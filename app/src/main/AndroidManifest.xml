@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cy.recyclerviewadapter">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.vr.VRTypeActivity" />
+        <activity android:name=".activity.vr.VRHeadFootActivity" />
+        <activity android:name=".activity.vr.VRActivity" />
+        <activity android:name=".activity.vr.VRMultiActivity" />
+        <activity android:name=".activity.vr.VRRefreshLoadMoreActivity" />
+        <activity android:name=".activity.vr.VRRefreshActivity" />
+        <activity android:name=".activity.vr.VRLoadMoreActivity" />
+        <activity android:name=".activity.vr.VRSwipeActivity" />
+        <activity android:name=".activity.hr.HRVActivity" />
+        <activity android:name=".activity.grv.GRVTypeActivity" />
+        <activity android:name=".activity.grv.GRVActivity" />
+        <activity android:name=".activity.grv.GRVHeadFootActivity" />
+        <activity android:name=".activity.grv.GRVRefreshLoadMoreActivity" />
+        <activity android:name=".activity.sgrv.SGRVTypeActivity" />
+        <activity android:name=".activity.sgrv.SGRVActivity" />
+        <activity android:name=".activity.sgrv.SGRVRefreshLoadMoreActivity" />
+        <activity android:name=".activity.sgrv.SGRVHeadFootActivity"></activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/activity_main"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical">
+
+<Button
+    android:id="@+id/btn_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="verticalrecyclerview" />
+<Button
+    android:id="@+id/btn_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="HorizontalRecyclerview" />
+<Button
+    android:id="@+id/btn_grid"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="GridRecyclerview" />
+<Button
+    android:id="@+id/btn_staggeredGrid"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="StaggeredGridRecyclerview" />
+
+</LinearLayout>

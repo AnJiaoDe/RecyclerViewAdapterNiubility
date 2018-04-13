@@ -1,0 +1,73 @@
+<com.cy.cyrvadapter.recyclerview.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/sl"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:background="@drawable/line_bottom">
+
+    <LinearLayout
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:padding="30dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="hello_world"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_zhiding"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#9f9f9f"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="置顶"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_biaoweiweidu"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#03c9ff"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+
+            android:text="标为未读"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+
+        <FrameLayout
+            android:id="@+id/layout_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:background="#ff0000">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/delete" />
+        </FrameLayout>
+
+
+    </LinearLayout>
+</com.cy.cyrvadapter.recyclerview.SwipeLayout>
