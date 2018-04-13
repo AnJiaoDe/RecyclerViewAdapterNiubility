@@ -9,8 +9,17 @@ https://blog.csdn.net/confusing_awakening/article/details/78332215
 将libray模块复制到项目中,或者直接在build.gradle中依赖:
 
 ```
+allprojects {
+		repositories {
+			
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+
+```
 dependencies {
-	        compile 'com.github.437042721:RecyclerViewAdapter:1.1.1'
+	        compile 'com.github.AnJiaoDe:RecyclerViewAdapter:1.1.1'
 	}
 ```
 
