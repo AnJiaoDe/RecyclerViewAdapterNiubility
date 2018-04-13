@@ -2,6 +2,8 @@ https://blog.csdn.net/confusing_awakening/article/details/78332215
 
 [APK下载](https://github.com/437042721/RecyclerViewAdapter/blob/master/app/build/outputs/apk/app-debug.apk)
 
+如有任何问题或者是建议，可以邮箱联系我！437042721@qq.com,QQ群757173381讨论，开源库会根据需求持续更新。
+
 **使用方法**
 
 将libray模块复制到项目中,或者直接在build.gradle中依赖:
@@ -1401,3 +1403,20 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
   - RecyclerView超级万能适配器（多布局、head、foot、下拉刷新、上拉自动更多、滑动删除）
   
   - VerticalRecyclerView、HorizontalRecyclerView、GridRecyclerView、StaggeredRecyclerView
+
+**License**
+
+ Copyright [cy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
