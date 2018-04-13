@@ -1,4 +1,5 @@
 https://blog.csdn.net/confusing_awakening/article/details/78332215
+
 **使用方法**
 
 将libray模块复制到项目中,或者直接在build.gradle中依赖:
