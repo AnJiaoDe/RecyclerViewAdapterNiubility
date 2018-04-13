@@ -78,6 +78,7 @@ dependencies {
 
 **1.VerticalRecyclerView**
 **1.1VR**
+
 ![Image text](gif/2.gif)
 
 ```
@@ -149,6 +150,7 @@ public class VRActivity extends BaseActivity {
 ```
 
 **1.2VR+MultiLayout**
+
 ![Image text](gif/3.gif)
 
 ```
@@ -293,6 +295,7 @@ public class VRMultiActivity extends BaseActivity {
 
 ```
 **1.3VR+head+foot**
+
 ![Image text](gif/4.gif)
 
 ```
@@ -396,6 +399,7 @@ public class VRHeadFootActivity extends BaseActivity {
 
 ```
 **1.4VR+Refresh+LoadMore**
+
 ![Image text](gif/5.gif)
 
 ```
@@ -483,6 +487,7 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
 
 ```
 **1.5VR+Refresh**
+
 ![Image text](gif/6.gif)
 
 ```
@@ -563,6 +568,7 @@ public class VRRefreshActivity extends BaseActivity {
 
 ```
 **1.6VR+LoadMore**
+
 ![Image text](gif/7.gif)
 
 ```
@@ -645,6 +651,7 @@ public class VRLoadMoreActivity extends BaseActivity {
 ```
 
 **1.7VR+Swipe**
+
 ![Image text](gif/8.gif)
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -748,6 +755,7 @@ public class VRSwipeActivity extends BaseActivity {
 
 ```
 **2.HorizontalRecyclerView**
+
 ![Image text](gif/9.gif)
 
 ```
@@ -826,6 +834,7 @@ public class HRVActivity extends BaseActivity {
 ```
 **3.GridRecyclerView**
 **3.1GRV**
+
 ![Image text](gif/10.gif)
 
 ```
@@ -903,6 +912,7 @@ public class GRVActivity extends BaseActivity {
 
 ```
 **3.2GRV+head+foot**
+
 ![Image text](gif/11.gif)
 
 ```
@@ -1008,6 +1018,7 @@ public class GRVHeadFootActivity extends BaseActivity {
 ```
 
 **3.3GRV+Refresh+LoadMore**
+
 ![Image text](gif/12.gif)
 
 ```
@@ -1088,6 +1099,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
 ```
 **4.StaggeredGridRecyclerView**
 **4.1SGRV**
+
 ![Image text](gif/13.gif)
 
 ```
@@ -1173,6 +1185,7 @@ public class SGRVActivity extends BaseActivity {
 }
 ```
 **4.2SGRV+head+foot**
+
 ![Image text](gif/14.gif)
 
 ```
@@ -1282,6 +1295,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
 
 ```
 **4.3SGRV+Refresh+LoadMore**
+
 ![Image text](gif/15.gif)
 
 ```
