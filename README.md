@@ -1,4 +1,4 @@
-在没有万能RV适配器的时候是这样写代码的
+﻿在没有万能RV适配器的时候是这样写代码的
 
 ```
     private class CurrHolder extends RecyclerView.ViewHolder implements
