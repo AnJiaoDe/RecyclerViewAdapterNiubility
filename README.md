@@ -1,4 +1,5 @@
-﻿在没有万能RV适配器的时候是这样写代码的
+https://github.com/437042721/RecyclerViewAdapter/blob/master/readme.html
+在没有万能RV适配器的时候是这样写代码的
 
 ```
     private class CurrHolder extends RecyclerView.ViewHolder implements
