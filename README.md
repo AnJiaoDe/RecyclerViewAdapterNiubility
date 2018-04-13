@@ -77,6 +77,7 @@ dependencies {
 ![Image text](gif/1.png)
 
 **1.VerticalRecyclerView**
+
 **1.1VR**
 
 ![Image text](gif/2.gif)
@@ -833,6 +834,7 @@ public class HRVActivity extends BaseActivity {
 
 ```
 **3.GridRecyclerView**
+
 **3.1GRV**
 
 ![Image text](gif/10.gif)
@@ -1098,6 +1100,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
 
 ```
 **4.StaggeredGridRecyclerView**
+
 **4.1SGRV**
 
 ![Image text](gif/13.gif)
