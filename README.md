@@ -1395,6 +1395,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
 
 ```
  
- 
- 
- 参考：[ListView、RecyclerView、GridView ](https://blog.csdn.net/confusing_awakening/article/category/6968968)
+ #更新日志
+ *V1.1.1*
+  - RecyclerView超级万能适配器（多布局、head、foot、下拉刷新、上拉自动更多、滑动删除）
+  -VerticalRecyclerView、HorizontalRecyclerView、GridRecyclerView、StaggeredRecyclerView
