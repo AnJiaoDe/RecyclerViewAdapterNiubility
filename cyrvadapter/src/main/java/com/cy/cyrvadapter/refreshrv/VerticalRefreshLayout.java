@@ -38,26 +38,26 @@ public class VerticalRefreshLayout extends BaseRefreshLayout {
     public void setAdapter(RecyclerView.Adapter adapter) {
         verticalRecyclerView.setAdapter(adapter);
     }
-    public void setAdapter(RecyclerView.Adapter adapter, RefreshListenerAdapter refreshListenerAdapter){
+    public void setAdapter(RecyclerView.Adapter adapter, int color,RefreshListenerAdapter refreshListenerAdapter){
         verticalRecyclerView.setAdapter(adapter, new OnRVScrollListener() {
             @Override
             public void rvStartLoadMore() {
                 startLoadMore();
             }
         });
-        setOnRefreshListener(refreshListenerAdapter);
+        setOnRefreshListener(refreshListenerAdapter,color);
     }
-    public void setAdapter(RecyclerView.Adapter adapter, OnCYRefreshListener onCYRefreshListener){
+    public void setAdapter(RecyclerView.Adapter adapter,int color, OnCYRefreshListener onCYRefreshListener){
         verticalRecyclerView.setAdapter(adapter);
-        setOnCYRefreshListener(onCYRefreshListener);
+        setOnCYRefreshListener(onCYRefreshListener,color);
     }
-    public void setAdapter(RecyclerView.Adapter adapter, OnCYLoadMoreLister onCYLoadMoreLister){
+    public void setAdapter(RecyclerView.Adapter adapter,int color, OnCYLoadMoreLister onCYLoadMoreLister){
         verticalRecyclerView.setAdapter(adapter, new OnRVScrollListener() {
             @Override
             public void rvStartLoadMore() {
                 startLoadMore();
             }
         });
-        setOnCYLoadMoreLister(onCYLoadMoreLister);
+        setOnCYLoadMoreLister(onCYLoadMoreLister,color);
     }
 }

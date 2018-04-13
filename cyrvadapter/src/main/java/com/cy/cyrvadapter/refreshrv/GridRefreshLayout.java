@@ -43,7 +43,7 @@ public class GridRefreshLayout extends BaseRefreshLayout {
 
 
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,boolean head,boolean foot, RefreshListenerAdapter refreshListenerAdapter) {
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,boolean head,boolean foot,int color, RefreshListenerAdapter refreshListenerAdapter) {
         gridRecyclerView.setAdapter(adapter, spanCount,head,foot, new OnRVScrollListener() {
             @Override
             public void rvStartLoadMore() {
@@ -51,14 +51,14 @@ public class GridRefreshLayout extends BaseRefreshLayout {
             }
         });
 
-        setOnRefreshListener(refreshListenerAdapter);
+        setOnRefreshListener(refreshListenerAdapter,color);
     }
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,boolean head,boolean foot, OnCYRefreshListener onCYRefreshListener) {
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,boolean head,boolean foot, int color,OnCYRefreshListener onCYRefreshListener) {
         gridRecyclerView.setAdapter(adapter, spanCount,head,foot);
 
-        setOnCYRefreshListener(onCYRefreshListener);
+        setOnCYRefreshListener(onCYRefreshListener,color);
     }
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,boolean head,boolean foot, OnCYLoadMoreLister onCYLoadMoreLister) {
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,boolean head,boolean foot,int color, OnCYLoadMoreLister onCYLoadMoreLister) {
         gridRecyclerView.setAdapter(adapter, spanCount,head,foot, new OnRVScrollListener() {
             @Override
             public void rvStartLoadMore() {
@@ -66,6 +66,6 @@ public class GridRefreshLayout extends BaseRefreshLayout {
             }
         });
 
-        setOnCYLoadMoreLister(onCYLoadMoreLister);
+        setOnCYLoadMoreLister(onCYLoadMoreLister, color);
     }
 }

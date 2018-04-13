@@ -41,7 +41,7 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
 
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation, RefreshListenerAdapter refreshListenerAdapter) {
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation,int color, RefreshListenerAdapter refreshListenerAdapter) {
         staggeredGridRecyclerView.setAdapter(adapter, spanCount, orientation, new OnRVScrollListener() {
             @Override
             public void rvStartLoadMore() {
@@ -49,16 +49,16 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
             }
         });
 
-        setOnRefreshListener(refreshListenerAdapter);
+        setOnRefreshListener(refreshListenerAdapter,color);
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation, OnCYRefreshListener onCYRefreshListener) {
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation, int color,OnCYRefreshListener onCYRefreshListener) {
         staggeredGridRecyclerView.setAdapter(adapter, spanCount, orientation);
 
-        setOnCYRefreshListener(onCYRefreshListener);
+        setOnCYRefreshListener(onCYRefreshListener,color);
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation, OnCYLoadMoreLister onCYLoadMoreLister) {
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation, int color,OnCYLoadMoreLister onCYLoadMoreLister) {
         staggeredGridRecyclerView.setAdapter(adapter, spanCount, orientation, new OnRVScrollListener() {
             @Override
             public void rvStartLoadMore() {
@@ -66,6 +66,6 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
             }
         });
 
-        setOnCYLoadMoreLister(onCYLoadMoreLister);
+        setOnCYLoadMoreLister(onCYLoadMoreLister, color);
     }
 }

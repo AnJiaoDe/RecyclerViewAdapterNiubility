@@ -3,7 +3,6 @@ package com.cy.cyrvadapter.refreshrv;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.cy.cyrvadapter.R;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.footer.BallPulseView;
@@ -29,11 +28,11 @@ public class BaseRefreshLayout extends TwinklingRefreshLayout {
     }
 
 
-    public void setOnCYRefreshListener(final OnCYRefreshListener onCYRefreshListener) {
+    public void setOnCYRefreshListener(final OnCYRefreshListener onCYRefreshListener,int color) {
         ProgressLayout progressLayout = new ProgressLayout(context);
 
 
-        progressLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+        progressLayout.setColorSchemeColors(color);
 
         setEnableOverScroll(false);
         setEnableLoadmore(false);
@@ -51,11 +50,11 @@ public class BaseRefreshLayout extends TwinklingRefreshLayout {
 
     }
 
-    public void setOnCYLoadMoreLister(final OnCYLoadMoreLister onCYLoadMoreLister) {
+    public void setOnCYLoadMoreLister(final OnCYLoadMoreLister onCYLoadMoreLister,int color) {
         BallPulseView ballPulseView = new BallPulseView(context);
 
 
-        ballPulseView.setAnimatingColor(getResources().getColor(R.color.colorPrimary));
+        ballPulseView.setAnimatingColor(color);
         setEnableOverScroll(false);
         setEnableRefresh(false);
 
@@ -72,13 +71,18 @@ public class BaseRefreshLayout extends TwinklingRefreshLayout {
     }
 
     @Override
-    public void setOnRefreshListener(RefreshListenerAdapter refreshListener) {
+    public final void setOnRefreshListener(RefreshListenerAdapter refreshListener) {
         super.setOnRefreshListener(refreshListener);
+
+
+    }
+    public void setOnRefreshListener(RefreshListenerAdapter refreshListener,int color) {
+        setOnRefreshListener(refreshListener);
 
         ProgressLayout progressLayout = new ProgressLayout(context);
 
 
-        progressLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+        progressLayout.setColorSchemeColors(color);
 
         setEnableOverScroll(false);
 
@@ -88,7 +92,7 @@ public class BaseRefreshLayout extends TwinklingRefreshLayout {
         BallPulseView ballPulseView = new BallPulseView(context);
 
 
-        ballPulseView.setAnimatingColor(getResources().getColor(R.color.colorPrimary));
+        ballPulseView.setAnimatingColor(color);
 
 
         setBottomView(ballPulseView);
