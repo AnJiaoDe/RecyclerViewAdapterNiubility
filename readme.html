@@ -1,0 +1,1394 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RecyclerView超级万能适配器（多布局、head、foot、下拉刷新、上拉自动更多、滑动删除）</title>
+<link rel="stylesheet" href="https://csdn.net/res-min/themes/base.css" />
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "all"},extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"] } });
+</script>
+</head>
+<body><div class="container"><p>在没有万能RV适配器的时候是这样写代码的</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs java">    <span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CurrHolder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">RecyclerView</span>.<span class="hljs-title">ViewHolder</span> <span class="hljs-keyword">implements</span>
+            <span class="hljs-title">OnClickListener</span>, <span class="hljs-title">ItemSelectListener</span> {</span>
+        ImageView album, menu;
+        TextView title, artist;
+        View splite, state;
+        Music music;
+
+        <span class="hljs-keyword">public</span> <span class="hljs-title">CurrHolder</span>(View view) {
+            <span class="hljs-keyword">super</span>(view);
+            album = (ImageView) view.findViewById(R.id.music_item_album);
+            menu = (ImageView) view.findViewById(R.id.music_item_menu);
+            title = (TextView) view.findViewById(R.id.music_item_title);
+            artist = (TextView) view.findViewById(R.id.music_item_artist);
+            splite = view.findViewById(R.id.music_item_splite);
+            state = view.findViewById(R.id.music_item_state);
+            menu.setImageResource(mTheme.isColorTheme() ? R.drawable.ic_item_menu
+                    : R.drawable.ic_item_menu_w);
+            <span class="hljs-keyword">if</span> (splite != <span class="hljs-keyword">null</span>) {
+                splite.setBackgroundColor(mTheme.getDividerColor());
+            }
+            state.setBackgroundColor(mTheme.color);
+            itemView.setOnClickListener(<span class="hljs-keyword">this</span>);
+            ViewUtil.setViewBg(itemView, mTheme.getItemSelector());
+        }</code></pre>
+
+<p>构造方法能写到怀疑人生</p>
+
+<p>有万能适配的时候是这样写代码的</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs java">    List&lt;VRBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">100</span>;i++){
+            list.add(<span class="hljs-keyword">new</span> VRBean(<span class="hljs-string">"内容"</span>+i));
+        }
+        rvAdapter = <span class="hljs-keyword">new</span> RVAdapter&lt;VRBean&gt;(list) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, VRBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+                holder.setText(R.id.tv, bean.getStr());
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                <span class="hljs-keyword">return</span> R.layout.item_rv;
+            }
+
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                showToast(<span class="hljs-string">"点击"</span> + position);
+
+            }
+        };
+        ((VerticalRecyclerView) findViewById(R.id.vr)).setAdapter(rvAdapter);</code></pre>
+
+<p>流水线式编程，各种复制粘贴</p>
+
+<p><img src="https://img-blog.csdn.net/20180413112843364?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+<p><strong>1.VerticalRecyclerView</strong> <br>
+<strong>1.1VR</strong> <br>
+<img src="https://img-blog.csdn.net/20180413113246318?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.recyclerview.VerticalRecyclerView</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/vr"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span> /&gt;</span>
+
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.vr;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.VRBean;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VRActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+
+    <span class="hljs-keyword">private</span> RVAdapter&lt;VRBean&gt; rvAdapter;
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_vr2);
+        List&lt;VRBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">100</span>;i++){
+            list.add(<span class="hljs-keyword">new</span> VRBean(<span class="hljs-string">"内容"</span>+i));
+        }
+        rvAdapter = <span class="hljs-keyword">new</span> RVAdapter&lt;VRBean&gt;(list) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, VRBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+                holder.setText(R.id.tv, bean.getStr());
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                <span class="hljs-keyword">return</span> R.layout.item_rv;
+            }
+
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                showToast(<span class="hljs-string">"点击"</span> + position);
+
+            }
+        };
+        ((VerticalRecyclerView) findViewById(R.id.vr)).setAdapter(rvAdapter);
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+</code></pre>
+
+<p><strong>1.2VR+MultiLayout</strong> <br>
+<img src="https://img-blog.csdn.net/20180413121715601?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.recyclerview.VerticalRecyclerView</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/vr"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span> /&gt;</span>
+
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs avrasm">package <span class="hljs-keyword">com</span><span class="hljs-preprocessor">.cy</span><span class="hljs-preprocessor">.recyclerviewadapter</span><span class="hljs-preprocessor">.activity</span><span class="hljs-preprocessor">.vr</span><span class="hljs-comment">;</span>
+
+import android<span class="hljs-preprocessor">.os</span><span class="hljs-preprocessor">.Bundle</span><span class="hljs-comment">;</span>
+import android<span class="hljs-preprocessor">.view</span><span class="hljs-preprocessor">.View</span><span class="hljs-comment">;</span>
+
+import <span class="hljs-keyword">com</span><span class="hljs-preprocessor">.cy</span><span class="hljs-preprocessor">.cyrvadapter</span><span class="hljs-preprocessor">.adapter</span><span class="hljs-preprocessor">.RVAdapter</span><span class="hljs-comment">;</span>
+import <span class="hljs-keyword">com</span><span class="hljs-preprocessor">.cy</span><span class="hljs-preprocessor">.cyrvadapter</span><span class="hljs-preprocessor">.recyclerview</span><span class="hljs-preprocessor">.VerticalRecyclerView</span><span class="hljs-comment">;</span>
+import <span class="hljs-keyword">com</span><span class="hljs-preprocessor">.cy</span><span class="hljs-preprocessor">.recyclerviewadapter</span><span class="hljs-preprocessor">.BaseActivity</span><span class="hljs-comment">;</span>
+import <span class="hljs-keyword">com</span><span class="hljs-preprocessor">.cy</span><span class="hljs-preprocessor">.recyclerviewadapter</span><span class="hljs-preprocessor">.R</span><span class="hljs-comment">;</span>
+import <span class="hljs-keyword">com</span><span class="hljs-preprocessor">.cy</span><span class="hljs-preprocessor">.recyclerviewadapter</span><span class="hljs-preprocessor">.bean</span><span class="hljs-preprocessor">.VRMultiBean</span><span class="hljs-comment">;</span>
+
+import java<span class="hljs-preprocessor">.util</span><span class="hljs-preprocessor">.ArrayList</span><span class="hljs-comment">;</span>
+import java<span class="hljs-preprocessor">.util</span><span class="hljs-preprocessor">.List</span><span class="hljs-comment">;</span>
+
+public class VRMultiActivity extends BaseActivity {
+
+    private RVAdapter&lt;VRMultiBean&gt; rvAdapter<span class="hljs-comment">;</span>
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super<span class="hljs-preprocessor">.onCreate</span>(savedInstanceState)<span class="hljs-comment">;</span>
+        setContentView(R<span class="hljs-preprocessor">.layout</span><span class="hljs-preprocessor">.activity</span>_vrmulti)<span class="hljs-comment">;</span>
+        final List&lt;VRMultiBean&gt; list = new ArrayList&lt;&gt;()<span class="hljs-comment">;</span>
+
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"忒囧途押金我积极偶就开个会积极自己交给鸡攻击huiyhuhuio8u9ehjkgh会祸害过"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>1, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>2, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>3}, <span class="hljs-number">1</span>))<span class="hljs-comment">;</span>
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"hi偶尔几个技能奇偶及会计进口国家囧囧而考虑过就没看了交集高科技奇偶及会计胡歌奇偶及会计"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>5, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>4, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>3}, <span class="hljs-number">2</span>))<span class="hljs-comment">;</span>
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"货物挤公交我黑狗竟然换个我哦我合计好几个我囧囧积极 囧囧囧囧囧窘境及囧窘境囧囧健康人格和基金囧囧花给你们"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>4, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>5, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>3}, <span class="hljs-number">3</span>))<span class="hljs-comment">;</span>
+
+
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"忒囧途押金我积极偶就开个会积极自己交给鸡攻击huiyhuhuio8u9ehjkgh会祸害过"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>4, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>2, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>1}, <span class="hljs-number">1</span>))<span class="hljs-comment">;</span>
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"货物挤公交我黑狗乐观我乳胶管我哦惹急hi偶然和基金法科技馆一积极几颗 自己进欧冠竟然换个我哦健康人格和基金囧囧花给你们"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>4, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>5, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>3}, <span class="hljs-number">3</span>))<span class="hljs-comment">;</span>
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"忒囧途押金我积极偶就开个会积极自己交给鸡攻击huiyhuhuio8u9ehjkgh会祸害过"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>1, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>2, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>3}, <span class="hljs-number">1</span>))<span class="hljs-comment">;</span>
+
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"忒囧途押金我积极偶就开个会积极自己交给鸡攻击huiyhuhuio8u9ehjkgh会祸害过"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>4, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>2, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>1}, <span class="hljs-number">2</span>))<span class="hljs-comment">;</span>
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"货物挤公交我黑狗乐观我乳胶管我哦惹急hi偶然和基金法科技馆一积极几颗 自己进欧冠竟然换个我哦健康人格和基金囧囧花给你们"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>4, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>5, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>3}, <span class="hljs-number">3</span>))<span class="hljs-comment">;</span>
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"忒囧途押金我积极偶就开个会积极自己交给鸡攻击huiyhuhuio8u9ehjkgh会祸害过"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>1, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>2, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>3}, <span class="hljs-number">1</span>))<span class="hljs-comment">;</span>
+
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"忒囧途押金我积极偶就开个会积极自己交给鸡攻击huiyhuhuio8u9ehjkgh会祸害过"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>4, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>2, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>1}, <span class="hljs-number">2</span>))<span class="hljs-comment">;</span>
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"货物挤公交我黑狗乐观我乳胶管我哦惹急hi偶然和基金法科技馆一积极几颗 自己进欧冠竟然换个我哦健康人格和基金囧囧花给你们"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>4, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>5, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>3}, <span class="hljs-number">2</span>))<span class="hljs-comment">;</span>
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"忒囧途押金我积极偶就开个会积极自己交给鸡攻击huiyhuhuio8u9ehjkgh会祸害过"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>1, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>2, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>3}, <span class="hljs-number">1</span>))<span class="hljs-comment">;</span>
+
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"忒囧途押金我积极偶就开个会积极自己交给鸡攻击huiyhuhuio8u9ehjkgh会祸害过"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>4, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>2, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>1}, <span class="hljs-number">2</span>))<span class="hljs-comment">;</span>
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"货物挤公交我黑狗乐观我乳胶管我哦惹急hi偶然和基金法科技馆一积极几颗 自己进欧冠竟然换个我哦健康人格和基金囧囧花给你们"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>4, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>5, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>3}, <span class="hljs-number">3</span>))<span class="hljs-comment">;</span>
+        list<span class="hljs-preprocessor">.add</span>(new VRMultiBean(<span class="hljs-string">"忒囧途押金我积极偶就开个会积极自己交给鸡攻击huiyhuhuio8u9ehjkgh会祸害过"</span>,
+                new int[]{R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>1, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>2, R<span class="hljs-preprocessor">.drawable</span><span class="hljs-preprocessor">.pic</span>3}, <span class="hljs-number">1</span>))<span class="hljs-comment">;</span>
+        rvAdapter = new RVAdapter&lt;VRMultiBean&gt;(list) {
+            @Override
+            public void bindDataToView(MyViewHolder holder, int position, VRMultiBean bean, boolean isSelected) {
+                switch (bean<span class="hljs-preprocessor">.getView</span>_type()) {
+                    case <span class="hljs-number">1</span>:
+                        holder<span class="hljs-preprocessor">.setText</span>(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.tv</span>,bean<span class="hljs-preprocessor">.getTitle</span>())<span class="hljs-comment">;</span>
+                        holder<span class="hljs-preprocessor">.setImageResource</span>(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.iv</span>,bean<span class="hljs-preprocessor">.getResID</span>()[<span class="hljs-number">0</span>])<span class="hljs-comment">;</span>
+                        holder<span class="hljs-preprocessor">.setOnClickListener</span>(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.tv</span>, new View<span class="hljs-preprocessor">.OnClickListener</span>() {
+                            @Override
+                            public void onClick(View v) {
+                                showToast(<span class="hljs-string">"点击文字"</span>)<span class="hljs-comment">;</span>
+                            }
+                        })<span class="hljs-comment">;</span>
+                        <span class="hljs-keyword">break</span><span class="hljs-comment">;</span>
+
+                    case <span class="hljs-number">2</span>:
+                        holder<span class="hljs-preprocessor">.setText</span>(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.tv</span>,bean<span class="hljs-preprocessor">.getTitle</span>())<span class="hljs-comment">;</span>
+                        holder<span class="hljs-preprocessor">.setImageResource</span>(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.iv</span>_1,bean<span class="hljs-preprocessor">.getResID</span>()[<span class="hljs-number">0</span>])<span class="hljs-comment">;</span>
+                        holder<span class="hljs-preprocessor">.setImageResource</span>(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.iv</span>_2,bean<span class="hljs-preprocessor">.getResID</span>()[<span class="hljs-number">1</span>])<span class="hljs-comment">;</span>
+                        holder<span class="hljs-preprocessor">.setImageResource</span>(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.iv</span>_3,bean<span class="hljs-preprocessor">.getResID</span>()[<span class="hljs-number">2</span>])<span class="hljs-comment">;</span>
+                        holder<span class="hljs-preprocessor">.setOnClickListener</span>(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.tv</span>, new View<span class="hljs-preprocessor">.OnClickListener</span>() {
+                            @Override
+                            public void onClick(View v) {
+                                showToast(<span class="hljs-string">"点击文字"</span>)<span class="hljs-comment">;</span>
+                            }
+                        })<span class="hljs-comment">;</span>
+                        <span class="hljs-keyword">break</span><span class="hljs-comment">;</span>
+                    case <span class="hljs-number">3</span>:
+                        holder<span class="hljs-preprocessor">.setText</span>(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.tv</span>,bean<span class="hljs-preprocessor">.getTitle</span>())<span class="hljs-comment">;</span>
+                        holder<span class="hljs-preprocessor">.setImageResource</span>(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.iv</span>,bean<span class="hljs-preprocessor">.getResID</span>()[<span class="hljs-number">0</span>])<span class="hljs-comment">;</span>
+                        holder<span class="hljs-preprocessor">.setOnClickListener</span>(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.tv</span>, new View<span class="hljs-preprocessor">.OnClickListener</span>() {
+                            @Override
+                            public void onClick(View v) {
+                                showToast(<span class="hljs-string">"点击文字"</span>)<span class="hljs-comment">;</span>
+                            }
+                        })<span class="hljs-comment">;</span>
+                        <span class="hljs-keyword">break</span><span class="hljs-comment">;</span>
+                }
+            }
+
+            @Override
+            public int getItemLayoutID(int position, VRMultiBean bean) {
+                switch (bean<span class="hljs-preprocessor">.getView</span>_type()) {
+                    case <span class="hljs-number">1</span>:
+                        return R<span class="hljs-preprocessor">.layout</span><span class="hljs-preprocessor">.item</span>_pic_right<span class="hljs-comment">;</span>
+                    case <span class="hljs-number">2</span>:
+                        return R<span class="hljs-preprocessor">.layout</span><span class="hljs-preprocessor">.item</span>_pic_bottom<span class="hljs-comment">;</span>
+                    case <span class="hljs-number">3</span>:
+                        return R<span class="hljs-preprocessor">.layout</span><span class="hljs-preprocessor">.item</span>_pic_one_bottom<span class="hljs-comment">;</span>
+                }
+                return <span class="hljs-number">1</span><span class="hljs-comment">;</span>
+            }
+
+
+            @Override
+            public void onItemClick(int position, VRMultiBean bean) {
+
+                showToast(<span class="hljs-string">"点击"</span>+position)<span class="hljs-comment">;</span>
+            }
+        }<span class="hljs-comment">;</span>
+        ((VerticalRecyclerView) findViewById(R<span class="hljs-preprocessor">.id</span><span class="hljs-preprocessor">.vr</span>))<span class="hljs-preprocessor">.setAdapter</span>(rvAdapter)<span class="hljs-comment">;</span>
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+}
+</code></pre>
+
+<p><strong>1.3VR+head+foot</strong> <br>
+<img src="https://img-blog.csdn.net/20180413122318313?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.recyclerview.VerticalRecyclerView</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/vr"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span> /&gt;</span>
+
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.vr;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.VRHeadFootBean;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VRHeadFootActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+
+    <span class="hljs-keyword">private</span> RVAdapter&lt;VRHeadFootBean&gt; rvAdapter;
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_vr);
+
+        List&lt;VRHeadFootBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">100</span>;i++){
+            list.add(<span class="hljs-keyword">new</span> VRHeadFootBean(<span class="hljs-string">"内容"</span>+i));
+        }
+        rvAdapter=<span class="hljs-keyword">new</span> RVAdapter&lt;VRHeadFootBean&gt;(list,<span class="hljs-keyword">true</span>,<span class="hljs-keyword">true</span>) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToHeadView</span>(MyViewHolder holder) {
+                <span class="hljs-keyword">super</span>.bindDataToHeadView(holder);
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToFootView</span>(MyViewHolder holder) {
+                <span class="hljs-keyword">super</span>.bindDataToFootView(holder);
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, VRHeadFootBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+                holder.setText(R.id.tv, bean.getStr());
+
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, VRHeadFootBean bean) {
+                <span class="hljs-keyword">if</span> (position==<span class="hljs-number">0</span>){
+                    <span class="hljs-keyword">return</span> R.layout.head;
+
+                }
+                <span class="hljs-keyword">if</span> (position==getItemCount()-<span class="hljs-number">1</span>){
+                    <span class="hljs-keyword">return</span> R.layout.foot;
+
+                }
+                <span class="hljs-keyword">return</span> R.layout.item_rv;
+
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, VRHeadFootBean bean) {
+
+                showToast(<span class="hljs-string">"点击"</span>+position);
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemHeadClick</span>() {
+                <span class="hljs-keyword">super</span>.onItemHeadClick();
+                showToast(<span class="hljs-string">"点击head"</span>);
+
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemFootClick</span>() {
+                <span class="hljs-keyword">super</span>.onItemFootClick();
+                showToast(<span class="hljs-string">"点击foot"</span>);
+
+            }
+        };
+        ((VerticalRecyclerView) findViewById(R.id.vr)).setAdapter(rvAdapter);
+
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+</code></pre>
+
+<p><strong>1.4VR+Refresh+LoadMore</strong> <br>
+<img src="https://img-blog.csdn.net/2018041312265859?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">xmlns:app</span>=<span class="hljs-value">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/vrl"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout</span>&gt;</span>
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.vr;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.VRBean;
+<span class="hljs-keyword">import</span> com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+<span class="hljs-keyword">import</span> com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VRRefreshLoadMoreActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+
+    <span class="hljs-keyword">private</span> RVAdapter&lt;VRBean&gt; rvAdapter;
+    <span class="hljs-keyword">private</span> VerticalRefreshLayout verticalRefreshLayout;
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_vrrefresh);
+
+        verticalRefreshLayout= (VerticalRefreshLayout) findViewById(R.id.vrl);
+        List&lt;VRBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">100</span>;i++){
+            list.add(<span class="hljs-keyword">new</span> VRBean(<span class="hljs-string">"内容"</span>+i));
+        }
+        rvAdapter = <span class="hljs-keyword">new</span> RVAdapter&lt;VRBean&gt;(list) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, VRBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+                holder.setText(R.id.tv, bean.getStr());
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                <span class="hljs-keyword">return</span> R.layout.item_rv;
+
+            }
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                showToast(<span class="hljs-string">"点击"</span> + position);
+
+            }
+        };
+        verticalRefreshLayout.setAdapter(rvAdapter, <span class="hljs-keyword">new</span> RefreshListenerAdapter() {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onRefresh</span>(TwinklingRefreshLayout refreshLayout) {
+                <span class="hljs-keyword">super</span>.onRefresh(refreshLayout);
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onLoadMore</span>(TwinklingRefreshLayout refreshLayout) {
+                <span class="hljs-keyword">super</span>.onLoadMore(refreshLayout);
+            }
+        });
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+</code></pre>
+
+<p><strong>1.5VR+Refresh</strong></p>
+
+<p><img src="https://img-blog.csdn.net/20180413123006536?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">xmlns:app</span>=<span class="hljs-value">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/vrl"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout</span>&gt;</span>
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.vr;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.refreshrv.BaseRefreshLayout;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.VRBean;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VRRefreshActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+    <span class="hljs-keyword">private</span> RVAdapter&lt;VRBean&gt; rvAdapter;
+    <span class="hljs-keyword">private</span> VerticalRefreshLayout verticalRefreshLayout;
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_vrrefresh2);
+
+        verticalRefreshLayout= (VerticalRefreshLayout) findViewById(R.id.vrl);
+        List&lt;VRBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">100</span>;i++){
+            list.add(<span class="hljs-keyword">new</span> VRBean(<span class="hljs-string">"内容"</span>+i));
+        }
+        rvAdapter = <span class="hljs-keyword">new</span> RVAdapter&lt;VRBean&gt;(list) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, VRBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+                holder.setText(R.id.tv, bean.getStr());
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                <span class="hljs-keyword">return</span> R.layout.item_rv;
+
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                showToast(<span class="hljs-string">"点击"</span> + position);
+
+            }
+        };
+        verticalRefreshLayout.setAdapter(rvAdapter, <span class="hljs-keyword">new</span> BaseRefreshLayout.OnCYRefreshListener() {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onRefresh</span>() {
+
+            }
+        });
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+</code></pre>
+
+<p><strong>1.6VR+LoadMore</strong> <br>
+<img src="https://img-blog.csdn.net/2018041312313173?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">xmlns:app</span>=<span class="hljs-value">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/vrl"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout</span>&gt;</span>
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.vr;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.refreshrv.BaseRefreshLayout;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.VRBean;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VRLoadMoreActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+    <span class="hljs-keyword">private</span> RVAdapter&lt;VRBean&gt; rvAdapter;
+    <span class="hljs-keyword">private</span> VerticalRefreshLayout verticalRefreshLayout;
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_vrload_more);
+
+
+        verticalRefreshLayout= (VerticalRefreshLayout) findViewById(R.id.vrl);
+        List&lt;VRBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">100</span>;i++){
+            list.add(<span class="hljs-keyword">new</span> VRBean(<span class="hljs-string">"内容"</span>+i));
+        }
+        rvAdapter = <span class="hljs-keyword">new</span> RVAdapter&lt;VRBean&gt;(list) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, VRBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+                holder.setText(R.id.tv, bean.getStr());
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                <span class="hljs-keyword">return</span> R.layout.item_rv;
+            }
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                showToast(<span class="hljs-string">"点击"</span> + position);
+
+            }
+        };
+        verticalRefreshLayout.setAdapter(rvAdapter, <span class="hljs-keyword">new</span> BaseRefreshLayout.OnCYLoadMoreLister() {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onLoadMore</span>() {
+
+            }
+        });
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+</code></pre>
+
+<p><strong>1.7VR+Swipe</strong> <br>
+<img src="https://img-blog.csdn.net/20180413123457843?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.recyclerview.SwipeRecyclerView</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/srv"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">com.cy.cyrvadapter.recyclerview.SwipeRecyclerView</span>&gt;</span>
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.vr;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.SwipeRVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.recyclerview.SwipeRecyclerView;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.VRBean;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VRSwipeActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+    <span class="hljs-keyword">private</span> SwipeRVAdapter&lt;VRBean&gt; rvAdapter;
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_vrswipe);
+
+        <span class="hljs-keyword">final</span> ArrayList&lt;VRBean&gt; list_bean = <span class="hljs-keyword">new</span> ArrayList&lt;VRBean&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++) {
+            list_bean.add(<span class="hljs-keyword">new</span> VRBean(<span class="hljs-string">"内容"</span>+i));
+        }
+
+
+        rvAdapter = <span class="hljs-keyword">new</span> SwipeRVAdapter&lt;VRBean&gt;(list_bean) {
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindSwipeDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, VRBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+                holder.setText(R.id.tv, bean.getStr());
+
+
+                holder.setOnClickListener(R.id.tv_zhiding, <span class="hljs-keyword">new</span> View.OnClickListener() {
+                    <span class="hljs-annotation">@Override</span>
+                    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+                        rvAdapter.closeOpenedSL();
+                        showToast(<span class="hljs-string">"点击置顶"</span>);
+
+                    }
+                });
+                holder.setOnClickListener(R.id.tv_biaoweiweidu, <span class="hljs-keyword">new</span> View.OnClickListener() {
+                    <span class="hljs-annotation">@Override</span>
+                    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+                        rvAdapter.closeOpenedSL();
+
+                        showToast(<span class="hljs-string">"点击标为未读"</span>);
+
+                    }
+                });
+                holder.setOnClickListener(R.id.layout_delete, <span class="hljs-keyword">new</span> View.OnClickListener() {
+                    <span class="hljs-annotation">@Override</span>
+                    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+                        rvAdapter.closeOpenedSL();
+
+                        showToast(<span class="hljs-string">"点击删除"</span>);
+
+                    }
+                });
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                <span class="hljs-keyword">return</span> R.layout.item_swipe;
+
+            }
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, VRBean bean) {
+                showToast(<span class="hljs-string">"点击内容"</span>);
+
+            }
+
+
+        };
+        ((SwipeRecyclerView)findViewById(R.id.srv)).setAdapter(rvAdapter);
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+</code></pre>
+
+<p><strong>2.HorizontalRecyclerView</strong> <br>
+<img src="https://img-blog.csdn.net/20180413123704732?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.recyclerview.HorizontalRecyclerView</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/hrv"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"300dp"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">com.cy.cyrvadapter.recyclerview.HorizontalRecyclerView</span>&gt;</span>
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.hr;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.recyclerview.HorizontalRecyclerView;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.HRVBean;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HRVActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+
+    <span class="hljs-keyword">private</span> RVAdapter&lt;HRVBean&gt; rvAdapter;
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_hrv);
+        List&lt;HRVBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">10</span>;i++){
+            <span class="hljs-keyword">if</span> (i%<span class="hljs-number">5</span>==<span class="hljs-number">0</span>){
+                list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic3));
+                <span class="hljs-keyword">continue</span>;
+
+            }
+            list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic1));
+        }
+        rvAdapter = <span class="hljs-keyword">new</span> RVAdapter&lt;HRVBean&gt;(list) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, HRVBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+
+                holder.setImageResource(R.id.iv,bean.getResID());
+
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+                <span class="hljs-keyword">return</span> R.layout.item_hrv;
+            }
+
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+
+            }
+        };
+        ((HorizontalRecyclerView)findViewById(R.id.hrv)).setAdapter(rvAdapter);
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+</code></pre>
+
+<p><strong>3.GridRecyclerView</strong> <br>
+<strong>3.1GRV</strong> <br>
+<img src="https://img-blog.csdn.net/20180413124027874?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.recyclerview.GridRecyclerView</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/grv"</span>
+    <span class="hljs-attribute">android:paddingRight</span>=<span class="hljs-value">"10dp"</span>
+    <span class="hljs-attribute">android:paddingBottom</span>=<span class="hljs-value">"10dp"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">com.cy.cyrvadapter.recyclerview.GridRecyclerView</span>&gt;</span>
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.grv;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.recyclerview.GridRecyclerView;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.HRVBean;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GRVActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+
+    <span class="hljs-keyword">private</span> RVAdapter&lt;HRVBean&gt; rvAdapter;
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_grv);
+        List&lt;HRVBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">100</span>;i++){
+            <span class="hljs-keyword">if</span> (i%<span class="hljs-number">5</span>==<span class="hljs-number">0</span>){
+                list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic3));
+                <span class="hljs-keyword">continue</span>;
+
+            }
+            list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic1));
+        }
+        rvAdapter=<span class="hljs-keyword">new</span> RVAdapter&lt;HRVBean&gt;(list) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, HRVBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+
+
+                holder.setImageResource(R.id.iv,bean.getResID());
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+                <span class="hljs-keyword">return</span> R.layout.item_grv;
+            }
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+
+            }
+        };
+        ((GridRecyclerView)findViewById(R.id.grv)).setAdapter(rvAdapter,<span class="hljs-number">3</span>,<span class="hljs-keyword">false</span>,<span class="hljs-keyword">false</span>);
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+</code></pre>
+
+<p><strong>3.2GRV+head+foot</strong> <br>
+<img src="https://img-blog.csdn.net/20180413124242987?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.recyclerview.GridRecyclerView</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/grv"</span>
+    <span class="hljs-attribute">android:paddingRight</span>=<span class="hljs-value">"10dp"</span>
+    <span class="hljs-attribute">android:paddingBottom</span>=<span class="hljs-value">"10dp"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">com.cy.cyrvadapter.recyclerview.GridRecyclerView</span>&gt;</span>
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.grv;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.recyclerview.GridRecyclerView;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.HRVBean;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GRVHeadFootActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+    <span class="hljs-keyword">private</span> RVAdapter&lt;HRVBean&gt; rvAdapter;
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_grvhead_foot);
+
+        List&lt;HRVBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">99</span>; i++) {
+            <span class="hljs-keyword">if</span> (i % <span class="hljs-number">5</span> == <span class="hljs-number">0</span>) {
+                list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic3));
+                <span class="hljs-keyword">continue</span>;
+
+            }
+            list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic1));
+        }
+        rvAdapter = <span class="hljs-keyword">new</span> RVAdapter&lt;HRVBean&gt;(list, <span class="hljs-keyword">true</span>, <span class="hljs-keyword">true</span>) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToHeadView</span>(MyViewHolder holder) {
+                <span class="hljs-keyword">super</span>.bindDataToHeadView(holder);
+            }
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToFootView</span>(MyViewHolder holder) {
+                <span class="hljs-keyword">super</span>.bindDataToFootView(holder);
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, HRVBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+
+
+                holder.setImageResource(R.id.iv, bean.getResID());
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+                <span class="hljs-keyword">if</span> (position == <span class="hljs-number">0</span>) {
+                    <span class="hljs-keyword">return</span> R.layout.head;
+                }
+                <span class="hljs-keyword">if</span> (position == getItemCount() - <span class="hljs-number">1</span>) {
+                    <span class="hljs-keyword">return</span> R.layout.foot;
+                }
+                <span class="hljs-keyword">return</span> R.layout.item_grv;
+            }
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+
+
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemHeadClick</span>() {
+                <span class="hljs-keyword">super</span>.onItemHeadClick();
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemFootClick</span>() {
+                <span class="hljs-keyword">super</span>.onItemFootClick();
+            }
+        };
+        ((GridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, <span class="hljs-number">3</span>,<span class="hljs-keyword">true</span>,<span class="hljs-keyword">true</span>);
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+</code></pre>
+
+<p><strong>3.3GRV+Refresh+LoadMore</strong> <br>
+<img src="https://img-blog.csdn.net/20180413130342162?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.refreshrv.GridRefreshLayout</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/grl"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_marginBottom</span>=<span class="hljs-value">"10dp"</span>
+    <span class="hljs-attribute">android:layout_marginRight</span>=<span class="hljs-value">"10dp"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">com.cy.cyrvadapter.refreshrv.GridRefreshLayout</span>&gt;</span>
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.grv;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.refreshrv.GridRefreshLayout;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.HRVBean;
+<span class="hljs-keyword">import</span> com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+<span class="hljs-keyword">import</span> com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GRVRefreshLoadMoreActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+    <span class="hljs-keyword">private</span> RVAdapter&lt;HRVBean&gt; rvAdapter;
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_grvrefresh_load_more);
+
+        List&lt;HRVBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">100</span>;i++){
+            <span class="hljs-keyword">if</span> (i%<span class="hljs-number">5</span>==<span class="hljs-number">0</span>){
+                list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic3));
+                <span class="hljs-keyword">continue</span>;
+
+            }
+            list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic1));
+        }
+
+        rvAdapter=<span class="hljs-keyword">new</span> RVAdapter&lt;HRVBean&gt;(list) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, HRVBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+
+
+                holder.setImageResource(R.id.iv,bean.getResID());
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+                <span class="hljs-keyword">return</span> R.layout.item_grv;
+            }
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+
+            }
+        };
+
+        ((GridRefreshLayout)findViewById(R.id.grl)).setAdapter(rvAdapter, <span class="hljs-number">3</span>, <span class="hljs-keyword">false</span>, <span class="hljs-keyword">false</span>, <span class="hljs-keyword">new</span> RefreshListenerAdapter() {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onRefresh</span>(TwinklingRefreshLayout refreshLayout) {
+                <span class="hljs-keyword">super</span>.onRefresh(refreshLayout);
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onLoadMore</span>(TwinklingRefreshLayout refreshLayout) {
+                <span class="hljs-keyword">super</span>.onLoadMore(refreshLayout);
+            }
+        });
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+</code></pre>
+
+<p><strong>4.StaggeredGridRecyclerView</strong> <br>
+<strong>4.1SGRV</strong> <br>
+<img src="https://img-blog.csdn.net/20180413130636826?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.recyclerview.StaggeredGridRecyclerView</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/grv"</span>
+    <span class="hljs-attribute">android:paddingRight</span>=<span class="hljs-value">"10dp"</span>
+    <span class="hljs-attribute">android:paddingBottom</span>=<span class="hljs-value">"10dp"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">com.cy.cyrvadapter.recyclerview.StaggeredGridRecyclerView</span>&gt;</span>
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.sgrv;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.support.v7.widget.RecyclerView;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.recyclerview.StaggeredGridRecyclerView;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.SGRVBean;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SGRVActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+    <span class="hljs-keyword">private</span> RVAdapter&lt;SGRVBean&gt; rvAdapter;
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sgrv);
+
+
+        List&lt;SGRVBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++) {
+            <span class="hljs-keyword">if</span> (i % <span class="hljs-number">5</span> == <span class="hljs-number">0</span>) {
+                list.add(<span class="hljs-keyword">new</span> SGRVBean(<span class="hljs-string">"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3367190441,1778923800&amp;fm=27&amp;gp=0.jpg"</span>,
+                        <span class="hljs-string">"接地极给客人就公开房间观看然后呢开飞机后肌肉及推介会IT界hi让他开户及"</span>));
+                <span class="hljs-keyword">continue</span>;
+
+            }
+            list.add(<span class="hljs-keyword">new</span> SGRVBean(<span class="hljs-string">"https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1523372810354&amp;di=f4e6cb5fbef06087acb322973b8cf432&amp;imgtype=0&amp;src=http%3A%2F%2Fimg3.duitang.com%2Fuploads%2Fitem%2F201605%2F11%2F20160511200420_WxrRN.jpeg"</span>,
+                    <span class="hljs-string">"个哥哥"</span>));
+        }
+        rvAdapter = <span class="hljs-keyword">new</span> RVAdapter&lt;SGRVBean&gt;(list) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(<span class="hljs-keyword">final</span> MyViewHolder holder, <span class="hljs-keyword">int</span> position, SGRVBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+
+                holder.setText(R.id.tv,bean.getText());
+
+                holder.setImage(R.id.iv,bean.getUrl());
+
+
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, SGRVBean bean) {
+                <span class="hljs-keyword">return</span> R.layout.item_sgrv;
+            }
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, SGRVBean bean) {
+
+                showToast(<span class="hljs-string">"点击"</span> + position);
+            }
+        };
+        ((StaggeredGridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, <span class="hljs-number">3</span>, RecyclerView.VERTICAL);
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}</code></pre>
+
+<p><strong>4.2SGRV+head+foot</strong> <br>
+<img src="https://img-blog.csdn.net/20180413130909337?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.recyclerview.StaggeredGridRecyclerView</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/grv"</span>
+    <span class="hljs-attribute">android:paddingRight</span>=<span class="hljs-value">"10dp"</span>
+    <span class="hljs-attribute">android:paddingBottom</span>=<span class="hljs-value">"10dp"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">com.cy.cyrvadapter.recyclerview.StaggeredGridRecyclerView</span>&gt;</span>
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.sgrv;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.support.v7.widget.RecyclerView;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.recyclerview.StaggeredGridRecyclerView;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.HRVBean;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SGRVHeadFootActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+    <span class="hljs-keyword">private</span> RVAdapter&lt;HRVBean&gt; rvAdapter;
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sgrvhead_foot);
+
+
+        List&lt;HRVBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">99</span>; i++) {
+            <span class="hljs-keyword">if</span> (i % <span class="hljs-number">5</span> == <span class="hljs-number">0</span>) {
+                list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic3));
+                <span class="hljs-keyword">continue</span>;
+
+            }
+            list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic7));
+        }
+        rvAdapter = <span class="hljs-keyword">new</span> RVAdapter&lt;HRVBean&gt;(list, <span class="hljs-keyword">true</span>,<span class="hljs-keyword">true</span>,<span class="hljs-keyword">true</span>) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToHeadView</span>(MyViewHolder holder) {
+                <span class="hljs-keyword">super</span>.bindDataToHeadView(holder);
+            }
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToFootView</span>(MyViewHolder holder) {
+                <span class="hljs-keyword">super</span>.bindDataToFootView(holder);
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, HRVBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+
+
+
+                holder.setImageResource(R.id.iv, bean.getResID());
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+                <span class="hljs-keyword">if</span> (position == <span class="hljs-number">0</span>) {
+                    <span class="hljs-keyword">return</span> R.layout.head;
+                }
+                <span class="hljs-keyword">if</span> (position == getItemCount() - <span class="hljs-number">1</span>) {
+                    <span class="hljs-keyword">return</span> R.layout.foot;
+                }
+                <span class="hljs-keyword">return</span> R.layout.item_grv;
+            }
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+
+                showToast(<span class="hljs-string">"点击"</span>+position);
+
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemHeadClick</span>() {
+                <span class="hljs-keyword">super</span>.onItemHeadClick();
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemFootClick</span>() {
+                <span class="hljs-keyword">super</span>.onItemFootClick();
+            }
+        };
+        ((StaggeredGridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, <span class="hljs-number">3</span>, RecyclerView.VERTICAL);
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+
+</code></pre>
+
+<p><strong>4.3SGRV+Refresh+LoadMore</strong> <br>
+<img src="https://img-blog.csdn.net/20180413131111106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述" title=""></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">com.cy.cyrvadapter.refreshrv.StaggeredGridRefreshLayout</span> <span class="hljs-attribute">xmlns:android</span>=<span class="hljs-value">"http://schemas.android.com/apk/res/android"</span>
+    <span class="hljs-attribute">xmlns:tools</span>=<span class="hljs-value">"http://schemas.android.com/tools"</span>
+    <span class="hljs-attribute">android:id</span>=<span class="hljs-value">"@+id/sgrl"</span>
+    <span class="hljs-attribute">android:layout_width</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_height</span>=<span class="hljs-value">"match_parent"</span>
+    <span class="hljs-attribute">android:layout_marginBottom</span>=<span class="hljs-value">"10dp"</span>
+    <span class="hljs-attribute">android:layout_marginRight</span>=<span class="hljs-value">"10dp"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">com.cy.cyrvadapter.refreshrv.StaggeredGridRefreshLayout</span>&gt;</span>
+</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs java"><span class="hljs-keyword">package</span> com.cy.recyclerviewadapter.activity.sgrv;
+
+<span class="hljs-keyword">import</span> android.os.Bundle;
+<span class="hljs-keyword">import</span> android.support.v7.widget.RecyclerView;
+<span class="hljs-keyword">import</span> android.view.View;
+
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.adapter.RVAdapter;
+<span class="hljs-keyword">import</span> com.cy.cyrvadapter.refreshrv.StaggeredGridRefreshLayout;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.BaseActivity;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.R;
+<span class="hljs-keyword">import</span> com.cy.recyclerviewadapter.bean.HRVBean;
+<span class="hljs-keyword">import</span> com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+<span class="hljs-keyword">import</span> com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+
+<span class="hljs-keyword">import</span> java.util.ArrayList;
+<span class="hljs-keyword">import</span> java.util.List;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SGRVRefreshLoadMoreActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseActivity</span> {</span>
+    <span class="hljs-keyword">private</span> RVAdapter&lt;HRVBean&gt; rvAdapter;
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sgrvrefresh_load_more);
+        List&lt;HRVBean&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">100</span>;i++){
+            <span class="hljs-keyword">if</span> (i%<span class="hljs-number">5</span>==<span class="hljs-number">0</span>){
+                list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic3));
+                <span class="hljs-keyword">continue</span>;
+
+            }
+            list.add(<span class="hljs-keyword">new</span> HRVBean(R.drawable.pic7));
+        }
+
+        rvAdapter=<span class="hljs-keyword">new</span> RVAdapter&lt;HRVBean&gt;(list) {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bindDataToView</span>(MyViewHolder holder, <span class="hljs-keyword">int</span> position, HRVBean bean, <span class="hljs-keyword">boolean</span> isSelected) {
+
+
+                holder.setImageResource(R.id.iv,bean.getResID());
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getItemLayoutID</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+                <span class="hljs-keyword">return</span> R.layout.item_grv;
+            }
+
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onItemClick</span>(<span class="hljs-keyword">int</span> position, HRVBean bean) {
+
+            }
+        };
+
+        ((StaggeredGridRefreshLayout)findViewById(R.id.sgrl)).setAdapter(rvAdapter, <span class="hljs-number">3</span>, RecyclerView.VERTICAL,<span class="hljs-keyword">new</span> RefreshListenerAdapter() {
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onRefresh</span>(TwinklingRefreshLayout refreshLayout) {
+                <span class="hljs-keyword">super</span>.onRefresh(refreshLayout);
+            }
+
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onLoadMore</span>(TwinklingRefreshLayout refreshLayout) {
+                <span class="hljs-keyword">super</span>.onLoadMore(refreshLayout);
+            }
+        });
+    }
+
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onClick</span>(View v) {
+
+    }
+}
+</code></pre></div></body>
+</html>
