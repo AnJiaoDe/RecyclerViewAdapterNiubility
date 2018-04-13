@@ -1,4 +1,14 @@
-https://github.com/437042721/RecyclerViewAdapter/blob/master/readme.html
+https://blog.csdn.net/confusing_awakening/article/details/78332215
+**使用方法**
+
+将libray模块复制到项目中,或者直接在build.gradle中依赖:
+
+```
+dependencies {
+	        compile 'com.github.437042721:RecyclerViewAdapter:1.1.1'
+	}
+```
+
 在没有万能RV适配器的时候是这样写代码的
 
 ```
@@ -450,7 +460,8 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
 
             }
         };
-        verticalRefreshLayout.setAdapter(rvAdapter, new RefreshListenerAdapter() {
+        verticalRefreshLayout.setAdapter(rvAdapter,  getResources().getColor(R.color.colorPrimary),
+                new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
@@ -534,7 +545,8 @@ public class VRRefreshActivity extends BaseActivity {
 
             }
         };
-        verticalRefreshLayout.setAdapter(rvAdapter, new BaseRefreshLayout.OnCYRefreshListener() {
+        verticalRefreshLayout.setAdapter(rvAdapter,  getResources().getColor(R.color.colorPrimary),
+                new BaseRefreshLayout.OnCYRefreshListener() {
             @Override
             public void onRefresh() {
 
@@ -547,6 +559,7 @@ public class VRRefreshActivity extends BaseActivity {
 
     }
 }
+
 
 ```
 **1.6VR+LoadMore**
@@ -613,7 +626,8 @@ public class VRLoadMoreActivity extends BaseActivity {
 
             }
         };
-        verticalRefreshLayout.setAdapter(rvAdapter, new BaseRefreshLayout.OnCYLoadMoreLister() {
+        verticalRefreshLayout.setAdapter(rvAdapter,  getResources().getColor(R.color.colorPrimary),
+                new BaseRefreshLayout.OnCYLoadMoreLister() {
             @Override
             public void onLoadMore() {
 
@@ -626,6 +640,7 @@ public class VRLoadMoreActivity extends BaseActivity {
 
     }
 }
+
 
 ```
 
@@ -996,20 +1011,6 @@ public class GRVHeadFootActivity extends BaseActivity {
 ![这里写图片描述](https://img-blog.csdn.net/20180413130342162?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
 ```
-<?xml version="1.0" encoding="utf-8"?>
-<com.cy.cyrvadapter.refreshrv.GridRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/grl"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="10dp"
-    android:layout_marginRight="10dp">
-
-</com.cy.cyrvadapter.refreshrv.GridRefreshLayout>
-
-```
-
-```
 package com.cy.recyclerviewadapter.activity.grv;
 
 import android.os.Bundle;
@@ -1064,7 +1065,8 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
             }
         };
 
-        ((GridRefreshLayout)findViewById(R.id.grl)).setAdapter(rvAdapter, 3, false, false, new RefreshListenerAdapter() {
+        ((GridRefreshLayout)findViewById(R.id.grl)).setAdapter(rvAdapter, 3, false, false,
+                getResources().getColor(R.color.colorPrimary),new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
@@ -1351,7 +1353,8 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
             }
         };
 
-        ((StaggeredGridRefreshLayout)findViewById(R.id.sgrl)).setAdapter(rvAdapter, 3, RecyclerView.VERTICAL,new RefreshListenerAdapter() {
+        ((StaggeredGridRefreshLayout)findViewById(R.id.sgrl)).setAdapter(rvAdapter, 3, RecyclerView.VERTICAL,
+                getResources().getColor(R.color.colorPrimary),new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
                 super.onRefresh(refreshLayout);
@@ -1370,4 +1373,9 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
     }
 }
 
+
 ```
+ 
+ 
+ 
+ 参考：[ListView、RecyclerView、GridView ](https://blog.csdn.net/confusing_awakening/article/category/6968968)
