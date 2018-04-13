@@ -1,5 +1,7 @@
 https://blog.csdn.net/confusing_awakening/article/details/78332215
 
+[APK下载](https://github.com/437042721/RecyclerViewAdapter/blob/master/app/build/outputs/apk/app-debug.apk)
+
 **使用方法**
 
 将libray模块复制到项目中,或者直接在build.gradle中依赖:
