@@ -78,7 +78,7 @@ dependencies {
 
 **1.VerticalRecyclerView**
 **1.1VR**
-![这里写图片描述](https://img-blog.csdn.net/20180413113246318?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/2.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -149,7 +149,7 @@ public class VRActivity extends BaseActivity {
 ```
 
 **1.2VR+MultiLayout**
-![这里写图片描述](https://img-blog.csdn.net/20180413121715601?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/3.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -293,7 +293,7 @@ public class VRMultiActivity extends BaseActivity {
 
 ```
 **1.3VR+head+foot**
-![这里写图片描述](https://img-blog.csdn.net/20180413122318313?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/4.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -396,7 +396,7 @@ public class VRHeadFootActivity extends BaseActivity {
 
 ```
 **1.4VR+Refresh+LoadMore**
-![这里写图片描述](https://img-blog.csdn.net/2018041312265859?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/5.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -483,8 +483,7 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
 
 ```
 **1.5VR+Refresh**
-
-![这里写图片描述](https://img-blog.csdn.net/20180413123006536?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/6.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -564,7 +563,7 @@ public class VRRefreshActivity extends BaseActivity {
 
 ```
 **1.6VR+LoadMore**
-![这里写图片描述](https://img-blog.csdn.net/2018041312313173?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/7.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -646,7 +645,7 @@ public class VRLoadMoreActivity extends BaseActivity {
 ```
 
 **1.7VR+Swipe**
-![这里写图片描述](https://img-blog.csdn.net/20180413123457843?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/8.gif)
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <com.cy.cyrvadapter.recyclerview.SwipeRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -749,7 +748,7 @@ public class VRSwipeActivity extends BaseActivity {
 
 ```
 **2.HorizontalRecyclerView**
-![这里写图片描述](https://img-blog.csdn.net/20180413123704732?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/9.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -827,7 +826,7 @@ public class HRVActivity extends BaseActivity {
 ```
 **3.GridRecyclerView**
 **3.1GRV**
-![这里写图片描述](https://img-blog.csdn.net/20180413124027874?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/10.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -904,7 +903,7 @@ public class GRVActivity extends BaseActivity {
 
 ```
 **3.2GRV+head+foot**
-![这里写图片描述](https://img-blog.csdn.net/20180413124242987?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/11.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -1009,7 +1008,7 @@ public class GRVHeadFootActivity extends BaseActivity {
 ```
 
 **3.3GRV+Refresh+LoadMore**
-![这里写图片描述](https://img-blog.csdn.net/20180413130342162?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/12.gif)
 
 ```
 package com.cy.recyclerviewadapter.activity.grv;
@@ -1089,7 +1088,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
 ```
 **4.StaggeredGridRecyclerView**
 **4.1SGRV**
-![这里写图片描述](https://img-blog.csdn.net/20180413130636826?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/13.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -1174,7 +1173,7 @@ public class SGRVActivity extends BaseActivity {
 }
 ```
 **4.2SGRV+head+foot**
-![这里写图片描述](https://img-blog.csdn.net/20180413130909337?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/14.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -1283,7 +1282,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
 
 ```
 **4.3SGRV+Refresh+LoadMore**
-![这里写图片描述](https://img-blog.csdn.net/20180413131111106?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvbmZ1c2luZ19hd2FrZW5pbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![Image text](gif/15.gif)
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
