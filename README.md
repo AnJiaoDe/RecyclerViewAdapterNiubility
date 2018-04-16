@@ -2,7 +2,7 @@ https://blog.csdn.net/confusing_awakening/article/details/78332215
 
 [APK下载](https://github.com/437042721/RecyclerViewAdapter/blob/master/app/build/outputs/apk/app-debug.apk)
 
-如有任何问题或者是建议，可以邮箱联系我！437042721@qq.com,QQ群:安娇德IT技术交流群757173381讨论，开源库会根据需求持续更新。
+如有任何问题或者是建议，可以QQ群:安娇德IT技术交流群757173381讨论，开源库会根据需求持续更新。
 
 **使用方法**
 
