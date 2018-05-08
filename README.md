@@ -107,19 +107,8 @@ dependencies {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.vr;
 
-import android.os.Bundle;
-import android.view.View;
 
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.VRBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VRActivity extends BaseActivity {
 
@@ -179,19 +168,7 @@ public class VRActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.vr;
 
-import android.os.Bundle;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.VRMultiBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VRMultiActivity extends BaseActivity {
 
@@ -324,19 +301,7 @@ public class VRMultiActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.vr;
 
-import android.os.Bundle;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.VRHeadFootBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VRHeadFootActivity extends BaseActivity {
 
@@ -430,21 +395,7 @@ public class VRHeadFootActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.vr;
 
-import android.os.Bundle;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.VRBean;
-import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
-import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VRRefreshLoadMoreActivity extends BaseActivity {
 
@@ -518,20 +469,7 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.vr;
 
-import android.os.Bundle;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.refreshrv.BaseRefreshLayout;
-import com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.VRBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VRRefreshActivity extends BaseActivity {
     private RVAdapter<VRBean> rvAdapter;
@@ -599,20 +537,6 @@ public class VRRefreshActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.vr;
-
-import android.os.Bundle;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.refreshrv.BaseRefreshLayout;
-import com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.VRBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VRLoadMoreActivity extends BaseActivity {
     private RVAdapter<VRBean> rvAdapter;
@@ -680,18 +604,7 @@ public class VRLoadMoreActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.vr;
 
-import android.os.Bundle;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.SwipeRVAdapter;
-import com.cy.cyrvadapter.recyclerview.SwipeRecyclerView;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.VRBean;
-
-import java.util.ArrayList;
 
 public class VRSwipeActivity extends BaseActivity {
     private SwipeRVAdapter<VRBean> rvAdapter;
@@ -785,19 +698,7 @@ public class VRSwipeActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.hr;
 
-import android.os.Bundle;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.recyclerview.HorizontalRecyclerView;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.HRVBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class HRVActivity extends BaseActivity {
 
@@ -867,19 +768,7 @@ public class HRVActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.grv;
 
-import android.os.Bundle;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.recyclerview.GridRecyclerView;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.HRVBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GRVActivity extends BaseActivity {
 
@@ -945,19 +834,6 @@ public class GRVActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.grv;
-
-import android.os.Bundle;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.recyclerview.GridRecyclerView;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.HRVBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GRVHeadFootActivity extends BaseActivity {
     private RVAdapter<HRVBean> rvAdapter;
@@ -1037,21 +913,7 @@ public class GRVHeadFootActivity extends BaseActivity {
 ![Image text](gif/12.gif)
 
 ```
-package com.cy.recyclerviewadapter.activity.grv;
 
-import android.os.Bundle;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.refreshrv.GridRefreshLayout;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.HRVBean;
-import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
-import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GRVRefreshLoadMoreActivity extends BaseActivity {
     private RVAdapter<HRVBean> rvAdapter;
@@ -1133,20 +995,6 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.sgrv;
-
-import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.recyclerview.StaggeredGridRecyclerView;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.SGRVBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SGRVActivity extends BaseActivity {
     private RVAdapter<SGRVBean> rvAdapter;
@@ -1219,20 +1067,7 @@ public class SGRVActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.sgrv;
 
-import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.recyclerview.StaggeredGridRecyclerView;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.HRVBean;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SGRVHeadFootActivity extends BaseActivity {
     private RVAdapter<HRVBean> rvAdapter;
@@ -1329,22 +1164,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
 ```
 
 ```
-package com.cy.recyclerviewadapter.activity.sgrv;
 
-import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.refreshrv.StaggeredGridRefreshLayout;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.HRVBean;
-import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
-import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SGRVRefreshLoadMoreActivity extends BaseActivity {
     private RVAdapter<HRVBean> rvAdapter;
@@ -1410,28 +1230,6 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
  
 
 ```
-package com.cy.cyrvadapter.adapter;
-
-import android.graphics.Bitmap;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.SparseArray;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import com.cy.cyrvadapter.bitmap.GlideUtils;
-
-import java.util.Collection;
-import java.util.List;
-
-/**
- * Created by lenovo on 2017/6/24.
- */
 
 public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.MyViewHolder> {
     private List<T> list_bean;
