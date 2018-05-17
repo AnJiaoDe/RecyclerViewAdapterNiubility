@@ -19,7 +19,8 @@ allprojects {
 
 ```
 dependencies {
-	        compile 'com.github.AnJiaoDe:RecyclerViewAdapter:1.1.1'
+	        implementation 'com.github.AnJiaoDe:RecyclerViewAdapter:V1.1.2'
+
 	}
 ```
 
@@ -1702,6 +1703,9 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.MyView
   - RecyclerView超级万能适配器（多布局、head、foot、下拉刷新、上拉自动更多、滑动删除）
   
   - VerticalRecyclerView、HorizontalRecyclerView、GridRecyclerView、StaggeredRecyclerView
+  
+ *V1.1.2*
+  - 更新依赖，下拉刷新、上拉更多，添加改变颜色的方法
 
 **License**
 
