@@ -19,10 +19,12 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.AnJiaoDe:RecyclerViewAdapter:V1.1.2'
-
+	        compile 'com.github.AnJiaoDe:RecyclerViewAdapter:V1.1.2'
 	}
+	
 ```
+**注意：如果sync报错，是因为和com.android.tools.build:gradle 3.0有关，**
+**可以改将compile改为implementation 或者api** 
 
 在没有万能RV适配器的时候是这样写代码的
 
