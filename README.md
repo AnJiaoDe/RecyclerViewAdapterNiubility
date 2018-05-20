@@ -6,6 +6,7 @@
 
 **使用方法**
 
+
 将libray模块复制到项目中,或者直接在build.gradle中依赖:
 
 ```
@@ -19,12 +20,39 @@ allprojects {
 
 ```
 dependencies {
-	        compile 'com.github.AnJiaoDe:RecyclerViewAdapter:V1.1.2'
+	        compile 'com.github.AnJiaoDe:RecyclerViewAdapter:V1.1.4'
 	}
 	
 ```
 **注意：如果sync报错，是因为和com.android.tools.build:gradle 3.0有关，**
 **可以改将compile改为implementation 或者api** 
+
+**目录**
+**1.VerticalRecyclerView**
+             
+      1.1VR
+      1.2VR+MultiLayout
+      1.3VR+head+foot
+      1.4VR+Refresh+LoadMore
+	  1.5VR+Refresh
+	  1.6VR+LoadMore
+	  1.7VR+Swipe
+	  1.8VR+Select
+**2.HorizontalRecyclerView**
+**3.GridRecyclerView**
+ 
+      3.1GRV
+      3.2GRV+head+foot
+	  3.3GRV+Refresh+LoadMore
+**4.StaggeredGridRecyclerView**
+
+	  4.1SGRV
+	  4.2SGRV+head+foot
+	  4.3SGRV+Refresh+LoadMore
+**5.extends RV(继承RVAdapter,扩展方法)**
+ **6.RVAdapter源码及API使用**
+ 
+[V1.1.3及其以下版本使用方法](https://github.com/AnJiaoDe/RecyclerViewAdapter/blob/master/README%20-%20V1.1.3%E5%8F%8A%E4%BB%A5%E4%B8%8B%E7%89%88%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.md)
 
 在没有万能RV适配器的时候是这样写代码的
 
@@ -67,7 +95,7 @@ dependencies {
         }
         rvAdapter = new RVAdapter<VRBean>(list) {
             @Override
-            public void bindDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindDataToView(MyViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -93,7 +121,6 @@ dependencies {
 ![Image text](gif/1.png)
 
 **1.VerticalRecyclerView**
-
 **1.1VR**
 
 ![Image text](gif/2.gif)
@@ -110,9 +137,6 @@ dependencies {
 ```
 
 ```
-
-
-
 public class VRActivity extends BaseActivity {
 
     private RVAdapter<VRBean> rvAdapter;
@@ -153,6 +177,7 @@ public class VRActivity extends BaseActivity {
     }
 }
 
+
 ```
 
 **1.2VR+MultiLayout**
@@ -171,8 +196,6 @@ public class VRActivity extends BaseActivity {
 ```
 
 ```
-
-
 public class VRMultiActivity extends BaseActivity {
 
     private RVAdapter<VRMultiBean> rvAdapter;
@@ -287,6 +310,7 @@ public class VRMultiActivity extends BaseActivity {
     }
 }
 
+
 ```
 **1.3VR+head+foot**
 
@@ -304,8 +328,6 @@ public class VRMultiActivity extends BaseActivity {
 ```
 
 ```
-
-
 public class VRHeadFootActivity extends BaseActivity {
 
     private RVAdapter<VRHeadFootBean> rvAdapter;
@@ -322,11 +344,14 @@ public class VRHeadFootActivity extends BaseActivity {
             @Override
             public void bindDataToHeadView(RVViewHolder holder) {
                 super.bindDataToHeadView(holder);
+                holder.setText(R.id.tv,"head傻逼");
             }
 
             @Override
             public void bindDataToFootView(RVViewHolder holder) {
                 super.bindDataToFootView(holder);
+                holder.setText(R.id.tv,"foot傻逼");
+
             }
 
             @Override
@@ -356,15 +381,14 @@ public class VRHeadFootActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemHeadClick() {
-                super.onItemHeadClick();
+            public void onHeadClick() {
                 showToast("点击head");
 
             }
 
             @Override
-            public void onItemFootClick() {
-                super.onItemFootClick();
+            public void onFootClick() {
+                super.onFootClick();
                 showToast("点击foot");
 
             }
@@ -378,6 +402,7 @@ public class VRHeadFootActivity extends BaseActivity {
 
     }
 }
+
 
 ```
 **1.4VR+Refresh+LoadMore**
@@ -398,8 +423,6 @@ public class VRHeadFootActivity extends BaseActivity {
 ```
 
 ```
-
-
 public class VRRefreshLoadMoreActivity extends BaseActivity {
 
     private RVAdapter<VRBean> rvAdapter;
@@ -472,8 +495,6 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
 ```
 
 ```
-
-
 public class VRRefreshActivity extends BaseActivity {
     private RVAdapter<VRBean> rvAdapter;
     private VerticalRefreshLayout verticalRefreshLayout;
@@ -540,7 +561,6 @@ public class VRRefreshActivity extends BaseActivity {
 ```
 
 ```
-
 public class VRLoadMoreActivity extends BaseActivity {
     private RVAdapter<VRBean> rvAdapter;
     private VerticalRefreshLayout verticalRefreshLayout;
@@ -588,7 +608,6 @@ public class VRLoadMoreActivity extends BaseActivity {
     }
 }
 
-
 ```
 
 **1.7VR+Swipe**
@@ -607,8 +626,6 @@ public class VRLoadMoreActivity extends BaseActivity {
 ```
 
 ```
-
-
 public class VRSwipeActivity extends BaseActivity {
     private SwipeRVAdapter<VRBean> rvAdapter;
 
@@ -684,6 +701,70 @@ public class VRSwipeActivity extends BaseActivity {
 }
 
 ```
+**1.8VR+Select**
+
+![Image text](gif/16.gif)
+
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<com.cy.cyrvadapter.recyclerview.VerticalRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vr"
+    android:layout_width="100dp"
+    android:layout_height="match_parent" />
+
+
+```
+
+```
+public class VRSelectActivity extends BaseActivity {
+    private RVAdapter<VRBean> rvAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_vrselect);
+        List<VRBean> list = new ArrayList<>();
+        for (int i=0;i<100;i++){
+            list.add(new VRBean("内容"+i));
+        }
+        rvAdapter = new RVAdapter<VRBean>(list) {
+            @Override
+            public void bindDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
+                holder.setText(R.id.tv, bean.getStr());
+
+                if (isSelected){
+                    holder.setBackgroundResource(R.id.tv,R.drawable.bg_shape);
+                }else {
+                    holder.getView(R.id.tv).setBackgroundColor(0x00000000);
+                }
+            }
+
+            @Override
+            public int getItemLayoutID(int position, VRBean bean) {
+                return R.layout.item_rv;
+            }
+
+
+
+            @Override
+            public void onItemClick(int position, VRBean bean) {
+                showToast("点击" + position);
+
+            }
+        };
+        ((VerticalRecyclerView) findViewById(R.id.vr)).setAdapter(rvAdapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+}
+
+```
+
 **2.HorizontalRecyclerView**
 
 ![Image text](gif/9.gif)
@@ -701,8 +782,6 @@ public class VRSwipeActivity extends BaseActivity {
 ```
 
 ```
-
-
 public class HRVActivity extends BaseActivity {
 
     private RVAdapter<HRVBean> rvAdapter;
@@ -751,7 +830,6 @@ public class HRVActivity extends BaseActivity {
 
 ```
 **3.GridRecyclerView**
-
 **3.1GRV**
 
 ![Image text](gif/10.gif)
@@ -771,8 +849,6 @@ public class HRVActivity extends BaseActivity {
 ```
 
 ```
-
-
 public class GRVActivity extends BaseActivity {
 
     private RVAdapter<HRVBean> rvAdapter;
@@ -820,6 +896,7 @@ public class GRVActivity extends BaseActivity {
 ```
 **3.2GRV+head+foot**
 
+
 ![Image text](gif/11.gif)
 
 ```
@@ -837,7 +914,6 @@ public class GRVActivity extends BaseActivity {
 ```
 
 ```
-
 public class GRVHeadFootActivity extends BaseActivity {
     private RVAdapter<HRVBean> rvAdapter;
 
@@ -891,13 +967,12 @@ public class GRVHeadFootActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemHeadClick() {
-                super.onItemHeadClick();
+            public void onHeadClick() {
             }
 
             @Override
-            public void onItemFootClick() {
-                super.onItemFootClick();
+            public void onFootClick() {
+                super.onFootClick();
             }
         };
         ((GridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, 3,true,true);
@@ -916,8 +991,20 @@ public class GRVHeadFootActivity extends BaseActivity {
 ![Image text](gif/12.gif)
 
 ```
+<?xml version="1.0" encoding="utf-8"?>
+<com.cy.cyrvadapter.refreshrv.GridRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/grl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="10dp"
+    android:layout_marginRight="10dp">
 
+</com.cy.cyrvadapter.refreshrv.GridRefreshLayout>
 
+```
+
+```
 public class GRVRefreshLoadMoreActivity extends BaseActivity {
     private RVAdapter<HRVBean> rvAdapter;
 
@@ -978,7 +1065,6 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
 
 ```
 **4.StaggeredGridRecyclerView**
-
 **4.1SGRV**
 
 ![Image text](gif/13.gif)
@@ -998,7 +1084,6 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
 ```
 
 ```
-
 public class SGRVActivity extends BaseActivity {
     private RVAdapter<SGRVBean> rvAdapter;
 
@@ -1070,8 +1155,6 @@ public class SGRVActivity extends BaseActivity {
 ```
 
 ```
-
-
 public class SGRVHeadFootActivity extends BaseActivity {
     private RVAdapter<HRVBean> rvAdapter;
 
@@ -1128,13 +1211,12 @@ public class SGRVHeadFootActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemHeadClick() {
-                super.onItemHeadClick();
+            public void onHeadClick() {
             }
 
             @Override
-            public void onItemFootClick() {
-                super.onItemFootClick();
+            public void onFootClick() {
+                super.onFootClick();
             }
         };
         ((StaggeredGridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, 3, RecyclerView.VERTICAL);
@@ -1167,8 +1249,6 @@ public class SGRVHeadFootActivity extends BaseActivity {
 ```
 
 ```
-
-
 public class SGRVRefreshLoadMoreActivity extends BaseActivity {
     private RVAdapter<HRVBean> rvAdapter;
 
@@ -1228,30 +1308,200 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
 
 
 ```
-  RVAdapter:
- 可自行在holder中扩展任意方法
  
+ **5.extends RV(继承RVAdapter,扩展方法)**
+
+![Image text](gif/17.gif)
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<com.cy.cyrvadapter.recyclerview.VerticalRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vr"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
 
 ```
 
+```
+public class ExtendsRVActivity extends BaseActivity {
+    private MyRVAdapter<VRBean> rvAdapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_extends_rv);
+        List<VRBean> list = new ArrayList<>();
+        for (int i=0;i<100;i++){
+            list.add(new VRBean("内容"+i));
+        }
+        rvAdapter = new MyRVAdapter<VRBean>(list) {
+
+
+            @Override
+            public void bindMyDataToView(MyViewHolder holder, int position, VRBean bean, boolean isSelected) {
+                holder.setText(R.id.tv, bean.getStr());
+
+                if (position==0||position==3){
+                    holder.setMyText(R.id.tv);
+                }
+            }
+
+            @Override
+            public int getItemLayoutID(int position, VRBean bean) {
+                return R.layout.item_rv;
+            }
+
+
+
+            @Override
+            public void onItemClick(int position, VRBean bean) {
+                showMyToast(ExtendsRVActivity.this);
+
+            }
+        };
+        ((VerticalRecyclerView) findViewById(R.id.vr)).setAdapter(rvAdapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+}
+
+```
+
+```
+/**
+ * 自定义全局RVAdapter继承自库中RVAdapter
+ */
+
+public abstract class MyRVAdapter<T> extends RVAdapter<T> {
+
+
+    //复写构造方法，可根据需要选择，但至少复写一个
+
+    public MyRVAdapter(List list_bean) {
+        super(list_bean);
+    }
+
+    public MyRVAdapter(List list, boolean isStaggeredGrid) {
+        super(list, isStaggeredGrid);
+    }
+
+    public MyRVAdapter(List list_bean, boolean haveHeadView, boolean haveFootView) {
+        super(list_bean, haveHeadView, haveFootView);
+    }
+
+    public MyRVAdapter(List list_bean, boolean isStaggeredGrid, boolean haveHeadView, boolean haveFootView) {
+        super(list_bean, isStaggeredGrid, haveHeadView, haveFootView);
+    }
+
+    //???????????????????????????????????????????????????????????????
+    //如果想在ViewHolder添加方法,复写父类方法，返回自定义的ViewHolder
+    @Override
+    public  RVViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
+
+    }
+
+    //如果想在ViewHolder添加方法,并且在实现或者复写的父类方法中使用自定义ViewHolder,父类ViewHolder必须强转为自定义的ViewHolder
+    @Override
+    public  void bindDataToView(RVViewHolder holder, int position, T bean, boolean isSelected) {
+        bindMyDataToView((MyViewHolder) holder, position, bean, isSelected);
+    }
+
+    @Override
+    public  void bindDataToHeadView(RVViewHolder holder) {
+        super.bindDataToHeadView(holder);
+
+        bindMyDataToHeadView((MyViewHolder) holder);
+    }
+
+    @Override
+    public  void bindDataToFootView(RVViewHolder holder) {
+        super.bindDataToFootView(holder);
+
+        bindMyDataToFootView((MyViewHolder) holder);
+    }
+
+    //???????????????????????????????????????????????????????????????????????
+    //填充数据，isSelected:整个RV做单选，点击到哪个，哪个就是选中状态
+    public abstract void bindMyDataToView(MyViewHolder holder, int position, T bean, boolean isSelected);
+
+    //添加头部 填充数据
+    public void bindMyDataToHeadView(MyViewHolder holder) {
+    }
+
+    //添加尾部 填充数据
+    public void bindMyDataToFootView(MyViewHolder holder) {
+    }
+    //???????????????????????????????????????????????????????????????????????
+
+    //自己添加任意方法
+    public void showMyToast(Context context) {
+        ToastUtils.showToast(context, "自定义MyRVAdapter中的方法");
+    }
+
+    //操作父类属性,List
+    public void operate() {
+        getList_bean().get(0);
+    }
+
+    /**
+     * 如果想在ViewHolder添加方法,首先继承RVAdapter,然后继承此类，并且实现其构造方法
+     */
+    public static class MyViewHolder extends RVAdapter.RVViewHolder {
+        public MyViewHolder(View itemView) {
+            super(itemView);
+        }
+        //自己添加任意方法
+        //设置TextView 的Text
+
+        public MyViewHolder setMyText(int tv_id) {
+            TextView tv = getView(tv_id);
+
+
+            tv.setText("自定义MyViewHolder中的方法");
+
+            return this;
+        }
+
+    }
+}
+
+```
+
+ **6.RVAdapter源码及API使用**
+ 
+
+```
 public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVViewHolder> {
-    private List<T> list_bean;
-    private boolean haveHeadView = false;
-    private boolean haveFootView = false;
-    private boolean isStaggeredGrid = false;
-    private int selectedPosition = 0; //默认选中位置
+    private List<T> list_bean;//数据源
+    private boolean haveHeadView = false;//是否需要head
+    private boolean haveFootView = false;//是否需要foot
+    private boolean isStaggeredGrid = false;//是否是瀑布流
+    private int selectedPosition = 0; //默认选中位置,整个RV做单选，点击到哪个，哪个就是选中状态
     private int lastSelectedPosition = 0; //上次选中位置
 
+    //以下是构造方法
 
     public RVAdapter(List<T> list_bean) {
         this.list_bean = list_bean;
     }
 
+    /*
+    是否使用瀑布流
+     */
     public RVAdapter(List<T> list, boolean isStaggeredGrid) {
         this.list_bean = list;
         this.isStaggeredGrid = isStaggeredGrid;
     }
 
+    /*
+    是否添加head,foot
+     */
     public RVAdapter(List<T> list_bean, boolean haveHeadView, boolean haveFootView) {
 
         this.haveFootView = haveFootView;
@@ -1276,68 +1526,75 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
     }
 
 
+    //??????????????????????????????????????????????????????????????????????????
+
+    //如果想添加方法而继承RVAdapter,记得复写此方法，并且return super
     @Override
-    public final RVViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public  RVViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new RVViewHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
     }
 
+    //如果想添加方法而继承RVAdapter,记得复写此方法，并且调用 super
+
     @Override
-    public final void onBindViewHolder(final RVViewHolder holder, final int position) {
+    public    void onBindViewHolder(final RVViewHolder holder, final int position) {
 
         if (isStaggeredGrid) {
             // 获取cardview的布局属性，记住这里要是布局的最外层的控件的布局属性，如果是里层的会报cast错误
             StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
 //         最最关键一步，设置当前view占满列数，这样就可以占据两列实现头部了
-            if (haveHeadView) {
-                if (haveFootView && position == getItemCount() - 1) {
+            if (position == 0) {
+                if (haveHeadView) {
                     layoutParams.setFullSpan(true);
 
                 }
-                if (position == 0) {
 
-                    layoutParams.setFullSpan(true);
-                }
-            } else if (haveFootView) {
-                if (position == getItemCount() - 1) {
-                    layoutParams.setFullSpan(true);
+            } else if (position == getItemCount() - 1 && haveFootView) {
 
-                }
+                layoutParams.setFullSpan(true);
+
+
             }
+
         }
+        //??????????????????????????????????????????????????????????????????????????
 
 
         //添加Item的点击事件
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (haveHeadView) {
-                    if (position == 0) {
-                        onItemHeadClick();
-                        return;
-                    }
-                    if (haveFootView) {
-                        if (position == getItemCount() - 1) {
-                            onItemFootClick();
-                            return;
-                        }
+
+                if (position == 0) {
+                    if (haveHeadView) {
+                        onHeadClick();
+                    } else {
+
+                        onItemClick(position, list_bean.get(position));
                     }
 
                 } else {
-                    if (haveFootView) {
-                        if (position == getItemCount() - 1) {
-                            onItemFootClick();
-                            return;
+                    if (position == getItemCount() - 1 && haveFootView) {
+
+                        onFootClick();
+
+                    } else {
+
+                        if (haveHeadView) {
+                            onItemClick(position, list_bean.get(position - 1));
+
+                        } else {
+
+                            onItemClick(position, list_bean.get(position));
                         }
                     }
-                }
-                if (haveHeadView) {
 
-                    onItemClick(position, list_bean.get(position - 1));
-                } else {
-                    onItemClick(position, list_bean.get(position));
 
                 }
 
+                //????????????????????????????????????????????????????????????????????????????????
+
+                //设置选中的item
                 if (lastSelectedPosition == position) {
                     return;
                 }
@@ -1349,68 +1606,86 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
 
             }
         });
-        //有头部
-        if (haveHeadView) {
-            if (position == 0) {
-//                if (list_bean.size() > 0) {
 
-                bindDataToHeadView(holder);
-//                }
-                return;
-            }
-            if (haveFootView) {
-                if (position == getItemCount() - 1) {
-//                    if (list_bean.size() > 0) {
-                    bindDataToFootView(holder);
-//                    }
-                    return;
+        //??????????????????????????????????????????????????????????????????????????
+        //添加Item的长按事件
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                if (position == 0) {
+                    if (haveHeadView) {
+                        onHeadLongClick();
+                    } else {
+
+                        onItemLongClick(position, list_bean.get(position));
+                    }
+
+                } else {
+                    if (position == getItemCount() - 1 && haveFootView) {
+
+                        onFootLongClick();
+
+                    } else {
+
+                        if (haveHeadView) {
+                            onItemLongClick(position, list_bean.get(position - 1));
+
+                        } else {
+
+                            onItemLongClick(position, list_bean.get(position));
+                        }
+                    }
+
+
                 }
+                return true;
+                //返回true，那么长按监听只执行长按监听中执行的代码，返回false，还会继续响应其他监听中的事件。
             }
-            if (position == selectedPosition) {
-                bindDataToView(holder, position - 1, list_bean.get(position - 1), true);
+        });
+        //??????????????????????????????????????????????????????????????????????????
 
+        //回调bindDataToView
+
+        if (position == 0) {
+            if (haveHeadView) {
+                bindDataToHeadView(holder);
             } else {
-                bindDataToView(holder, position - 1, list_bean.get(position - 1), false);
+
+                bindDataToView(holder, position, list_bean.get(position), position == selectedPosition ? true : false);
 
             }
 
         } else {
-            if (haveFootView) {
-                if (position == getItemCount() - 1) {
-//                    if (list_bean.size() > 0) {
+            if (position == getItemCount() - 1 && haveFootView) {
 
-                    bindDataToFootView(holder);
-//                    }
-                    return;
-                }
-            }
-            if (position == selectedPosition) {
-                bindDataToView(holder, position, list_bean.get(position), true);
+                bindDataToFootView(holder);
 
             } else {
-                bindDataToView(holder, position, list_bean.get(position), false);
+
+                if (haveHeadView) {
+                    bindDataToView(holder, position - 1, list_bean.get(position - 1), position == selectedPosition ? true : false);
 
 
+                } else {
+
+                    bindDataToView(holder, position, list_bean.get(position), position == selectedPosition ? true : false);
+
+                }
             }
+
+
         }
 
 
     }
 
-    //填充数据
-    public abstract void bindDataToView(RVViewHolder holder, int position, T bean, boolean isSelected);
 
-    //添加头部
-    public void bindDataToHeadView(RVViewHolder holder) {
-    }
-
-    //添加尾部
-    public void bindDataToFootView(RVViewHolder holder) {
-    }
+    //??????????????????????????????????????????????????????????????????????????
 
 
     @Override
-    public final int getItemCount() {
+    public    int getItemCount() {
         if (haveHeadView) {
             if (haveFootView) {
                 return list_bean.size() + 2;
@@ -1425,23 +1700,9 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
         return list_bean.size();
     }
 
-    public void removeFoot() {
-        haveFootView = false;
-        notifyDataSetChanged();
-    }
-
-    public boolean isHaveFootView() {
-        return haveFootView;
-    }
-
-    /*
-      取得ItemView的布局文件
-      @return
-     */
-    public abstract int getItemLayoutID(int position, T bean);
 
     @Override
-    public final int getItemViewType(int position) {
+    public   int getItemViewType(int position) {
 
         if (haveHeadView) {
             if (haveFootView && position == getItemCount() - 1) {
@@ -1460,10 +1721,19 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
         return getItemLayoutID(position, list_bean.get(position));
     }
 
-    public int getRealItemCount() {
-        return list_bean.size();
-    }
-   /*
+    //??????????????????????????????????????????????????????????????????????????
+
+
+    //填充数据，isSelected:整个RV做单选，点击到哪个，哪个就是选中状态
+    public abstract void bindDataToView(RVViewHolder holder, int position, T bean, boolean isSelected);
+
+    /*
+          取得ItemView的布局文件
+          @return
+         */
+    public abstract int getItemLayoutID(int position, T bean);
+
+      /*
       ItemView的单击事件
 
       @param position
@@ -1471,80 +1741,210 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
 
     public abstract void onItemClick(int position, T bean);
 
-    public void onItemHeadClick() {
+    //添加头部 填充数据
+    public void bindDataToHeadView(RVViewHolder holder) {
     }
 
-    public void onItemFootClick() {
+    //添加尾部 填充数据
+    public void bindDataToFootView(RVViewHolder holder) {
     }
 
-    public void onItemLongClick(int position) {
+    //head点击回调
+    public void onHeadClick() {
     }
 
-    public void onItemHeadLongClick() {
+    //foot 点击回调
+    public void onFootClick() {
     }
 
-    public void onItemFootLongClick() {
+    //长按回调
+    public void onItemLongClick(int position, T bean) {
     }
 
+    //head长按回调
+    public void onHeadLongClick() {
+    }
+
+    //foot长按回调
+    public void onFootLongClick() {
+    }
+
+    //??????????????????????????????????????????????????????????????????????????
+
+    /**
+     * @return真实count
+     */
+    public int getRealItemCount() {
+        return list_bean.size();
+    }
+
+    /**
+     * @return是否有head
+     */
+    public boolean isHaveHeadView() {
+        return haveHeadView;
+    }
+
+    /**
+     * @param haveHeadView 添加还是移除head
+     */
+    public void setHaveHeadView(boolean haveHeadView) {
+        if (this.haveHeadView == haveHeadView) {
+            return;
+        }
+        this.haveHeadView = haveHeadView;
+
+        notifyDataSetChanged();
+    }
+
+    /**
+     * @return是否有foot
+     */
+    public boolean isHaveFootView() {
+        return haveFootView;
+    }
+
+    /**
+     * @param haveFootView 添加还是移除foot
+     */
+    public void setHaveFootView(boolean haveFootView) {
+
+        if (this.haveFootView == haveFootView) {
+            return;
+        }
+        this.haveFootView = haveFootView;
+
+        notifyDataSetChanged();
+    }
+
+
+    /**
+     * @return是否是瀑布流
+     */
+    public boolean isStaggeredGrid() {
+        return isStaggeredGrid;
+    }
+
+    /**
+     * @param staggeredGrid 切换瀑布流
+     */
+    public void setStaggeredGrid(boolean staggeredGrid) {
+
+        if (this.isStaggeredGrid == staggeredGrid) {
+            return;
+        }
+        this.isStaggeredGrid = staggeredGrid;
+
+        notifyDataSetChanged();
+    }
+
+    //获取list
+    public List<T> getList_bean() {
+        return list_bean;
+    }
+    //更换List,并且notifyDataSetChanged
+
+    public void setList_bean(List<T> list_bean) {
+        this.list_bean = list_bean;
+        notifyDataSetChanged();
+    }
+
+
+    //??????????????????????????????????????????????????????????????????????????
+
+    //以下方法是操作数据项的
+
+    //删除相应position的数据Item ,并且notifyDataSetChanged
     public void remove(int position) {
         list_bean.remove(position);
         notifyDataSetChanged();
     }
 
+    //删除相应position的数据Item
+    public void removeNoNotify(int position) {
+        list_bean.remove(position);
+    }
+
+    //添加一条数据item,并且notifyDataSetChanged
     public void add(T bean) {
         list_bean.add(bean);
         notifyDataSetChanged();
     }
+    //添加一条数据item
 
     public void addNoNotify(T bean) {
         list_bean.add(bean);
     }
+    //添加一条数据item到position 0,并且notifyDataSetChanged
 
     public void addToHead(T bean) {
         list_bean.add(0, bean);
         notifyDataSetChanged();
     }
+    //添加一条数据item到position 0
 
-    public int addAll(List<T> beans) {
+    public void addToHeadNoNotify(T bean) {
+        list_bean.add(0, bean);
+    }
+    //添加List,并且notifyDataSetChanged
+
+    public void addAll(List<T> beans) {
         list_bean.addAll(beans);
 
         notifyDataSetChanged();
-        return beans.size();
+    }
+    //添加List
+
+    public void addAllNoNotify(List<T> beans) {
+        list_bean.addAll(beans);
+
     }
 
-    public void addAll(Collection<T> c) {
-        list_bean.addAll(c);
-        notifyDataSetChanged();
+    //先清空后添加List,并且notifyDataSetChanged
 
-
-    }
-
-    public int clearAddAll(List<T> beans) {
+    public void clearAddAll(List<T> beans) {
         list_bean.clear();
         list_bean.addAll(beans);
         notifyDataSetChanged();
 
-        return beans.size();
     }
+    //先清空后添加List
+
+    public void clearAddAllNoNotify(List<T> beans) {
+        list_bean.clear();
+        list_bean.addAll(beans);
+
+    }
+    //添加List到position 0,并且notifyDataSetChanged
 
     public void addAllToHead(List<T> beans) {
         list_bean.addAll(0, beans);
         notifyDataSetChanged();
     }
+    //添加List到position 0
+
+    public void addAllToHeadNoNotify(List<T> beans) {
+        list_bean.addAll(0, beans);
+    }
+    //清空list,并且notifyDataSetChanged
 
     public void clear() {
         list_bean.clear();
         notifyDataSetChanged();
     }
+    //清空list
 
     public void clearNoNotify() {
         list_bean.clear();
     }
 
-
-    public static class RVViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * 如果想在ViewHolder添加方法,首先继承RVAdapter,然后继承此类，并且实现其构造方法
+     */
+    public static   class RVViewHolder extends RecyclerView.ViewHolder {
         private SparseArray<View> array_view;
 
+        //构造方法
         public RVViewHolder(View itemView) {
             super(itemView);
 
@@ -1554,6 +1954,7 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
         }
 
 
+        //获取View
         public <T extends View> T getView(int viewId) {
 
             View view = array_view.get(viewId);
@@ -1564,130 +1965,158 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
             return (T) view;
         }
 
+        //???????????????????????????????????????????????????????????????
 
+
+        //设置View显示
         public RVViewHolder setVisible(int res_id) {
             getView(res_id).setVisibility(View.VISIBLE);
             return this;
         }
+        //设置View隐藏
 
         public RVViewHolder setInVisible(int res_id) {
             getView(res_id).setVisibility(View.INVISIBLE);
             return this;
         }
+        //设置View Gone
 
         public void setViewGone(int res_id) {
             getView(res_id).setVisibility(View.GONE);
         }
 
-        public void setViewVisible(int res_id) {
-            getView(res_id).setVisibility(View.VISIBLE);
-        }
 
+        //???????????????????????????????????????????????????????????????
 
-        public void setText(int tv_id, String text) {
-            TextView tv = getView(tv_id);
-
-
-            tv.setText(nullToString(text));
-        }
-
+        //null转空String
         public String nullToString(Object object) {
             return object == null ? "" : object.toString();
         }
 
-        public void setPriceText(int tv_id, String text) {
+        //设置TextView 的Text
+
+        public RVViewHolder setText(int tv_id, Object text) {
             TextView tv = getView(tv_id);
 
-            tv.setText("¥" + text);
+
+            tv.setText(nullToString(text));
+
+            return this;
         }
 
-        public void setCountText(int tv_id, String text) {
+
+        //设置TextView 前面+¥
+        public RVViewHolder setPriceText(int tv_id, Object text) {
             TextView tv = getView(tv_id);
 
-            tv.setText("x" + text);
+            tv.setText("¥" + String.valueOf(text));
+
+            return this;
         }
 
-        public void setCountText(int tv_id, int text) {
-            TextView tv = getView(tv_id);
 
-            tv.setText("x" + text);
-        }
-
-        public void setPriceText(int tv_id, int text) {
-            TextView tv = getView(tv_id);
-
-            tv.setText("¥" + text);
-        }
-
-        public void setPriceText(int tv_id, float text) {
-            TextView tv = getView(tv_id);
-
-            tv.setText("¥" + text);
-        }
-
-        public void setText(int tv_id, int text) {
-            TextView tv = getView(tv_id);
-            tv.setText(String.valueOf(nullToString(text)));
-        }
-
-        public void setTextColor(int tv_id, int color) {
+        //设置TextView或者EditText的TextColor
+        public RVViewHolder setTextColor(int tv_id, int color) {
             TextView tv = getView(tv_id);
             tv.setTextColor(color);
+
+            return this;
         }
+
+        //获取TextView的文本值(去空格)
 
         public String getTVText(int tv_id) {
             TextView tv = getView(tv_id);
             return tv.getText().toString().trim();
         }
 
+        //获取EditText的文本值(去空格)
         public String getETText(int tv_id) {
             EditText tv = getView(tv_id);
             return tv.getText().toString().trim();
         }
 
-        public void setBackgroundResource(int v_id, int resid) {
+        //???????????????????????????????????????????????????????????????
+
+        //设置View的BackgroundResource
+
+        public RVViewHolder setBackgroundResource(int v_id, int resid) {
             View view = getView(v_id);
             view.setBackgroundResource(resid);
+
+            return this;
         }
 
-        public void setImageBitmap(int v_id, Bitmap bitmap) {
-            ImageView view = getView(v_id);
+        //设置ImageView的ImageBitmap
+        public RVViewHolder setImageBitmap(int iv_id, Bitmap bitmap) {
+            ImageView view = getView(iv_id);
             view.setImageBitmap(bitmap);
+
+            return this;
         }
 
-        public void setImageResource(int v_id, int resID) {
-            ImageView view = getView(v_id);
+        //设置ImageView的ImageResource
+
+        public RVViewHolder setImageResource(int iv_id, int resID) {
+            ImageView view = getView(iv_id);
             view.setImageResource(resID);
+
+            return this;
         }
 
-        public void setImage(int iv_id, String url, int width, int height, int default_res) {
-            ImageView iv = getView(iv_id);
-
-            GlideUtils.loadImageByGlide(itemView.getContext(), url, iv, width, height);
-        }
-
-        public void setImage(int iv_id, String url) {
+        //???????????????????????????????????????????????????????????????
+        //Glide 记载网络和本地图片
+        public RVViewHolder setImage(int iv_id, String url) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(itemView.getContext(), url, iv);
-        }
 
-        public void setImage(int iv_id, String url, int width, int height) {
+            return this;
+        }
+        //Glide 记载网络和本地图片
+
+        public RVViewHolder setImage(int iv_id, String url, int default_res) {
+            ImageView iv = getView(iv_id);
+
+            GlideUtils.loadImageByGlide(itemView.getContext(), url, iv, default_res);
+
+            return this;
+        }
+        //Glide 记载网络和本地图片
+
+        public RVViewHolder setImage(int iv_id, String url, int width, int height) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(itemView.getContext(), url, iv, width, height);
+
+            return this;
+        }
+        //Glide 记载网络和本地图片
+
+        public RVViewHolder setImage(int iv_id, String url, int width, int height, int default_res) {
+            ImageView iv = getView(iv_id);
+
+            GlideUtils.loadImageByGlide(itemView.getContext(), url, iv, width, height, default_res);
+
+            return this;
         }
 
+
+        //???????????????????????????????????????????????????????????????
+        //设置进度条进度
         public void setProgress(int progress_id, int progress) {
             ProgressBar progressBar = getView(progress_id);
             progressBar.setProgress(progress);
 
         }
 
+        //???????????????????????????????????????????????????????????????
+        //设置点击监听
         public void setOnClickListener(int res_id, View.OnClickListener onClickListener) {
             getView(res_id).setOnClickListener(onClickListener);
         }
 
+        //设置长按监听
         public void setOnLongClickListener(int res_id, View.OnLongClickListener onLongClickListener) {
             getView(res_id).setOnLongClickListener(onLongClickListener);
         }
@@ -1695,9 +2124,13 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
 
     }
 
+
 }
 
 ```
+
+
+
 
  **更新日志**
  
@@ -1708,6 +2141,9 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
   
  *V1.1.2*
   - 更新依赖，下拉刷新、上拉更多，添加改变颜色的方法
+  
+   *V1.1.4*
+  - 添加自身RV单选功能，实现了可继承扩展RVAdapter和RVViewHolder 
 
 **License**
 
