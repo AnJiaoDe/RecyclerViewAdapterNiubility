@@ -80,7 +80,7 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
     //如果想添加方法而继承RVAdapter,记得复写此方法，并且调用 super
 
     @Override
-    public  void onBindViewHolder(final RVViewHolder holder, final int position) {
+    public    void onBindViewHolder(final RVViewHolder holder, final int position) {
 
         if (isStaggeredGrid) {
             // 获取cardview的布局属性，记住这里要是布局的最外层的控件的布局属性，如果是里层的会报cast错误
@@ -228,7 +228,7 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
 
 
     @Override
-    public  int getItemCount() {
+    public    int getItemCount() {
         if (haveHeadView) {
             if (haveFootView) {
                 return list_bean.size() + 2;
@@ -245,7 +245,7 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
 
 
     @Override
-    public  int getItemViewType(int position) {
+    public   int getItemViewType(int position) {
 
         if (haveHeadView) {
             if (haveFootView && position == getItemCount() - 1) {

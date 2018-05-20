@@ -31,7 +31,7 @@ public abstract class SwipeRVAdapter<T> extends RVAdapter<T> {
     }
 
     @Override
-    public final   void bindDataToView(RVViewHolder holder, final int position, final T bean, boolean isSelected) {
+    public    void bindDataToView(RVViewHolder holder, final int position, final T bean, boolean isSelected) {
 
         ((SwipeLayout) holder.itemView).getContentView().setOnClickListener(new View.OnClickListener() {
             @Override

@@ -38,26 +38,26 @@ public abstract class MyRVAdapter<T> extends RVAdapter<T> {
     //???????????????????????????????????????????????????????????????
     //如果想在ViewHolder添加方法,复写父类方法，返回自定义的ViewHolder
     @Override
-    public RVViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public  RVViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
 
     }
 
     //如果想在ViewHolder添加方法,并且在实现或者复写的父类方法中使用自定义ViewHolder,父类ViewHolder必须强转为自定义的ViewHolder
     @Override
-    public final void bindDataToView(RVViewHolder holder, int position, T bean, boolean isSelected) {
+    public  void bindDataToView(RVViewHolder holder, int position, T bean, boolean isSelected) {
         bindMyDataToView((MyViewHolder) holder, position, bean, isSelected);
     }
 
     @Override
-    public void bindDataToHeadView(RVViewHolder holder) {
+    public  void bindDataToHeadView(RVViewHolder holder) {
         super.bindDataToHeadView(holder);
 
         bindMyDataToHeadView((MyViewHolder) holder);
     }
 
     @Override
-    public void bindDataToFootView(RVViewHolder holder) {
+    public  void bindDataToFootView(RVViewHolder holder) {
         super.bindDataToFootView(holder);
 
         bindMyDataToFootView((MyViewHolder) holder);
