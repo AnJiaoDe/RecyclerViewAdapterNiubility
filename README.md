@@ -1,4 +1,5 @@
 
+
 [简书](https://www.jianshu.com/p/863b27551a79)
 
 [APK下载](https://github.com/437042721/RecyclerViewAdapter/blob/master/app/build/outputs/apk/app-debug.apk)
@@ -29,6 +30,7 @@ dependencies {
 **可以改将compile改为implementation 或者api** 
 
 **目录**
+集成了Glide开源库
 **1.VerticalRecyclerView**
              
       1.1VR
