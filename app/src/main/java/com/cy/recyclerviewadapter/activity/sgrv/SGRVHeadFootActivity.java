@@ -33,16 +33,16 @@ public class SGRVHeadFootActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<HRVBean>(list, true,true,true) {
             @Override
-            public void bindDataToHeadView(MyViewHolder holder) {
+            public void bindDataToHeadView(RVViewHolder holder) {
                 super.bindDataToHeadView(holder);
             }
             @Override
-            public void bindDataToFootView(MyViewHolder holder) {
+            public void bindDataToFootView(RVViewHolder holder) {
                 super.bindDataToFootView(holder);
             }
 
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, HRVBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, HRVBean bean, boolean isSelected) {
 
 
 
@@ -69,13 +69,12 @@ public class SGRVHeadFootActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemHeadClick() {
-                super.onItemHeadClick();
+            public void onHeadClick() {
             }
 
             @Override
-            public void onItemFootClick() {
-                super.onItemFootClick();
+            public void onFootClick() {
+                super.onFootClick();
             }
         };
         ((StaggeredGridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, 3, RecyclerView.VERTICAL);

@@ -19,6 +19,7 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn_horizontal).setOnClickListener(this);
         findViewById(R.id.btn_grid).setOnClickListener(this);
         findViewById(R.id.btn_staggeredGrid).setOnClickListener(this);
+        findViewById(R.id.btn_extendsRV).setOnClickListener(this);
     }
 
     @Override
@@ -38,6 +39,10 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_staggeredGrid:
                 startAppcompatActivity(SGRVTypeActivity.class);
+
+                break;
+            case R.id.btn_extendsRV:
+                startAppcompatActivity(ExtendsRVActivity.class);
 
                 break;
         }

@@ -35,7 +35,7 @@ public class SGRVActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<SGRVBean>(list) {
             @Override
-            public void bindDataToView(final MyViewHolder holder, int position, SGRVBean bean, boolean isSelected) {
+            public void bindDataToView(final RVViewHolder holder, int position, SGRVBean bean, boolean isSelected) {
 
                 holder.setText(R.id.tv,bean.getText());
 

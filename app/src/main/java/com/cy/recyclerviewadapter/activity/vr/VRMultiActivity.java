@@ -59,7 +59,7 @@ public class VRMultiActivity extends BaseActivity {
                 new int[]{R.drawable.pic1, R.drawable.pic2, R.drawable.pic3}, 1));
         rvAdapter = new RVAdapter<VRMultiBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, VRMultiBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, VRMultiBean bean, boolean isSelected) {
                 switch (bean.getView_type()) {
                     case 1:
                         holder.setText(R.id.tv,bean.getTitle());

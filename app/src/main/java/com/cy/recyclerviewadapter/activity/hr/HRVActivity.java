@@ -31,7 +31,7 @@ public class HRVActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<HRVBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, HRVBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, HRVBean bean, boolean isSelected) {
 
                 holder.setImageResource(R.id.iv,bean.getResID());
 

@@ -20,6 +20,7 @@ public class VRTypeActivity extends BaseActivity {
         findViewById(R.id.btn_vr_refresh).setOnClickListener(this);
         findViewById(R.id.btn_vr_more).setOnClickListener(this);
         findViewById(R.id.btn_swipe).setOnClickListener(this);
+        findViewById(R.id.btn_select).setOnClickListener(this);
     }
 
     @Override
@@ -51,6 +52,9 @@ public class VRTypeActivity extends BaseActivity {
                 break;
             case R.id.btn_swipe:
                 startAppcompatActivity(VRSwipeActivity.class);
+                break;
+            case R.id.btn_select:
+                startAppcompatActivity(VRSelectActivity.class);
                 break;
         }
     }

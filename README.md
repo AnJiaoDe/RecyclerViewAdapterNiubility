@@ -67,7 +67,7 @@ dependencies {
         }
         rvAdapter = new RVAdapter<VRBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -127,7 +127,7 @@ public class VRActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<VRBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -220,7 +220,7 @@ public class VRMultiActivity extends BaseActivity {
                 new int[]{R.drawable.pic1, R.drawable.pic2, R.drawable.pic3}, 1));
         rvAdapter = new RVAdapter<VRMultiBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, VRMultiBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, VRMultiBean bean, boolean isSelected) {
                 switch (bean.getView_type()) {
                     case 1:
                         holder.setText(R.id.tv,bean.getTitle());
@@ -320,17 +320,17 @@ public class VRHeadFootActivity extends BaseActivity {
         }
         rvAdapter=new RVAdapter<VRHeadFootBean>(list,true,true) {
             @Override
-            public void bindDataToHeadView(MyViewHolder holder) {
+            public void bindDataToHeadView(RVViewHolder holder) {
                 super.bindDataToHeadView(holder);
             }
 
             @Override
-            public void bindDataToFootView(MyViewHolder holder) {
+            public void bindDataToFootView(RVViewHolder holder) {
                 super.bindDataToFootView(holder);
             }
 
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, VRHeadFootBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, VRHeadFootBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
 
             }
@@ -416,7 +416,7 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<VRBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -489,7 +489,7 @@ public class VRRefreshActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<VRBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -557,7 +557,7 @@ public class VRLoadMoreActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<VRBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -627,7 +627,7 @@ public class VRSwipeActivity extends BaseActivity {
 
 
             @Override
-            public void bindSwipeDataToView(MyViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindSwipeDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
 
 
@@ -722,7 +722,7 @@ public class HRVActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<HRVBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, HRVBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, HRVBean bean, boolean isSelected) {
 
                 holder.setImageResource(R.id.iv,bean.getResID());
 
@@ -791,7 +791,7 @@ public class GRVActivity extends BaseActivity {
         }
         rvAdapter=new RVAdapter<HRVBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, HRVBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, HRVBean bean, boolean isSelected) {
 
 
                 holder.setImageResource(R.id.iv,bean.getResID());
@@ -857,16 +857,16 @@ public class GRVHeadFootActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<HRVBean>(list, true, true) {
             @Override
-            public void bindDataToHeadView(MyViewHolder holder) {
+            public void bindDataToHeadView(RVViewHolder holder) {
                 super.bindDataToHeadView(holder);
             }
             @Override
-            public void bindDataToFootView(MyViewHolder holder) {
+            public void bindDataToFootView(RVViewHolder holder) {
                 super.bindDataToFootView(holder);
             }
 
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, HRVBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, HRVBean bean, boolean isSelected) {
 
 
                 holder.setImageResource(R.id.iv, bean.getResID());
@@ -938,7 +938,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
 
         rvAdapter=new RVAdapter<HRVBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, HRVBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, HRVBean bean, boolean isSelected) {
 
 
                 holder.setImageResource(R.id.iv,bean.getResID());
@@ -1021,7 +1021,7 @@ public class SGRVActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<SGRVBean>(list) {
             @Override
-            public void bindDataToView(final MyViewHolder holder, int position, SGRVBean bean, boolean isSelected) {
+            public void bindDataToView(final RVViewHolder holder, int position, SGRVBean bean, boolean isSelected) {
 
                 holder.setText(R.id.tv,bean.getText());
 
@@ -1092,16 +1092,16 @@ public class SGRVHeadFootActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<HRVBean>(list, true,true,true) {
             @Override
-            public void bindDataToHeadView(MyViewHolder holder) {
+            public void bindDataToHeadView(RVViewHolder holder) {
                 super.bindDataToHeadView(holder);
             }
             @Override
-            public void bindDataToFootView(MyViewHolder holder) {
+            public void bindDataToFootView(RVViewHolder holder) {
                 super.bindDataToFootView(holder);
             }
 
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, HRVBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, HRVBean bean, boolean isSelected) {
 
 
 
@@ -1188,7 +1188,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
 
         rvAdapter=new RVAdapter<HRVBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, HRVBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, HRVBean bean, boolean isSelected) {
 
 
                 holder.setImageResource(R.id.iv,bean.getResID());
@@ -1234,7 +1234,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
 
 ```
 
-public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.MyViewHolder> {
+public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVViewHolder> {
     private List<T> list_bean;
     private boolean haveHeadView = false;
     private boolean haveFootView = false;
@@ -1277,12 +1277,12 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.MyView
 
 
     @Override
-    public final MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
+    public final RVViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new RVViewHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
     }
 
     @Override
-    public final void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public final void onBindViewHolder(final RVViewHolder holder, final int position) {
 
         if (isStaggeredGrid) {
             // 获取cardview的布局属性，记住这里要是布局的最外层的控件的布局属性，如果是里层的会报cast错误
@@ -1398,14 +1398,14 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.MyView
     }
 
     //填充数据
-    public abstract void bindDataToView(MyViewHolder holder, int position, T bean, boolean isSelected);
+    public abstract void bindDataToView(RVViewHolder holder, int position, T bean, boolean isSelected);
 
     //添加头部
-    public void bindDataToHeadView(MyViewHolder holder) {
+    public void bindDataToHeadView(RVViewHolder holder) {
     }
 
     //添加尾部
-    public void bindDataToFootView(MyViewHolder holder) {
+    public void bindDataToFootView(RVViewHolder holder) {
     }
 
 
@@ -1542,10 +1542,10 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.MyView
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class RVViewHolder extends RecyclerView.ViewHolder {
         private SparseArray<View> array_view;
 
-        public MyViewHolder(View itemView) {
+        public RVViewHolder(View itemView) {
             super(itemView);
 
 
@@ -1565,12 +1565,12 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.MyView
         }
 
 
-        public MyViewHolder setVisible(int res_id) {
+        public RVViewHolder setVisible(int res_id) {
             getView(res_id).setVisibility(View.VISIBLE);
             return this;
         }
 
-        public MyViewHolder setInVisible(int res_id) {
+        public RVViewHolder setInVisible(int res_id) {
             getView(res_id).setVisibility(View.INVISIBLE);
             return this;
         }

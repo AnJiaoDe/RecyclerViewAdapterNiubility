@@ -1,33 +1,35 @@
-package com.cy.recyclerviewadapter.activity.vr;
+package com.cy.recyclerviewadapter;
 
 import android.os.Bundle;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.RVAdapter;
 import com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
-import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VRActivity extends BaseActivity {
-
-    private RVAdapter<VRBean> rvAdapter;
+public class ExtendsRVActivity extends BaseActivity {
+    private MyRVAdapter<VRBean> rvAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vr2);
+        setContentView(R.layout.activity_extends_rv);
         List<VRBean> list = new ArrayList<>();
         for (int i=0;i<100;i++){
             list.add(new VRBean("内容"+i));
         }
-        rvAdapter = new RVAdapter<VRBean>(list) {
+        rvAdapter = new MyRVAdapter<VRBean>(list) {
+
+
             @Override
-            public void bindDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindMyDataToView(MyViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
+
+                if (position==0||position==3){
+                    holder.setMyText(R.id.tv);
+                }
             }
 
             @Override
@@ -39,7 +41,7 @@ public class VRActivity extends BaseActivity {
 
             @Override
             public void onItemClick(int position, VRBean bean) {
-                showToast("点击" + position);
+                showMyToast(ExtendsRVActivity.this);
 
             }
         };

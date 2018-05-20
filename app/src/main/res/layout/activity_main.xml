@@ -26,5 +26,10 @@ android:orientation="vertical">
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="StaggeredGridRecyclerview" />
+<Button
+    android:id="@+id/btn_extendsRV"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="extends RV" />
 
 </LinearLayout>

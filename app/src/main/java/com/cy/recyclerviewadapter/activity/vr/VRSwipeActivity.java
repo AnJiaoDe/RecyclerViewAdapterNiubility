@@ -29,7 +29,7 @@ public class VRSwipeActivity extends BaseActivity {
 
 
             @Override
-            public void bindSwipeDataToView(MyViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindSwipeDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
 
 

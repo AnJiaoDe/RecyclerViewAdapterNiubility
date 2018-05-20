@@ -31,7 +31,9 @@
         <activity android:name=".activity.sgrv.SGRVTypeActivity" />
         <activity android:name=".activity.sgrv.SGRVActivity" />
         <activity android:name=".activity.sgrv.SGRVRefreshLoadMoreActivity" />
-        <activity android:name=".activity.sgrv.SGRVHeadFootActivity"></activity>
+        <activity android:name=".activity.sgrv.SGRVHeadFootActivity" />
+        <activity android:name=".activity.vr.VRSelectActivity" />
+        <activity android:name=".ExtendsRVActivity"></activity>
     </application>
 
 </manifest>

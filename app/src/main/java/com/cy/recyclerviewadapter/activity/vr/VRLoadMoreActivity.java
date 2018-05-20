@@ -29,7 +29,7 @@ public class VRLoadMoreActivity extends BaseActivity {
         }
         rvAdapter = new RVAdapter<VRBean>(list) {
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 

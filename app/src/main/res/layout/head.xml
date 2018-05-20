@@ -6,6 +6,7 @@
     android:background="@drawable/line_bottom"
     android:gravity="center"
 
+    android:id="@+id/tv"
     android:layout_height="100dp">
 
 </TextView>

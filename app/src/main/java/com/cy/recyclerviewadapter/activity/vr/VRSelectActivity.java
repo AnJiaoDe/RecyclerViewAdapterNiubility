@@ -12,14 +12,13 @@ import com.cy.recyclerviewadapter.bean.VRBean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VRActivity extends BaseActivity {
-
+public class VRSelectActivity extends BaseActivity {
     private RVAdapter<VRBean> rvAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vr2);
+        setContentView(R.layout.activity_vrselect);
         List<VRBean> list = new ArrayList<>();
         for (int i=0;i<100;i++){
             list.add(new VRBean("内容"+i));
@@ -28,6 +27,12 @@ public class VRActivity extends BaseActivity {
             @Override
             public void bindDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
+
+                if (isSelected){
+                    holder.setBackgroundResource(R.id.tv,R.drawable.bg_shape);
+                }else {
+                    holder.getView(R.id.tv).setBackgroundColor(0x00000000);
+                }
             }
 
             @Override

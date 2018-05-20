@@ -26,17 +26,20 @@ public class VRHeadFootActivity extends BaseActivity {
         }
         rvAdapter=new RVAdapter<VRHeadFootBean>(list,true,true) {
             @Override
-            public void bindDataToHeadView(MyViewHolder holder) {
+            public void bindDataToHeadView(RVViewHolder holder) {
                 super.bindDataToHeadView(holder);
+                holder.setText(R.id.tv,"head傻逼");
             }
 
             @Override
-            public void bindDataToFootView(MyViewHolder holder) {
+            public void bindDataToFootView(RVViewHolder holder) {
                 super.bindDataToFootView(holder);
+                holder.setText(R.id.tv,"foot傻逼");
+
             }
 
             @Override
-            public void bindDataToView(MyViewHolder holder, int position, VRHeadFootBean bean, boolean isSelected) {
+            public void bindDataToView(RVViewHolder holder, int position, VRHeadFootBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
 
             }
@@ -62,15 +65,14 @@ public class VRHeadFootActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemHeadClick() {
-                super.onItemHeadClick();
+            public void onHeadClick() {
                 showToast("点击head");
 
             }
 
             @Override
-            public void onItemFootClick() {
-                super.onItemFootClick();
+            public void onFootClick() {
+                super.onFootClick();
                 showToast("点击foot");
 
             }
