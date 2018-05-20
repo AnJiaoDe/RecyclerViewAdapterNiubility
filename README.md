@@ -1,8 +1,9 @@
+
 [简书](https://www.jianshu.com/p/863b27551a79)
 
 [APK下载](https://github.com/437042721/RecyclerViewAdapter/blob/master/app/build/outputs/apk/app-debug.apk)
 
-
+**欢迎star,fork,follow**
 
 **使用方法**
 
