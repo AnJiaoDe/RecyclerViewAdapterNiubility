@@ -491,9 +491,10 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
             return;
         }
         this.selectedPosition = selectedPosition; //选择的position赋值给参数，
-        notifyItemChanged(selectedPosition);
-        notifyItemChanged(lastSelectedPosition);
+//        notifyItemChanged(selectedPosition);
+//        notifyItemChanged(lastSelectedPosition);
 
+        notifyDataSetChanged();
         lastSelectedPosition = selectedPosition;
 
     }
