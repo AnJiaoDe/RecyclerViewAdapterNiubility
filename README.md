@@ -22,7 +22,7 @@ allprojects {
 
 ```
 dependencies {
-	        compile 'com.github.AnJiaoDe:RecyclerViewAdapter:V1.1.4'
+	        compile 'com.github.AnJiaoDe:RecyclerViewAdapter:V1.1.5'
 	}
 	
 ```
@@ -2224,7 +2224,8 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
   
    *V1.1.4*
   - 添加自身RV单选功能，实现了可继承扩展RVAdapter和RVViewHolder 
-
+   *V1.1.5*
+  - 可修改选中的位置，比如商品分类左右列表，右边列表滑动 可选中左边列表
 **License**
 
  Copyright [cy] [name of copyright owner]
