@@ -481,6 +481,29 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
         list_bean.clear();
     }
 
+    public int getSelectedPosition() {
+        return selectedPosition;
+    }
+
+    public void setSelectedPosition(int selectedPosition) {
+        //设置选中的item
+        if (lastSelectedPosition == selectedPosition) {
+            return;
+        }
+        this.selectedPosition = selectedPosition; //选择的position赋值给参数，
+        notifyItemChanged(selectedPosition);
+        notifyItemChanged(lastSelectedPosition);
+
+        lastSelectedPosition = selectedPosition;
+
+    }
+
+    public int getLastSelectedPosition() {
+        return lastSelectedPosition;
+    }
+
+
+
     /**
      * 如果想在ViewHolder添加方法,首先继承RVAdapter,然后继承此类，并且实现其构造方法
      */
