@@ -194,6 +194,11 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
             if (haveHeadView) {
                 bindDataToHeadView(holder);
             } else {
+                if (haveFootView){
+
+                    bindDataToFootView(holder);
+                    return;
+                }
 
                 bindDataToView(holder, position, list_bean.get(position), position == selectedPosition ? true : false);
 
