@@ -22,7 +22,7 @@ allprojects {
 
 ```
 dependencies {
-	        compile 'com.github.AnJiaoDe:RecyclerViewAdapter:V1.1.6'
+	        compile 'com.github.AnJiaoDe:RecyclerViewAdapter:V1.2.1'
 	}
 	
 ```
@@ -2228,6 +2228,8 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
   - 可修改选中的位置，比如商品分类左右列表，右边列表滑动 可选中左边列表
     *V1.1.6*
   - 修正V1.1.5的BUG：快速滑动，选中位置，会出现空白
+     *V1.2.1*
+  - 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
 **License**
 
  Copyright [cy] [name of copyright owner]
