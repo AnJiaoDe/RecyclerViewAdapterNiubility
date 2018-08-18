@@ -1,5 +1,6 @@
 package com.cy.cyrvadapter.adapter;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -638,37 +639,64 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
 
         //???????????????????????????????????????????????????????????????
         //Glide 记载网络和本地图片
-        public RVViewHolder setImage(int iv_id, String url) {
+
+        /**
+         *
+         * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
+         * @param iv_id
+         * @param url
+         * @return
+         */
+        public RVViewHolder setImage(Context context,int iv_id, String url) {
             ImageView iv = getView(iv_id);
 
-            GlideUtils.loadImageByGlide(itemView.getContext(), url, iv);
+            GlideUtils.loadImageByGlide(context, url, iv);
 
             return this;
         }
         //Glide 记载网络和本地图片
-
-        public RVViewHolder setImage(int iv_id, String url, int default_res) {
+        /**
+         *
+         * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
+         * @param iv_id
+         * @param url
+         * @return
+         */
+        public RVViewHolder setImage(Context context,int iv_id, String url, int default_res) {
             ImageView iv = getView(iv_id);
 
-            GlideUtils.loadImageByGlide(itemView.getContext(), url, iv, default_res);
+            GlideUtils.loadImageByGlide(context, url, iv, default_res);
 
             return this;
         }
         //Glide 记载网络和本地图片
-
-        public RVViewHolder setImage(int iv_id, String url, int width, int height) {
+        /**
+         *
+         * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
+         * @param iv_id
+         * @param url
+         * @return
+         */
+        public RVViewHolder setImage(Context context,int iv_id, String url, int width, int height) {
             ImageView iv = getView(iv_id);
 
-            GlideUtils.loadImageByGlide(itemView.getContext(), url, iv, width, height);
+            GlideUtils.loadImageByGlide(context, url, iv, width, height);
 
             return this;
         }
         //Glide 记载网络和本地图片
+        /**
+         *
+         * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
+         * @param iv_id
+         * @param url
+         * @return
+         */
 
-        public RVViewHolder setImage(int iv_id, String url, int width, int height, int default_res) {
+        public RVViewHolder setImage(Context context,int iv_id, String url, int width, int height, int default_res) {
             ImageView iv = getView(iv_id);
 
-            GlideUtils.loadImageByGlide(itemView.getContext(), url, iv, width, height, default_res);
+            GlideUtils.loadImageByGlide(context, url, iv, width, height, default_res);
 
             return this;
         }
