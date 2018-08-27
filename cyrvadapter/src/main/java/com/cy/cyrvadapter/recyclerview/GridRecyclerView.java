@@ -17,6 +17,7 @@ public class GridRecyclerView extends RecyclerView {
         this(context, null);
     }
 
+
     public GridRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -24,8 +25,8 @@ public class GridRecyclerView extends RecyclerView {
 
     }
 
-    public void setAdapter(final Adapter adapter, int spanCount, boolean head, final boolean foot) {
-        final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount);
+    public void setAdapter(final Adapter adapter, int spanCount,int orientation, boolean head, final boolean foot) {
+        final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount,orientation,false);
         setLayoutManager(layoutManager);
 
         if (head) {
@@ -58,12 +59,26 @@ public class GridRecyclerView extends RecyclerView {
         setAdapter(adapter);
 
     }
+    public void setAdapter(final Adapter adapter, int spanCount,int orientation) {
+        final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount,orientation,false);
+        setLayoutManager(layoutManager);
 
-    public void setAdapter(Adapter adapter, int spanCount, boolean head, boolean foot, OnRVScrollListener onRVScrollListener) {
-        setAdapter(adapter, spanCount, head, foot);
+        setAdapter(adapter);
+
+    }
+
+    public void setAdapter(Adapter adapter, int spanCount,int orientation, boolean head, boolean foot, OnRVScrollListener onRVScrollListener) {
+        setAdapter(adapter, spanCount, orientation,head, foot);
 
         setOnScrollListener(onRVScrollListener);
     }
+    public void setAdapter(Adapter adapter, int spanCount,int orientation, OnRVScrollListener onRVScrollListener) {
+        setAdapter(adapter, spanCount, orientation);
+
+        setOnScrollListener(onRVScrollListener);
+    }
+
+
 
 
 }

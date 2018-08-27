@@ -36,6 +36,8 @@ public class StaggeredGridRecyclerView extends RecyclerView {
     }
 
 
+
+
     public void setAdapter(Adapter adapter, int spanCount, int orientation, OnRVScrollListener onRVScrollListener) {
         setAdapter(adapter, spanCount,orientation);
 

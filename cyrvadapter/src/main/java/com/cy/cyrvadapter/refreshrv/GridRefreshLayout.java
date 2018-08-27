@@ -36,15 +36,15 @@ public class GridRefreshLayout extends BaseRefreshLayout {
         return gridRecyclerView;
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,boolean head,boolean foot) {
-        gridRecyclerView.setAdapter(adapter,spanCount,head,foot);
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,int orientation,boolean head,boolean foot) {
+        gridRecyclerView.setAdapter(adapter,spanCount,orientation,head,foot);
 
     }
 
 
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,boolean head,boolean foot,int color, RefreshListenerAdapter refreshListenerAdapter) {
-        gridRecyclerView.setAdapter(adapter, spanCount,head,foot, new OnRVScrollListener() {
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,int orientation,boolean head,boolean foot,int color, RefreshListenerAdapter refreshListenerAdapter) {
+        gridRecyclerView.setAdapter(adapter, spanCount,orientation,head,foot, new OnRVScrollListener() {
             @Override
             public void rvStartLoadMore() {
                 startLoadMore();
@@ -53,13 +53,13 @@ public class GridRefreshLayout extends BaseRefreshLayout {
 
         setOnRefreshListener(refreshListenerAdapter,color);
     }
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,boolean head,boolean foot, int color,OnCYRefreshListener onCYRefreshListener) {
-        gridRecyclerView.setAdapter(adapter, spanCount,head,foot);
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,int orientation,boolean head,boolean foot, int color,OnCYRefreshListener onCYRefreshListener) {
+        gridRecyclerView.setAdapter(adapter, spanCount,orientation,head,foot);
 
         setOnCYRefreshListener(onCYRefreshListener,color);
     }
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,boolean head,boolean foot,int color, OnCYLoadMoreLister onCYLoadMoreLister) {
-        gridRecyclerView.setAdapter(adapter, spanCount,head,foot, new OnRVScrollListener() {
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,int orientation,boolean head,boolean foot,int color, OnCYLoadMoreLister onCYLoadMoreLister) {
+        gridRecyclerView.setAdapter(adapter, spanCount,orientation,head,foot, new OnRVScrollListener() {
             @Override
             public void rvStartLoadMore() {
                 startLoadMore();
