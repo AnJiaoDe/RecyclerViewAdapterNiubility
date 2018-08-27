@@ -1,6 +1,7 @@
 package com.cy.recyclerviewadapter.activity.grv;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.cy.cyrvadapter.adapter.RVAdapter;
@@ -73,7 +74,7 @@ public class GRVHeadFootActivity extends BaseActivity {
                 super.onFootClick();
             }
         };
-        ((GridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, 3,true,true);
+        ((GridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, 3, RecyclerView.VERTICAL,true,true);
     }
 
     @Override

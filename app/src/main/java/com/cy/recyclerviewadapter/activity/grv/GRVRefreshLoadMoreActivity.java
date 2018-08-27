@@ -1,6 +1,7 @@
 package com.cy.recyclerviewadapter.activity.grv;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.cy.cyrvadapter.adapter.RVAdapter;
@@ -52,7 +53,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
             }
         };
 
-        ((GridRefreshLayout)findViewById(R.id.grl)).setAdapter(rvAdapter, 3, false, false,
+        ((GridRefreshLayout)findViewById(R.id.grl)).setAdapter(rvAdapter, 3, RecyclerView.VERTICAL, false, false,
                 getResources().getColor(R.color.colorPrimary),new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {

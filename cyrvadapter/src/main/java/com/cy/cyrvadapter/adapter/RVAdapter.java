@@ -195,7 +195,7 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
             if (haveHeadView) {
                 bindDataToHeadView(holder);
             } else {
-                if (haveFootView){
+                if (haveFootView && getItemCount() == 1) {
 
                     bindDataToFootView(holder);
                     return;

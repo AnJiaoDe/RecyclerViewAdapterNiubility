@@ -1,6 +1,7 @@
 package com.cy.recyclerviewadapter;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.cy.cyrvadapter.adapter.RVAdapter;
@@ -49,7 +50,7 @@ public class MainActivity extends BaseActivity {
             }
         };
 
-        ((GridRecyclerView)findViewById(R.id.grv)).setAdapter(rvAdapter,3,false,true);
+        ((GridRecyclerView)findViewById(R.id.grv)).setAdapter(rvAdapter,3, RecyclerView.VERTICAL,false,true);
     }
 
     @Override

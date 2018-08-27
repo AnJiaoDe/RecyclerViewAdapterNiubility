@@ -39,7 +39,7 @@ public class SGRVActivity extends BaseActivity {
 
                 holder.setText(R.id.tv,bean.getText());
 
-                holder.setImage(R.id.iv,bean.getUrl());
+                holder.setImage(SGRVActivity.this,R.id.iv,bean.getUrl());
 
 
             }
