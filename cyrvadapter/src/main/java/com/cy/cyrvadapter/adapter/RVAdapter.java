@@ -74,14 +74,14 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
 
     //如果想添加方法而继承RVAdapter,记得复写此方法，并且return super
     @Override
-    public  RVViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RVViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new RVViewHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
     }
 
     //如果想添加方法而继承RVAdapter,记得复写此方法，并且调用 super
 
     @Override
-    public    void onBindViewHolder(final RVViewHolder holder, final int position) {
+    public void onBindViewHolder(final RVViewHolder holder, final int position) {
 
         if (isStaggeredGrid) {
             // 获取cardview的布局属性，记住这里要是布局的最外层的控件的布局属性，如果是里层的会报cast错误
@@ -113,7 +113,12 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
                     if (haveHeadView) {
                         onHeadClick();
                     } else {
+                        if (haveFootView) {
 
+                            onFootClick();
+                            return;
+
+                        }
                         onItemClick(position, list_bean.get(position));
                     }
 
@@ -234,7 +239,7 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
 
 
     @Override
-    public    int getItemCount() {
+    public int getItemCount() {
         if (haveHeadView) {
             if (haveFootView) {
                 return list_bean.size() + 2;
@@ -251,7 +256,7 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
 
 
     @Override
-    public   int getItemViewType(int position) {
+    public int getItemViewType(int position) {
 
         if (haveHeadView) {
             if (haveFootView && position == getItemCount() - 1) {
@@ -510,11 +515,10 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
     }
 
 
-
     /**
      * 如果想在ViewHolder添加方法,首先继承RVAdapter,然后继承此类，并且实现其构造方法
      */
-    public static   class RVViewHolder extends RecyclerView.ViewHolder {
+    public static class RVViewHolder extends RecyclerView.ViewHolder {
         private SparseArray<View> array_view;
 
         //构造方法
@@ -641,13 +645,12 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
         //Glide 记载网络和本地图片
 
         /**
-         *
          * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
          * @param iv_id
          * @param url
          * @return
          */
-        public RVViewHolder setImage(Context context,int iv_id, String url) {
+        public RVViewHolder setImage(Context context, int iv_id, String url) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(context, url, iv);
@@ -655,14 +658,14 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
             return this;
         }
         //Glide 记载网络和本地图片
+
         /**
-         *
          * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
          * @param iv_id
          * @param url
          * @return
          */
-        public RVViewHolder setImage(Context context,int iv_id, String url, int default_res) {
+        public RVViewHolder setImage(Context context, int iv_id, String url, int default_res) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(context, url, iv, default_res);
@@ -670,14 +673,14 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
             return this;
         }
         //Glide 记载网络和本地图片
+
         /**
-         *
          * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
          * @param iv_id
          * @param url
          * @return
          */
-        public RVViewHolder setImage(Context context,int iv_id, String url, int width, int height) {
+        public RVViewHolder setImage(Context context, int iv_id, String url, int width, int height) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(context, url, iv, width, height);
@@ -685,15 +688,15 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
             return this;
         }
         //Glide 记载网络和本地图片
+
         /**
-         *
          * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
          * @param iv_id
          * @param url
          * @return
          */
 
-        public RVViewHolder setImage(Context context,int iv_id, String url, int width, int height, int default_res) {
+        public RVViewHolder setImage(Context context, int iv_id, String url, int width, int height, int default_res) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(context, url, iv, width, height, default_res);

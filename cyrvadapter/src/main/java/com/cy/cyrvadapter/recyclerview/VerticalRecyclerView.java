@@ -11,12 +11,14 @@ import android.util.AttributeSet;
  */
 
 public class VerticalRecyclerView extends RecyclerView {
+    private Context context;
     public VerticalRecyclerView(Context context) {
         this(context, null);
     }
 
     public VerticalRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.context=context;
         setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
@@ -25,6 +27,9 @@ public class VerticalRecyclerView extends RecyclerView {
         super.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         setLayoutManager(linearLayoutManager);
+
+        addOnScrollListener(new OnCYScrollListener(context));
+
     }
 
     public void setAdapter(Adapter adapter, OnRVScrollListener onRVScrollListener){

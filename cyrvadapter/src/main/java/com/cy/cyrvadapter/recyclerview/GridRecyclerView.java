@@ -25,8 +25,8 @@ public class GridRecyclerView extends RecyclerView {
 
     }
 
-    public void setAdapter(final Adapter adapter, int spanCount,int orientation, boolean head, final boolean foot) {
-        final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount,orientation,false);
+    public void setAdapter(final Adapter adapter, int spanCount, int orientation, boolean head, final boolean foot) {
+        final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount, orientation, false);
         setLayoutManager(layoutManager);
 
         if (head) {
@@ -46,7 +46,7 @@ public class GridRecyclerView extends RecyclerView {
                     return position == 0 ? layoutManager.getSpanCount() : 1;
                 }
             });
-        }else if(foot){
+        } else if (foot) {
 
             layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
@@ -58,25 +58,34 @@ public class GridRecyclerView extends RecyclerView {
         }
         setAdapter(adapter);
 
+        addOnScrollListener(new OnCYScrollListener(context));
+
     }
-    public void setAdapter(final Adapter adapter, int spanCount,int orientation) {
-        final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount,orientation,false);
+
+    public void setAdapter(final Adapter adapter, int spanCount, int orientation) {
+        final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount, orientation, false);
         setLayoutManager(layoutManager);
 
+
         setAdapter(adapter);
+        addOnScrollListener(new OnCYScrollListener(context));
+
+
 
     }
 
-    public void setAdapter(Adapter adapter, int spanCount,int orientation, boolean head, boolean foot, OnRVScrollListener onRVScrollListener) {
-        setAdapter(adapter, spanCount, orientation,head, foot);
+    public void setAdapter(Adapter adapter, int spanCount, int orientation, boolean head, boolean foot, OnRVScrollListener onRVScrollListener) {
+        setAdapter(adapter, spanCount, orientation, head, foot);
 
-        setOnScrollListener(onRVScrollListener);
+        addOnScrollListener(onRVScrollListener);
     }
-    public void setAdapter(Adapter adapter, int spanCount,int orientation, OnRVScrollListener onRVScrollListener) {
+
+    public void setAdapter(Adapter adapter, int spanCount, int orientation, OnRVScrollListener onRVScrollListener) {
         setAdapter(adapter, spanCount, orientation);
 
-        setOnScrollListener(onRVScrollListener);
+        addOnScrollListener(onRVScrollListener);
     }
+
 
 
 

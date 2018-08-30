@@ -21,12 +21,14 @@ public class SwipeRecyclerView extends RecyclerView {
     private boolean canScrollVertically = true;
     private SwipeRVAdapter rvAdapter;
 
+    private Context context;
     public SwipeRecyclerView(Context context) {
         this(context, null);
     }
 
     public SwipeRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.context=context;
     }
 
     @Override
@@ -41,6 +43,7 @@ public class SwipeRecyclerView extends RecyclerView {
         };
         setLayoutManager(linearLayoutManager);
         this.rvAdapter = (SwipeRVAdapter) adapter;
+        addOnScrollListener(new OnCYScrollListener(context));
 
     }
 

@@ -33,6 +33,9 @@ public class StaggeredGridRecyclerView extends RecyclerView {
         setLayoutManager(layoutManager);
         setAdapter(adapter);
 
+        addOnScrollListener(new OnCYScrollListener(context));
+
+
     }
 
 

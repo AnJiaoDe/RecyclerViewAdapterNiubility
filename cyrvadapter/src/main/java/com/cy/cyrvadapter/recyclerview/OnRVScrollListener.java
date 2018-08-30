@@ -102,9 +102,16 @@ public abstract class OnRVScrollListener extends RecyclerView.OnScrollListener {
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         int visibleItemCount = layoutManager.getChildCount();
         int totalItemCount = layoutManager.getItemCount();
-        if (!recyclerView.canScrollVertically(1)&&visibleItemCount > 0 && currentScrollState == RecyclerView.SCROLL_STATE_IDLE &&
+        if (!recyclerView.canScrollVertically(1) && visibleItemCount > 0 && currentScrollState == RecyclerView.SCROLL_STATE_IDLE &&
                 (lastVisibleItemPosition) >= totalItemCount - 1) {
             rvStartLoadMore();
+        }
+
+        if (newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING) {
+
+            onGlideShouldPauseRequests();
+        } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+            onGlideShouldResumeRequests();
         }
     }
 
@@ -118,14 +125,24 @@ public abstract class OnRVScrollListener extends RecyclerView.OnScrollListener {
         }
         return max;
     }
-    public void onScrolledUp() {}
 
-    public void onScrolledDown() {}
+    public void onScrolledUp() {
+    }
 
-    public void onScrolledToTop() {}
+    public void onScrolledDown() {
+    }
 
-    public void onScrolledToBottom() {}
+    public void onScrolledToTop() {
+    }
+
+    public void onScrolledToBottom() {
+    }
 
     public abstract void rvStartLoadMore();
+
+    public abstract void onGlideShouldPauseRequests();
+
+    public abstract void onGlideShouldResumeRequests();
+
 
 }

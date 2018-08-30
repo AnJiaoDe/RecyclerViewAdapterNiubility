@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.cy.cyrvadapter.recyclerview.OnRVScrollListener;
 import com.cy.cyrvadapter.recyclerview.StaggeredGridRecyclerView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
@@ -47,6 +48,17 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
             public void rvStartLoadMore() {
                 startLoadMore();
             }
+            @Override
+            public void onGlideShouldPauseRequests() {
+                Glide.with(context).pauseRequests();
+
+            }
+
+            @Override
+            public void onGlideShouldResumeRequests() {
+                Glide.with(context).resumeRequests();
+
+            }
         });
 
         setOnRefreshListener(refreshListenerAdapter,color);
@@ -63,6 +75,17 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
             @Override
             public void rvStartLoadMore() {
                 startLoadMore();
+            }
+            @Override
+            public void onGlideShouldPauseRequests() {
+                Glide.with(context).pauseRequests();
+
+            }
+
+            @Override
+            public void onGlideShouldResumeRequests() {
+                Glide.with(context).resumeRequests();
+
             }
         });
 
