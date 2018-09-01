@@ -23,10 +23,9 @@ public class OnCYScrollListener extends RecyclerView.OnScrollListener {
         super.onScrollStateChanged(recyclerView, newState);
         if (newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING) {
 
-            Log.e("pauseRequests","++++++++++++++++++++++");
-            Glide.with(context).pauseRequests();
+            if (context!=null) Glide.with(context).pauseRequests();
         } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-            Glide.with(context).resumeRequests();
+            if (context!=null)  Glide.with(context).resumeRequests();
             Log.e("resumeRequests","++++++++++++++++++++++");
 
 

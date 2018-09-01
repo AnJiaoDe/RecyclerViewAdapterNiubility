@@ -50,13 +50,13 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
             }
             @Override
             public void onGlideShouldPauseRequests() {
-                Glide.with(context).pauseRequests();
+                if (context!=null)  Glide.with(context).pauseRequests();
 
             }
 
             @Override
             public void onGlideShouldResumeRequests() {
-                Glide.with(context).resumeRequests();
+                if (context!=null)  Glide.with(context).resumeRequests();
 
             }
         });
@@ -78,13 +78,13 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
             }
             @Override
             public void onGlideShouldPauseRequests() {
-                Glide.with(context).pauseRequests();
+                if (context!=null)    Glide.with(context).pauseRequests();
 
             }
 
             @Override
             public void onGlideShouldResumeRequests() {
-                Glide.with(context).resumeRequests();
+                if (context!=null)  Glide.with(context).resumeRequests();
 
             }
         });

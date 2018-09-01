@@ -1,6 +1,6 @@
 package com.cy.cyrvadapter.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -650,7 +650,7 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
          * @param url
          * @return
          */
-        public RVViewHolder setImage(Context context, int iv_id, String url) {
+        public RVViewHolder setImage(Activity context, int iv_id, String url) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(context, url, iv);
@@ -665,7 +665,7 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
          * @param url
          * @return
          */
-        public RVViewHolder setImage(Context context, int iv_id, String url, int default_res) {
+        public RVViewHolder setImage(Activity context, int iv_id, String url, int default_res) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(context, url, iv, default_res);
@@ -680,7 +680,7 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
          * @param url
          * @return
          */
-        public RVViewHolder setImage(Context context, int iv_id, String url, int width, int height) {
+        public RVViewHolder setImage(Activity context, int iv_id, String url, int width, int height) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(context, url, iv, width, height);
@@ -696,7 +696,7 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
          * @return
          */
 
-        public RVViewHolder setImage(Context context, int iv_id, String url, int width, int height, int default_res) {
+        public RVViewHolder setImage(Activity context, int iv_id, String url, int width, int height, int default_res) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(context, url, iv, width, height, default_res);
