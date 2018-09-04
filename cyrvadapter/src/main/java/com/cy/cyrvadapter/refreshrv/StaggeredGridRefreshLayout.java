@@ -42,49 +42,51 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
 
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation,int color, RefreshListenerAdapter refreshListenerAdapter) {
+    public void setAdapter(final Context context, RecyclerView.Adapter adapter, int spanCount, int orientation, int color, RefreshListenerAdapter refreshListenerAdapter) {
         staggeredGridRecyclerView.setAdapter(adapter, spanCount, orientation, new OnRVScrollListener() {
             @Override
             public void rvStartLoadMore() {
                 startLoadMore();
             }
+
             @Override
             public void onGlideShouldPauseRequests() {
-                if (context!=null)  Glide.with(context).pauseRequests();
+                Glide.with(context).pauseRequests();
 
             }
 
             @Override
             public void onGlideShouldResumeRequests() {
-                if (context!=null)  Glide.with(context).resumeRequests();
+                Glide.with(context).resumeRequests();
 
             }
         });
 
-        setOnRefreshListener(refreshListenerAdapter,color);
+        setOnRefreshListener(refreshListenerAdapter, color);
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation, int color,OnCYRefreshListener onCYRefreshListener) {
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation, int color, OnCYRefreshListener onCYRefreshListener) {
         staggeredGridRecyclerView.setAdapter(adapter, spanCount, orientation);
 
-        setOnCYRefreshListener(onCYRefreshListener,color);
+        setOnCYRefreshListener(onCYRefreshListener, color);
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation, int color,OnCYLoadMoreLister onCYLoadMoreLister) {
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation, int color, OnCYLoadMoreLister onCYLoadMoreLister) {
         staggeredGridRecyclerView.setAdapter(adapter, spanCount, orientation, new OnRVScrollListener() {
             @Override
             public void rvStartLoadMore() {
                 startLoadMore();
             }
+
             @Override
             public void onGlideShouldPauseRequests() {
-                if (context!=null)    Glide.with(context).pauseRequests();
+                if (context != null) Glide.with(context).pauseRequests();
 
             }
 
             @Override
             public void onGlideShouldResumeRequests() {
-                if (context!=null)  Glide.with(context).resumeRequests();
+                if (context != null) Glide.with(context).resumeRequests();
 
             }
         });
