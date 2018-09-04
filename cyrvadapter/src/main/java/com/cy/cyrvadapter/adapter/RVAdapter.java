@@ -1,6 +1,7 @@
 package com.cy.cyrvadapter.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -642,6 +643,21 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
         }
 
         //???????????????????????????????????????????????????????????????
+        //Glide 记载网络和本地图片
+
+        /**
+         * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
+         * @param iv_id
+         * @param url
+         * @return
+         */
+        public RVViewHolder setImage(Context context, int iv_id, String url) {
+            ImageView iv = getView(iv_id);
+
+            GlideUtils.loadImageByGlide(context, url, iv);
+
+            return this;
+        }
         //Glide 记载网络和本地图片
 
         /**
