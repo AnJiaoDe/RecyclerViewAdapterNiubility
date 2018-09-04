@@ -37,13 +37,62 @@ public class GridRefreshLayout extends BaseRefreshLayout {
         return gridRecyclerView;
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,int orientation,boolean head,boolean foot) {
-        gridRecyclerView.setAdapter(adapter,spanCount,orientation,head,foot);
 
+
+
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,int orientation,int color, RefreshListenerAdapter refreshListenerAdapter) {
+        gridRecyclerView.setAdapter(adapter, spanCount,orientation, new OnRVScrollListener() {
+            @Override
+            public void rvStartLoadMore() {
+                startLoadMore();
+            }
+
+            @Override
+            public void onGlideShouldPauseRequests() {
+                if (context!=null)  Glide.with(context).pauseRequests();
+
+            }
+
+            @Override
+            public void onGlideShouldResumeRequests() {
+                if (context!=null)  Glide.with(context).resumeRequests();
+
+            }
+        });
+
+        setOnRefreshListener(refreshListenerAdapter,color);
     }
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,int orientation, int color,OnCYRefreshListener onCYRefreshListener) {
+        gridRecyclerView.setAdapter(adapter, spanCount,orientation);
 
+        setOnCYRefreshListener(onCYRefreshListener,color);
+    }
+    public void setAdapter(RecyclerView.Adapter adapter, int spanCount,int orientation,int color, OnCYLoadMoreLister onCYLoadMoreLister) {
+        gridRecyclerView.setAdapter(adapter, spanCount,orientation, new OnRVScrollListener() {
+            @Override
+            public void rvStartLoadMore() {
+                startLoadMore();
+            }
 
+            @Override
+            public void onGlideShouldPauseRequests() {
 
+                if (context!=null){
+
+                    if (context!=null)  Glide.with(context).pauseRequests();
+                }
+
+            }
+
+            @Override
+            public void onGlideShouldResumeRequests() {
+                if (context!=null)  Glide.with(context).resumeRequests();
+
+            }
+        });
+
+        setOnCYLoadMoreLister(onCYLoadMoreLister, color);
+    }
     public void setAdapter(RecyclerView.Adapter adapter, int spanCount,int orientation,boolean head,boolean foot,int color, RefreshListenerAdapter refreshListenerAdapter) {
         gridRecyclerView.setAdapter(adapter, spanCount,orientation,head,foot, new OnRVScrollListener() {
             @Override
