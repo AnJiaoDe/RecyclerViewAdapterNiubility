@@ -24,10 +24,17 @@ public class HorizontalRecyclerView extends RecyclerView {
     }
 
 
-    public void setAdapter(Context context,Adapter adapter){
+    @Override
+    public void setAdapter(Adapter adapter) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         setLayoutManager(linearLayoutManager);
+
+        super.setAdapter(adapter);
+    }
+
+    public void setAdapter(Context context, Adapter adapter){
+
 
         addOnScrollListener(new OnRVScrollListener(context));
 
@@ -35,9 +42,7 @@ public class HorizontalRecyclerView extends RecyclerView {
 
     }
     public void setAdapter(Context context,Adapter adapter, OnRVLoadMoreScrollListener onRVLoadMoreScrollListener){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        setLayoutManager(linearLayoutManager);
+
 
         addOnScrollListener(onRVLoadMoreScrollListener);
         setAdapter(adapter);

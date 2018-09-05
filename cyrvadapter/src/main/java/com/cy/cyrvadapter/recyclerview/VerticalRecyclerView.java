@@ -21,17 +21,23 @@ public class VerticalRecyclerView extends RecyclerView {
     }
 
 
-    public void setAdapter(Context context,Adapter adapter){
+    @Override
+    public void setAdapter(Adapter adapter) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         setLayoutManager(linearLayoutManager);
+
+        super.setAdapter(adapter);
+    }
+
+    public void setAdapter(Context context, Adapter adapter){
+
 
         addOnScrollListener(new OnRVScrollListener(context));
 
         setAdapter(adapter);
     }
     public void setAdapter(Context context,Adapter adapter, OnRVLoadMoreScrollListener onRVLoadMoreScrollListener){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        setLayoutManager(linearLayoutManager);
+
 
         addOnScrollListener(onRVLoadMoreScrollListener);
 
