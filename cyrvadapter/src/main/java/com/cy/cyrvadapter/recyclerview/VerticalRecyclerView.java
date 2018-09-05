@@ -27,6 +27,7 @@ public class VerticalRecyclerView extends RecyclerView {
 
         addOnScrollListener(new OnRVScrollListener(context));
 
+        setAdapter(adapter);
     }
     public void setAdapter(Context context,Adapter adapter, OnRVLoadMoreScrollListener onRVLoadMoreScrollListener){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -34,6 +35,7 @@ public class VerticalRecyclerView extends RecyclerView {
 
         addOnScrollListener(onRVLoadMoreScrollListener);
 
+        setAdapter(adapter);
     }
 
 }
