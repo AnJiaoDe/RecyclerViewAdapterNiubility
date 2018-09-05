@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.cy.cyrvadapter.recyclerview.OnRVScrollListener;
+import com.cy.cyrvadapter.recyclerview.OnRVLoadMoreScrollListener;
 import com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 
@@ -15,7 +15,6 @@ import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
  */
 
 public class VerticalRefreshLayout extends BaseRefreshLayout {
-    private Context context;
     private VerticalRecyclerView verticalRecyclerView;
 
     public VerticalRefreshLayout(Context context) {
@@ -24,7 +23,6 @@ public class VerticalRefreshLayout extends BaseRefreshLayout {
 
     public VerticalRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
 
         verticalRecyclerView = new VerticalRecyclerView(context);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
@@ -36,51 +34,57 @@ public class VerticalRefreshLayout extends BaseRefreshLayout {
     public VerticalRecyclerView getRV() {
         return verticalRecyclerView;
     }
+
     public void setAdapter(RecyclerView.Adapter adapter) {
         verticalRecyclerView.setAdapter(adapter);
     }
-    public void setAdapter(RecyclerView.Adapter adapter, int color,RefreshListenerAdapter refreshListenerAdapter){
-        verticalRecyclerView.setAdapter(adapter, new OnRVScrollListener() {
+
+    public void setAdapter(final Context context, RecyclerView.Adapter adapter, int color, RefreshListenerAdapter refreshListenerAdapter) {
+        verticalRecyclerView.setAdapter(context, adapter, new OnRVLoadMoreScrollListener() {
             @Override
             public void rvStartLoadMore() {
                 startLoadMore();
             }
+
             @Override
             public void onGlideShouldPauseRequests() {
-                if (context!=null)  Glide.with(context).pauseRequests();
+                Glide.with(context).pauseRequests();
 
             }
 
             @Override
             public void onGlideShouldResumeRequests() {
-                if (context!=null) Glide.with(context).resumeRequests();
+                Glide.with(context).resumeRequests();
 
             }
         });
-        setOnRefreshListener(refreshListenerAdapter,color);
+        setOnRefreshListener(context, refreshListenerAdapter, color);
     }
-    public void setAdapter(RecyclerView.Adapter adapter,int color, OnCYRefreshListener onCYRefreshListener){
-        verticalRecyclerView.setAdapter(adapter);
-        setOnCYRefreshListener(onCYRefreshListener,color);
+
+    public void setAdapter(Context context, RecyclerView.Adapter adapter, int color, OnCYRefreshListener onCYRefreshListener) {
+        verticalRecyclerView.setAdapter(context, adapter);
+        setOnCYRefreshListener(context, onCYRefreshListener, color);
     }
-    public void setAdapter(RecyclerView.Adapter adapter,int color, OnCYLoadMoreLister onCYLoadMoreLister){
-        verticalRecyclerView.setAdapter(adapter, new OnRVScrollListener() {
+
+    public void setAdapter(final Context context, RecyclerView.Adapter adapter, int color, OnCYLoadMoreLister onCYLoadMoreLister) {
+        verticalRecyclerView.setAdapter(context, adapter, new OnRVLoadMoreScrollListener() {
             @Override
             public void rvStartLoadMore() {
                 startLoadMore();
             }
+
             @Override
             public void onGlideShouldPauseRequests() {
-                if (context!=null)  Glide.with(context).pauseRequests();
+                Glide.with(context).pauseRequests();
 
             }
 
             @Override
             public void onGlideShouldResumeRequests() {
-                if (context!=null)  Glide.with(context).resumeRequests();
+                Glide.with(context).resumeRequests();
 
             }
         });
-        setOnCYLoadMoreLister(onCYLoadMoreLister,color);
+        setOnCYLoadMoreLister(context,onCYLoadMoreLister, color);
     }
 }

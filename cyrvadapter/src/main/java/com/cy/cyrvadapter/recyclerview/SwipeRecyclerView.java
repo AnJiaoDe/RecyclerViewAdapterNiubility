@@ -43,7 +43,7 @@ public class SwipeRecyclerView extends RecyclerView {
         };
         setLayoutManager(linearLayoutManager);
         this.rvAdapter = (SwipeRVAdapter) adapter;
-        addOnScrollListener(new OnCYScrollListener(context));
+        addOnScrollListener(new OnRVScrollListener(context));
 
     }
 

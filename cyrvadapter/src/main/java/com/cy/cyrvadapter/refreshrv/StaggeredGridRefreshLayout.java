@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.cy.cyrvadapter.recyclerview.OnRVScrollListener;
+import com.cy.cyrvadapter.recyclerview.OnRVLoadMoreScrollListener;
 import com.cy.cyrvadapter.recyclerview.StaggeredGridRecyclerView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 
@@ -15,7 +15,6 @@ import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
  */
 
 public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
-    private Context context;
 
     private StaggeredGridRecyclerView staggeredGridRecyclerView;
 
@@ -25,7 +24,6 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
 
     public StaggeredGridRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
         staggeredGridRecyclerView = new StaggeredGridRecyclerView(context);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -37,13 +35,13 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
         return staggeredGridRecyclerView;
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation) {
-        staggeredGridRecyclerView.setAdapter(adapter, spanCount, orientation);
+    public void setAdapter(Context context, RecyclerView.Adapter adapter, int spanCount, int orientation) {
+        staggeredGridRecyclerView.setAdapter(context, adapter, spanCount, orientation);
 
     }
 
     public void setAdapter(final Context context, RecyclerView.Adapter adapter, int spanCount, int orientation, int color, RefreshListenerAdapter refreshListenerAdapter) {
-        staggeredGridRecyclerView.setAdapter(adapter, spanCount, orientation, new OnRVScrollListener() {
+        staggeredGridRecyclerView.setAdapter(context, adapter, spanCount, orientation, new OnRVLoadMoreScrollListener() {
             @Override
             public void rvStartLoadMore() {
                 startLoadMore();
@@ -62,17 +60,17 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
             }
         });
 
-        setOnRefreshListener(refreshListenerAdapter, color);
+        setOnRefreshListener(context, refreshListenerAdapter, color);
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation, int color, OnCYRefreshListener onCYRefreshListener) {
-        staggeredGridRecyclerView.setAdapter(adapter, spanCount, orientation);
+    public void setAdapter(Context context, RecyclerView.Adapter adapter, int spanCount, int orientation, int color, OnCYRefreshListener onCYRefreshListener) {
+        staggeredGridRecyclerView.setAdapter(context, adapter, spanCount, orientation);
 
-        setOnCYRefreshListener(onCYRefreshListener, color);
+        setOnCYRefreshListener(context, onCYRefreshListener, color);
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter, int spanCount, int orientation, int color, OnCYLoadMoreLister onCYLoadMoreLister) {
-        staggeredGridRecyclerView.setAdapter(adapter, spanCount, orientation, new OnRVScrollListener() {
+    public void setAdapter(final Context context, RecyclerView.Adapter adapter, int spanCount, int orientation, int color, OnCYLoadMoreLister onCYLoadMoreLister) {
+        staggeredGridRecyclerView.setAdapter(context, adapter, spanCount, orientation, new OnRVLoadMoreScrollListener() {
             @Override
             public void rvStartLoadMore() {
                 startLoadMore();
@@ -80,17 +78,17 @@ public class StaggeredGridRefreshLayout extends BaseRefreshLayout {
 
             @Override
             public void onGlideShouldPauseRequests() {
-                if (context != null) Glide.with(context).pauseRequests();
+                Glide.with(context).pauseRequests();
 
             }
 
             @Override
             public void onGlideShouldResumeRequests() {
-                if (context != null) Glide.with(context).resumeRequests();
+                Glide.with(context).resumeRequests();
 
             }
         });
 
-        setOnCYLoadMoreLister(onCYLoadMoreLister, color);
+        setOnCYLoadMoreLister(context, onCYLoadMoreLister, color);
     }
 }

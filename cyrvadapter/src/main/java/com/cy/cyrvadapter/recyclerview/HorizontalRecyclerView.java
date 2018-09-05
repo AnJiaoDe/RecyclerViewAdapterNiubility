@@ -11,7 +11,6 @@ import android.util.AttributeSet;
  */
 
 public class HorizontalRecyclerView extends RecyclerView {
-    private Context context;
     public HorizontalRecyclerView(Context context) {
         this(context, null);
     }
@@ -20,26 +19,24 @@ public class HorizontalRecyclerView extends RecyclerView {
         super(context, attrs);
 
 
-        this.context=context;
         setOverScrollMode(OVER_SCROLL_NEVER);
 
     }
 
-    @Override
-    public void setAdapter(Adapter adapter) {
-        super.setAdapter(adapter);
+
+    public void setAdapter(Context context,Adapter adapter){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         setLayoutManager(linearLayoutManager);
 
-        addOnScrollListener(new OnCYScrollListener(context));
-
-
+        addOnScrollListener(new OnRVScrollListener(context));
     }
-    public void setAdapter(Adapter adapter, OnRVScrollListener onRVScrollListener){
-        setAdapter(adapter);
+    public void setAdapter(Context context,Adapter adapter, OnRVLoadMoreScrollListener onRVLoadMoreScrollListener){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        setLayoutManager(linearLayoutManager);
 
-        setOnScrollListener(onRVScrollListener);
+        addOnScrollListener(onRVLoadMoreScrollListener);
     }
 
 

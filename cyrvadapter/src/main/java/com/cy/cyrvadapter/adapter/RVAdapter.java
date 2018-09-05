@@ -1,6 +1,5 @@
 package com.cy.cyrvadapter.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
@@ -648,7 +647,8 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
         /**
          * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
          * @param iv_id
-         * @param url
+         * @param url              最好使用getApplicationContext否则Glide容易内存泄漏
+
          * @return
          */
         public RVViewHolder setImage(Context context, int iv_id, String url) {
@@ -658,30 +658,16 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
 
             return this;
         }
+
         //Glide 记载网络和本地图片
 
         /**
          * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
          * @param iv_id
-         * @param url
+         * @param url 最好使用getApplicationContext否则Glide容易内存泄漏
          * @return
          */
-        public RVViewHolder setImage(Activity context, int iv_id, String url) {
-            ImageView iv = getView(iv_id);
-
-            GlideUtils.loadImageByGlide(context, url, iv);
-
-            return this;
-        }
-        //Glide 记载网络和本地图片
-
-        /**
-         * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
-         * @param iv_id
-         * @param url
-         * @return
-         */
-        public RVViewHolder setImage(Activity context, int iv_id, String url, int default_res) {
+        public RVViewHolder setImage(Context context, int iv_id, String url, int default_res) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(context, url, iv, default_res);
@@ -693,10 +679,10 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
         /**
          * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
          * @param iv_id
-         * @param url
+         * @param url 最好使用getApplicationContext否则Glide容易内存泄漏
          * @return
          */
-        public RVViewHolder setImage(Activity context, int iv_id, String url, int width, int height) {
+        public RVViewHolder setImage(Context context, int iv_id, String url, int width, int height) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(context, url, iv, width, height);
@@ -708,11 +694,11 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
         /**
          * @param context 注意：context必须传入fragment级别以上，不然会导致fragment或者activity被回收后，glide依然在执行任务
          * @param iv_id
-         * @param url
+         * @param url 最好使用getApplicationContext否则Glide容易内存泄漏
          * @return
          */
 
-        public RVViewHolder setImage(Activity context, int iv_id, String url, int width, int height, int default_res) {
+        public RVViewHolder setImage(Context context, int iv_id, String url, int width, int height, int default_res) {
             ImageView iv = getView(iv_id);
 
             GlideUtils.loadImageByGlide(context, url, iv, width, height, default_res);

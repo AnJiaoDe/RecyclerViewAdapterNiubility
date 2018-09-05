@@ -45,7 +45,7 @@ public class VRLoadMoreActivity extends BaseActivity {
 
             }
         };
-        verticalRefreshLayout.setAdapter(rvAdapter,  getResources().getColor(R.color.colorPrimary),
+        verticalRefreshLayout.setAdapter(getApplicationContext(),rvAdapter,  getResources().getColor(R.color.colorPrimary),
                 new BaseRefreshLayout.OnCYLoadMoreLister() {
             @Override
             public void onLoadMore() {

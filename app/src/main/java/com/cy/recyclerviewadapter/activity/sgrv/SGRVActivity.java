@@ -56,7 +56,7 @@ public class SGRVActivity extends BaseActivity {
                 showToast("点击" + position);
             }
         };
-        ((StaggeredGridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, 3, RecyclerView.VERTICAL);
+        ((StaggeredGridRecyclerView) findViewById(R.id.grv)).setAdapter(getApplicationContext(),rvAdapter, 3, RecyclerView.VERTICAL);
     }
 
     @Override

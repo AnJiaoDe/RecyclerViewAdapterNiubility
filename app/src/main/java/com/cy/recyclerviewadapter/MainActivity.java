@@ -50,7 +50,7 @@ public class MainActivity extends BaseActivity {
             }
         };
 
-        ((GridRecyclerView)findViewById(R.id.grv)).setAdapter(rvAdapter,3, RecyclerView.VERTICAL,false,true);
+        ((GridRecyclerView)findViewById(R.id.grv)).setAdapter(getApplicationContext(),rvAdapter,3, RecyclerView.VERTICAL,false,true);
     }
 
     @Override

@@ -48,7 +48,7 @@ public class GRVActivity extends BaseActivity {
 
             }
         };
-        ((GridRecyclerView)findViewById(R.id.grv)).setAdapter(rvAdapter,3, RecyclerView.VERTICAL,false,false);
+        ((GridRecyclerView)findViewById(R.id.grv)).setAdapter(getApplicationContext(),rvAdapter,3, RecyclerView.VERTICAL,false,false);
     }
 
     @Override

@@ -53,7 +53,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
             }
         };
 
-        ((GridRefreshLayout)findViewById(R.id.grl)).setAdapter(rvAdapter, 3, RecyclerView.VERTICAL, false, false,
+        ((GridRefreshLayout)findViewById(R.id.grl)).setAdapter(getApplicationContext(),rvAdapter, 3, RecyclerView.VERTICAL, false, false,
                 getResources().getColor(R.color.colorPrimary),new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {

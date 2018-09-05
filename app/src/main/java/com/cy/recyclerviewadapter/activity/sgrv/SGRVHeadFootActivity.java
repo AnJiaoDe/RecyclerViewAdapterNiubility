@@ -77,7 +77,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
                 super.onFootClick();
             }
         };
-        ((StaggeredGridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, 3, RecyclerView.VERTICAL);
+        ((StaggeredGridRecyclerView) findViewById(R.id.grv)).setAdapter(getApplicationContext(),rvAdapter, 3, RecyclerView.VERTICAL);
     }
 
     @Override

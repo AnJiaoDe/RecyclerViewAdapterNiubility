@@ -52,7 +52,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
             }
         };
 
-        ((StaggeredGridRefreshLayout)findViewById(R.id.sgrl)).setAdapter(rvAdapter, 3, RecyclerView.VERTICAL,
+        ((StaggeredGridRefreshLayout)findViewById(R.id.sgrl)).setAdapter(getApplicationContext(),rvAdapter, 3, RecyclerView.VERTICAL,
                 getResources().getColor(R.color.colorPrimary),new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {

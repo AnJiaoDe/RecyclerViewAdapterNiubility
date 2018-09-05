@@ -13,7 +13,6 @@ import com.lcodecore.tkrefreshlayout.header.progresslayout.ProgressLayout;
  */
 
 public class BaseRefreshLayout extends TwinklingRefreshLayout {
-    private Context context;
 
     public BaseRefreshLayout(Context context) {
         this(context, null);
@@ -22,13 +21,12 @@ public class BaseRefreshLayout extends TwinklingRefreshLayout {
     public BaseRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        this.context = context;
 
 
     }
 
 
-    public void setOnCYRefreshListener(final OnCYRefreshListener onCYRefreshListener,int color) {
+    public void setOnCYRefreshListener(Context context,final OnCYRefreshListener onCYRefreshListener,int color) {
         ProgressLayout progressLayout = new ProgressLayout(context);
 
 
@@ -50,7 +48,7 @@ public class BaseRefreshLayout extends TwinklingRefreshLayout {
 
     }
 
-    public void setOnCYLoadMoreLister(final OnCYLoadMoreLister onCYLoadMoreLister,int color) {
+    public void setOnCYLoadMoreLister(Context context,final OnCYLoadMoreLister onCYLoadMoreLister,int color) {
         BallPulseView ballPulseView = new BallPulseView(context);
 
 
@@ -76,7 +74,7 @@ public class BaseRefreshLayout extends TwinklingRefreshLayout {
 
 
     }
-    public void setOnRefreshListener(RefreshListenerAdapter refreshListener,int color) {
+    public void setOnRefreshListener(Context context,RefreshListenerAdapter refreshListener,int color) {
         setOnRefreshListener(refreshListener);
 
         ProgressLayout progressLayout = new ProgressLayout(context);

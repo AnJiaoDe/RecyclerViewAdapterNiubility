@@ -11,31 +11,29 @@ import android.util.AttributeSet;
  */
 
 public class VerticalRecyclerView extends RecyclerView {
-    private Context context;
     public VerticalRecyclerView(Context context) {
         this(context, null);
     }
 
     public VerticalRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.context=context;
         setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
-    @Override
-    public void setAdapter(Adapter adapter) {
-        super.setAdapter(adapter);
+
+    public void setAdapter(Context context,Adapter adapter){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         setLayoutManager(linearLayoutManager);
 
-        addOnScrollListener(new OnCYScrollListener(context));
+        addOnScrollListener(new OnRVScrollListener(context));
 
     }
+    public void setAdapter(Context context,Adapter adapter, OnRVLoadMoreScrollListener onRVLoadMoreScrollListener){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        setLayoutManager(linearLayoutManager);
 
-    public void setAdapter(Adapter adapter, OnRVScrollListener onRVScrollListener){
-        setAdapter(adapter);
+        addOnScrollListener(onRVLoadMoreScrollListener);
 
-        setOnScrollListener(onRVScrollListener);
     }
 
 }

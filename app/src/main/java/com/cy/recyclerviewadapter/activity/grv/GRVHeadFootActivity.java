@@ -74,7 +74,7 @@ public class GRVHeadFootActivity extends BaseActivity {
                 super.onFootClick();
             }
         };
-        ((GridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, 3, RecyclerView.VERTICAL,true,true);
+        ((GridRecyclerView) findViewById(R.id.grv)).setAdapter(getApplicationContext(),rvAdapter, 3, RecyclerView.VERTICAL,true,true);
     }
 
     @Override

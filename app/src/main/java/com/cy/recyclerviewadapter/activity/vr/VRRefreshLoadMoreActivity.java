@@ -47,7 +47,7 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
 
             }
         };
-        verticalRefreshLayout.setAdapter(rvAdapter,  getResources().getColor(R.color.colorPrimary),
+        verticalRefreshLayout.setAdapter(getApplicationContext(),rvAdapter,  getResources().getColor(R.color.colorPrimary),
                 new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {

@@ -11,7 +11,6 @@ import android.util.AttributeSet;
  */
 
 public class GridRecyclerView extends RecyclerView {
-    private Context context;
 
     public GridRecyclerView(Context context) {
         this(context, null);
@@ -20,12 +19,28 @@ public class GridRecyclerView extends RecyclerView {
 
     public GridRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
         setOverScrollMode(OVER_SCROLL_NEVER);
 
     }
 
-    public void setAdapter(final Adapter adapter, int spanCount, int orientation, boolean head, final boolean foot) {
+    /*
+          最好使用getApplicationContext否则Glide容易内存泄漏
+           */
+    public void setAdapter(Context context, final Adapter adapter, int spanCount, int orientation) {
+        final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount, orientation, false);
+        setLayoutManager(layoutManager);
+
+
+        setAdapter(adapter);
+        addOnScrollListener(new OnRVScrollListener(context));
+
+
+    }
+
+    /*
+    最好使用getApplicationContext否则Glide容易内存泄漏
+     */
+    public void setAdapter(Context context, final Adapter adapter, int spanCount, int orientation, boolean head, final boolean foot) {
         final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount, orientation, false);
         setLayoutManager(layoutManager);
 
@@ -58,36 +73,27 @@ public class GridRecyclerView extends RecyclerView {
         }
         setAdapter(adapter);
 
-        addOnScrollListener(new OnCYScrollListener(context));
+        addOnScrollListener(new OnRVScrollListener(context));
 
     }
 
-    public void setAdapter(final Adapter adapter, int spanCount, int orientation) {
-        final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount, orientation, false);
-        setLayoutManager(layoutManager);
+    /*
+       最好使用getApplicationContext否则Glide容易内存泄漏
+        */
+    public void setAdapter(Context context, Adapter adapter, int spanCount, int orientation, OnRVLoadMoreScrollListener onRVLoadMoreScrollListener) {
+        setAdapter(context, adapter, spanCount, orientation);
 
-
-        setAdapter(adapter);
-        addOnScrollListener(new OnCYScrollListener(context));
-
-
-
+        addOnScrollListener(onRVLoadMoreScrollListener);
     }
 
-    public void setAdapter(Adapter adapter, int spanCount, int orientation, boolean head, boolean foot, OnRVScrollListener onRVScrollListener) {
-        setAdapter(adapter, spanCount, orientation, head, foot);
+    /*
+       最好使用getApplicationContext否则Glide容易内存泄漏
+        */
+    public void setAdapter(Context context, Adapter adapter, int spanCount, int orientation, boolean head, boolean foot, OnRVLoadMoreScrollListener onRVLoadMoreScrollListener) {
+        setAdapter(context, adapter, spanCount, orientation, head, foot);
 
-        addOnScrollListener(onRVScrollListener);
+        addOnScrollListener(onRVLoadMoreScrollListener);
     }
-
-    public void setAdapter(Adapter adapter, int spanCount, int orientation, OnRVScrollListener onRVScrollListener) {
-        setAdapter(adapter, spanCount, orientation);
-
-        addOnScrollListener(onRVScrollListener);
-    }
-
-
-
 
 
 }

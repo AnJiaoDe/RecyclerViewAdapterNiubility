@@ -44,7 +44,7 @@ public class VRRefreshActivity extends BaseActivity {
 
             }
         };
-        verticalRefreshLayout.setAdapter(rvAdapter,  getResources().getColor(R.color.colorPrimary),
+        verticalRefreshLayout.setAdapter(getApplicationContext(),rvAdapter,  getResources().getColor(R.color.colorPrimary),
                 new BaseRefreshLayout.OnCYRefreshListener() {
             @Override
             public void onRefresh() {

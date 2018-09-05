@@ -11,7 +11,6 @@ import android.util.AttributeSet;
  */
 
 public class StaggeredGridRecyclerView extends RecyclerView {
-    private Context context;
 
     public StaggeredGridRecyclerView(Context context) {
         this(context,null);
@@ -19,12 +18,11 @@ public class StaggeredGridRecyclerView extends RecyclerView {
 
     public StaggeredGridRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.context=context;
         setOverScrollMode(OVER_SCROLL_NEVER);
 
     }
 
-    public void setAdapter(final Adapter adapter, int spanCount, int orientation) {
+    public void setAdapter(Context context,final Adapter adapter, int spanCount, int orientation) {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(spanCount, orientation);
 
         //取消动画，防止item复用导致的闪烁
@@ -33,7 +31,7 @@ public class StaggeredGridRecyclerView extends RecyclerView {
         setLayoutManager(layoutManager);
         setAdapter(adapter);
 
-        addOnScrollListener(new OnCYScrollListener(context));
+        addOnScrollListener(new OnRVScrollListener(context));
 
 
     }
@@ -41,10 +39,11 @@ public class StaggeredGridRecyclerView extends RecyclerView {
 
 
 
-    public void setAdapter(Adapter adapter, int spanCount, int orientation, OnRVScrollListener onRVScrollListener) {
-        setAdapter(adapter, spanCount,orientation);
+    public void setAdapter(Context context,Adapter adapter, int spanCount, int orientation, OnRVLoadMoreScrollListener onRVLoadMoreScrollListener) {
+        setAdapter(context,adapter, spanCount,orientation);
 
-        setOnScrollListener(onRVScrollListener);
+        addOnScrollListener(onRVLoadMoreScrollListener);
+
     }
 
 }
