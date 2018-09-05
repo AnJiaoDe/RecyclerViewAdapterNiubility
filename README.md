@@ -22,7 +22,7 @@ allprojects {
 
 ```
 dependencies {
-	        compile 'com.github.AnJiaoDe:RecyclerViewAdapter:V2.2.7'
+	        compile 'com.github.AnJiaoDe:RecyclerViewAdapter:V2.2.8'
 	}
 	
 ```
