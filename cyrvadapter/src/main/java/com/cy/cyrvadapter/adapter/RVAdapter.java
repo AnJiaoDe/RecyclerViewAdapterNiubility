@@ -420,6 +420,15 @@ public abstract class RVAdapter<T> extends RecyclerView.Adapter<RVAdapter.RVView
     }
 
     //添加一条数据item,并且notifyDataSetChanged
+    public void add(int position,T bean) {
+        list_bean.add(position,bean);
+        notifyDataSetChanged();
+    }
+    //添加一条数据item
+    public void addNoNotify(int position,T bean) {
+        list_bean.add(position,bean);
+    }
+    //添加一条数据item,并且notifyDataSetChanged
     public void add(T bean) {
         list_bean.add(bean);
         notifyDataSetChanged();
