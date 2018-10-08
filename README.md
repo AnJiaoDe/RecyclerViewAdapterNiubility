@@ -30,9 +30,12 @@ dependencies {
 ```
 **注意：如果sync报错，是因为和com.android.tools.build:gradle 3.0有关，**
 **可以改将compile改为implementation 或者api** 
+
 **以下是老版本使用方法，新版本使用方法有所变化（如方法参数变化）** 
+
 **目录**
 集成了Glide开源库
+
 **1.VerticalRecyclerView**
              
       1.1VR
