@@ -2,7 +2,7 @@
   微信公众号
  ![这里写图片描述](http://upload-images.jianshu.io/upload_images/11866078-a6969884111cd3b4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
  
-[简书](https://www.jianshu.com/p/863b27551a79)
+[简书](https://www.jianshu.com/u/b8159d455c69)
 
 [APK下载](https://github.com/437042721/RecyclerViewAdapter/blob/master/app/build/outputs/apk/app-debug.apk)
 
