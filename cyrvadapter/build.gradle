@@ -37,11 +37,11 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.android.support:appcompat-v7:+'
+//    implementation 'com.android.support:appcompat-v7:+'
 
     testImplementation 'junit:junit:4.12'
     api 'com.lcodecorex:tkrefreshlayout:1.0.7'
-    api 'com.android.support:recyclerview-v7:+'
+    api 'com.android.support:design:+'
     api 'com.github.bumptech.glide:glide:3.7.0'
 
 }
