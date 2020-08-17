@@ -14,6 +14,7 @@ public class GRVTypeActivity extends BaseActivity {
         setContentView(R.layout.activity_grvtype);
 
         findViewById(R.id.btn_grv).setOnClickListener(this);
+        findViewById(R.id.btn_grv_h).setOnClickListener(this);
         findViewById(R.id.btn_head).setOnClickListener(this);
         findViewById(R.id.btn_refresh_loadmore).setOnClickListener(this);
     }
@@ -24,6 +25,9 @@ public class GRVTypeActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_grv:
                 startAppcompatActivity(GRVActivity.class);
+                break;
+            case R.id.btn_grv_h:
+                startAppcompatActivity(GRVHorinzotalActivity.class);
                 break;
             case R.id.btn_head:
                 startAppcompatActivity(GRVHeadFootActivity.class);

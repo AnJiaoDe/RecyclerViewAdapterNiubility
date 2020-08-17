@@ -6,7 +6,7 @@
     android:textSize="20sp"
     android:gravity="center"
     android:id="@+id/tv"
-
+    android:textColor="@color/red"
     android:layout_height="100dp">
 
 </TextView>

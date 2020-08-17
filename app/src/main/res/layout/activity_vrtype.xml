@@ -27,6 +27,11 @@
         android:layout_height="wrap_content"
         android:text="VR+refresh+loadmore" />
     <Button
+        android:id="@+id/btn_vr_refreshloadmoreself"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VR+refresh+loadmore_self" />
+    <Button
         android:id="@+id/btn_vr_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,9 +47,14 @@
         android:layout_height="wrap_content"
         android:text="VR+swipe" />
     <Button
-        android:id="@+id/btn_select"
+        android:id="@+id/btn_anim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="VR+Select" />
+        android:text="VR+Anim" />
+<!--    <Button-->
+<!--        android:id="@+id/btn_select"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="VR+Select" />-->
 
 </LinearLayout>

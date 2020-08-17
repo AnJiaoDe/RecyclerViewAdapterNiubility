@@ -17,10 +17,11 @@ public class VRTypeActivity extends BaseActivity {
         findViewById(R.id.btn_vr_multi).setOnClickListener(this);
         findViewById(R.id.btn_vr_head_foot).setOnClickListener(this);
         findViewById(R.id.btn_vr_refreshloadmore).setOnClickListener(this);
+        findViewById(R.id.btn_vr_refreshloadmoreself).setOnClickListener(this);
         findViewById(R.id.btn_vr_refresh).setOnClickListener(this);
         findViewById(R.id.btn_vr_more).setOnClickListener(this);
         findViewById(R.id.btn_swipe).setOnClickListener(this);
-        findViewById(R.id.btn_select).setOnClickListener(this);
+        findViewById(R.id.btn_anim).setOnClickListener(this);
     }
 
     @Override
@@ -42,6 +43,9 @@ public class VRTypeActivity extends BaseActivity {
 
                 startAppcompatActivity(VRRefreshLoadMoreActivity.class);
                 break;
+            case R.id.btn_vr_refreshloadmoreself:
+                startAppcompatActivity(VRRefreshLoadMoreSelfActivity.class);
+                break;
             case R.id.btn_vr_refresh:
 
                 startAppcompatActivity(VRRefreshActivity.class);
@@ -53,8 +57,8 @@ public class VRTypeActivity extends BaseActivity {
             case R.id.btn_swipe:
                 startAppcompatActivity(VRSwipeActivity.class);
                 break;
-            case R.id.btn_select:
-                startAppcompatActivity(VRSelectActivity.class);
+            case R.id.btn_anim:
+                startAppcompatActivity(VRAnimActivity.class);
                 break;
         }
     }

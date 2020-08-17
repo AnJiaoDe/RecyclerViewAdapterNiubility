@@ -29,17 +29,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="StaggeredGridRecyclerview" />
-
     <Button
-        android:id="@+id/btn_extendsRV"
+        android:id="@+id/btn_tabRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="extends RV" />
+        android:text="TabLayoutRecyclerview" />
 
-    <com.cy.cyrvadapter.recyclerview.GridRecyclerView
-        android:id="@+id/grv"
+<!--    <Button-->
+<!--        android:id="@+id/btn_code_adapter"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="纯代码布局的Adapter" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/btn_extendsRV"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="extends RV" />-->
+
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:scaleType="centerInside"
+        android:layout_height="match_parent"
+        android:id="@+id/iv"/>
 
 
 </LinearLayout>

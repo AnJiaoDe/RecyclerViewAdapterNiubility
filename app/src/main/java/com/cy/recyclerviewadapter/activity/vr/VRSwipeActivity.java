@@ -3,8 +3,11 @@ package com.cy.recyclerviewadapter.activity.vr;
 import android.os.Bundle;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.SwipeRVAdapter;
-import com.cy.cyrvadapter.recyclerview.SwipeRecyclerView;
+import com.cy.cyrvadapter.adapter.BaseViewHolder;
+import com.cy.cyrvadapter.adapter.ItemAnimCallback;
+import com.cy.cyrvadapter.adapter.SwipeAdapter;
+import com.cy.cyrvadapter.swipelayout.SwipeRecyclerView;
+import com.cy.cyrvadapter.refreshlayout.LogUtils;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
@@ -12,7 +15,7 @@ import com.cy.recyclerviewadapter.bean.VRBean;
 import java.util.ArrayList;
 
 public class VRSwipeActivity extends BaseActivity {
-    private SwipeRVAdapter<VRBean> rvAdapter;
+    private SwipeAdapter<VRBean> swipeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,42 +24,48 @@ public class VRSwipeActivity extends BaseActivity {
 
         final ArrayList<VRBean> list_bean = new ArrayList<VRBean>();
         for (int i = 0; i < 100; i++) {
-            list_bean.add(new VRBean("内容"+i));
+            list_bean.add(new VRBean("内容" + i));
         }
 
-
-        rvAdapter = new SwipeRVAdapter<VRBean>(list_bean) {
-
-
+        swipeAdapter = new SwipeAdapter<VRBean>() {
             @Override
-            public void bindSwipeDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindDataToView(final BaseViewHolder holder, final int position, VRBean bean,boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
-
 
                 holder.setOnClickListener(R.id.tv_zhiding, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        rvAdapter.closeOpenedSL();
+                        closeOpened();
                         showToast("点击置顶");
-
                     }
                 });
                 holder.setOnClickListener(R.id.tv_biaoweiweidu, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        rvAdapter.closeOpenedSL();
-
+                        closeOpened();
                         showToast("点击标为未读");
-
                     }
                 });
+                LogUtils.log("position", position);
+
                 holder.setOnClickListener(R.id.layout_delete, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        rvAdapter.closeOpenedSL();
-
-                        showToast("点击删除");
-
+                        closeOpened(new OnSwipeCallback() {
+                            @Override
+                            public void onClosed() {
+                                //必须关闭动画完毕后才remove item,否则，会因为缓存导致,其他item闪烁
+                                LogUtils.log("position_remove", position);
+                                /**
+                                 *  此处要注意，函数体内，创建匿名内部类，而且内部类持有函数参数，只能将函数参数定义为final，但容易产生BUG，
+                                 * 假remove数据项后，如没有全部item都刷新，这里得到的position永远是当前holder最原始的position，
+                                 * 所幸的是：holder自身保存了position，
+                                 * holder.getAdapterPosition()获取的position是当前holder在整个recyclerView中的正确位置，
+                                 */
+//                                getSimpleAdapter().remove(position);
+                                getSimpleAdapter().remove(holder.getAdapterPosition());
+                            }
+                        });
                     }
                 });
             }
@@ -64,19 +73,18 @@ public class VRSwipeActivity extends BaseActivity {
             @Override
             public int getItemLayoutID(int position, VRBean bean) {
                 return R.layout.item_swipe;
-
             }
-
 
             @Override
-            public void onItemClick(int position, VRBean bean) {
-                showToast("点击内容");
-
+            public void onItemClick(BaseViewHolder holder, int position, VRBean bean) {
+                showToast("点击内容"+position);
             }
-
-
         };
-        ((SwipeRecyclerView)findViewById(R.id.srv)).setAdapter(rvAdapter);
+        ((SwipeRecyclerView) findViewById(R.id.srv))
+                .addItemTouchAnim(new ItemAnimCallback(swipeAdapter.getSimpleAdapter()))
+                .setSimpleAdapter(swipeAdapter);
+        swipeAdapter.getSimpleAdapter().add(list_bean);
+
     }
 
     @Override

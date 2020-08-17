@@ -3,8 +3,9 @@ package com.cy.recyclerviewadapter.activity.vr;
 import android.os.Bundle;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.RVAdapter;
+import com.cy.cyrvadapter.adapter.SimpleAdapter;
 import com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
+import com.cy.cyrvadapter.adapter.BaseViewHolder;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRMultiBean;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class VRMultiActivity extends BaseActivity {
 
-    private RVAdapter<VRMultiBean> rvAdapter;
+    private SimpleAdapter<VRMultiBean> rvAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +58,9 @@ public class VRMultiActivity extends BaseActivity {
                 new int[]{R.drawable.pic4, R.drawable.pic5, R.drawable.pic3}, 3));
         list.add(new VRMultiBean("忒囧途押金我积极偶就开个会积极自己交给鸡攻击huiyhuhuio8u9ehjkgh会祸害过",
                 new int[]{R.drawable.pic1, R.drawable.pic2, R.drawable.pic3}, 1));
-        rvAdapter = new RVAdapter<VRMultiBean>(list) {
+        rvAdapter = new SimpleAdapter<VRMultiBean>() {
             @Override
-            public void bindDataToView(RVViewHolder holder, int position, VRMultiBean bean, boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, VRMultiBean bean,boolean isSelected) {
                 switch (bean.getView_type()) {
                     case 1:
                         holder.setText(R.id.tv,bean.getTitle());
@@ -96,7 +97,6 @@ public class VRMultiActivity extends BaseActivity {
                         break;
                 }
             }
-
             @Override
             public int getItemLayoutID(int position, VRMultiBean bean) {
                 switch (bean.getView_type()) {
@@ -112,12 +112,13 @@ public class VRMultiActivity extends BaseActivity {
 
 
             @Override
-            public void onItemClick(int position, VRMultiBean bean) {
+            public void onItemClick(BaseViewHolder holder,int position, VRMultiBean bean) {
 
                 showToast("点击"+position);
             }
         };
         ((VerticalRecyclerView) findViewById(R.id.vr)).setAdapter(rvAdapter);
+        rvAdapter.add(list);
     }
 
     @Override

@@ -1,99 +1,82 @@
 package com.cy.cyrvadapter.recyclerview;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.SparseArray;
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.cy.cyrvadapter.adapter.GridFullSpanBean;
+import com.cy.cyrvadapter.adapter.GridItemDecoration;
+import com.cy.cyrvadapter.refreshlayout.LogUtils;
+import com.cy.cyrvadapter.refreshlayout.ScreenUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by cy on 2017/7/2.
  */
 
-public class GridRecyclerView extends RecyclerView {
-
+public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView> {
+    private int spanCount = 2;
+    private int orientation = RecyclerView.VERTICAL;
+    private Context context;
+    private SparseArray<GridFullSpanBean> sparseArrayGridFullSpanBean = new SparseArray<GridFullSpanBean>();
+    private GridItemDecoration gridItemDecoration;
     public GridRecyclerView(Context context) {
         this(context, null);
     }
 
-
     public GridRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        setOverScrollMode(OVER_SCROLL_NEVER);
-
+        this.context = context;
     }
 
-    /*
-          最好使用getApplicationContext否则Glide容易内存泄漏
-           */
-    public void setAdapter(Context context, final Adapter adapter, int spanCount, int orientation) {
-        final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount, orientation, false);
+    public GridRecyclerView setSpanCount(int spanCount) {
+        this.spanCount = spanCount;
+        return this;
+    }
+
+    public GridRecyclerView setOrientation(int orientation) {
+        this.orientation = orientation;
+        return this;
+    }
+
+    public GridRecyclerView addFullSpanPosition(int position,GridFullSpanBean gridFullSpanBean) {
+        sparseArrayGridFullSpanBean.put(position,gridFullSpanBean);
+        return this;
+    }
+
+    public SparseArray<GridFullSpanBean> getSparseArrayGridFullSpanBean() {
+        return sparseArrayGridFullSpanBean;
+    }
+
+    public void addItemDecoration(GridItemDecoration gridItemDecoration) {
+        this.gridItemDecoration=gridItemDecoration;
+        super.addItemDecoration(gridItemDecoration);
+    }
+
+    public GridItemDecoration getGridItemDecoration() {
+        return gridItemDecoration;
+    }
+
+    @Override
+    public void setAdapter(final Adapter adapter) {
+        final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), spanCount, orientation, false);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (sparseArrayGridFullSpanBean.get(position) != null) return layoutManager.getSpanCount();
+                return 1;
+            }
+        });
         setLayoutManager(layoutManager);
-
-
-        setAdapter(adapter);
-        addOnScrollListener(new OnRVScrollListener(context));
-
-
+        super.setAdapter(adapter);
     }
-
-    /*
-    最好使用getApplicationContext否则Glide容易内存泄漏
-     */
-    public void setAdapter(Context context, final Adapter adapter, int spanCount, int orientation, boolean head, final boolean foot) {
-        final GridLayoutManager layoutManager = new GridLayoutManager(context, spanCount, orientation, false);
-        setLayoutManager(layoutManager);
-
-        if (head) {
-             /*
-        *设置SpanSizeLookup，它将决定view会横跨多少列。这个方法是为RecyclerView添加Header和Footer的关键。
-        *当判断position指向的View为Header或者Footer时候，返回总列数（ lm.getSpanCount()）,即可让其独占一行。
-        */
-
-            layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-
-                    if (foot && position == adapter.getItemCount() - 1) {
-                        return layoutManager.getSpanCount();
-
-                    }
-                    return position == 0 ? layoutManager.getSpanCount() : 1;
-                }
-            });
-        } else if (foot) {
-
-            layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    return position == adapter.getItemCount() - 1 ? layoutManager.getSpanCount() : 1;
-                }
-            });
-
-        }
-        setAdapter(adapter);
-
-        addOnScrollListener(new OnRVScrollListener(context));
-
-    }
-
-    /*
-       最好使用getApplicationContext否则Glide容易内存泄漏
-        */
-    public void setAdapter(Context context, Adapter adapter, int spanCount, int orientation, OnRVLoadMoreScrollListener onRVLoadMoreScrollListener) {
-        setAdapter(context, adapter, spanCount, orientation);
-
-        addOnScrollListener(onRVLoadMoreScrollListener);
-    }
-
-    /*
-       最好使用getApplicationContext否则Glide容易内存泄漏
-        */
-    public void setAdapter(Context context, Adapter adapter, int spanCount, int orientation, boolean head, boolean foot, OnRVLoadMoreScrollListener onRVLoadMoreScrollListener) {
-        setAdapter(context, adapter, spanCount, orientation, head, foot);
-
-        addOnScrollListener(onRVLoadMoreScrollListener);
-    }
-
-
 }

@@ -2,8 +2,6 @@
 <com.cy.cyrvadapter.recyclerview.GridRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/grv"
-    android:paddingRight="10dp"
-    android:paddingBottom="10dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 

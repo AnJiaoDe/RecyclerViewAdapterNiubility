@@ -1,13 +1,13 @@
 apply plugin: 'com.android.library'
 
-apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.AnJiaoDe' // ××××代表你github名字
+//apply plugin: 'com.github.dcendents.android-maven'
+//group='com.github.AnJiaoDe' // ××××代表你github名字
 android {
-    compileSdkVersion 28
+    compileSdkVersion var.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 28
+        minSdkVersion var.minSdkVersion
+        targetSdkVersion var.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -31,17 +31,12 @@ artifacts {
     archives sourcesJar
 }
 dependencies {
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly 'androidx.appcompat:appcompat:1.0.2'
+    testCompileOnly 'junit:junit:4.12'
+    androidTestCompileOnly 'androidx.test.ext:junit:1.1.1'
+    androidTestCompileOnly 'androidx.test.espresso:espresso-core:3.2.0'
 
-
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-//    implementation 'com.android.support:appcompat-v7:+'
-
-    testImplementation 'junit:junit:4.12'
-    api 'com.lcodecorex:tkrefreshlayout:1.0.7'
-    api 'com.android.support:design:+'
-    api 'com.github.bumptech.glide:glide:3.7.0'
-
+//    api "androidx.recyclerview:recyclerview:1.1.0"
+    compileOnly "androidx.recyclerview:recyclerview:1.2.0-alpha03"
 }

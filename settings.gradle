@@ -1,1 +1,1 @@
-include ':app', ':cyrvadapter'
+include ':app', ':cyrvadapter', ':http'

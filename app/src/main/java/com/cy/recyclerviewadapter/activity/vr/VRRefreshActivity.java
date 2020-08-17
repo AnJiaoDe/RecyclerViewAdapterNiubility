@@ -1,11 +1,13 @@
 package com.cy.recyclerviewadapter.activity.vr;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.RVAdapter;
-import com.cy.cyrvadapter.refreshrv.BaseRefreshLayout;
+import com.cy.cyrvadapter.adapter.SimpleAdapter;
+import com.cy.cyrvadapter.refreshrv.OnRefreshListener;
 import com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout;
+import com.cy.cyrvadapter.adapter.BaseViewHolder;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VRRefreshActivity extends BaseActivity {
-    private RVAdapter<VRBean> rvAdapter;
+    private SimpleAdapter<VRBean> rvAdapter;
     private VerticalRefreshLayout verticalRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +28,9 @@ public class VRRefreshActivity extends BaseActivity {
         for (int i=0;i<100;i++){
             list.add(new VRBean("内容"+i));
         }
-        rvAdapter = new RVAdapter<VRBean>(list) {
+        rvAdapter = new SimpleAdapter<VRBean>() {
             @Override
-            public void bindDataToView(RVViewHolder holder, int position, VRBean bean, boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, VRBean bean,boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -39,18 +41,41 @@ public class VRRefreshActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(int position, VRBean bean) {
+            public void onItemClick(BaseViewHolder holder,int position, VRBean bean) {
                 showToast("点击" + position);
 
             }
         };
-        verticalRefreshLayout.setAdapter(getApplicationContext(),rvAdapter,  getResources().getColor(R.color.colorPrimary),
-                new BaseRefreshLayout.OnCYRefreshListener() {
+        verticalRefreshLayout.setAdapter(rvAdapter,new OnRefreshListener() {
             @Override
-            public void onRefresh() {
-
+            public void onRefreshStart() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+//                        verticalRefreshLayout.finishRefresh(new RefreshFinishListener() {
+//                            @Override
+//                            public void onRefreshFinish(final FrameLayout headLayout) {
+//                                final TextView textView = new TextView(headLayout.getContext());
+//                                textView.setGravity(Gravity.CENTER);
+//                                textView.setBackgroundColor(Color.WHITE);
+//                                textView.setText("有8条更新");
+//                                headLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        headLayout.removeView(textView);
+//                                        verticalRefreshLayout.closeRefresh();
+//                                    }
+//                                }, 2000);
+//                            }
+//                        });
+                        verticalRefreshLayout.finishRefresh();
+                    }
+                }, 3000);
             }
         });
+        rvAdapter.add(list);
     }
 
     @Override
