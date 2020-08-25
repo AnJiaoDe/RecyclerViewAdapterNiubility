@@ -113,7 +113,7 @@ public class RefreshLayout extends LinearLayout {
         headView.getView().measure(widthMeasureSpec,
                 MeasureSpec.makeMeasureSpec(headView.getView().getLayoutParams().height, MeasureSpec.EXACTLY));
         contentView.measure(widthMeasureSpec,
-                MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));
+                MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.AT_MOST));
         footView.getView().measure(widthMeasureSpec,
                 MeasureSpec.makeMeasureSpec(footView.getView().getLayoutParams().height, MeasureSpec.EXACTLY));
     }
@@ -128,7 +128,8 @@ public class RefreshLayout extends LinearLayout {
 
         headView.getView().layout(0, 0, width_parent, height_head);
         if (contentView != null)
-            contentView.layout(0, height_head - height_foot, width_parent, height_parent + height_head - height_foot);
+//            contentView.layout(0, height_head - height_foot, width_parent, height_parent + height_head - height_foot);
+            contentView.layout(0, height_head - height_foot, width_parent,contentView.getMeasuredHeight());
         footView.getView().layout(0, height_parent - height_foot, width_parent, height_parent);
     }
 
@@ -141,8 +142,8 @@ public class RefreshLayout extends LinearLayout {
 
     public final <T extends RefreshLayout>T setContentView(View view) {
         removeView(contentView);
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-        layoutParams.weight = 1;
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        layoutParams.weight = 1;
         this.contentView = view;
         addView(contentView, 1, layoutParams);
         return (T) this;

@@ -41,6 +41,7 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
         rvAdapter = new SimpleAdapter<VRBean>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, VRBean bean,boolean isSelected) {
+                LogUtils.log("bindDataToView",position);
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -113,10 +114,11 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
                                     @Override
                                     public void run() {
                                         footLayout.removeView(textView);
+                                        verticalRefreshLayout.closeLoadMore();
                                         for (int i = 0; i < 8; i++) {
-                                            rvAdapter.getAdapter().addNoNotify(new VRBean("更多" + i));
+                                            rvAdapter.getAdapter().add(new VRBean("更多" + i));
                                         }
-                                        rvAdapter.getAdapter().notifyDataSetChanged();
+
 //                                                verticalRefreshLayout.getRecyclerView().smoothScrollBy(0,
 //                                                        ScreenUtils.dpAdapt(VRRefreshLoadMoreActivity.this, 40) );
 //                                        verticalRefreshLayout.closeLoadMore();
