@@ -18,11 +18,10 @@ android {
         }
     }
 }
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -34,6 +33,5 @@ dependencies {
     api 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
 
     api "androidx.recyclerview:recyclerview:1.2.0-alpha03"
-    api "androidx.recyclerview:recyclerview:1.2.0-alpha03"
-    api "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.0.4"
+    api "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.0.5"
 }
