@@ -11,19 +11,19 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.refreshlayout.LoadMoreFinishListener;
-import com.cy.cyrvadapter.refreshlayout.LogUtils;
-import com.cy.cyrvadapter.refreshlayout.OnPullListener;
-import com.cy.cyrvadapter.refreshlayout.RefreshFinishListener;
-import com.cy.cyrvadapter.refreshrv.GridRefreshLayout;
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
 import com.cy.http.HttpUtils;
 import com.cy.http.Imageloader;
 import com.cy.http.StringCallbackImpl;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.S360Bean;
+import com.cy.refreshlayoutniubility.LoadMoreFinishListener;
+import com.cy.refreshlayoutniubility.OnPullListener;
+import com.cy.refreshlayoutniubility.RefreshFinishListener;
+import com.cy.rvadapterniubility.LogUtils;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.refreshrv.GridRefreshLayout;
 import com.google.gson.Gson;
 
 public class GRVRefreshLoadMoreActivity extends BaseActivity {
@@ -52,7 +52,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
             }
 
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, S360Bean.DataBean bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, S360Bean.DataBean bean, boolean isSelected) {
                 holder.setImageResource(R.id.iv,R.drawable.default_pic);
                 if (isScrolling()) return;
                 String urlImage = bean.getUrl();

@@ -9,16 +9,15 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.refreshlayout.LoadMoreFinishListener;
-import com.cy.cyrvadapter.refreshlayout.LogUtils;
-import com.cy.cyrvadapter.refreshlayout.OnPullListener;
-import com.cy.cyrvadapter.refreshlayout.RefreshFinishListener;
-import com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout;
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
 import com.cy.recyclerviewadapter.BaseActivity;
+import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.refreshlayoutniubility.LoadMoreFinishListener;
+import com.cy.refreshlayoutniubility.OnPullListener;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.refreshrv.VerticalRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +39,7 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
 
         rvAdapter = new SimpleAdapter<VRBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRBean bean,boolean isSelected) {
-                LogUtils.log("bindDataToView",position);
+            public void bindDataToView(BaseViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 

@@ -3,12 +3,12 @@ package com.cy.recyclerviewadapter.activity.hr;
 import android.os.Bundle;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.recyclerview.HorizontalRecyclerView;
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.HorizontalRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class HRVActivity extends BaseActivity {
         }
         rvAdapter = new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected) {
 
                 holder.setImageResource(R.id.iv,bean.getResID());
 

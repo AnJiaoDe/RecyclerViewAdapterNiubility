@@ -3,12 +3,12 @@ package com.cy.recyclerviewadapter.activity.vr;
 import android.os.Bundle;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRMultiBean;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.VerticalRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class VRMultiActivity extends BaseActivity {
                 new int[]{R.drawable.pic1, R.drawable.pic2, R.drawable.pic3}, 1));
         rvAdapter = new SimpleAdapter<VRMultiBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRMultiBean bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, VRMultiBean bean, boolean isSelected) {
                 switch (bean.getView_type()) {
                     case 1:
                         holder.setText(R.id.tv,bean.getTitle());

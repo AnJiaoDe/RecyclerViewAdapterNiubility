@@ -4,15 +4,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
-import com.cy.cyrvadapter.adapter.MultiAdapter;
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.recyclerview.OnRVLoadMoreListener;
-import com.cy.cyrvadapter.refreshrv.OnRefreshListener;
-import com.cy.cyrvadapter.refreshrv.VerticalRefreshLayout;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.MultiAdapter;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
+import com.cy.rvadapterniubility.recyclerview.OnRVLoadMoreListener;
+import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
+import com.cy.rvadapterniubility.refreshrv.VerticalRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected) {
                 holder.setText(R.id.tv, "head" + position);
             }
 

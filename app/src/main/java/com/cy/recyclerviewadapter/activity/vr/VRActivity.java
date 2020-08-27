@@ -4,14 +4,14 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.adapter.LinearItemDecoration;
-import com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
-import com.cy.cyrvadapter.refreshlayout.LogUtils;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.rvadapterniubility.LogUtils;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.LinearItemDecoration;
+import com.cy.rvadapterniubility.recyclerview.VerticalRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class VRActivity extends BaseActivity {
         final VerticalRecyclerView verticalRecyclerView=findViewById(R.id.vr);
         rvAdapter = new SimpleAdapter<VRBean>() {
             @Override
-            public void bindDataToView(final BaseViewHolder holder, int position, VRBean bean,boolean isSelected) {
+            public void bindDataToView(final BaseViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
                 LogUtils.log("position",position);
             }

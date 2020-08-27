@@ -3,17 +3,14 @@ package com.cy.recyclerviewadapter.activity.grv;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.cy.cyrvadapter.adapter.MultiAdapter;
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.recyclerview.GridRecyclerView;
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.MultiAdapter;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.GridRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +26,7 @@ public class GRVHeadFootActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected) {
                 holder.setText(R.id.tv, "head" + position);
             }
 

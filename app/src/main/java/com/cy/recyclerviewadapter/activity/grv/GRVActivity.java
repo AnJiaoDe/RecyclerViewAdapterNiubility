@@ -4,14 +4,14 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.GridItemDecoration;
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.recyclerview.GridRecyclerView;
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
-import com.cy.cyrvadapter.refreshlayout.LogUtils;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
+import com.cy.rvadapterniubility.LogUtils;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
+import com.cy.rvadapterniubility.recyclerview.GridRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class GRVActivity extends BaseActivity {
         }
         rvAdapter=new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected) {
                 holder.setImageResource(R.id.iv,bean.getResID());
             }
 
@@ -52,7 +52,7 @@ public class GRVActivity extends BaseActivity {
         };
         ((GridRecyclerView)findViewById(R.id.grv))
                 .setSpanCount(4)
-                .addItemDecoration(new GridItemDecoration((GridRecyclerView)findViewById(R.id.grv),dpAdapt(10)));
+                .addItemDecoration(new GridItemDecoration(dpAdapt(10)));
         ((GridRecyclerView)findViewById(R.id.grv)).setAdapter(rvAdapter);
         rvAdapter.add(list);
     }

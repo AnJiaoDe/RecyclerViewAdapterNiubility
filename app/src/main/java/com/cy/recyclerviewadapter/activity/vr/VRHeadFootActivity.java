@@ -3,14 +3,14 @@ package com.cy.recyclerviewadapter.activity.vr;
 import android.os.Bundle;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.MultiAdapter;
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.recyclerview.VerticalRecyclerView;
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.recyclerviewadapter.bean.VRHeadFootBean;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.MultiAdapter;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.VerticalRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class VRHeadFootActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected) {
                 holder.setText(R.id.tv, "head" + position);
             }
 

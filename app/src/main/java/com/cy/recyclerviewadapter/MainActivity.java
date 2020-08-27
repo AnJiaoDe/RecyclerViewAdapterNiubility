@@ -9,8 +9,6 @@ import android.util.LruCache;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.refreshlayout.LogUtils;
 import com.cy.recyclerviewadapter.activity.grv.GRVTypeActivity;
 import com.cy.recyclerviewadapter.activity.hr.HRVActivity;
 import com.cy.recyclerviewadapter.activity.sgrv.SGRVTypeActivity;

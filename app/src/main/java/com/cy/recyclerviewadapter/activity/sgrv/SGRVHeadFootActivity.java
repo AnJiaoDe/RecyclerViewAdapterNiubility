@@ -3,13 +3,12 @@ package com.cy.recyclerviewadapter.activity.sgrv;
 import android.os.Bundle;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.MultiAdapter;
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
-import com.cy.cyrvadapter.refreshrv.StaggeredGridRefreshLayout;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.MultiAdapter;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected) {
                 holder.setText(R.id.tv, "head" + position);
             }
 

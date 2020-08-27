@@ -3,12 +3,12 @@ package com.cy.recyclerviewadapter.activity.sgrv;
 import android.os.Bundle;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.recyclerview.StaggeredGridRecyclerView;
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.StaggeredRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class SGRVActivity extends BaseActivity {
 
         rvAdapter = new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected) {
                 holder.setBackgroundResource(R.id.iv,bean.getResID());
             }
 
@@ -40,7 +40,7 @@ public class SGRVActivity extends BaseActivity {
                 showToast("点击" + position);
             }
         };
-        ((StaggeredGridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter);
+        ((StaggeredRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter);
         List<HRVBean> list = new ArrayList<>();
         for (int i=0;i<300;i++){
             if (i%5==0){

@@ -8,10 +8,6 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
-import com.cy.cyrvadapter.refreshlayout.LogUtils;
-import com.cy.cyrvadapter.refreshrv.StaggeredGridRefreshLayout;
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
 import com.cy.http.BitmapCallbackImpl;
 import com.cy.http.HttpUtils;
 import com.cy.http.Imageloader;
@@ -19,6 +15,10 @@ import com.cy.http.StringCallbackImpl;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.BingBean;
+import com.cy.rvadapterniubility.LogUtils;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.refreshrv.StaggeredRefreshLayout;
 import com.google.gson.Gson;
 
 public class SGRVRefreshLoadMoreActivity extends BaseActivity {
@@ -54,11 +54,11 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sgrvrefresh_load_more);
-        final StaggeredGridRefreshLayout staggeredGridRefreshLayout = ((StaggeredGridRefreshLayout) findViewById(R.id.sgrl));
+        final StaggeredRefreshLayout staggeredGridRefreshLayout = ((StaggeredRefreshLayout) findViewById(R.id.sgrl));
 
         rvAdapter = new SimpleAdapter<BingBean.ImagesBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, BingBean.ImagesBean bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, BingBean.ImagesBean bean, boolean isSelected) {
                 LogUtils.log("position", position);
                 String urlImage = "http://cn.bing.com" + bean.getUrl();
                 Bitmap bitmap = Imageloader.getInstance().getBitmapFromMemoryCache(urlImage);

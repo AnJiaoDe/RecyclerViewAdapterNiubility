@@ -3,10 +3,10 @@ package com.cy.recyclerviewadapter.activity.vr;
 import android.os.Bundle;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.SimpleAdapter;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
 public class VRSelectActivity extends BaseActivity {
     private SimpleAdapter<VRBean> rvAdapter;

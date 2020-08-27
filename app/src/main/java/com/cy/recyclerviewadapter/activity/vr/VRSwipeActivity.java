@@ -3,14 +3,14 @@ package com.cy.recyclerviewadapter.activity.vr;
 import android.os.Bundle;
 import android.view.View;
 
-import com.cy.cyrvadapter.adapter.BaseViewHolder;
-import com.cy.cyrvadapter.adapter.ItemAnimCallback;
-import com.cy.cyrvadapter.adapter.SwipeAdapter;
-import com.cy.cyrvadapter.swipelayout.SwipeRecyclerView;
-import com.cy.cyrvadapter.refreshlayout.LogUtils;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.rvadapterniubility.LogUtils;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
+import com.cy.rvadapterniubility.adapter.SwipeAdapter;
+import com.cy.rvadapterniubility.swipelayout.SwipeRecyclerView;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ public class VRSwipeActivity extends BaseActivity {
 
         swipeAdapter = new SwipeAdapter<VRBean>() {
             @Override
-            public void bindDataToView(final BaseViewHolder holder, final int position, VRBean bean,boolean isSelected) {
+            public void bindDataToView(final BaseViewHolder holder, final int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
 
                 holder.setOnClickListener(R.id.tv_zhiding, new View.OnClickListener() {
