@@ -8,10 +8,6 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cy.http.BitmapCallbackImpl;
-import com.cy.http.HttpUtils;
-import com.cy.http.Imageloader;
-import com.cy.http.StringCallbackImpl;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.BingBean;
@@ -56,201 +52,201 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
         setContentView(R.layout.activity_sgrvrefresh_load_more);
         final StaggeredRefreshLayout staggeredGridRefreshLayout = ((StaggeredRefreshLayout) findViewById(R.id.sgrl));
 
-        rvAdapter = new SimpleAdapter<BingBean.ImagesBean>() {
-            @Override
-            public void bindDataToView(BaseViewHolder holder, int position, BingBean.ImagesBean bean, boolean isSelected) {
-                LogUtils.log("position", position);
-                String urlImage = "http://cn.bing.com" + bean.getUrl();
-                Bitmap bitmap = Imageloader.getInstance().getBitmapFromMemoryCache(urlImage);
-                bitmap = null;
-                if (bitmap != null) {
-                    LogUtils.log("bitmap != null");
-//                    computeSize((ImageView) holder.getView(R.id.iv),bitmap);
-                    holder.setImageBitmap(R.id.iv, bitmap);
-                } else {
-                    LogUtils.log("bitmap == null");
-//                    holder.setImageResource(R.id.iv, R.drawable.default_pic);
-                    if (isScrolling()) return;
-//                    ((ImageView)holder.getView(R.id.iv)).setScaleType(ImageView.ScaleType.FIT_START);
-                    Imageloader.getInstance().with(SGRVRefreshLoadMoreActivity.this)
-                            .url("http://cn.bing.com" + bean.getUrl())
-                            .tag("http://cn.bing.com" + bean.getUrl())
-                            .width(500)
-                            .height(500)
-                            .into((ImageView) holder.getView(R.id.iv))
-//                            .load();
-                            .load(new BitmapCallbackImpl(SGRVRefreshLoadMoreActivity.this) {
-                                @Override
-                                public void onSuccess(Bitmap response) {
-                                    ImageView imageView =getImageParams().getImageView();
-                                    RecyclerView.LayoutParams layoutParams= (RecyclerView.LayoutParams) imageView.getLayoutParams();
-                                    int width=staggeredGridRefreshLayout.getRecyclerView().getWidth()-
-                                           3*layoutParams.leftMargin;
-                                    layoutParams.width=width/2;
-                                    layoutParams.height=(int) (width/2*response.getHeight() * 1F / response.getWidth());
-                                    LogUtils.log("width", width);
-
-                                    imageView.setLayoutParams(layoutParams);
-
-                                    imageView.setImageBitmap(response);
-
-
-                                }
-
-                                @Override
-                                public void onLoading(Object readedPart, int percent, long current, long length) {
-
-                                }
-
-                                @Override
-                                public void onCancel(Object readedPart, int percent, long current, long length) {
-
-                                }
-
-                                @Override
-                                public void onFail(String errorMsg) {
-
-                                }
-                            });
-
-//                    Glide.with(SGRVRefreshLoadMoreActivity.this).load("http://cn.bing.com" + bean.getUrl()).into((ImageView) holder.getView(R.id.iv));
-                    /**
-                     * W/RecyclerView: Cannot call this method in a scroll callback. Scroll callbacks mightbe run during a measure & layout pass where you cannot change theRecyclerView data. Any method call that might change the structureof the RecyclerView or the adapter contents should be postponed tothe next frame.
-                     *     java.lang.IllegalStateException:
-                     */
-//                            rvAdapter.notifyItemChanged(ii);
-
-//                                    BaseViewHolder holder = (BaseViewHolder) staggeredGridRefreshLayout.getRecyclerView().findViewHolderForAdapterPosition(ii);
-                    //有些图片加载出来后，holder空间被撑大，有些holder不可见了，所以需要判断null
-//                                    holder.setImageBitmap(R.id.iv, response);
-                }
-            }
-
-            @Override
-            public int getItemLayoutID(int position, BingBean.ImagesBean bean) {
-                return R.layout.item_sgrv;
-            }
-
-
-            @Override
-            public void onItemClick(BaseViewHolder holder, int position, BingBean.ImagesBean bean) {
-
-            }
-        };
-        LogUtils.log("rvAdapter____", rvAdapter.hashCode());
-
-        staggeredGridRefreshLayout.setAdapter(rvAdapter);
-//        staggeredGridRefreshLayout.setOnPullListener(new OnPullListener() {
+//        rvAdapter = new SimpleAdapter<BingBean.ImagesBean>() {
 //            @Override
-//            public void onRefreshStart() {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        staggeredGridRefreshLayout.finishRefresh(new RefreshFinishListener() {
-//                            @Override
-//                            public void onRefreshFinish(final FrameLayout headLayout) {
-//                                for (int i = 0; i < 8; i++) {
-//                                    rvAdapter.addToHeadNoNotify(new HRVBean(R.drawable.pic3));
+//            public void bindDataToView(BaseViewHolder holder, int position, BingBean.ImagesBean bean, boolean isSelected) {
+//                LogUtils.log("position", position);
+//                String urlImage = "http://cn.bing.com" + bean.getUrl();
+//                Bitmap bitmap = Imageloader.getInstance().getBitmapFromMemoryCache(urlImage);
+//                bitmap = null;
+//                if (bitmap != null) {
+//                    LogUtils.log("bitmap != null");
+////                    computeSize((ImageView) holder.getView(R.id.iv),bitmap);
+//                    holder.setImageBitmap(R.id.iv, bitmap);
+//                } else {
+//                    LogUtils.log("bitmap == null");
+////                    holder.setImageResource(R.id.iv, R.drawable.default_pic);
+//                    if (isScrolling()) return;
+////                    ((ImageView)holder.getView(R.id.iv)).setScaleType(ImageView.ScaleType.FIT_START);
+//                    Imageloader.getInstance().with(SGRVRefreshLoadMoreActivity.this)
+//                            .url("http://cn.bing.com" + bean.getUrl())
+//                            .tag("http://cn.bing.com" + bean.getUrl())
+//                            .width(500)
+//                            .height(500)
+//                            .into((ImageView) holder.getView(R.id.iv))
+////                            .load();
+//                            .load(new BitmapCallbackImpl(SGRVRefreshLoadMoreActivity.this) {
+//                                @Override
+//                                public void onSuccess(Bitmap response) {
+//                                    ImageView imageView =getImageParams().getImageView();
+//                                    RecyclerView.LayoutParams layoutParams= (RecyclerView.LayoutParams) imageView.getLayoutParams();
+//                                    int width=staggeredGridRefreshLayout.getRecyclerView().getWidth()-
+//                                           3*layoutParams.leftMargin;
+//                                    layoutParams.width=width/2;
+//                                    layoutParams.height=(int) (width/2*response.getHeight() * 1F / response.getWidth());
+//                                    LogUtils.log("width", width);
+//
+//                                    imageView.setLayoutParams(layoutParams);
+//
+//                                    imageView.setImageBitmap(response);
+//
+//
 //                                }
-//                                rvAdapter.notifyDataSetChanged();
 //
-//                                final TextView textView = new TextView(headLayout.getContext());
-//                                textView.setGravity(Gravity.CENTER);
-//                                textView.setBackgroundColor(Color.WHITE);
-//                                textView.setText("有8条更新");
-//                                headLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//                                @Override
+//                                public void onLoading(Object readedPart, int percent, long current, long length) {
 //
-//                                new Handler().postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        headLayout.removeView(textView);
-//                                        staggeredGridRefreshLayout.closeRefresh();
-//                                    }
-//                                }, 2000);
-//                            }
-//                        });
-//                    }
-//                }, 3000);
+//                                }
 //
+//                                @Override
+//                                public void onCancel(Object readedPart, int percent, long current, long length) {
+//
+//                                }
+//
+//                                @Override
+//                                public void onFail(String errorMsg) {
+//
+//                                }
+//                            });
+//
+////                    Glide.with(SGRVRefreshLoadMoreActivity.this).load("http://cn.bing.com" + bean.getUrl()).into((ImageView) holder.getView(R.id.iv));
+//                    /**
+//                     * W/RecyclerView: Cannot call this method in a scroll callback. Scroll callbacks mightbe run during a measure & layout pass where you cannot change theRecyclerView data. Any method call that might change the structureof the RecyclerView or the adapter contents should be postponed tothe next frame.
+//                     *     java.lang.IllegalStateException:
+//                     */
+////                            rvAdapter.notifyItemChanged(ii);
+//
+////                                    BaseViewHolder holder = (BaseViewHolder) staggeredGridRefreshLayout.getRecyclerView().findViewHolderForAdapterPosition(ii);
+//                    //有些图片加载出来后，holder空间被撑大，有些holder不可见了，所以需要判断null
+////                                    holder.setImageBitmap(R.id.iv, response);
+//                }
 //            }
 //
 //            @Override
-//            public void onLoadMoreStart() {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        staggeredGridRefreshLayout.finishLoadMore(new LoadMoreFinishListener() {
-//                            @Override
-//                            public void onLoadMoreFinish(FrameLayout footLayout) {
-//                                staggeredGridRefreshLayout.finishLoadMore(new LoadMoreFinishListener() {
-//                                    @Override
-//                                    public void onLoadMoreFinish(final FrameLayout footLayout) {
+//            public int getItemLayoutID(int position, BingBean.ImagesBean bean) {
+//                return R.layout.item_sgrv;
+//            }
 //
-//                                        for (int i = 0; i < 8; i++) {
-//                                            rvAdapter.add(new HRVBean(R.drawable.pic3));
-//                                        }
-//                                        rvAdapter.notifyDataSetChanged();
 //
-//                                        staggeredGridRefreshLayout.getRecyclerView().smoothScrollBy(0,100);
-//
-//                                        final TextView textView = new TextView(footLayout.getContext());
-//                                        textView.setGravity(Gravity.CENTER);
-//                                        textView.setBackgroundColor(Color.WHITE);
-//                                        textView.setTextColor(Color.RED);
-//                                        textView.setText("有8条更新");
-//                                        footLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//
-//                                        new Handler().postDelayed(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                footLayout.removeView(textView);
-//                                                staggeredGridRefreshLayout.closeLoadMore();
-//                                            }
-//                                        }, 2000);
-//                                    }
-//
-//                                });
-//                            }
-//                        });
-//                    }
-//                }, 3000);
+//            @Override
+//            public void onItemClick(BaseViewHolder holder, int position, BingBean.ImagesBean bean) {
 //
 //            }
-//        });
-
-        HttpUtils.getInstance().get("http://cn.bing.com/HPImageArchive.aspx")
-                .param("format", "js")
-                .param("ids", 0)
-                .param("n", 20)
-                .enqueue(new StringCallbackImpl() {
-                    @Override
-                    public void onSuccess(String response) {
-
-//                        LogUtils.log(response);
-                        BingBean bingBean = null;
-                        try {
-                            bingBean = new Gson().fromJson(response, BingBean.class);
-                        } catch (Exception e) {
-                            LogUtils.log("Exception", e.getMessage());
-                        }
-                        rvAdapter.add(bingBean.getImages());
-                    }
-
-                    @Override
-                    public void onLoading(Object readedPart, int percent, long current, long length) {
-
-                    }
-
-                    @Override
-                    public void onCancel(Object readedPart, int percent, long current, long length) {
-
-                    }
-
-                    @Override
-                    public void onFail(String errorMsg) {
-
-                    }
-                });
+//        };
+//        LogUtils.log("rvAdapter____", rvAdapter.hashCode());
+//
+//        staggeredGridRefreshLayout.setAdapter(rvAdapter);
+////        staggeredGridRefreshLayout.setOnPullListener(new OnPullListener() {
+////            @Override
+////            public void onRefreshStart() {
+////                new Handler().postDelayed(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        staggeredGridRefreshLayout.finishRefresh(new RefreshFinishListener() {
+////                            @Override
+////                            public void onRefreshFinish(final FrameLayout headLayout) {
+////                                for (int i = 0; i < 8; i++) {
+////                                    rvAdapter.addToHeadNoNotify(new HRVBean(R.drawable.pic3));
+////                                }
+////                                rvAdapter.notifyDataSetChanged();
+////
+////                                final TextView textView = new TextView(headLayout.getContext());
+////                                textView.setGravity(Gravity.CENTER);
+////                                textView.setBackgroundColor(Color.WHITE);
+////                                textView.setText("有8条更新");
+////                                headLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+////
+////                                new Handler().postDelayed(new Runnable() {
+////                                    @Override
+////                                    public void run() {
+////                                        headLayout.removeView(textView);
+////                                        staggeredGridRefreshLayout.closeRefresh();
+////                                    }
+////                                }, 2000);
+////                            }
+////                        });
+////                    }
+////                }, 3000);
+////
+////            }
+////
+////            @Override
+////            public void onLoadMoreStart() {
+////                new Handler().postDelayed(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        staggeredGridRefreshLayout.finishLoadMore(new LoadMoreFinishListener() {
+////                            @Override
+////                            public void onLoadMoreFinish(FrameLayout footLayout) {
+////                                staggeredGridRefreshLayout.finishLoadMore(new LoadMoreFinishListener() {
+////                                    @Override
+////                                    public void onLoadMoreFinish(final FrameLayout footLayout) {
+////
+////                                        for (int i = 0; i < 8; i++) {
+////                                            rvAdapter.add(new HRVBean(R.drawable.pic3));
+////                                        }
+////                                        rvAdapter.notifyDataSetChanged();
+////
+////                                        staggeredGridRefreshLayout.getRecyclerView().smoothScrollBy(0,100);
+////
+////                                        final TextView textView = new TextView(footLayout.getContext());
+////                                        textView.setGravity(Gravity.CENTER);
+////                                        textView.setBackgroundColor(Color.WHITE);
+////                                        textView.setTextColor(Color.RED);
+////                                        textView.setText("有8条更新");
+////                                        footLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+////
+////                                        new Handler().postDelayed(new Runnable() {
+////                                            @Override
+////                                            public void run() {
+////                                                footLayout.removeView(textView);
+////                                                staggeredGridRefreshLayout.closeLoadMore();
+////                                            }
+////                                        }, 2000);
+////                                    }
+////
+////                                });
+////                            }
+////                        });
+////                    }
+////                }, 3000);
+////
+////            }
+////        });
+//
+//        HttpUtils.getInstance().get("http://cn.bing.com/HPImageArchive.aspx")
+//                .param("format", "js")
+//                .param("ids", 0)
+//                .param("n", 20)
+//                .enqueue(new StringCallbackImpl() {
+//                    @Override
+//                    public void onSuccess(String response) {
+//
+////                        LogUtils.log(response);
+//                        BingBean bingBean = null;
+//                        try {
+//                            bingBean = new Gson().fromJson(response, BingBean.class);
+//                        } catch (Exception e) {
+//                            LogUtils.log("Exception", e.getMessage());
+//                        }
+//                        rvAdapter.add(bingBean.getImages());
+//                    }
+//
+//                    @Override
+//                    public void onLoading(Object readedPart, int percent, long current, long length) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancel(Object readedPart, int percent, long current, long length) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onFail(String errorMsg) {
+//
+//                    }
+//                });
     }
 
 //    private int getTargetHeight(ImageView view) {
