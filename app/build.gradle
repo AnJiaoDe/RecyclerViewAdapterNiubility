@@ -42,5 +42,5 @@ dependencies {
     api 'androidx.viewpager2:viewpager2:1.1.0-alpha01'
 
     api "androidx.recyclerview:recyclerview:1.2.0-alpha03"
-    api "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.0.8"
+    api "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.0.9"
 }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.cy.cyrvadapter.recyclerview.HorizontalRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.cy.rvadapterniubility.recyclerview.HorizontalRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/hrv"
     android:layout_width="match_parent"
-    android:layout_height="300dp">
+    android:background="#eee"
+    android:layout_height="wrap_content">
 
-</com.cy.cyrvadapter.recyclerview.HorizontalRecyclerView>
+</com.cy.rvadapterniubility.recyclerview.HorizontalRecyclerView>

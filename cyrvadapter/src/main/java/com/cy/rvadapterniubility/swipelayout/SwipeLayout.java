@@ -22,7 +22,7 @@ import java.util.List;
  * Created by cy on 11/24/14.
  */
 public class SwipeLayout extends LinearLayout {
-    private List<OnSwipeListener> list_listener;
+    //    private List<OnSwipeListener> list_listener;
     private View contentView;
     private View sideView;
     private int dragDistance;
@@ -33,7 +33,7 @@ public class SwipeLayout extends LinearLayout {
     private float velocity_x_limit;
     private int duration_open = 200;
     private int duration_close = 200;
-
+    private OnSwipeListener onSwipeListener;
 
     public SwipeLayout(Context context) {
         this(context, null);
@@ -41,9 +41,9 @@ public class SwipeLayout extends LinearLayout {
 
     public SwipeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        list_listener = new ArrayList<>();
+//        list_listener = new ArrayList<>();
         setOrientation(HORIZONTAL);
-        velocity_x_limit = (int) (ViewConfiguration.get(context).getScaledMaximumFlingVelocity() * 0.2f);
+        velocity_x_limit = (int) (ViewConfiguration.get(context).getScaledMaximumFlingVelocity() * 0.4f);
 
         contentView = new View(context);
         sideView = new View(context);
@@ -110,24 +110,24 @@ public class SwipeLayout extends LinearLayout {
 
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int size_width= MeasureSpec.getSize(widthMeasureSpec);
-        int size_height= MeasureSpec.getSize(heightMeasureSpec);
+        int size_width = MeasureSpec.getSize(widthMeasureSpec);
+        int size_height = MeasureSpec.getSize(heightMeasureSpec);
         contentView.measure(MeasureSpec.makeMeasureSpec(size_width, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(size_height, MeasureSpec.EXACTLY));
-        sideView.measure(getChildMeasureSpec(widthMeasureSpec,0,sideView.getLayoutParams().width),
+        sideView.measure(getChildMeasureSpec(widthMeasureSpec, 0, sideView.getLayoutParams().width),
                 MeasureSpec.makeMeasureSpec(size_height, MeasureSpec.EXACTLY));
         dragDistance = sideView.getMeasuredWidth();
     }
 
 
-    public final void setContentView(View view) {
+    public void setContentView(View view) {
         removeView(contentView);
 //        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         this.contentView = view;
         addView(contentView, 0);
     }
 
-    public final void setSideView(View view) {
+    public void setSideView(View view) {
         removeView(sideView);
 //        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         this.sideView = view;
@@ -189,9 +189,7 @@ public class SwipeLayout extends LinearLayout {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 isOpened = true;
-                for (OnSwipeListener onSwipeListener : list_listener) {
-                    onSwipeListener.onOpened();
-                }
+                if (onSwipeListener != null) onSwipeListener.onOpened();
             }
         });
         valueAnimator.start();
@@ -224,9 +222,6 @@ public class SwipeLayout extends LinearLayout {
                 super.onAnimationEnd(animation);
                 isOpened = false;
                 if (onSwipeListener != null) onSwipeListener.onClosed();
-                for (OnSwipeListener onSwipeListener : list_listener) {
-                    onSwipeListener.onClosed();
-                }
             }
         });
         valueAnimator.start();
@@ -245,9 +240,7 @@ public class SwipeLayout extends LinearLayout {
         contentView.setRight(contentView.getRight() + distanceX);
         sideView.setLeft(sideView.getLeft() + distanceX);
         sideView.setRight(sideView.getRight() + distanceX);
-        for (OnSwipeListener onSwipeListener : list_listener) {
-            onSwipeListener.onScrolled(distanceX);
-        }
+        if (onSwipeListener != null) onSwipeListener.onScrolled(distanceX);
     }
 
     @Override
@@ -310,10 +303,16 @@ public class SwipeLayout extends LinearLayout {
                 velocityTracker.computeCurrentVelocity(1000);
                 velocity_x = velocityTracker.getXVelocity();
 
+                LogUtils.log("velocity_x_limit", velocity_x_limit);
+                LogUtils.log("-velocity_x", -velocity_x);
                 //右滑
-                if (velocity_x > velocity_x_limit || contentView.getLeft() >= -dragDistance * 1f / 2) {
+                if (velocity_x > velocity_x_limit) {
                     close();
-                } else if (-velocity_x > velocity_x_limit || contentView.getLeft() < -dragDistance * 1f / 2) {
+                } else if (-velocity_x > velocity_x_limit) {
+                    open();
+                } else if (contentView.getLeft() >= -dragDistance * 1f / 2) {
+                    close();
+                } else if (contentView.getLeft() < -dragDistance * 1f / 2) {
                     open();
                 }
 
@@ -332,28 +331,23 @@ public class SwipeLayout extends LinearLayout {
         return true;
     }
 
-    public void addOnSwipeListener(OnSwipeListener listener) {
-        list_listener.add(listener);
-    }
+//    public void addOnSwipeListener(OnSwipeListener listener) {
+//        list_listener.add(listener);
+//    }
+//
+//    public void removeOnSwipeListener(OnSwipeListener listener) {
+//        list_listener.remove(listener);
+//    }
 
-    public void removeOnSwipeListener(OnSwipeListener listener) {
-        list_listener.remove(listener);
-    }
+//    public List<OnSwipeListener> getList_listener() {
+//        return list_listener;
+//    }
 
-    public List<OnSwipeListener> getList_listener() {
-        return list_listener;
-    }
+//    public void clearOnSwipeListener() {
+//        list_listener.clear();
+//    }
 
-    public void clearOnSwipeListener() {
-        list_listener.clear();
-    }
-
-    public static interface OnSwipeListener {
-
-        public void onScrolled(int dx);
-
-        public void onOpened();
-
-        public void onClosed();
+    public void setOnSwipeListener(OnSwipeListener onSwipeListener) {
+        this.onSwipeListener = onSwipeListener;
     }
 }

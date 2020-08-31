@@ -1,12 +1,18 @@
 package com.cy.recyclerviewadapter.activity.vr;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.refreshlayoutniubility.RefreshFinishListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -67,7 +73,35 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
         verticalRefreshLayout.setAdapter(multiAdapter, new OnRefreshListener() {
             @Override
             public void onRefreshStart() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
 
+                        verticalRefreshLayout.finishRefresh(new RefreshFinishListener() {
+                            @Override
+                            public void onRefreshFinish(final FrameLayout headLayout) {
+                                for (int i = 0; i < 8; i++) {
+                                    multiAdapter.getAdapters().get(1).addToTopNoNotify(new VRBean("更新" + i));
+                                }
+                                multiAdapter.getAdapters().get(1).notifyDataSetChanged();
+
+                                final TextView textView = new TextView(headLayout.getContext());
+                                textView.setGravity(Gravity.CENTER);
+                                textView.setBackgroundColor(Color.WHITE);
+                                textView.setText("有8条更新");
+                                headLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        headLayout.removeView(textView);
+                                        verticalRefreshLayout.closeRefresh();
+                                    }
+                                }, 1000);
+                            }
+                        });
+                    }
+                }, 2000);
             }
         }, new OnRVLoadMoreListener(multiAdapter, 6) {
             @Override
@@ -98,7 +132,6 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                                         multiAdapter.getAdapter(1).notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
                                     }
                                 });
-//                                verticalRefreshLayout.closeLoadMore();
                             }
                         }, 1000);
                     }

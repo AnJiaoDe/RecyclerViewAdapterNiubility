@@ -36,7 +36,7 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
     private boolean isLoadMoreing = false;
     private OnCloseLoadMoreCallback onCloseLoadMoreCallback;
     private final String CLEAR = "CLEAR";
-    private IGridRecyclerView gridRecyclerView;
+    private GridRecyclerView gridRecyclerView;
 
     public OnGridLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
@@ -66,10 +66,10 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
 
     private void checkRecyclerView(RecyclerView recyclerView) {
         try {
-            this.gridRecyclerView = (IGridRecyclerView) recyclerView;
+            this.gridRecyclerView = (GridRecyclerView) recyclerView;
         } catch (Exception e) {
             throw new IllegalArgumentException(
-                    "You can only use " + getClass().getName() + " in " + GridRecyclerView.class.getName() + " or " + StaggeredRecyclerView.class.getName());
+                    "You can only use " + getClass().getName() + " in " + GridRecyclerView.class.getName());
         }
     }
 
@@ -209,7 +209,7 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
 
     public void setLoadMoreText(String text) {
         if (gridRecyclerView == null) return;
-        BaseViewHolder baseViewHolder = (BaseViewHolder) gridRecyclerView.getRecyclerView().findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+        BaseViewHolder baseViewHolder = (BaseViewHolder) gridRecyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
         baseViewHolder.setGone(R.id.animView);
         baseViewHolder.setText(R.id.tv, text);
         baseViewHolder.setVisible(R.id.tv);

@@ -45,7 +45,7 @@ public class VRHeadFootActivity extends BaseActivity {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, VRHeadFootBean bean,boolean isSelected) {
 
-                holder.setText(R.id.tv,bean);
+                holder.setText(R.id.tv,bean.getStr());
             }
 
             @Override
@@ -62,7 +62,7 @@ public class VRHeadFootActivity extends BaseActivity {
             @Override
             public void onViewAttachedToWindow(BaseViewHolder holder) {
                 super.onViewAttachedToWindow(holder);
-                getAdapter().startDefaultAttachedAnim(holder);
+                startDefaultAttachedAnim(holder);
             }
 
         }).addAdapter(new SimpleAdapter<String>() {

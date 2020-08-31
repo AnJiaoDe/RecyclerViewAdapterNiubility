@@ -1,4 +1,4 @@
-<com.cy.cyrvadapter.swipelayout.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.cy.rvadapterniubility.swipelayout.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:id="@+id/sl"
     android:layout_width="match_parent"
@@ -70,4 +70,4 @@
 
 
     </LinearLayout>
-</com.cy.cyrvadapter.swipelayout.SwipeLayout>
+</com.cy.rvadapterniubility.swipelayout.SwipeLayout>

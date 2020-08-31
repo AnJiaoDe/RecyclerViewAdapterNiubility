@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.cy.rvadapterniubility.adapter.IScrollState;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
@@ -30,6 +31,9 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
     public BaseRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setOverScrollMode(OVER_SCROLL_NEVER);
+        //去除难看的默认闪烁动画
+        SimpleItemAnimator simpleItemAnimator = (SimpleItemAnimator) getItemAnimator();
+        if (simpleItemAnimator != null) simpleItemAnimator.setSupportsChangeAnimations(false);
         addOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

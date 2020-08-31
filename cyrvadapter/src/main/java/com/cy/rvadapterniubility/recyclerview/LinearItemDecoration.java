@@ -3,6 +3,8 @@ package com.cy.rvadapterniubility.recyclerview;
 import android.graphics.Rect;
 import android.view.View;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -15,13 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * @Version:
  */
 public class LinearItemDecoration extends RecyclerView.ItemDecoration {
-
     private int space_vertical, space_horizontal;
-    private RecyclerView.Adapter adapter;
-
-    public LinearItemDecoration(RecyclerView.Adapter adapter) {
-        this.adapter = adapter;
-    }
 
     public LinearItemDecoration setSpace_vertical(int space_vertical) {
         this.space_vertical = space_vertical;
@@ -35,12 +31,26 @@ public class LinearItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        final LinearLayoutManager layoutManager = (LinearLayoutManager) parent.getLayoutManager();
         RecyclerView.ViewHolder viewHolder = parent.getChildViewHolder(view);
+        int orientation= layoutManager.getOrientation();
         int position = viewHolder.getBindingAdapterPosition();
-        outRect.left = space_horizontal;
-        outRect.top = space_vertical;
-        outRect.right=position==adapter.getItemCount()-1?space_horizontal:0;
-        outRect.bottom = space_vertical;
+
+        switch (orientation) {
+            case RecyclerView.VERTICAL:
+                outRect.left =space_horizontal;
+                outRect.top = space_vertical;
+                outRect.right =space_horizontal;
+                outRect.bottom = position==parent.getAdapter().getItemCount()-1?space_vertical:0;
+                break;
+            //HORIZONTAL的其实就是VERTICAL翻转一下
+            case RecyclerView.HORIZONTAL:
+                outRect.left = space_horizontal;
+                outRect.top =space_vertical;
+                outRect.right =position==parent.getAdapter().getItemCount()-1?space_horizontal:0;
+                outRect.bottom = space_vertical;
+                break;
+        }
     }
 
     public int getSpace_vertical() {

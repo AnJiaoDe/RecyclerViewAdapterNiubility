@@ -10,6 +10,7 @@ import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
 import com.cy.rvadapterniubility.adapter.SwipeAdapter;
+import com.cy.rvadapterniubility.swipelayout.OnSwipeListener;
 import com.cy.rvadapterniubility.swipelayout.SwipeRecyclerView;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class VRSwipeActivity extends BaseActivity {
                 holder.setOnClickListener(R.id.layout_delete, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        closeOpened(new OnSwipeCallback() {
+                        closeOpened(new OnSwipeListener() {
                             @Override
                             public void onClosed() {
                                 //必须关闭动画完毕后才remove item,否则，会因为缓存导致,其他item闪烁
@@ -63,7 +64,7 @@ public class VRSwipeActivity extends BaseActivity {
                                  * holder.getAdapterPosition()获取的position是当前holder在整个recyclerView中的正确位置，
                                  */
 //                                getSimpleAdapter().remove(position);
-                                getSimpleAdapter().remove(holder.getAdapterPosition());
+                                getSimpleAdapter().remove(holder.getBindingAdapterPosition());
                             }
                         });
                     }

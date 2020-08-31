@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.cy.rvadapterniubility.swipelayout.OnSwipeListener;
 import com.cy.rvadapterniubility.swipelayout.SwipeLayout;
 
 /**
@@ -22,26 +23,26 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder> {
         ((SwipeLayout) holder.itemView).getContentView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.onItemClick(holder, holder.getAdapterPosition(), bean);
+                adapter.onItemClick(holder, holder.getBindingAdapterPosition(), bean);
             }
         });
-        ((SwipeLayout) holder.itemView).addOnSwipeListener(new SwipeLayout.OnSwipeListener() {
+        ((SwipeLayout) holder.itemView).setOnSwipeListener(new OnSwipeListener() {
             @Override
             public void onScrolled(int dx) {
                 swipeLayout_scrolled = (SwipeLayout) holder.itemView;
-                SwipeAdapter.this.onScrolled(holder, holder.getAdapterPosition(), bean, dx);
+                SwipeAdapter.this.onScrolled(holder, holder.getBindingAdapterPosition(), bean, dx);
             }
 
             @Override
             public void onOpened() {
                 swipeLayout_opened = (SwipeLayout) holder.itemView;
-                SwipeAdapter.this.onOpened(holder, holder.getAdapterPosition(), bean);
+                SwipeAdapter.this.onOpened(holder, holder.getBindingAdapterPosition(), bean);
             }
 
             @Override
             public void onClosed() {
                 swipeLayout_opened = null;
-                SwipeAdapter.this.onClosed(holder, holder.getAdapterPosition(), bean);
+                SwipeAdapter.this.onClosed(holder, holder.getBindingAdapterPosition(), bean);
             }
         });
     }
@@ -81,23 +82,8 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder> {
         swipeLayout_opened = null;
     }
 
-    public void closeOpened(final OnSwipeCallback onSwipeCallback) {
-        swipeLayout_opened.close(new SwipeLayout.OnSwipeListener() {
-            @Override
-            public void onScrolled(int dx) {
-
-            }
-
-            @Override
-            public void onOpened() {
-
-            }
-
-            @Override
-            public void onClosed() {
-                onSwipeCallback.onClosed();
-            }
-        });
+    public void closeOpened(OnSwipeListener onSwipeListener) {
+        swipeLayout_opened.close(onSwipeListener);
         swipeLayout_opened = null;
     }
 
@@ -149,63 +135,5 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder> {
             };
         }
         return (SimpleAdapter<T>) adapter;
-    }
-//
-//    /**
-//     * 策略2
-//     *
-//     * @return
-//     */
-//    public HeadFootAdapter<T> getHeadFootAdapter() {
-//        if (adapter == null || !(adapter instanceof HeadFootAdapter)) {
-//            adapter = new HeadFootAdapter<T>() {
-//                @Override
-//                public void bindDataToView(BaseViewHolder holder, int position, T bean) {
-//                    dealSwipe(holder, bean);
-//                    SwipeAdapter.this.bindDataToView(holder, position, bean);
-//                }
-//
-//                @Override
-//                public int getItemLayoutID(int position, T bean) {
-//                    return SwipeAdapter.this.getItemLayoutID(position, bean);
-//                }
-//
-//                @Override
-//                public void onItemClick(BaseViewHolder holder, int position, T bean) {
-//                    SwipeAdapter.this.onItemClick(holder, position, bean);
-//                }
-//
-//                @Override
-//                public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
-//                    SwipeAdapter.this.onItemLongClick(holder, position, bean);
-//                }
-//
-//                @Override
-//                public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
-//                    super.onViewAttachedToWindow(holder);
-//                    SwipeAdapter.this.onViewAttachedToWindow(holder);
-//
-//                }
-//            };
-//        }
-//        return (HeadFootAdapter<T>) adapter;
-//    }
-
-    public static class OnSwipeCallback implements SwipeLayout.OnSwipeListener {
-
-        @Override
-        public void onScrolled(int dx) {
-
-        }
-
-        @Override
-        public void onOpened() {
-
-        }
-
-        @Override
-        public void onClosed() {
-
-        }
     }
 }

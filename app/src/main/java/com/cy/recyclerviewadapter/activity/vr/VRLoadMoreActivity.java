@@ -56,31 +56,9 @@ public class VRLoadMoreActivity extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-//                        verticalRefreshLayout.finishLoadMore(new LoadMoreFinishListener() {
-//                            @Override
-//                            public void onLoadMoreFinish(FrameLayout footLayout) {
-//                                verticalRefreshLayout.finishLoadMore(new LoadMoreFinishListener() {
-//                                    @Override
-//                                    public void onLoadMoreFinish(final FrameLayout footLayout) {
-//                                        final TextView textView = new TextView(footLayout.getContext());
-//                                        textView.setGravity(Gravity.CENTER);
-//                                        textView.setBackgroundColor(Color.WHITE);
-//                                        textView.setTextColor(Color.RED);
-//                                        textView.setText("有8条更新");
-//                                        footLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//
-//                                        new Handler().postDelayed(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                footLayout.removeView(textView);
-//                                                verticalRefreshLayout.closeLoadMore();
-//                                            }
-//                                        }, 2000);
-//                                    }
-//
-//                                });
-//                            }
-//                        });
+                        for (int i = 0; i < 8; i++) {
+                            rvAdapter.addNoNotify(new VRBean("更多" + i));
+                        }
                         verticalRefreshLayout.finishLoadMore();
                     }
                 }, 3000);

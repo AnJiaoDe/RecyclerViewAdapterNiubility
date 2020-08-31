@@ -15,7 +15,7 @@ import com.cy.refreshlayoutniubility.ScreenUtils;
  * Created by cy on 2017/7/2.
  */
 
-public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView> implements IGridRecyclerView {
+public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView>  {
     private int spanCount = 2;
     private int orientation = RecyclerView.VERTICAL;
     private SparseArray<Boolean> arrayFullSpan;
@@ -41,16 +41,14 @@ public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView> impleme
         return this;
     }
 
-    @Override
-    public <T extends IGridRecyclerView> T addFullSpanPosition(int position) {
+    public GridRecyclerView addFullSpanPosition(int position) {
         arrayFullSpan.put(position, true);
-        return (T) this;
+        return  this;
     }
 
-    @Override
-    public <T extends IGridRecyclerView> T removeFullSpanPosition(int position) {
+    public GridRecyclerView removeFullSpanPosition(int position) {
         arrayFullSpan.remove(position);
-        return (T) this;
+        return  this;
     }
 
     public SparseArray<Boolean> getArrayFullSpan() {
@@ -64,13 +62,8 @@ public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView> impleme
     }
 
 
-    @Override
-    public <T extends IGridItemDecoration> T getGridItemDecoration() {
-        return (T) gridItemDecoration;
-    }
-    @Override
-    public <T extends RecyclerView> T getRecyclerView() {
-        return (T) this;
+    public GridItemDecoration getGridItemDecoration() {
+        return  gridItemDecoration;
     }
 
     @Override

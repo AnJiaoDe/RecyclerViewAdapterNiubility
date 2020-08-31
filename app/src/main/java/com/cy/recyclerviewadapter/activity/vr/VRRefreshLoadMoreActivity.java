@@ -15,6 +15,7 @@ import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.refreshlayoutniubility.LoadMoreFinishListener;
 import com.cy.refreshlayoutniubility.OnPullListener;
+import com.cy.refreshlayoutniubility.RefreshFinishListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.refreshrv.VerticalRefreshLayout;
@@ -59,31 +60,30 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        verticalRefreshLayout.finishRefresh();
 
-//                        verticalRefreshLayout.finishRefresh(new RefreshFinishListener() {
-//                            @Override
-//                            public void onRefreshFinish(final FrameLayout headLayout) {
-//                                for (int i = 0; i < 8; i++) {
-//                                    rvAdapter.getAdapter().addToTopNoNotify(new VRBean("更新" + i));
-//                                }
-//                                rvAdapter.getAdapter().notifyDataSetChanged();
-//
-//                                final TextView textView = new TextView(headLayout.getContext());
-//                                textView.setGravity(Gravity.CENTER);
-//                                textView.setBackgroundColor(Color.WHITE);
-//                                textView.setText("有8条更新");
-//                                headLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//
-//                                new Handler().postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        headLayout.removeView(textView);
-//                                        verticalRefreshLayout.closeRefresh();
-//                                    }
-//                                }, 1000);
-//                            }
-//                        });
+                        verticalRefreshLayout.finishRefresh(new RefreshFinishListener() {
+                            @Override
+                            public void onRefreshFinish(final FrameLayout headLayout) {
+                                for (int i = 0; i < 8; i++) {
+                                    rvAdapter.getAdapter().addToTopNoNotify(new VRBean("更新" + i));
+                                }
+                                rvAdapter.getAdapter().notifyDataSetChanged();
+
+                                final TextView textView = new TextView(headLayout.getContext());
+                                textView.setGravity(Gravity.CENTER);
+                                textView.setBackgroundColor(Color.WHITE);
+                                textView.setText("有8条更新");
+                                headLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        headLayout.removeView(textView);
+                                        verticalRefreshLayout.closeRefresh();
+                                    }
+                                }, 1000);
+                            }
+                        });
                     }
                 }, 2000);
 
@@ -116,11 +116,6 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
                                         for (int i = 0; i < 8; i++) {
                                             rvAdapter.getAdapter().add(new VRBean("更多" + i));
                                         }
-
-//                                                verticalRefreshLayout.getRecyclerView().smoothScrollBy(0,
-//                                                        ScreenUtils.dpAdapt(VRRefreshLoadMoreActivity.this, 40) );
-//                                        verticalRefreshLayout.closeLoadMore();
-
                                     }
                                 }, 1000);
 

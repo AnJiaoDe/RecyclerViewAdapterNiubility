@@ -47,7 +47,7 @@ public class VRActivity extends BaseActivity {
             }
         };
         ((VerticalRecyclerView) findViewById(R.id.vr)).addItemDecoration(
-                new LinearItemDecoration(rvAdapter).setSpace_vertical(dpAdapt(10)).setSpace_horizontal(0));
+                new LinearItemDecoration().setSpace_vertical(dpAdapt(10)).setSpace_horizontal(dpAdapt(10)));
         ((VerticalRecyclerView) findViewById(R.id.vr)).setAdapter(rvAdapter);
         rvAdapter.add(list);
     }

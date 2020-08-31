@@ -84,9 +84,9 @@ public class GRVHeadFootActivity extends BaseActivity {
                 remove(position);
             }
         });
-        ((GridRecyclerView) findViewById(R.id.grv)).setSpanCount(2).setAdapter(multiAdapter.getMergeAdapter());
+        ((GridRecyclerView) findViewById(R.id.grv)).addFullSpanPosition(0).setSpanCount(2).setAdapter(multiAdapter.getMergeAdapter());
         final List<String> list_head = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1; i++) {
             list_head.add("head" + i);
         }
 
