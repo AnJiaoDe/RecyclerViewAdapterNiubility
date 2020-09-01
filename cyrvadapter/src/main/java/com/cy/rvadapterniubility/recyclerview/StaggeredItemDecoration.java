@@ -15,14 +15,13 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
  * @UpdateRemark:
  * @Version:
  */
-public class StaggeredItemDecoration extends RecyclerView.ItemDecoration implements IGridItemDecoration{
+public class StaggeredItemDecoration extends RecyclerView.ItemDecoration {
     private int space;
 
     public StaggeredItemDecoration(int space) {
         this.space = space;
     }
 
-    @Override
     public int getSpace() {
         return space;
     }

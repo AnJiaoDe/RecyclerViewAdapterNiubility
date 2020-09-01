@@ -91,8 +91,8 @@ public abstract class OnRVLoadMoreListener extends OnVerticalScrollListener {
         super.onIdle(recyclerView, positionHolder);
         this.recyclerView = recyclerView;
         for (int position : positionHolder.getLastVisibleItemPositions()) {
-            BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
-            if (baseViewHolder.itemView.getBottom() < recyclerView.getHeight()) continue;
+            RecyclerView.ViewHolder holder =  recyclerView.findViewHolderForAdapterPosition(position);
+            if (holder!=null&&holder.itemView.getBottom() < recyclerView.getHeight()) continue;
             //说明最后一个item-count_remain可见了，可以开始loadMore了
             if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - getCount_remain()) {
                 if (loadMoreAdapter.getItemCount() == 0) {
@@ -191,6 +191,7 @@ public abstract class OnRVLoadMoreListener extends OnVerticalScrollListener {
     public void setLoadMoreText(String text) {
         if (recyclerView == null) return;
         BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+        if(baseViewHolder==null)return;
         baseViewHolder.setGone(R.id.animView);
         baseViewHolder.setText(R.id.tv, text);
         baseViewHolder.setVisible(R.id.tv);

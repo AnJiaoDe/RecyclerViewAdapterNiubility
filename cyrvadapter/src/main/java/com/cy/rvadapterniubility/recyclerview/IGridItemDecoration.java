@@ -1,5 +1,7 @@
 package com.cy.rvadapterniubility.recyclerview;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * @Description:
  * @Author: cy
@@ -10,5 +12,9 @@ package com.cy.rvadapterniubility.recyclerview;
  * @Version:
  */
 public interface IGridItemDecoration {
+
     public int getSpace();
+
+    public <T extends RecyclerView.ItemDecoration> T getGridItemDecoration();
+
 }

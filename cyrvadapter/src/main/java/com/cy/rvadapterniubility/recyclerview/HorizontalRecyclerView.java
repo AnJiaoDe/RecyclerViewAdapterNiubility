@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerView> {
-    private LinearItemDecoration linearItemDecoration;
 
     public HorizontalRecyclerView(Context context) {
         this(context, null);
@@ -30,34 +29,5 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
         super.setAdapter(adapter);
     }
 
-    @Override
-    public void addItemDecoration(@NonNull RecyclerView.ItemDecoration decor, int index) {
-        try {
-            this.linearItemDecoration = (LinearItemDecoration) decor;
-        }catch (Exception e){
-            throw new IllegalAccessError("You can only use LinearItemDecoration in VerticalRecyclerView or HorizontalRecyclerView");
-        }
-        super.addItemDecoration(decor, index);
-    }
-
-    @Override
-    public void addItemDecoration(@NonNull RecyclerView.ItemDecoration decor) {
-        try {
-            this.linearItemDecoration = (LinearItemDecoration) decor;
-        }catch (Exception e){
-            throw new IllegalAccessError("You can only use LinearItemDecoration in VerticalRecyclerView or HorizontalRecyclerView");
-        }
-        super.addItemDecoration(decor);
-    }
-
-    @NonNull
-    @Override
-    public RecyclerView.ItemDecoration getItemDecorationAt(int index) {
-        return linearItemDecoration;
-    }
-
-    public LinearItemDecoration getItemDecoration() {
-        return linearItemDecoration;
-    }
 
 }

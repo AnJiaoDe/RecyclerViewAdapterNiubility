@@ -2,10 +2,13 @@ package com.cy.rvadapterniubility.recyclerview;
 
 import android.graphics.Rect;
 import android.view.View;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.rvadapterniubility.LogUtils;
+import com.cy.rvadapterniubility.adapter.MultiAdapter;
+
 /**
  * @Description:注意：使用ItemDecoration时，一定要小心，设置的item的宽度不能超过每列的最大限制，超过了就看不见space了
  * @Author: cy
@@ -15,9 +18,10 @@ import com.cy.rvadapterniubility.LogUtils;
  * @UpdateRemark:
  * @Version:
  */
-public class GridItemDecoration extends RecyclerView.ItemDecoration implements IGridItemDecoration{
+public class FullSpanGridItemDecoration extends RecyclerView.ItemDecoration  implements IGridItemDecoration{
     private int space;
-    public GridItemDecoration(int space) {
+
+    public FullSpanGridItemDecoration( int space) {
         this.space = space;
     }
     @Override
@@ -29,7 +33,6 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration implements I
     public <T extends RecyclerView.ItemDecoration> T getGridItemDecoration() {
         return (T) this;
     }
-
     /**
      * 5个span,6个space,要想分的均匀，必须找到5,6的公约数(肯定是找最小公约数5*6=30)，将每个space分成30/6=5份
      * 每个span左右占据份数如下：
@@ -45,6 +48,13 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration implements I
      */
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        GridRecyclerView gridRecyclerView = null;
+        try {
+            gridRecyclerView = (GridRecyclerView) parent;
+        } catch (Exception e) {
+            throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in GridLayoutManager  for " + GridRecyclerView.class.getName());
+        }
+
         final RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
         RecyclerView.ViewHolder viewHolder = parent.getChildViewHolder(view);
         int spanCount = 1;
@@ -60,15 +70,41 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration implements I
         int position = viewHolder.getAbsoluteAdapterPosition();
         int perSpace = (int) (space * 1f / spanCount);
 
-        int a = spanCount - position % spanCount;
-        int b = 1 + position % spanCount;
+
+        LogUtils.log("gridRecyclerView.getArrayFullSpan().get(position)", gridRecyclerView.getArrayFullSpan().get(position) + "" + position);
+
+        int a = position>0&&gridRecyclerView.getArrayFullSpan().get(0) != null?spanCount - (position-1) % spanCount:spanCount - position % spanCount;
+        int b = position>0&&gridRecyclerView.getArrayFullSpan().get(0) != null?1 +  (position-1) % spanCount:1 + position % spanCount;
         switch (orientation) {
             case RecyclerView.VERTICAL:
-                    outRect.left = a * perSpace;
-                    outRect.top = 0;
-                    outRect.right = b * perSpace;
-                    outRect.bottom = space;
+                if (position == 0) {
+                    if (gridRecyclerView.getArrayFullSpan().get(position) != null) {
+                        outRect.left = space;
+                        outRect.top = space;
+                        outRect.right = space;
+                        outRect.bottom = space;
+                        return;
+                    }
+                }
+                if (position == gridRecyclerView.getAdapter().getItemCount() - 1) {
+                    if (gridRecyclerView.getArrayFullSpan().get(position) != null) {
+                        outRect.left = space;
+                        outRect.top = 0;
+                        outRect.right = space;
+                        outRect.bottom = space;
+                        return;
+                    }
+                }
+
+                outRect.left = a * perSpace;
+                outRect.top = 0;
+                outRect.right = b * perSpace;
+                outRect.bottom = space;
+                if (gridRecyclerView.getArrayFullSpan().get(0) != null) {
+                    if (position < spanCount-1) outRect.top = space;
+                }else {
                     if (position < spanCount) outRect.top = space;
+                }
                 break;
             //HORIZONTAL的其实就是VERTICAL翻转一下
             case RecyclerView.HORIZONTAL:

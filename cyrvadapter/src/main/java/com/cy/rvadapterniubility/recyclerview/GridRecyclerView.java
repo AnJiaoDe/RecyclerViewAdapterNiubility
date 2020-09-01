@@ -4,22 +4,25 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.MergeAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.refreshlayoutniubility.ScreenUtils;
+import com.cy.rvadapterniubility.adapter.MultiAdapter;
 
 
 /**
  * Created by cy on 2017/7/2.
  */
 
-public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView>  {
+public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView> {
     private int spanCount = 2;
     private int orientation = RecyclerView.VERTICAL;
     private SparseArray<Boolean> arrayFullSpan;
-    private GridItemDecoration gridItemDecoration;
+    private IGridItemDecoration gridItemDecoration;
 
     public GridRecyclerView(Context context) {
         this(context, null);
@@ -43,12 +46,12 @@ public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView>  {
 
     public GridRecyclerView addFullSpanPosition(int position) {
         arrayFullSpan.put(position, true);
-        return  this;
+        return this;
     }
 
     public GridRecyclerView removeFullSpanPosition(int position) {
         arrayFullSpan.remove(position);
-        return  this;
+        return this;
     }
 
     public SparseArray<Boolean> getArrayFullSpan() {
@@ -56,14 +59,21 @@ public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView>  {
     }
 
 
-    public void addItemDecoration(GridItemDecoration gridItemDecoration) {
+    public GridRecyclerView addItemDecoration(GridItemDecoration gridItemDecoration) {
+        if(this.gridItemDecoration!=null)removeItemDecoration(this.gridItemDecoration.getGridItemDecoration());
         this.gridItemDecoration = gridItemDecoration;
         super.addItemDecoration(gridItemDecoration);
+        return this;
+    }
+    public GridRecyclerView addItemDecoration(FullSpanGridItemDecoration gridItemDecoration) {
+        if(this.gridItemDecoration!=null)removeItemDecoration(this.gridItemDecoration.getGridItemDecoration());
+        this.gridItemDecoration = gridItemDecoration;
+        super.addItemDecoration(gridItemDecoration);
+        return this;
     }
 
-
-    public GridItemDecoration getGridItemDecoration() {
-        return  gridItemDecoration;
+    public IGridItemDecoration getGridItemDecoration() {
+        return gridItemDecoration;
     }
 
     @Override

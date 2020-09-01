@@ -1,15 +1,18 @@
 package com.cy.recyclerviewadapter.activity.grv;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.cy.recyclerviewadapter.BaseActivity;
+import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.FullSpanGridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.GridRecyclerView;
 
 import java.util.ArrayList;
@@ -37,8 +40,6 @@ public class GRVHeadFootActivity extends BaseActivity {
 
             @Override
             public void onItemClick(BaseViewHolder holder, int position, String bean) {
-                showToast("点击head,删除head");
-                remove(position);
             }
         }).addAdapter(new SimpleAdapter<HRVBean>() {
 
@@ -64,7 +65,6 @@ public class GRVHeadFootActivity extends BaseActivity {
                 super.onViewAttachedToWindow(holder);
                 getAdapter().startDefaultAttachedAnim(holder);
             }
-
         }).addAdapter(new SimpleAdapter<String>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean,boolean isSelected) {
@@ -80,16 +80,18 @@ public class GRVHeadFootActivity extends BaseActivity {
 
             @Override
             public void onItemClick(BaseViewHolder holder, int position, String bean) {
-                showToast("点击foot,删除foot");
-                remove(position);
             }
         });
-        ((GridRecyclerView) findViewById(R.id.grv)).addFullSpanPosition(0).setSpanCount(2).setAdapter(multiAdapter.getMergeAdapter());
+
+        ((GridRecyclerView) findViewById(R.id.grv)).addFullSpanPosition(0)
+                .addFullSpanPosition(101)
+                .setSpanCount(2)
+                .addItemDecoration(new FullSpanGridItemDecoration(dpAdapt(10)))
+                .setAdapter(multiAdapter.getMergeAdapter());
         final List<String> list_head = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
             list_head.add("head" + i);
         }
-
 
         List<HRVBean> list_content = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
@@ -102,16 +104,37 @@ public class GRVHeadFootActivity extends BaseActivity {
         }
 
         final List<String> list_foot = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 1; i++) {
             list_foot.add("foot" + i);
         }
         multiAdapter.getAdapter(0).add(list_head);
+        LogUtils.log("multiAdapter.getAdapter(0).add(list_head);");
         multiAdapter.getAdapter(1).add(list_content);
+        LogUtils.log("multiAdapter.getAdapter(1).add(list_content);");
         multiAdapter.getAdapter(2).add(list_foot);
+        LogUtils.log("multiAdapter.getAdapter(2).add(list_foot);");
+
     }
 
     @Override
     public void onClick(View v) {
 
+    }
+    /**
+     * --------------------------------------------------------------------------------
+     */
+    public int dpAdapt(float dp) {
+        return dpAdapt(dp, 360);
+    }
+
+    public int dpAdapt(float dp, float widthDpBase) {
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        int heightPixels = dm.heightPixels;//高的像素
+        int widthPixels = dm.widthPixels;//宽的像素
+        float density = dm.density;//density=dpi/160,密度比
+        float heightDP = heightPixels / density;//高度的dp
+        float widthDP = widthPixels / density;//宽度的dp
+        float w = widthDP > heightDP ? heightDP : widthDP;
+        return (int) (dp * w / widthDpBase * density + 0.5f);
     }
 }

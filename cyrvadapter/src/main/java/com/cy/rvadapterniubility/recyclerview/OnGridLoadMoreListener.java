@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.cy.BaseAdapter.R;
 import com.cy.refreshlayoutniubility.IAnimationView;
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -106,7 +107,7 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
             int space = gridRecyclerView != null ? gridRecyclerView.getGridItemDecoration().getSpace() : 0;
 //            //数据太少，没有充满recyclerView,没有loadMore的必要
-            if (holder.itemView.getBottom() + 2 * space < recyclerView.getHeight())
+            if (holder!=null&&holder.itemView.getBottom() + 2 * space < recyclerView.getHeight())
                 continue;
             //说明最后一个item-count_remain可见了，可以开始loadMore了
             if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - getCount_remain()) {
@@ -128,10 +129,6 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
 
     public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
 
-        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
-        if (layoutParams instanceof StaggeredGridLayoutManager.LayoutParams)
-            ((StaggeredGridLayoutManager.LayoutParams) layoutParams).setFullSpan(true);
-        layoutParams.rightMargin = gridRecyclerView.getGridItemDecoration().getSpace();
         IAnimationView animationView = setAnimationView();
         if (animationView == null) {
             animationView = holder.getView(R.id.animView);
@@ -167,8 +164,8 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationY(0);
+                            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
                             loadMoreAdapter.clear();
-                            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                             if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
                         }
                     });
@@ -210,6 +207,7 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
     public void setLoadMoreText(String text) {
         if (gridRecyclerView == null) return;
         BaseViewHolder baseViewHolder = (BaseViewHolder) gridRecyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+        if(baseViewHolder==null)return;
         baseViewHolder.setGone(R.id.animView);
         baseViewHolder.setText(R.id.tv, text);
         baseViewHolder.setVisible(R.id.tv);

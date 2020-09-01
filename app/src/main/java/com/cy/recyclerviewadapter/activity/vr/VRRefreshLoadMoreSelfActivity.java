@@ -119,6 +119,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                         for (int i = 0; i < 8; i++) {
                             multiAdapter.getAdapter(1).addNoNotify(new VRBean("更多" + i));
                         }
+
                         setLoadMoreText("有8条更多");
                         new Handler().postDelayed(new Runnable() {
                             @Override

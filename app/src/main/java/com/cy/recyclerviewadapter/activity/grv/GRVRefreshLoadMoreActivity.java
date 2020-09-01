@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,203 +14,157 @@ import android.widget.TextView;
 
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
+import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.recyclerviewadapter.bean.S360Bean;
+import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.refreshlayoutniubility.LoadMoreFinishListener;
 import com.cy.refreshlayoutniubility.OnPullListener;
 import com.cy.refreshlayoutniubility.RefreshFinishListener;
 import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.FullSpanGridItemDecoration;
+import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
+import com.cy.rvadapterniubility.recyclerview.GridRecyclerView;
+import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
+import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
 import com.cy.rvadapterniubility.refreshrv.GridRefreshLayout;
+import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
 import com.google.gson.Gson;
 
-public class GRVRefreshLoadMoreActivity extends BaseActivity {
-    private SimpleAdapter<S360Bean.DataBean> rvAdapter;
-    private int page = 0;
-    private GridRefreshLayout gridRefreshLayout;
-    private final int TYPE_FIRST = 0;
-    private final int TYPE_REFRESH = 1;
-    private final int TYPE_LOADMORE = 2;
+import java.util.ArrayList;
+import java.util.List;
 
+public class GRVRefreshLoadMoreActivity extends BaseActivity {
+    private SimpleAdapter<HRVBean> rvAdapter;
+    private GridRefreshLayout gridRefreshLayout;
+    private MultiAdapter multiAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grvrefresh_load_more);
 
 
-//        TextView textView=null;
-//        textView.setText("dg");
-//        rvAdapter = new SimpleAdapter<S360Bean.DataBean>() {
-//
-//            @Override
-//            public void onScrolling() {
-//                super.onScrolling();
-//                LogUtils.log("onScrolling");
-//                Imageloader.getInstance().cancelAllLoad();
-//            }
-//
-//            @Override
-//            public void bindDataToView(BaseViewHolder holder, int position, S360Bean.DataBean bean, boolean isSelected) {
-//                holder.setImageResource(R.id.iv,R.drawable.default_pic);
-//                if (isScrolling()) return;
-//                String urlImage = bean.getUrl();
-//                Bitmap bitmap = Imageloader.getInstance().getBitmapFromMemoryCache(urlImage);
-//                if (bitmap != null) {
-//                    LogUtils.log("bitmap!=null");
-////                    computeSize((ImageView) holder.getView(R.id.iv),bitmap);
-//                    holder.setImageBitmap(R.id.iv, bitmap);
-//                } else {
-//                    LogUtils.log("bitmap==null");
-////                    holder.setImageResource(R.id.iv, R.drawable.default_pic);
-////                    ((ImageView)holder.getView(R.id.iv)).setScaleType(ImageView.ScaleType.FIT_START);
-//                    Imageloader.getInstance().with(GRVRefreshLoadMoreActivity.this)
-//                            .url( bean.getUrl())
-//                            .tag(bean.getUrl())
-//                            .width(500)
-//                            .height(500)
-//                            .into((ImageView) holder.getView(R.id.iv))
-//                            .load();
-//
-////                    Glide.with(GRVRefreshLoadMoreActivity.this).load( bean.getUrl()).placeholder(R.drawable.default_pic)
-////                            .into((ImageView) holder.getView(R.id.iv));
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public int getItemLayoutID(int position, S360Bean.DataBean bean) {
-//                return R.layout.item_grv;
-//            }
-//
-//            @Override
-//            public void onItemClick(BaseViewHolder holder, int position,S360Bean.DataBean bean) {
-//
-//            }
-//        };
-//
-//        gridRefreshLayout = ((GridRefreshLayout) findViewById(R.id.grl));
-//        gridRefreshLayout.setAdapter(rvAdapter,new OnPullListener() {
-//            @Override
-//            public void onRefreshStart() {
-//                call(page+=10, TYPE_REFRESH,10);
-//            }
-//
-//            @Override
-//            public void onLoadMoreStart() {
-//                call(page+=10, TYPE_LOADMORE,10);
-//            }
-//        });
-//
-//        call(page, TYPE_FIRST,10);
-//    }
-//
-//    private void call(int page, final int type,int count) {
-//
-//        HttpUtils.getInstance().get("http://wallpaper.apc.360.cn/index.php")
-//                .param("c", "WallPaper")
-//                .param("a", "getAppsByCategory")
-//                .param("cid", 12)
-//                .param("start", page)
-//                .param("count", count)
-//                .param("from", "360chrome")
-//                .enqueue(new StringCallbackImpl() {
-//                    @Override
-//                    public void onSuccess(String response) {
-////                        LogUtils.log(response);
-//                        S360Bean s360Bean = null;
-//                        try {
-//                            s360Bean = new Gson().fromJson(response, S360Bean.class);
-//                        } catch (Exception e) {
-//                            LogUtils.log("Exception", e.getMessage());
-//                            return;
-//                        }
-//                        if(!s360Bean.getErrno().equals("0")){
-//                            LogUtils.log("Exception", s360Bean.getErrmsg());
-//                            return;
-//                        }
-//                        LogUtils.log("size", s360Bean.getData().size());
-//
-//                        final S360Bean bean = s360Bean;
-//
-//                        switch (type) {
-//                            case TYPE_FIRST:
-//                                rvAdapter.add(bean.getData());
-//                                break;
-//                            case TYPE_REFRESH:
-//                                gridRefreshLayout.finishRefresh(new RefreshFinishListener() {
-//                                    @Override
-//                                    public void onRefreshFinish(final FrameLayout headLayout) {
-//                                        rvAdapter.addToTop(bean.getData());
-//
-//                                        final TextView textView = new TextView(headLayout.getContext());
-//                                        textView.setGravity(Gravity.CENTER);
-//                                        textView.setBackgroundColor(Color.WHITE);
-//                                        textView.setText("有" + bean.getData().size() + "条更新");
-//                                        headLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//
-//                                        new Handler().postDelayed(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                headLayout.removeView(textView);
-//                                                gridRefreshLayout.closeRefresh();
-//                                            }
-//                                        }, 1000);
-//                                    }
-//                                });
-//                                break;
-//                            case TYPE_LOADMORE:
-//                                gridRefreshLayout.finishLoadMore(new LoadMoreFinishListener() {
-//                                    @Override
-//                                    public void onLoadMoreFinish(final FrameLayout footLayout) {
-//                                        rvAdapter.add(bean.getData());
-//
-////                                        gridRefreshLayout.getRecyclerView().smoothScrollBy(0, 100);
-//
-//                                        final TextView textView = new TextView(footLayout.getContext());
-//                                        textView.setGravity(Gravity.CENTER);
-//                                        textView.setBackgroundColor(Color.WHITE);
-//                                        textView.setTextColor(Color.RED);
-//                                        textView.setText("有" + bean.getData().size() + "条更新");
-//                                        footLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//
-//                                        new Handler().postDelayed(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                footLayout.removeView(textView);
-////                                                ViewGroup.LayoutParams layoutParams = gridRefreshLayout.getFootView().getView().getLayoutParams();
-////                                                layoutParams.height = 0;
-////                                                gridRefreshLayout.requestLayout();
-//                                                //关闭loadmore的时候，有动画过程感觉有反弹的效果，不好看，体验差
-//                                                gridRefreshLayout.closeLoadMore();
-//                                            }
-//                                        }, 1000);
-//                                    }
-//                                });
-//                                break;
-//                        }
-//
-//                    }
-//
-//                    @Override
-//                    public void onLoading(Object readedPart, int percent, long current, long length) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancel(Object readedPart, int percent, long current, long length) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onFail(String errorMsg) {
-//
-//                    }
-//                });
+        gridRefreshLayout=findViewById(R.id.grl);
+        List<HRVBean> list = new ArrayList<>();
+        for (int i=0;i<100;i++){
+            if (i%5==0){
+                list.add(new HRVBean(R.drawable.pic3));
+                continue;
+
+            }
+            list.add(new HRVBean(R.drawable.pic1));
+        }
+        rvAdapter=new SimpleAdapter<HRVBean>() {
+            @Override
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected) {
+                holder.setImageResource(R.id.iv,bean.getResID());
+            }
+
+            @Override
+            public int getItemLayoutID(int position, HRVBean bean) {
+                return R.layout.item_grv;
+            }
+
+
+            @Override
+            public void onItemClick(BaseViewHolder holder,int position, HRVBean bean) {
+                showToast("点击" + position);
+            }
+        };
+        multiAdapter=new MultiAdapter().addAdapter(rvAdapter);
+        gridRefreshLayout.getRecyclerView().addItemDecoration(new FullSpanGridItemDecoration(dpAdapt(10)));
+        gridRefreshLayout.setAdapter(multiAdapter, new OnRefreshListener() {
+            @Override
+            public void onRefreshStart() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        gridRefreshLayout.finishRefresh(new RefreshFinishListener() {
+                            @Override
+                            public void onRefreshFinish(final FrameLayout headLayout) {
+                                for (int i = 0; i < 8; i++) {
+                                    rvAdapter.addToTopNoNotify(new HRVBean(R.drawable.pic3));
+                                }
+                                rvAdapter.notifyDataSetChanged();
+
+                                final TextView textView = new TextView(headLayout.getContext());
+                                textView.setGravity(Gravity.CENTER);
+                                textView.setBackgroundColor(Color.WHITE);
+                                textView.setText("有8条更新");
+                                headLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        headLayout.removeView(textView);
+                                        gridRefreshLayout.closeRefresh();
+                                    }
+                                }, 1000);
+                            }
+                        });
+                    }
+                }, 2000);
+            }
+        }, new OnGridLoadMoreListener(multiAdapter) {
+            @Override
+            public void onLoadMoreStart() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        /**
+                         * 模拟没有更多的场景
+                         */
+                        if (multiAdapter.getMergeAdapter().getItemCount() > 120) {
+                            closeLoadMoreNoData();
+                            return;
+                        }
+                        for (int i = 0; i < 8; i++) {
+                           rvAdapter.addNoNotify(new HRVBean(R.drawable.pic1));
+                        }
+//                        rvAdapter.notifyDataSetChanged();
+                        setLoadMoreText("有8条更多");
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                /**
+                                 * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
+                                 */
+                                closeLoadMore(new OnCloseLoadMoreCallback() {
+                                    @Override
+                                    public void onClosed() {
+                                        rvAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
+                                    }
+                                });
+                            }
+                        }, 1000);
+                    }
+                }, 2000);
+            }
+        });
+        rvAdapter.add(list);
     }
 
     @Override
     public void onClick(View v) {
 
+    }
+    /**
+     * --------------------------------------------------------------------------------
+     */
+    public int dpAdapt(float dp) {
+        return dpAdapt(dp, 360);
+    }
+
+    public int dpAdapt(float dp, float widthDpBase) {
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        int heightPixels = dm.heightPixels;//高的像素
+        int widthPixels = dm.widthPixels;//宽的像素
+        float density = dm.density;//density=dpi/160,密度比
+        float heightDP = heightPixels / density;//高度的dp
+        float widthDP = widthPixels / density;//宽度的dp
+        float w = widthDP > heightDP ? heightDP : widthDP;
+        return (int) (dp * w / widthDpBase * density + 0.5f);
     }
 }
