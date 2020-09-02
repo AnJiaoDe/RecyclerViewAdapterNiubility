@@ -53,7 +53,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
             }
         }).addAdapter(new SimpleAdapter<VRBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRBean bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -119,7 +119,6 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                         for (int i = 0; i < 8; i++) {
                             multiAdapter.getAdapter(1).addNoNotify(new VRBean("更多" + i));
                         }
-
                         setLoadMoreText("有8条更多");
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -131,6 +130,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                                     @Override
                                     public void onClosed() {
                                         multiAdapter.getAdapter(1).notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
+
                                     }
                                 });
                             }

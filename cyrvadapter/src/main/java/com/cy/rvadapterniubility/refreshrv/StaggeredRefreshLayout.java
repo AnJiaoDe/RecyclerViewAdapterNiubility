@@ -3,6 +3,7 @@ package com.cy.rvadapterniubility.refreshrv;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import com.cy.rvadapterniubility.recyclerview.BaseRecyclerView;
 import com.cy.rvadapterniubility.recyclerview.OnStaggeredLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.StaggeredAdapter;
 import com.cy.rvadapterniubility.recyclerview.StaggeredRecyclerView;
@@ -12,7 +13,7 @@ import com.cy.rvadapterniubility.recyclerview.StaggeredRecyclerView;
  * Created by cy on 2018/4/9.
  */
 
-public class StaggeredRefreshLayout extends BaseRVRefreshLayout<StaggeredRecyclerView> {
+public class StaggeredRefreshLayout extends BaseRVRefreshLayout {
 
     private StaggeredRecyclerView staggeredGridRecyclerView;
 
@@ -27,13 +28,18 @@ public class StaggeredRefreshLayout extends BaseRVRefreshLayout<StaggeredRecycle
     }
 
     @Override
-    public StaggeredRecyclerView getRecyclerView() {
-        return staggeredGridRecyclerView;
+    public BaseRecyclerView getRecyclerView() {
+        return null;
     }
+
+    //    @Override
+//    public StaggeredRecyclerView getRecyclerView() {
+//        return staggeredGridRecyclerView;
+//    }
     public StaggeredRefreshLayout setAdapter(StaggeredAdapter staggeredAdapter, OnRefreshListener onRefreshListener, OnStaggeredLoadMoreListener onStaggeredLoadMoreListener) {
         setEnableLoadMore(false);
         staggeredGridRecyclerView.setAdapter(staggeredAdapter);
-        staggeredGridRecyclerView.addOnScrollListener(onStaggeredLoadMoreListener);
+//        staggeredGridRecyclerView.addOnScrollListener(onStaggeredLoadMoreListener);
         setOnRefreshListener(onRefreshListener);
         return this;
     }

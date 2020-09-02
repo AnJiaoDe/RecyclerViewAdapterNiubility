@@ -46,11 +46,11 @@ public abstract class OnStaggeredLoadMoreListener extends OnVerticalScrollListen
     }
 
     private void checkRecyclerView(RecyclerView recyclerView) {
-        try {
-            this.staggeredRecyclerView = (StaggeredRecyclerView) recyclerView;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("You must use " + getClass().getName() + " in " + StaggeredRecyclerView.class.getName());
-        }
+//        try {
+//            this.staggeredRecyclerView = (StaggeredRecyclerView) recyclerView;
+//        } catch (Exception e) {
+//            throw new IllegalArgumentException("You must use " + getClass().getName() + " in " + StaggeredRecyclerView.class.getName());
+//        }
     }
 
     private View getViewLoadMore(Context context) {

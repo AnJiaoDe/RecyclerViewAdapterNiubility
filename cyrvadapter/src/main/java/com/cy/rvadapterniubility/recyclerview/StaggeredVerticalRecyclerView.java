@@ -25,27 +25,28 @@ public class StaggeredVerticalRecyclerView extends BaseRecyclerView<StaggeredVer
     public StaggeredVerticalRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 //        setOverScrollMode(OVER_SCROLL_NEVER);
+
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                downX = (int) ev.getX();
-                downY = (int) ev.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                int moveX = (int) ev.getX();
-                int moveY = (int) ev.getY();
-//                int distanceY = moveY - downY;
-                if (Math.abs(moveX - downX) < Math.abs(moveY - downY)) {
-                    return false;
-                }
-                downX = moveX;
-                downY = moveY;
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
+//        switch (ev.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                downX = (int) ev.getX();
+//                downY = (int) ev.getY();
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                int moveX = (int) ev.getX();
+//                int moveY = (int) ev.getY();
+////                int distanceY = moveY - downY;
+//                if (Math.abs(moveX - downX) < Math.abs(moveY - downY)) {
+//                    return false;
+//                }
+//                downX = moveX;
+//                downY = moveY;
+//        }
+//        return true;
+//    }
 
     @Override
     public void setAdapter(RecyclerView.Adapter adapter) {

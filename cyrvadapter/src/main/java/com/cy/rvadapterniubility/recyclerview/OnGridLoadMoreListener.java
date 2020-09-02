@@ -165,8 +165,8 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationY(0);
                             gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
-                            loadMoreAdapter.clear();
                             if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
+                            loadMoreAdapter.clear();
                         }
                     });
                     animatorSet.start();

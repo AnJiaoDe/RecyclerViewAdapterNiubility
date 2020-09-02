@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.IScrollState;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
 
@@ -20,6 +21,7 @@ import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
 public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
     //永远<=0
     private int offsetX = 0;
+    private int offsetY = 0;
 
     private ItemTouchHelper itemTouchHelper;
     private ItemAnimCallback itemAnimCallback;
@@ -38,7 +40,10 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+
                 offsetX -= dx;
+                offsetY-=dy;
+                LogUtils.log("onScrolleddy",offsetY);
             }
         });
     }
@@ -63,11 +68,23 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
      */
     @Override
     public void scrollTo(int x, int y) {
-        scrollBy(offsetX - x, y);
+        scrollBy(offsetX - x, offsetY-y);
     }
 
     public int getOffsetX() {
         return offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
+    }
+
+    public void setOffsetX(int offsetX) {
+        this.offsetX = offsetX;
+    }
+
+    public void setOffsetY(int offsetY) {
+        this.offsetY = offsetY;
     }
 
     public T addOnScrollListener(OnVerticalScrollListener onSimpleScrollListener) {

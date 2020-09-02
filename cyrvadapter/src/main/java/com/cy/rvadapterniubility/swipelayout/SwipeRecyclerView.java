@@ -33,7 +33,7 @@ public class SwipeRecyclerView extends BaseRecyclerView<SwipeRecyclerView> {
         setLayoutManager(linearLayoutManager);
     }
 
-    public void setSimpleAdapter(SwipeAdapter swipeAdapter) {
+    public void setSwipeAdapter(SwipeAdapter swipeAdapter) {
         this.swipeAdapter = swipeAdapter;
         setAdapter(swipeAdapter.getSimpleAdapter());
     }
@@ -45,8 +45,8 @@ public class SwipeRecyclerView extends BaseRecyclerView<SwipeRecyclerView> {
 
     @Override
     public final void setAdapter(RecyclerView.Adapter adapter) {
-        if(swipeAdapter ==null)throw new RuntimeException("You must call setSimpleAdapter(SwipeAdapter swipeAdapter) or" +
-                "setHeadFootAdapter(SwipeAdapter swipeAdapter) in com.cy.cyrvadapter.swipelayout.SwipeRecyclerView");
+        if(swipeAdapter ==null)throw new RuntimeException("You must call setSwipeAdapter(SwipeAdapter swipeAdapter)" +
+                " in "+getClass().getName());
         super.setAdapter(adapter);
     }
 

@@ -25,7 +25,7 @@ public class GRVActivity extends BaseActivity {
         setContentView(R.layout.activity_grv);
         LogUtils.log("GRVActivity");
         List<HRVBean> list = new ArrayList<>();
-        for (int i=0;i<300;i++){
+        for (int i=0;i<100;i++){
             if (i%5==0){
                 list.add(new HRVBean(R.drawable.pic3));
                 continue;

@@ -2,8 +2,10 @@ package com.cy.rvadapterniubility.recyclerview;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,19 +26,13 @@ import java.util.List;
  * Created by cy on 2018/4/8.
  */
 
-public class StaggeredRecyclerView extends BaseRecyclerView<StaggeredRecyclerView> {
-    //    private SparseArray<Boolean> arrayFullSpan;
-//    private StaggeredGridItemDecoration gridItemDecoration;
-//    private SimpleAdapter simpleAdapter;
+public class StaggeredRecyclerView extends ScrollView {
     private int orientation = RecyclerView.VERTICAL;
     private int spanCount = 2;
-
     private List<ILinearRecyclerView> listRV;
     private SimpleAdapter simpleAdapter0;
-    //    private List<SimpleAdapter> listAdapter;
     private StaggeredAdapter<Object> staggeredAdapter;
-    private TextView textView;
-    private SimpleAdapter simpleAdapter;
+    //    private SimpleAdapter simpleAdapter;
     private LinearLayout contentView;
 
     public StaggeredRecyclerView(Context context) {
@@ -46,80 +42,83 @@ public class StaggeredRecyclerView extends BaseRecyclerView<StaggeredRecyclerVie
     public StaggeredRecyclerView(final Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         listRV = new ArrayList<ILinearRecyclerView>();
-        simpleAdapter = new SimpleAdapter<String>() {
-            @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected) {
-                LogUtils.log("bindDataToView");
-                contentView = (LinearLayout) holder.itemView;
-                if (contentView.getChildCount() > 0) return;
-                LogUtils.log("bindDataToView222");
 
-                LinearLayout ll = new LinearLayout(context);
-                ll.setOrientation(LinearLayout.HORIZONTAL);
-                for (int i = 0; i < spanCount; i++) {
-                    listRV.get(i).getRecyclerView().setAdapter(staggeredAdapter.getListAdapter().get(i));
-                    ll.addView(listRV.get(i).getRecyclerView(), new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1));
+        contentView = new LinearLayout(context);
+        contentView.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout ll = new LinearLayout(context);
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        for (int i = 0; i < spanCount; i++) {
+            final ILinearRecyclerView linearRecyclerView;
+            if (orientation == RecyclerView.VERTICAL) {
+                linearRecyclerView = new StaggeredVerticalRecyclerView(getContext());
+            } else {
+                linearRecyclerView = new StaggeredHorizontalRecyclerView(getContext());
+            }
+
+            linearRecyclerView.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    for (int i = 0; i < spanCount; i++) {
+                        int index=listRV.indexOf(linearRecyclerView);
+                        ILinearRecyclerView linearR=listRV.get(i);
+                        if(i!=index){
+//                            ((StaggeredVerticalRecyclerView)linearR.getRecyclerView()).setOffsetX();
+//                            ((StaggeredVerticalRecyclerView)linearR.getRecyclerView()).setOffsetX(((StaggeredVerticalRecyclerView)listRV.get(index).getRecyclerView()).getOffsetX());
+//                            ((StaggeredVerticalRecyclerView)linearR.getRecyclerView()).setOffsetY(((StaggeredVerticalRecyclerView)listRV.get(index).getRecyclerView()).getOffsetY());
+                            ((StaggeredVerticalRecyclerView)linearR.getRecyclerView())
+                                    .scrollTo(((StaggeredVerticalRecyclerView)listRV.get(index).getRecyclerView()).getOffsetX(),
+                                            ((StaggeredVerticalRecyclerView)listRV.get(index).getRecyclerView()).getOffsetY());
+                        }
+                    }
                 }
+            });
+            listRV.add(linearRecyclerView);
 
-                contentView.addView(ll, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            ll.addView(listRV.get(i).getRecyclerView(), new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1));
+        }
+//        simpleAdapter = new SimpleAdapter<String>() {
+//            @Override
+//            public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected) {
+//                LogUtils.log("bindDataToView");
+//                contentView = (LinearLayout) holder.itemView;
+//                if (contentView.getChildCount() > 0) return;
+//                LogUtils.log("bindDataToView222");
 
-//                textView = new TextView(context);
-//                textView.setText("加载更多");
-//                textView.setGravity(Gravity.CENTER);
-//                textView.setTextSize(20);
-//                textView.setVisibility(GONE);
-//                contentView.addView(textView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100));
-            }
+//        LinearLayout ll = new LinearLayout(context);
+//        ll.setOrientation(LinearLayout.HORIZONTAL);
+//        for (int i = 0; i < spanCount; i++) {
+//            listRV.get(i).getRecyclerView().setAdapter(staggeredAdapter.getListAdapter().get(i));
+//            ll.addView(listRV.get(i).getRecyclerView(), new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1));
+//        }
+        contentView.addView(ll, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//            }
+//
+//            @Override
+//            public int getItemLayoutID(int position, String bean) {
+//                return R.layout.cy_staggerd_item;
+//            }
+//
+//            @Override
+//            public void onItemClick(BaseViewHolder holder, int position, String bean) {
+//
+//            }
+//        };
+//        simpleAdapter.addNoNotify("");
 
-            @Override
-            public int getItemLayoutID(int position, String bean) {
-                return R.layout.cy_staggerd_item;
-            }
+        addView(contentView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    }
 
-            @Override
-            public void onItemClick(BaseViewHolder holder, int position, String bean) {
-
-            }
-        };
-        simpleAdapter.addNoNotify("");
-//        listAdapter = new ArrayList<SimpleAdapter>();
-
-//        arrayFullSpan = new SparseArray<>();
-//        addItemDecoration(new StaggeredGridItemDecoration(ScreenUtils.dpAdapt(context, 10)));
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return super.onInterceptTouchEvent(ev);
     }
 
     LinearLayout getContentView() {
         return contentView;
     }
 
-//    public void addTe() {
-//        textView.setVisibility(VISIBLE);
-//    }
-//
-//    public void removeTe() {
-//        textView.setVisibility(GONE);
-//    }
-
-    //    public void addItemDecoration(StaggeredGridItemDecoration gridItemDecoration) {
-//        this.gridItemDecoration=gridItemDecoration;
-////        super.addItemDecoration(gridItemDecoration);
-//    }
-//    @Override
-//    public <T extends IGridRecyclerView> T addFullSpanPosition(int position) {
-//        arrayFullSpan.put(position, true);
-//        return (T) this;
-//    }
-//
-//    @Override
-//    public <T extends IGridRecyclerView> T removeFullSpanPosition(int position) {
-//        arrayFullSpan.remove(position);
-//        return (T) this;
-//    }
-//
-//    @Override
-//    public <T extends IGridItemDecoration> T getGridItemDecoration() {
-//        return (T) gridItemDecoration;
-//    }
     public StaggeredRecyclerView setSpanCount(int spanCount) {
         this.spanCount = spanCount;
         return this;
@@ -138,21 +137,18 @@ public class StaggeredRecyclerView extends BaseRecyclerView<StaggeredRecyclerVie
         return spanCount;
     }
 
-//    public List<SimpleAdapter> getListAdapter() {
-//        return listAdapter;
-//    }
-
     public <T extends Object> void setAdapter(@Nullable final StaggeredAdapter<T> staggeredAdapter) {
         this.staggeredAdapter = (StaggeredAdapter<Object>) staggeredAdapter;
-        setLayoutManager(new LinearLayoutManager(getContext(), orientation, false));
+//        setLayoutManager(new LinearLayoutManager(getContext(), orientation, false));
         for (int i = 0; i < spanCount; i++) {
-            ILinearRecyclerView linearRecyclerView;
-            if (orientation == RecyclerView.VERTICAL) {
-                linearRecyclerView = new StaggeredVerticalRecyclerView(getContext());
-            } else {
-                linearRecyclerView = new StaggeredHorizontalRecyclerView(getContext());
-            }
-            listRV.add(linearRecyclerView);
+//            ILinearRecyclerView linearRecyclerView;
+//            if (orientation == RecyclerView.VERTICAL) {
+//                linearRecyclerView = new StaggeredVerticalRecyclerView(getContext());
+//            } else {
+//                linearRecyclerView = new StaggeredHorizontalRecyclerView(getContext());
+//            }
+//            listRV.add(linearRecyclerView);
+
             if (i == 0) {
                 simpleAdapter0 = new SimpleAdapter<T>() {
                     @Override
@@ -229,22 +225,17 @@ public class StaggeredRecyclerView extends BaseRecyclerView<StaggeredRecyclerVie
                     }
                 }.setList_bean(simpleAdapter0.getList_bean()));
             }
+            listRV.get(i).getRecyclerView().setAdapter(staggeredAdapter.getListAdapter().get(i));
 
         }
-        super.setAdapter(simpleAdapter);
+//        super.setAdapter(simpleAdapter);
     }
 
-     List<ILinearRecyclerView> getListRV() {
+    List<ILinearRecyclerView> getListRV() {
         return listRV;
     }
-
-    //    SimpleAdapter getSimpleAdapter0() {
-//        return simpleAdapter0;
+//    @Override
+//    public void setAdapter(@Nullable RecyclerView.Adapter adapter) {
+//        throw new IllegalArgumentException("You must use " + StaggeredAdapter.class.getName()+" in "+getClass().getName());
 //    }
-
-
-    @Override
-    public void setAdapter(@Nullable RecyclerView.Adapter adapter) {
-        throw new IllegalArgumentException("You must use " + SimpleAdapter.class.getName());
-    }
 }

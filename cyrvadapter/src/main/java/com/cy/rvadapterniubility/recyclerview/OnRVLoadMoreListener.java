@@ -146,8 +146,8 @@ public abstract class OnRVLoadMoreListener extends OnVerticalScrollListener {
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationY(0);
-                            loadMoreAdapter.clear();
                             if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
+                            loadMoreAdapter.clear();
                         }
                     });
                     animatorSet.start();
