@@ -3,7 +3,7 @@ package com.cy.rvadapterniubility.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public interface IAdapter<T, V extends RecyclerView.ViewHolder> {
+public interface IAdapter<T, V extends RecyclerView.ViewHolder,A extends RecyclerView.Adapter> {
 
     public void bindDataToView(V holder, int position, T bean, boolean isSelected);
 
@@ -14,5 +14,7 @@ public interface IAdapter<T, V extends RecyclerView.ViewHolder> {
     public void onItemLongClick(V holder, int position, T bean);
 
     public void onViewAttachedToWindow(V holder);
+
+    public A getAdapter();
 
 }

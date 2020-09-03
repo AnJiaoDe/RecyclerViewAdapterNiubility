@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
-import com.cy.rvadapterniubility.LogUtils;
-import com.cy.rvadapterniubility.adapter.IScrollState;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
 
 /**
@@ -33,20 +31,24 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
     public BaseRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setOverScrollMode(OVER_SCROLL_NEVER);
-        //去除难看的默认闪烁动画
-        SimpleItemAnimator simpleItemAnimator = (SimpleItemAnimator) getItemAnimator();
-        if (simpleItemAnimator != null) simpleItemAnimator.setSupportsChangeAnimations(false);
+        setEnableAnimDefault(false);
         addOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
                 offsetX -= dx;
-                offsetY-=dy;
-                LogUtils.log("onScrolleddy",offsetY);
+                offsetY -= dy;
             }
         });
     }
+
+    public T setEnableAnimDefault(boolean enable) {
+        SimpleItemAnimator simpleItemAnimator = (SimpleItemAnimator) getItemAnimator();
+        //去除难看的默认闪烁动画
+        if (simpleItemAnimator != null) simpleItemAnimator.setSupportsChangeAnimations(enable);
+        return (T) this;
+    }
+
     /**
      * x为正，表示手指往左滑,x为负，表示手指往右滑
      *
@@ -68,7 +70,7 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
      */
     @Override
     public void scrollTo(int x, int y) {
-        scrollBy(offsetX - x, offsetY-y);
+        scrollBy(offsetX - x, offsetY - y);
     }
 
     public int getOffsetX() {
@@ -79,70 +81,18 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
         return offsetY;
     }
 
-    public void setOffsetX(int offsetX) {
+    public T setOffsetX(int offsetX) {
         this.offsetX = offsetX;
+        return (T) this;
     }
 
-    public void setOffsetY(int offsetY) {
+    public T setOffsetY(int offsetY) {
         this.offsetY = offsetY;
+        return (T) this;
     }
 
     public T addOnScrollListener(OnVerticalScrollListener onSimpleScrollListener) {
         super.addOnScrollListener(onSimpleScrollListener.getOnScrollListener());
-        return (T) this;
-    }
-
-
-    public T addOnScrollHelper(final IScrollState scrollState) {
-        addOnScrollListener(new OnVerticalScrollListener() {
-            @Override
-            public void onFirstScrolled(RecyclerView recyclerView, PositionHolder positionHolder) {
-                super.onFirstScrolled(recyclerView, positionHolder);
-                scrollState.onFirstOnScrolled(positionHolder);
-            }
-
-            @Override
-            public void onScrollArrivedTop(RecyclerView recyclerView, PositionHolder positionHolder) {
-                super.onScrollArrivedTop(recyclerView, positionHolder);
-                scrollState.onScrollArrivedTop(positionHolder);
-            }
-
-            @Override
-            public void onDragging(RecyclerView recyclerView, PositionHolder positionHolder) {
-                super.onDragging(recyclerView, positionHolder);
-                scrollState.onDragging(positionHolder);
-            }
-
-            @Override
-            public void onIdle(RecyclerView recyclerView, PositionHolder positionHolder) {
-                super.onIdle(recyclerView, positionHolder);
-                scrollState.onIdle(positionHolder);
-            }
-
-            @Override
-            public void onScrollingDown(RecyclerView recyclerView, int dy) {
-                super.onScrollingDown(recyclerView, dy);
-                scrollState.onScrollingDown(dy);
-            }
-
-            @Override
-            public void onScrollingUp(RecyclerView recyclerView, int dy) {
-                super.onScrollingUp(recyclerView, dy);
-                scrollState.onScrollingUp(dy);
-            }
-
-            @Override
-            public void onScrollArrivedBottom(RecyclerView recyclerView, PositionHolder positionHolder) {
-                super.onScrollArrivedBottom(recyclerView, positionHolder);
-                scrollState.onScrollArrivedBottom(positionHolder);
-            }
-
-            @Override
-            public void onSettling(RecyclerView recyclerView, PositionHolder positionHolder) {
-                super.onSettling(recyclerView, positionHolder);
-                scrollState.onSettling(positionHolder);
-            }
-        }.getOnScrollListener());
         return (T) this;
     }
 
@@ -153,8 +103,8 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
         return (T) this;
     }
 
-    public void setDragTouchView(final ViewHolder holder, View view) {
-        if (itemAnimCallback == null) return;
+    public T setDragTouchView(final ViewHolder holder, View view) {
+        if (itemAnimCallback == null) return (T) this;
         itemAnimCallback.setLongPressDragEnabled(false);
         view.setOnLongClickListener(new OnLongClickListener() {
             @Override
@@ -163,14 +113,16 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
                 return false;
             }
         });
+        return (T) this;
     }
 
     public ItemTouchHelper getItemTouchHelper() {
         return itemTouchHelper;
     }
 
-    public void clear() {
+    public T clear() {
         itemTouchHelper = null;
+        return (T) this;
     }
 
     @Override

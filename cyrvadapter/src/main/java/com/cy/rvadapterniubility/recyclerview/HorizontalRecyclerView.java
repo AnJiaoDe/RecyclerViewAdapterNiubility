@@ -20,7 +20,6 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
 
     public HorizontalRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-//        setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
     @Override
@@ -28,6 +27,4 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
         setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
         super.setAdapter(adapter);
     }
-
-
 }

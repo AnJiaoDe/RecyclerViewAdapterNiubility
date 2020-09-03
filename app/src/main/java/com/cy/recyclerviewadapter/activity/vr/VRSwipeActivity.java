@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.cy.recyclerviewadapter.BaseActivity;
+import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
-import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
 import com.cy.rvadapterniubility.adapter.SwipeAdapter;
@@ -64,7 +64,7 @@ public class VRSwipeActivity extends BaseActivity {
                                  * holder.getAdapterPosition()获取的position是当前holder在整个recyclerView中的正确位置，
                                  */
 //                                getSimpleAdapter().remove(position);
-                                getSimpleAdapter().remove(holder.getBindingAdapterPosition());
+                                getAdapter().remove(holder.getBindingAdapterPosition());
                             }
                         });
                     }
@@ -82,9 +82,9 @@ public class VRSwipeActivity extends BaseActivity {
             }
         };
         ((SwipeRecyclerView) findViewById(R.id.srv))
-                .addItemTouchAnim(new ItemAnimCallback(swipeAdapter.getSimpleAdapter()))
-                .setSwipeAdapter(swipeAdapter);
-        swipeAdapter.getSimpleAdapter().add(list_bean);
+                .addItemTouchAnim(new ItemAnimCallback(swipeAdapter.getAdapter()))
+                .setAdapter(swipeAdapter);
+        swipeAdapter.getAdapter().add(list_bean);
 
     }
 

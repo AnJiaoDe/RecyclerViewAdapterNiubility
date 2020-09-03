@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.swipelayout.SwipeRecyclerView;
 
 import java.util.Collections;
@@ -23,7 +22,6 @@ public  class ItemAnimCallback extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        LogUtils.log("getMovementFlags");
         final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
         if(recyclerView instanceof SwipeRecyclerView)return makeMovementFlags(dragFlags, ItemTouchHelper.ACTION_STATE_IDLE);

@@ -13,7 +13,6 @@ import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
-import com.cy.rvadapterniubility.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,6 @@ import java.util.List;
  * Created by cy on 11/24/14.
  */
 public class SwipeLayout extends LinearLayout {
-    //    private List<OnSwipeListener> list_listener;
     private View contentView;
     private View sideView;
     private int dragDistance;
@@ -41,9 +39,8 @@ public class SwipeLayout extends LinearLayout {
 
     public SwipeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-//        list_listener = new ArrayList<>();
         setOrientation(HORIZONTAL);
-        velocity_x_limit = (int) (ViewConfiguration.get(context).getScaledMaximumFlingVelocity() * 0.4f);
+        velocity_x_limit = (int) (ViewConfiguration.get(context).getScaledMaximumFlingVelocity() * 0.2f);
 
         contentView = new View(context);
         sideView = new View(context);
@@ -74,7 +71,6 @@ public class SwipeLayout extends LinearLayout {
         //说明SwipeLayout在XML中定义的宽度为Wrap_content
         switch (MeasureSpec.getMode(heightMeasureSpec)) {
             case MeasureSpec.AT_MOST:
-                LogUtils.log("AT_MOST");
                 /**
                  * 对应：
                  * <com.cy.swipelayout.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -85,10 +81,8 @@ public class SwipeLayout extends LinearLayout {
                  */
                 break;
             case MeasureSpec.UNSPECIFIED:
-                LogUtils.log("UNSPECIFIED");
                 break;
             case MeasureSpec.EXACTLY:
-                LogUtils.log("EXACTLY");
                 /**
                  * 对应：
                  * <com.cy.swipelayout.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -105,7 +99,6 @@ public class SwipeLayout extends LinearLayout {
                  */
                 break;
             default:
-                LogUtils.log("NONE");
                 break;
 
         }
@@ -129,7 +122,6 @@ public class SwipeLayout extends LinearLayout {
 
     public void setSideView(View view) {
         removeView(sideView);
-//        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         this.sideView = view;
         addView(sideView, 1);
     }
@@ -251,16 +243,12 @@ public class SwipeLayout extends LinearLayout {
                 downY = (int) ev.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                LogUtils.log("ACTION_MOVE------------");
 
                 int moveX = (int) ev.getX();
                 int moveY = (int) ev.getY();
                 int distanceX = moveX - downX;
                 int distanceY = moveY - downY;
-//                downX = moveX;
-//                downY = moveY;
                 if (Math.abs(distanceX) > Math.abs(distanceY)) {
-                    LogUtils.log("ACTION_MOVE");
                     return true;
                 }
                 break;
@@ -278,7 +266,6 @@ public class SwipeLayout extends LinearLayout {
                 downX = (int) ev.getX();
                 break;
             case MotionEvent.ACTION_MOVE:
-                LogUtils.log("onTouchEvent ACTION_MOVE");
                 int moveX = (int) ev.getX();
                 int distanceX = moveX - downX;
                 downX = moveX;
@@ -303,8 +290,6 @@ public class SwipeLayout extends LinearLayout {
                 velocityTracker.computeCurrentVelocity(1000);
                 velocity_x = velocityTracker.getXVelocity();
 
-                LogUtils.log("velocity_x_limit", velocity_x_limit);
-                LogUtils.log("-velocity_x", -velocity_x);
                 //右滑
                 if (velocity_x > velocity_x_limit) {
                     close();
@@ -331,21 +316,6 @@ public class SwipeLayout extends LinearLayout {
         return true;
     }
 
-//    public void addOnSwipeListener(OnSwipeListener listener) {
-//        list_listener.add(listener);
-//    }
-//
-//    public void removeOnSwipeListener(OnSwipeListener listener) {
-//        list_listener.remove(listener);
-//    }
-
-//    public List<OnSwipeListener> getList_listener() {
-//        return list_listener;
-//    }
-
-//    public void clearOnSwipeListener() {
-//        list_listener.clear();
-//    }
 
     public void setOnSwipeListener(OnSwipeListener onSwipeListener) {
         this.onSwipeListener = onSwipeListener;

@@ -3,6 +3,7 @@ package com.cy.rvadapterniubility.adapter;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.rvadapterniubility.swipelayout.OnSwipeListener;
 import com.cy.rvadapterniubility.swipelayout.SwipeLayout;
@@ -11,8 +12,8 @@ import com.cy.rvadapterniubility.swipelayout.SwipeLayout;
  * Created by cy on 2018/3/29.类似策略模式,引入IAdapter接口，面向多态编程
  */
 
-public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder> {
-    private IAdapter<T, BaseViewHolder> adapter;
+public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, SimpleAdapter> {
+    private IAdapter<T, BaseViewHolder, SimpleAdapter> adapter;
     private SwipeLayout swipeLayout_opened;
     private SwipeLayout swipeLayout_scrolled;
 
@@ -72,7 +73,6 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder> {
     }
 
 
-
     public SwipeLayout getOpened() {
         return swipeLayout_opened;
     }
@@ -96,19 +96,14 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder> {
         swipeLayout_scrolled = null;
     }
 
-    /**
-     * 策略1
-     *
-     * @return
-     */
-    public SimpleAdapter<T> getSimpleAdapter() {
-        if (adapter == null || !(adapter instanceof SimpleAdapter)) {
-            adapter = null;
+    @Override
+    public SimpleAdapter<T> getAdapter() {
+        if (adapter == null)
             adapter = new SimpleAdapter<T>() {
                 @Override
                 public void bindDataToView(final BaseViewHolder holder, int position, T bean, boolean isSelected) {
                     dealSwipe(holder, bean);
-                    SwipeAdapter.this.bindDataToView(holder, position, bean,position==getPositionSelected());
+                    SwipeAdapter.this.bindDataToView(holder, position, bean, position == getPositionSelected());
                 }
 
                 @Override
@@ -133,7 +128,6 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder> {
 
                 }
             };
-        }
         return (SimpleAdapter<T>) adapter;
     }
 }

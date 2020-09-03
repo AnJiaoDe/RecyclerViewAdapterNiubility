@@ -20,7 +20,6 @@ import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.refreshlayoutniubility.LoadMoreFinishListener;
 import com.cy.refreshlayoutniubility.OnPullListener;
 import com.cy.refreshlayoutniubility.RefreshFinishListener;
-import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;

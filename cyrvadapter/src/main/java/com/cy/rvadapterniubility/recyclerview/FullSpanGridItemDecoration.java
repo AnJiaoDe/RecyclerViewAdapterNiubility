@@ -6,8 +6,6 @@ import android.view.View;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cy.rvadapterniubility.LogUtils;
-import com.cy.rvadapterniubility.adapter.MultiAdapter;
 
 /**
  * @Description:注意：使用ItemDecoration时，一定要小心，设置的item的宽度不能超过每列的最大限制，超过了就看不见space了
@@ -54,7 +52,6 @@ public class FullSpanGridItemDecoration extends RecyclerView.ItemDecoration  imp
         } catch (Exception e) {
             throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in GridLayoutManager  for " + GridRecyclerView.class.getName());
         }
-
         final RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
         RecyclerView.ViewHolder viewHolder = parent.getChildViewHolder(view);
         int spanCount = 1;
@@ -71,7 +68,6 @@ public class FullSpanGridItemDecoration extends RecyclerView.ItemDecoration  imp
         int perSpace = (int) (space * 1f / spanCount);
 
 
-        LogUtils.log("gridRecyclerView.getArrayFullSpan().get(position)", gridRecyclerView.getArrayFullSpan().get(position) + "" + position);
 
         int a = position>0&&gridRecyclerView.getArrayFullSpan().get(0) != null?spanCount - (position-1) % spanCount:spanCount - position % spanCount;
         int b = position>0&&gridRecyclerView.getArrayFullSpan().get(0) != null?1 +  (position-1) % spanCount:1 + position % spanCount;

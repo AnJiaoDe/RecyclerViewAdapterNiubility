@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.refreshlayoutniubility.OnPullListener;
 import com.cy.refreshlayoutniubility.RefreshLayoutNiubility;
-import com.cy.rvadapterniubility.LogUtils;
-import com.cy.rvadapterniubility.adapter.IScrollState;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.BaseRecyclerView;
@@ -22,7 +20,7 @@ import com.cy.rvadapterniubility.recyclerview.OnVerticalScrollListener;
  * Created by lenovo on 2017/12/31.
  */
 
-public abstract class BaseRVRefreshLayout<T extends BaseRecyclerView> extends RefreshLayoutNiubility {
+public abstract class BaseRVRefreshLayout<T extends BaseRecyclerView, V extends BaseRVRefreshLayout> extends RefreshLayoutNiubility {
 
     public BaseRVRefreshLayout(Context context) {
         this(context, null);
@@ -34,31 +32,30 @@ public abstract class BaseRVRefreshLayout<T extends BaseRecyclerView> extends Re
 
     public abstract T getRecyclerView();
 
-
     /**
      *
      */
-    public BaseRVRefreshLayout addOnScrollListener() {
+    public V addOnScrollListener() {
         addOnScrollListener(new OnVerticalScrollListener() {
             @Override
             public void onScrollArrivedBottom(RecyclerView recyclerView, PositionHolder positionHolder) {
-                super.onScrollArrivedBottom(recyclerView,positionHolder);
+                super.onScrollArrivedBottom(recyclerView, positionHolder);
                 startLoadMore();
             }
         });
-        return this;
+        return (V) this;
     }
 
-    public BaseRVRefreshLayout addOnScrollListener(OnVerticalScrollListener onSimpleScrollListener) {
-        getRecyclerView().addOnScrollListener(onSimpleScrollListener.getOnScrollListener());
-        return this;
+    public V addOnScrollListener(OnVerticalScrollListener onVerticalScrollListener) {
+        getRecyclerView().addOnScrollListener(onVerticalScrollListener.getOnScrollListener());
+        return (V) this;
     }
 
 
     /**
      * @param onRefreshListener
      */
-    public BaseRVRefreshLayout setOnRefreshListener(final OnRefreshListener onRefreshListener) {
+    public V setOnRefreshListener(final OnRefreshListener onRefreshListener) {
         setEnableLoadMore(false);
         setOnPullListener(new OnPullListener() {
             @Override
@@ -71,13 +68,13 @@ public abstract class BaseRVRefreshLayout<T extends BaseRecyclerView> extends Re
 
             }
         });
-        return this;
+        return (V) this;
     }
 
     /**
      * @param onLoadMoreListener
      */
-    public BaseRVRefreshLayout setOnLoadMoreListener(final OnLoadMoreListener onLoadMoreListener) {
+    public V setOnLoadMoreListener(final OnLoadMoreListener onLoadMoreListener) {
         setEnableRefresh(false);
         setOnPullListener(new OnPullListener() {
             @Override
@@ -90,7 +87,7 @@ public abstract class BaseRVRefreshLayout<T extends BaseRecyclerView> extends Re
             }
         });
         addOnScrollListener();
-        return this;
+        return (V) this;
     }
 
     @Override
@@ -98,122 +95,42 @@ public abstract class BaseRVRefreshLayout<T extends BaseRecyclerView> extends Re
         super.setOnPullListener(onPullListener);
         addOnScrollListener();
     }
-//    /**
-//     * @param adapter
-//     */
-//
-//    public void setAdapter(RecyclerView.Adapter adapter) {
-//        getRecyclerView().setAdapter(adapter);
-//    }
-//
-//    /**
-//     * @param adapter
-//     * @param onPullListener
-//     */
-//    public void setAdapter(RecyclerView.Adapter adapter, OnPullListener onPullListener) {
-//        setAdapter(adapter);
-//        setOnPullListener(onPullListener);
-//    }
-//
-//    /**
-//     * @param adapter
-//     * @param onRefreshListener
-//     */
-//    public void setAdapter(RecyclerView.Adapter adapter, OnRefreshListener onRefreshListener) {
-//        setAdapter(adapter);
-//        setOnRefreshListener(onRefreshListener);
-//    }
-//
-//    /**
-//     * @param adapter
-//     * @param onLoadMoreListener
-//     */
-//    public void setAdapter(RecyclerView.Adapter adapter, OnLoadMoreListener onLoadMoreListener) {
-//        setAdapter(adapter);
-//        setOnLoadMoreListener(onLoadMoreListener);
-//    }
 
-    public BaseRVRefreshLayout setAdapter(IScrollState scrollState) {
+    public V setAdapter(SimpleAdapter simpleAdapter) {
         BaseRecyclerView baseRecyclerView = getRecyclerView();
-        baseRecyclerView.addOnScrollHelper(scrollState);
-        baseRecyclerView.setAdapter(scrollState.getAdapter());
-        return this;
+        baseRecyclerView.setAdapter(simpleAdapter);
+        return (V) this;
     }
-    public BaseRVRefreshLayout setAdapter(MultiAdapter multiAdapter) {
+    public V setAdapter(SimpleAdapter simpleAdapter,OnRefreshListener onRefreshListener) {
         BaseRecyclerView baseRecyclerView = getRecyclerView();
-        baseRecyclerView.setAdapter(multiAdapter.getMergeAdapter());
-        return this;
-    }
-    public BaseRVRefreshLayout setAdapter(MultiAdapter multiAdapter, OnRVLoadMoreListener onRVLoadMoreListener) {
-        setEnableRefresh(false);
-        setEnableLoadMore(false);
-        BaseRecyclerView baseRecyclerView = getRecyclerView();
-        baseRecyclerView.addOnScrollListener(onRVLoadMoreListener);
-        baseRecyclerView.setAdapter(multiAdapter.getMergeAdapter());
-        return this;
-    }
-    public BaseRVRefreshLayout setAdapter(MultiAdapter multiAdapter, OnRefreshListener onRefreshListener, OnRVLoadMoreListener onRVLoadMoreListener) {
-        setEnableLoadMore(false);
-        BaseRecyclerView baseRecyclerView = getRecyclerView();
-        baseRecyclerView.addOnScrollListener(onRVLoadMoreListener);
-        setOnRefreshListener(onRefreshListener);
-        baseRecyclerView.setAdapter(multiAdapter.getMergeAdapter());
-        return this;
-    }
-
-    public BaseRVRefreshLayout setAdapter(MultiAdapter multiAdapter, OnRefreshListener onRefreshListener, OnGridLoadMoreListener onGridLoadMoreListener) {
-        setEnableLoadMore(false);
-        BaseRecyclerView baseRecyclerView = getRecyclerView();
-        baseRecyclerView.addOnScrollListener(onGridLoadMoreListener);
-        setOnRefreshListener(onRefreshListener);
-        baseRecyclerView.setAdapter(multiAdapter.getMergeAdapter());
-        return this;
-    }
-    public BaseRVRefreshLayout setAdapter(SimpleAdapter simpleAdapter, OnRefreshListener onRefreshListener, OnGridLoadMoreListener onGridLoadMoreListener) {
-        setEnableLoadMore(false);
-        BaseRecyclerView baseRecyclerView = getRecyclerView();
-        baseRecyclerView.addOnScrollListener(onGridLoadMoreListener);
         setOnRefreshListener(onRefreshListener);
         baseRecyclerView.setAdapter(simpleAdapter);
-        return this;
+        return (V) this;
+    }
+    public V setAdapter(SimpleAdapter simpleAdapter,OnPullListener onPullListener) {
+        BaseRecyclerView baseRecyclerView = getRecyclerView();
+        setOnPullListener(onPullListener);
+        baseRecyclerView.setAdapter(simpleAdapter);
+        return (V) this;
+    }
+    public V setAdapter(MultiAdapter multiAdapter) {
+        BaseRecyclerView baseRecyclerView = getRecyclerView();
+        baseRecyclerView.setAdapter(multiAdapter.getMergeAdapter());
+        return (V) this;
     }
 
-    public BaseRVRefreshLayout setAdapter(MultiAdapter multiAdapter, OnVerticalScrollListener onSimpleScrollListener) {
+    public V setAdapter(MultiAdapter multiAdapter, OnVerticalScrollListener onVerticalScrollListener) {
         BaseRecyclerView baseRecyclerView = getRecyclerView();
-        baseRecyclerView.addOnScrollListener(onSimpleScrollListener);
+        baseRecyclerView.addOnScrollListener(onVerticalScrollListener);
         baseRecyclerView.setAdapter(multiAdapter.getMergeAdapter());
-        return this;
+        return (V) this;
     }
-    public BaseRVRefreshLayout setAdapter(MultiAdapter multiAdapter, OnPullListener onPullListener) {
-        LogUtils.log("setAdapter");
+
+    public V setAdapter(MultiAdapter multiAdapter, OnPullListener onPullListener) {
         BaseRecyclerView baseRecyclerView = getRecyclerView();
         setOnPullListener(onPullListener);
         baseRecyclerView.setAdapter(multiAdapter.getMergeAdapter());
-        return this;
-    }
-    public BaseRVRefreshLayout setAdapter(IScrollState scrollState, OnPullListener onPullListener) {
-        LogUtils.log("setAdapter");
-        setAdapter(scrollState);
-        setOnPullListener(onPullListener);
-        return this;
+        return (V) this;
     }
 
-
-    public BaseRVRefreshLayout setAdapter(IScrollState scrollState, OnRefreshListener onRefreshListener) {
-        setAdapter(scrollState);
-        setOnRefreshListener(onRefreshListener);
-        return this;
-    }
-
-    public BaseRVRefreshLayout setAdapter(IScrollState scrollState, OnLoadMoreListener onLoadMoreListener) {
-        setAdapter(scrollState);
-        setOnLoadMoreListener(onLoadMoreListener);
-        return this;
-    }
-
-    public BaseRVRefreshLayout setAdapter(IScrollState scrollState, OnVerticalScrollListener onSimpleScrollListener) {
-        setAdapter(scrollState);
-        addOnScrollListener(onSimpleScrollListener);
-        return this;
-    }
 }

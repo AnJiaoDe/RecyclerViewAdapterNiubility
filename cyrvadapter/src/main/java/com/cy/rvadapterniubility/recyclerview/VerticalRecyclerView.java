@@ -20,7 +20,6 @@ public class VerticalRecyclerView extends BaseRecyclerView<VerticalRecyclerView>
 
     public VerticalRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-//        setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
     @Override

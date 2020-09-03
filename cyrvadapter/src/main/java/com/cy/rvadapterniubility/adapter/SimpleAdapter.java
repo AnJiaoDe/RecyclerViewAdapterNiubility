@@ -21,11 +21,9 @@ import java.util.List;
  * @param <T>
  */
 
-public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> implements IAdapter<T, BaseViewHolder>, IScrollState<SimpleAdapter> {
+public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> implements IAdapter<T, BaseViewHolder,SimpleAdapter> {
 
     private List<T> list_bean;//数据源
-
-    private Boolean isScrolling = false;
     private int positionSelectedLast = 0;
     private int positionSelected = 0;
 
@@ -127,73 +125,16 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         super.onViewAttachedToWindow(holder);
     }
 
+    @Override
+    public SimpleAdapter getAdapter() {
+        return this;
+    }
+
     /**
      * ------------------------------------------------------------------------------
      */
 
 
-    /**
-     * ---------------------------------------------------------------------------------
-     */
-
-    public Boolean isScrolling() {
-        return isScrolling;
-    }
-
-    public void setScrolling(Boolean scrolling) {
-        isScrolling = scrolling;
-    }
-
-    @Override
-    public void onFirstOnScrolled(OnVerticalScrollListener.PositionHolder positionHolder) {
-
-    }
-
-    @Override
-    public void onScrollArrivedBottom(OnVerticalScrollListener.PositionHolder positionHolder) {
-
-    }
-
-    @Override
-    public void onScrollArrivedTop(OnVerticalScrollListener.PositionHolder positionHolder) {
-
-    }
-
-    @Override
-    public void onIdle(OnVerticalScrollListener.PositionHolder positionHolder) {
-        isScrolling = false;
-        reduce(positionHolder.getLastVisibleItemPositions()[0]);
-    }
-
-    @Override
-    public void onDragging(OnVerticalScrollListener.PositionHolder positionHolder) {
-        onScrolling();
-        isScrolling = true;
-    }
-
-    @Override
-    public void onSettling(OnVerticalScrollListener.PositionHolder positionHolder) {
-
-        onScrolling();
-        isScrolling = true;
-    }
-
-    @Override
-    public void onScrollingUp(int dy) {
-        onScrolling();
-        isScrolling = true;
-    }
-
-    @Override
-    public void onScrollingDown(int dy) {
-        onScrolling();
-        isScrolling = true;
-    }
-
-    @Override
-    public SimpleAdapter getAdapter() {
-        return this;
-    }
 
     public void onScrolling() {
 

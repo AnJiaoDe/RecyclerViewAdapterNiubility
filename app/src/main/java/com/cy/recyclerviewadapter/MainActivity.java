@@ -11,7 +11,6 @@ import android.widget.ImageView;
 
 import com.cy.recyclerviewadapter.activity.grv.GRVTypeActivity;
 import com.cy.recyclerviewadapter.activity.hr.HRVActivity;
-import com.cy.recyclerviewadapter.activity.sgrv.SGRVTypeActivity;
 import com.cy.recyclerviewadapter.activity.vr.VRTypeActivity;
 
 import org.json.JSONObject;
@@ -39,7 +38,7 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn_vertical).setOnClickListener(this);
         findViewById(R.id.btn_horizontal).setOnClickListener(this);
         findViewById(R.id.btn_grid).setOnClickListener(this);
-        findViewById(R.id.btn_staggeredGrid).setOnClickListener(this);
+//        findViewById(R.id.btn_staggeredGrid).setOnClickListener(this);
 //        findViewById(R.id.btn_code_adapter).setOnClickListener(this);
 //        findViewById(R.id.btn_extendsRV).setOnClickListener(this);
 
@@ -144,9 +143,9 @@ public class MainActivity extends BaseActivity {
             case R.id.btn_grid:
                 startAppcompatActivity(GRVTypeActivity.class);
                 break;
-            case R.id.btn_staggeredGrid:
-                startAppcompatActivity(SGRVTypeActivity.class);
-                break;
+//            case R.id.btn_staggeredGrid:
+//                startAppcompatActivity(SGRVTypeActivity.class);
+//                break;
 //            case R.id.btn_code_adapter:
 //                startAppcompatActivity(VRCodeViewActivity.class);
 //                break;
