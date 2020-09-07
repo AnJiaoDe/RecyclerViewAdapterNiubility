@@ -1,6 +1,5 @@
 package com.cy.recyclerviewadapter.activity.grv;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,28 +8,20 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
-import com.cy.recyclerviewadapter.bean.S360Bean;
-import com.cy.recyclerviewadapter.bean.VRBean;
-import com.cy.refreshlayoutniubility.LoadMoreFinishListener;
-import com.cy.refreshlayoutniubility.OnPullListener;
 import com.cy.refreshlayoutniubility.RefreshFinishListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.FullSpanGridItemDecoration;
-import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
-import com.cy.rvadapterniubility.recyclerview.GridRecyclerView;
 import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
 import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
 import com.cy.rvadapterniubility.refreshrv.GridRefreshLayout;
 import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,12 +8,11 @@ import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
-import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.FullSpanGridItemDecoration;
-import com.cy.rvadapterniubility.recyclerview.GridRecyclerView;
+import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +82,7 @@ public class GRVHeadFootActivity extends BaseActivity {
             }
         });
 
-        ((GridRecyclerView) findViewById(R.id.grv)).addFullSpanPosition(0)
+        ((VerticalGridRecyclerView) findViewById(R.id.grv)).addFullSpanPosition(0)
                 .addFullSpanPosition(101)
                 .setSpanCount(2)
                 .addItemDecoration(new FullSpanGridItemDecoration(dpAdapt(10)))

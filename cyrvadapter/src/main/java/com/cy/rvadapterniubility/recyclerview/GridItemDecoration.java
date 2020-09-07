@@ -52,7 +52,7 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration implements I
             spanCount = ((GridLayoutManager) layoutManager).getSpanCount();
             orientation = ((GridLayoutManager) layoutManager).getOrientation();
         } else {
-            throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in GridLayoutManager  for " + GridRecyclerView.class.getName());
+            throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in GridLayoutManager  for " + VerticalGridRecyclerView.class.getName());
         }
         //getBindingAdapterPosition是所在adapter的位置
         //在整个adapter的位置

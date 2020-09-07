@@ -11,7 +11,7 @@ import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
-import com.cy.rvadapterniubility.recyclerview.GridRecyclerView;
+import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +50,10 @@ public class GRVActivity extends BaseActivity {
                 showToast("点击" + position);
             }
         };
-        ((GridRecyclerView)findViewById(R.id.grv))
+        ((VerticalGridRecyclerView)findViewById(R.id.grv))
                 .setSpanCount(4)
                 .addItemDecoration(new GridItemDecoration(dpAdapt(10)));
-        ((GridRecyclerView)findViewById(R.id.grv)).setAdapter(rvAdapter);
+        ((VerticalGridRecyclerView)findViewById(R.id.grv)).setAdapter(rvAdapter);
         rvAdapter.add(list);
     }
 

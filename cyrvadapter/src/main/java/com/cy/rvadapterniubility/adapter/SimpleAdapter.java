@@ -2,7 +2,6 @@ package com.cy.rvadapterniubility.adapter;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +9,6 @@ import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.cy.rvadapterniubility.recyclerview.GridRecyclerView;
-import com.cy.rvadapterniubility.recyclerview.OnVerticalScrollListener;
 
 import java.util.ArrayList;
 import java.util.List;

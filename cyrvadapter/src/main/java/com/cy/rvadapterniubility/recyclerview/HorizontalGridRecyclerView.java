@@ -3,53 +3,50 @@ package com.cy.rvadapterniubility.recyclerview;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.SparseArray;
+import android.view.MotionEvent;
+import android.view.ViewParent;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.MergeAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.refreshlayoutniubility.ScreenUtils;
-import com.cy.rvadapterniubility.adapter.MultiAdapter;
 
 
 /**
  * Created by cy on 2017/7/2.
  */
 
-public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView> {
+public class HorizontalGridRecyclerView extends BaseRecyclerView<HorizontalGridRecyclerView> {
     private int spanCount = 2;
-    private int orientation = RecyclerView.VERTICAL;
     private SparseArray<Boolean> arrayFullSpan;
     private IGridItemDecoration gridItemDecoration;
 
-    public GridRecyclerView(Context context) {
+    private int downX; // 按下时 X轴坐标值
+    private int downY; // 按下时 Y 轴坐标值
+
+    public HorizontalGridRecyclerView(Context context) {
         this(context, null);
     }
 
-    public GridRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public HorizontalGridRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         arrayFullSpan = new SparseArray<>();
         addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(context, 10)));
     }
 
-    public GridRecyclerView setSpanCount(int spanCount) {
+    public HorizontalGridRecyclerView setSpanCount(int spanCount) {
         this.spanCount = spanCount;
         return this;
     }
 
-    public GridRecyclerView setOrientation(int orientation) {
-        this.orientation = orientation;
-        return this;
-    }
 
-    public GridRecyclerView addFullSpanPosition(int position) {
+    public HorizontalGridRecyclerView addFullSpanPosition(int position) {
         arrayFullSpan.put(position, true);
         return this;
     }
 
-    public GridRecyclerView removeFullSpanPosition(int position) {
+    public HorizontalGridRecyclerView removeFullSpanPosition(int position) {
         arrayFullSpan.remove(position);
         return this;
     }
@@ -59,13 +56,13 @@ public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView> {
     }
 
 
-    public GridRecyclerView addItemDecoration(GridItemDecoration gridItemDecoration) {
+    public HorizontalGridRecyclerView addItemDecoration(GridItemDecoration gridItemDecoration) {
         if(this.gridItemDecoration!=null)removeItemDecoration(this.gridItemDecoration.getGridItemDecoration());
         this.gridItemDecoration = gridItemDecoration;
         super.addItemDecoration(gridItemDecoration);
         return this;
     }
-    public GridRecyclerView addItemDecoration(FullSpanGridItemDecoration gridItemDecoration) {
+    public HorizontalGridRecyclerView addItemDecoration(FullSpanGridItemDecoration gridItemDecoration) {
         if(this.gridItemDecoration!=null)removeItemDecoration(this.gridItemDecoration.getGridItemDecoration());
         this.gridItemDecoration = gridItemDecoration;
         super.addItemDecoration(gridItemDecoration);
@@ -77,8 +74,8 @@ public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView> {
     }
 
     @Override
-    public void setAdapter(final RecyclerView.Adapter adapter) {
-        final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), spanCount, orientation, false);
+    public void setAdapter(final Adapter adapter) {
+        final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), spanCount, RecyclerView.HORIZONTAL, false);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -88,5 +85,28 @@ public class GridRecyclerView extends BaseRecyclerView<GridRecyclerView> {
         });
         setLayoutManager(layoutManager);
         super.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                downX = (int) ev.getX();
+                downY = (int) ev.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                int moveX = (int) ev.getX();
+                int moveY = (int) ev.getY();
+                if (Math.abs(moveX - downX) > Math.abs(moveY - downY)) {
+                    requestDisallowInterceptTouchEvent();
+                }
+                downX = moveX;
+                downY = moveY;
+        }
+        return super.onInterceptTouchEvent(ev);
+    }
+    private void requestDisallowInterceptTouchEvent() {
+        final ViewParent parent = getParent();
+        if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
     }
 }

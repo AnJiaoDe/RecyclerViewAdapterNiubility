@@ -46,11 +46,11 @@ public class FullSpanGridItemDecoration extends RecyclerView.ItemDecoration  imp
      */
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        GridRecyclerView gridRecyclerView = null;
+        VerticalGridRecyclerView gridRecyclerView = null;
         try {
-            gridRecyclerView = (GridRecyclerView) parent;
+            gridRecyclerView = (VerticalGridRecyclerView) parent;
         } catch (Exception e) {
-            throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in GridLayoutManager  for " + GridRecyclerView.class.getName());
+            throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in GridLayoutManager  for " + VerticalGridRecyclerView.class.getName());
         }
         final RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
         RecyclerView.ViewHolder viewHolder = parent.getChildViewHolder(view);
@@ -60,7 +60,7 @@ public class FullSpanGridItemDecoration extends RecyclerView.ItemDecoration  imp
             spanCount = ((GridLayoutManager) layoutManager).getSpanCount();
             orientation = ((GridLayoutManager) layoutManager).getOrientation();
         } else {
-            throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in GridLayoutManager  for " + GridRecyclerView.class.getName());
+            throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in GridLayoutManager  for " + VerticalGridRecyclerView.class.getName());
         }
         //getBindingAdapterPosition是所在adapter的位置
         //在整个adapter的位置

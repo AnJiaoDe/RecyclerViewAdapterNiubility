@@ -12,7 +12,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.cy.BaseAdapter.R;
 import com.cy.refreshlayoutniubility.IAnimationView;
@@ -36,7 +35,7 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
     private boolean isLoadMoreing = false;
     private OnCloseLoadMoreCallback onCloseLoadMoreCallback;
     private final String CLEAR = "CLEAR";
-    private GridRecyclerView gridRecyclerView;
+    private VerticalGridRecyclerView gridRecyclerView;
 
     public OnGridLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
@@ -66,10 +65,10 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
 
     private void checkRecyclerView(RecyclerView recyclerView) {
         try {
-            this.gridRecyclerView = (GridRecyclerView) recyclerView;
+            this.gridRecyclerView = (VerticalGridRecyclerView) recyclerView;
         } catch (Exception e) {
             throw new IllegalArgumentException(
-                    "You can only use " + getClass().getName() + " in " + GridRecyclerView.class.getName());
+                    "You can only use " + getClass().getName() + " in " + VerticalGridRecyclerView.class.getName());
         }
     }
 

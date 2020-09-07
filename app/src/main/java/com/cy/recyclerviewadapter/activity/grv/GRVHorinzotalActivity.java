@@ -1,6 +1,5 @@
 package com.cy.recyclerviewadapter.activity.grv;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -13,7 +12,7 @@ import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
-import com.cy.rvadapterniubility.recyclerview.GridRecyclerView;
+import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,11 +50,11 @@ public class GRVHorinzotalActivity extends BaseActivity {
                 showToast("点击" + position);
             }
         };
-        ((GridRecyclerView)findViewById(R.id.grvh))
+        ((VerticalGridRecyclerView)findViewById(R.id.grvh))
                 .setSpanCount(2)
                 .setOrientation(RecyclerView.HORIZONTAL)
                 .addItemDecoration(new GridItemDecoration(dpAdapt(10)));
-        ((GridRecyclerView)findViewById(R.id.grvh)).setAdapter(rvAdapter);
+        ((VerticalGridRecyclerView)findViewById(R.id.grvh)).setAdapter(rvAdapter);
         rvAdapter.add(list);
     }
 
