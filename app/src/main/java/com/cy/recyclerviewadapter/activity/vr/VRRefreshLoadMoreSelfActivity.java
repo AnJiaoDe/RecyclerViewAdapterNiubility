@@ -16,6 +16,7 @@ import com.cy.refreshlayoutniubility.RefreshFinishListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.LinearItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
 import com.cy.rvadapterniubility.recyclerview.OnLinearLoadMoreListener;
 import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
@@ -70,6 +71,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
 
 //        verticalRefreshLayout.setEnableLoadMore(false);
 //        verticalRefreshLayout.getRecyclerView().setAdapter(multiAdapter.getMergeAdapter());
+        verticalRefreshLayout.getRecyclerView().addItemDecoration(new LinearItemDecoration().setSpace_vertical(60));
         verticalRefreshLayout.setAdapter(multiAdapter, new OnRefreshListener() {
             @Override
             public void onRefreshStart() {

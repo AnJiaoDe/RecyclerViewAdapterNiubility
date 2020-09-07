@@ -96,7 +96,7 @@ public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
 
             if(orientation==RecyclerView.VERTICAL){
-                if (holder != null && holder.itemView.getBottom() + 2 * space >= recyclerView.getHeight()) {
+                if (holder != null && holder.itemView.getBottom() +  space >= recyclerView.getHeight()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
                         gridRecyclerView.addFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                         loadMoreAdapter.add("");
@@ -104,7 +104,7 @@ public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
                     return;
                 }
             }else {
-                if (holder != null && holder.itemView.getRight() + 2 * space >= recyclerView.getWidth()){
+                if (holder != null && holder.itemView.getRight() +  space >= recyclerView.getWidth()){
                     if (loadMoreAdapter.getItemCount() == 0) {
                         gridRecyclerView.addFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                         loadMoreAdapter.add("");
@@ -124,10 +124,10 @@ public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
 //            //数据太少，没有充满recyclerView,没有loadMore的必要
             if(orientation==RecyclerView.VERTICAL){
-                if (holder!=null&&holder.itemView.getBottom() + 2 * space < recyclerView.getHeight())
+                if (holder!=null&&holder.itemView.getBottom() +  space < recyclerView.getHeight())
                     continue;
             }else {
-                if (holder!=null&&holder.itemView.getRight() + 2 * space < recyclerView.getWidth())
+                if (holder!=null&&holder.itemView.getRight() +  space < recyclerView.getWidth())
                     continue;
             }
 

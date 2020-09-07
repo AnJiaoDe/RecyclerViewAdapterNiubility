@@ -34,7 +34,7 @@ public class LinearItemDecoration extends RecyclerView.ItemDecoration {
         final LinearLayoutManager layoutManager = (LinearLayoutManager) parent.getLayoutManager();
         RecyclerView.ViewHolder viewHolder = parent.getChildViewHolder(view);
         int orientation= layoutManager.getOrientation();
-        int position = viewHolder.getBindingAdapterPosition();
+        int position = viewHolder.getAbsoluteAdapterPosition();
 
         switch (orientation) {
             case RecyclerView.VERTICAL:
