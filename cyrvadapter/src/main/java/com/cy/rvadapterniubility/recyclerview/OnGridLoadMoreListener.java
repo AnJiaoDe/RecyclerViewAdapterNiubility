@@ -39,6 +39,7 @@ public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
     private final String CLEAR = "CLEAR";
     private VerticalGridRecyclerView gridRecyclerView;
     private int orientation=RecyclerView.VERTICAL;
+    private int space;
 
     public OnGridLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
@@ -76,6 +77,7 @@ public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
             throw new IllegalArgumentException(
                     "You can only use " + getClass().getName() + " in " + VerticalGridRecyclerView.class.getName());
         }
+        space = gridRecyclerView != null ? gridRecyclerView.getGridItemDecoration().getSpace() : 0;
     }
 
     /**
@@ -90,7 +92,6 @@ public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
         checkRecyclerView(recyclerView);
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
-            int space = gridRecyclerView != null ? gridRecyclerView.getGridItemDecoration().getSpace() : 0;
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
 
@@ -121,7 +122,6 @@ public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
         checkRecyclerView(recyclerView);
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
-            int space = gridRecyclerView != null ? gridRecyclerView.getGridItemDecoration().getSpace() : 0;
 //            //数据太少，没有充满recyclerView,没有loadMore的必要
             if(orientation==RecyclerView.VERTICAL){
                 if (holder!=null&&holder.itemView.getBottom() + 2 * space < recyclerView.getHeight())
