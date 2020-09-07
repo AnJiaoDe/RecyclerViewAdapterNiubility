@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.refreshlayoutniubility.ScreenUtils;
+import com.cy.rvadapterniubility.adapter.MultiAdapter;
 
 
 /**
@@ -86,7 +87,11 @@ public class HorizontalGridRecyclerView extends BaseRecyclerView<HorizontalGridR
         setLayoutManager(layoutManager);
         super.setAdapter(adapter);
     }
-
+    public HorizontalGridRecyclerView setAdapter(MultiAdapter multiAdapter, OnGridLoadMoreListener onRVLoadMoreListener) {
+        addOnScrollListener(onRVLoadMoreListener);
+        setAdapter(multiAdapter.getMergeAdapter());
+        return this;
+    }
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {

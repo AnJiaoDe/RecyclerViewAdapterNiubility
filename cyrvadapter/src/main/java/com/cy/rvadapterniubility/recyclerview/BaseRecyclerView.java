@@ -91,7 +91,7 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
         return (T) this;
     }
 
-    public T addOnScrollListener(OnVerticalScrollListener onSimpleScrollListener) {
+    public T addOnScrollListener(OnSimpleScrollListener onSimpleScrollListener) {
         super.addOnScrollListener(onSimpleScrollListener.getOnScrollListener());
         return (T) this;
     }

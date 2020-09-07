@@ -11,9 +11,7 @@ import com.cy.refreshlayoutniubility.RefreshLayoutNiubility;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.BaseRecyclerView;
-import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
-import com.cy.rvadapterniubility.recyclerview.OnRVLoadMoreListener;
-import com.cy.rvadapterniubility.recyclerview.OnVerticalScrollListener;
+import com.cy.rvadapterniubility.recyclerview.OnSimpleScrollListener;
 
 
 /**
@@ -36,7 +34,7 @@ public abstract class BaseRVRefreshLayout<T extends BaseRecyclerView, V extends 
      *
      */
     public V addOnScrollListener() {
-        addOnScrollListener(new OnVerticalScrollListener() {
+        addOnScrollListener(new OnSimpleScrollListener() {
             @Override
             public void onScrollArrivedBottom(RecyclerView recyclerView, PositionHolder positionHolder) {
                 super.onScrollArrivedBottom(recyclerView, positionHolder);
@@ -46,7 +44,7 @@ public abstract class BaseRVRefreshLayout<T extends BaseRecyclerView, V extends 
         return (V) this;
     }
 
-    public V addOnScrollListener(OnVerticalScrollListener onVerticalScrollListener) {
+    public V addOnScrollListener(OnSimpleScrollListener onVerticalScrollListener) {
         getRecyclerView().addOnScrollListener(onVerticalScrollListener.getOnScrollListener());
         return (V) this;
     }
@@ -119,7 +117,7 @@ public abstract class BaseRVRefreshLayout<T extends BaseRecyclerView, V extends 
         return (V) this;
     }
 
-    public V setAdapter(MultiAdapter multiAdapter, OnVerticalScrollListener onVerticalScrollListener) {
+    public V setAdapter(MultiAdapter multiAdapter, OnSimpleScrollListener onVerticalScrollListener) {
         BaseRecyclerView baseRecyclerView = getRecyclerView();
         baseRecyclerView.addOnScrollListener(onVerticalScrollListener);
         baseRecyclerView.setAdapter(multiAdapter.getMergeAdapter());

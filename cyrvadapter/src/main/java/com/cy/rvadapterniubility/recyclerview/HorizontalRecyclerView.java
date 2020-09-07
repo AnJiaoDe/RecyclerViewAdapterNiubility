@@ -5,10 +5,11 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewParent;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.cy.rvadapterniubility.adapter.MultiAdapter;
 
 /**
  * Created by cy on 2017/7/2.
@@ -31,7 +32,11 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
         setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         super.setAdapter(adapter);
     }
-
+    public HorizontalRecyclerView setAdapter(MultiAdapter multiAdapter, OnLinearLoadMoreListener onRVLoadMoreListener) {
+        addOnScrollListener(onRVLoadMoreListener);
+        setAdapter(multiAdapter.getMergeAdapter());
+        return this;
+    }
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
@@ -54,4 +59,5 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
         final ViewParent parent = getParent();
         if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
     }
+
 }

@@ -10,14 +10,14 @@ import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.refreshrv.OnLoadMoreListener;
-import com.cy.rvadapterniubility.refreshrv.VerticalRefreshLayout;
+import com.cy.rvadapterniubility.refreshrv.LinearRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class VRLoadMoreActivity extends BaseActivity {
     private SimpleAdapter<VRBean> rvAdapter;
-    private VerticalRefreshLayout verticalRefreshLayout;
+    private LinearRefreshLayout verticalRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class VRLoadMoreActivity extends BaseActivity {
         setContentView(R.layout.activity_vrload_more);
 
 
-        verticalRefreshLayout = (VerticalRefreshLayout) findViewById(R.id.vrl);
+        verticalRefreshLayout = (LinearRefreshLayout) findViewById(R.id.vrl);
         List<VRBean> list = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             list.add(new VRBean("内容" + i));

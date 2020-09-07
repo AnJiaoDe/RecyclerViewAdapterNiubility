@@ -18,7 +18,7 @@ import com.cy.refreshlayoutniubility.OnPullListener;
 import com.cy.refreshlayoutniubility.RefreshFinishListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
-import com.cy.rvadapterniubility.refreshrv.VerticalRefreshLayout;
+import com.cy.rvadapterniubility.refreshrv.LinearRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.List;
 public class VRRefreshLoadMoreActivity extends BaseActivity {
 
     private SimpleAdapter<VRBean> rvAdapter;
-    private VerticalRefreshLayout verticalRefreshLayout;
+    private LinearRefreshLayout verticalRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

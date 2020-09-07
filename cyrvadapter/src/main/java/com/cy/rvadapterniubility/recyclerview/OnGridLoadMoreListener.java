@@ -11,6 +11,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.BaseAdapter.R;
@@ -28,7 +30,7 @@ import com.cy.rvadapterniubility.adapter.SimpleAdapter;
  * @UpdateRemark:
  * @Version:
  */
-public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
+public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
     private SimpleAdapter<String> loadMoreAdapter;
     private MultiAdapter<SimpleAdapter> multiAdapter;
     private int count_remain = 0;
@@ -36,6 +38,7 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
     private OnCloseLoadMoreCallback onCloseLoadMoreCallback;
     private final String CLEAR = "CLEAR";
     private VerticalGridRecyclerView gridRecyclerView;
+    private int orientation=RecyclerView.VERTICAL;
 
     public OnGridLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
@@ -47,7 +50,8 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
 
             @Override
             public int getItemLayoutID(int position, String bean) {
-                return OnGridLoadMoreListener.this.getLoadMoreLayoutID();
+                if(orientation==RecyclerView.VERTICAL)return OnGridLoadMoreListener.this.getVerticalLoadMoreLayoutID();
+                return OnGridLoadMoreListener.this.getHorizontalLoadMoreLayoutID();
             }
 
             @Override
@@ -66,6 +70,8 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
     private void checkRecyclerView(RecyclerView recyclerView) {
         try {
             this.gridRecyclerView = (VerticalGridRecyclerView) recyclerView;
+            GridLayoutManager gridLayoutManager= (GridLayoutManager) recyclerView.getLayoutManager();
+            orientation=gridLayoutManager.getOrientation();
         } catch (Exception e) {
             throw new IllegalArgumentException(
                     "You can only use " + getClass().getName() + " in " + VerticalGridRecyclerView.class.getName());
@@ -87,13 +93,25 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
             int space = gridRecyclerView != null ? gridRecyclerView.getGridItemDecoration().getSpace() : 0;
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
-            if (holder != null && holder.itemView.getBottom() + 2 * space >= recyclerView.getHeight()) {
-                if (loadMoreAdapter.getItemCount() == 0) {
-                    gridRecyclerView.addFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
-                    loadMoreAdapter.add("");
+
+            if(orientation==RecyclerView.VERTICAL){
+                if (holder != null && holder.itemView.getBottom() + 2 * space >= recyclerView.getHeight()) {
+                    if (loadMoreAdapter.getItemCount() == 0) {
+                        gridRecyclerView.addFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
+                        loadMoreAdapter.add("");
+                    }
+                    return;
                 }
-                return;
+            }else {
+                if (holder != null && holder.itemView.getRight() + 2 * space >= recyclerView.getWidth()){
+                    if (loadMoreAdapter.getItemCount() == 0) {
+                        gridRecyclerView.addFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
+                        loadMoreAdapter.add("");
+                    }
+                    return;
+                }
             }
+
         }
     }
 
@@ -105,8 +123,14 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
             int space = gridRecyclerView != null ? gridRecyclerView.getGridItemDecoration().getSpace() : 0;
 //            //数据太少，没有充满recyclerView,没有loadMore的必要
-            if (holder!=null&&holder.itemView.getBottom() + 2 * space < recyclerView.getHeight())
-                continue;
+            if(orientation==RecyclerView.VERTICAL){
+                if (holder!=null&&holder.itemView.getBottom() + 2 * space < recyclerView.getHeight())
+                    continue;
+            }else {
+                if (holder!=null&&holder.itemView.getRight() + 2 * space < recyclerView.getWidth())
+                    continue;
+            }
+
             //说明最后一个item-count_remain可见了，可以开始loadMore了
             if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - getCount_remain()) {
                 if (loadMoreAdapter.getItemCount() == 0) {
@@ -149,7 +173,9 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
             switch (bean) {
                 case CLEAR:
                     final ObjectAnimator objectAnimator_alpha = ObjectAnimator.ofFloat(holder.itemView, "alpha", 1, 0);
-                    final ObjectAnimator objectAnimator_transY = ObjectAnimator.ofFloat(holder.itemView, "translationY", 0, holder.itemView.getHeight());
+                    final ObjectAnimator objectAnimator_transY =orientation==RecyclerView.VERTICAL?
+                            ObjectAnimator.ofFloat(holder.itemView, "translationY", 0, holder.itemView.getHeight())
+                            : ObjectAnimator.ofFloat(holder.itemView, "translationX", 0, holder.itemView.getWidth());
 
                     final AnimatorSet animatorSet = new AnimatorSet();
                     animatorSet.setDuration(500);
@@ -161,6 +187,7 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
                             super.onAnimationEnd(animation);
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
+                            holder.itemView.setTranslationX(0);
                             holder.itemView.setTranslationY(0);
                             gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
                             if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
@@ -183,8 +210,11 @@ public abstract class OnGridLoadMoreListener extends OnVerticalScrollListener {
         }
     }
 
-    public int getLoadMoreLayoutID() {
-        return R.layout.cyrvadapter_loadmore_foot_default;
+    public int getVerticalLoadMoreLayoutID() {
+        return R.layout.cy_loadmore_vertical_foot_default;
+    }
+    public int getHorizontalLoadMoreLayoutID() {
+        return R.layout.cy_loadmore_horizontal_foot_default;
     }
 
     /**

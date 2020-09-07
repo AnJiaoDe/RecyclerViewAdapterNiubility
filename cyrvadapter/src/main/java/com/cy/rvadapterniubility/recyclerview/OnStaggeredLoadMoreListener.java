@@ -184,7 +184,7 @@
 //    }
 //
 //    public int getLoadMoreLayoutID() {
-//        return R.layout.cyrvadapter_loadmore_foot_default;
+//        return R.layout.cy_loadmore_vertical_foot_default;
 //    }
 //
 //

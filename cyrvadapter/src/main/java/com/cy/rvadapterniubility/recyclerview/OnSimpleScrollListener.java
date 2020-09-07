@@ -6,12 +6,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.cy.rvadapterniubility.LogUtils;
+
 
 /**
  * Created by lenovo on 2017/12/31.
  */
 
-public class OnVerticalScrollListener {
+public class OnSimpleScrollListener {
     protected boolean firstCallOnScrolled = true;
 
     protected static enum LAYOUT_MANAGER_TYPE {
@@ -28,25 +30,35 @@ public class OnVerticalScrollListener {
 
     protected RecyclerView.OnScrollListener onScrollListener;
     private PositionHolder positionHolder;
-
-    public OnVerticalScrollListener() {
+    private int orientation=RecyclerView.VERTICAL;
+    public OnSimpleScrollListener() {
         positionHolder = new PositionHolder(new int[1], new int[1], new int[1], new int[1]);
         onScrollListener = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-//                LogUtils.log("onScrolled", dy);
+                LogUtils.log("onScrolled", dx);
+                LogUtils.log("onScrolleddy", dy);
                 if (firstCallOnScrolled) {
                     computPosition(recyclerView);
                     onFirstScrolled(recyclerView,positionHolder);
                     firstCallOnScrolled = false;
                 }
                 if (dy < 0) { // 当前处于上滑状态
-                    onScrollingUp(recyclerView,dy);
+                    onScrollingFingerToBottom(recyclerView,dy);
                     return;
                 }
                 if (dy > 0) { // 当前处于下滑状态
-                    onScrollingDown(recyclerView,dy);
+                    onScrollingFingerToTop(recyclerView,dy);
+                    return;
+                }
+                if (dx < 0) { // 当前处于上滑状态
+                    onScrollingFingerToRight(recyclerView,dy);
+                    return;
+                }
+                if (dx > 0) { // 当前处于下滑状态
+                    onScrollingFingerToLeft(recyclerView,dy);
+                    return;
                 }
             }
 
@@ -63,14 +75,26 @@ public class OnVerticalScrollListener {
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
                         onIdle(recyclerView,positionHolder);
-                        //不能上滑
-                        if (!recyclerView.canScrollVertically(1)) {
-                            onScrollArrivedBottom(recyclerView,positionHolder);
+                        if(orientation==RecyclerView.VERTICAL){
+                            if (!recyclerView.canScrollVertically(1)) {
+                                onScrollArrivedBottom(recyclerView,positionHolder);
+                                return;
+                            }
+                            if (!recyclerView.canScrollVertically(-1)) {
+                                onScrollArrivedTop(recyclerView,positionHolder);
+                                return;
+                            }
+                        }else {
+                            if (!recyclerView.canScrollHorizontally(1)) {
+                                onScrollArrivedRight(recyclerView,positionHolder);
+                                return;
+                            }
+                            if (!recyclerView.canScrollHorizontally(-1)) {
+                                onScrollArrivedLeft(recyclerView,positionHolder);
+                                return;
+                            }
                         }
-                        //不能下滑
-                        if (!recyclerView.canScrollVertically(-1)) {
-                            onScrollArrivedTop(recyclerView,positionHolder);
-                        }
+
                         break;
                     case RecyclerView.SCROLL_STATE_DRAGGING:
                         onDragging(recyclerView,positionHolder);
@@ -100,6 +124,7 @@ public class OnVerticalScrollListener {
         switch (layoutManagerType) {
             case LINEAR:
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+                orientation=linearLayoutManager.getOrientation();
                 positionHolder.getFirstVisibleItemPositions()[0] = (linearLayoutManager.findFirstVisibleItemPosition());
                 positionHolder.getFirstCompletelyVisibleItemPositions()[0] = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
                 positionHolder.getLastVisibleItemPositions()[0] = linearLayoutManager.findLastVisibleItemPosition();
@@ -107,6 +132,7 @@ public class OnVerticalScrollListener {
                 break;
             case GRID:
                 GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+                orientation=gridLayoutManager.getOrientation();
                 positionHolder.getFirstVisibleItemPositions()[0] = (gridLayoutManager.findFirstVisibleItemPosition());
                 positionHolder.getFirstCompletelyVisibleItemPositions()[0] = gridLayoutManager.findFirstCompletelyVisibleItemPosition();
                 positionHolder.getLastVisibleItemPositions()[0] = gridLayoutManager.findLastVisibleItemPosition();
@@ -114,6 +140,8 @@ public class OnVerticalScrollListener {
                 break;
             case STAGGERED_GRID:
                 StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
+                orientation=staggeredGridLayoutManager.getOrientation();
+
                 /**
                  * Note that, this value is not affected by layout orientation or item order traversal.
                  *      * ({@link #setReverseLayout(boolean)}). Views are sorted by their positions in the adapter,
@@ -138,15 +166,35 @@ public class OnVerticalScrollListener {
     }
 
     public void onScrollArrivedTop(RecyclerView recyclerView, PositionHolder positionHolder) {
+        LogUtils.log("onScrollArrivedTop");
+
     }
 
     public void onScrollArrivedBottom(RecyclerView recyclerView, PositionHolder positionHolder) {
+        LogUtils.log("onScrollArrivedBottom");
+
+    }
+    public void onScrollArrivedLeft(RecyclerView recyclerView, PositionHolder positionHolder) {
+        LogUtils.log("onScrollArrivedLeft");
     }
 
-    public void onScrollingUp(RecyclerView recyclerView, int dy) {
+    public void onScrollArrivedRight(RecyclerView recyclerView, PositionHolder positionHolder) {
+        LogUtils.log("onScrollArrivedRight");
     }
 
-    public void onScrollingDown(RecyclerView recyclerView, int dy) {
+    public void onScrollingFingerToBottom(RecyclerView recyclerView, int dy) {
+        LogUtils.log("onScrollingFingerToBottom");
+    }
+
+    public void onScrollingFingerToTop(RecyclerView recyclerView, int dy) {
+        LogUtils.log("onScrollingFingerToTop");
+    }
+    public void onScrollingFingerToLeft(RecyclerView recyclerView, int dy) {
+        LogUtils.log("onScrollingFingerToLeft");
+    }
+
+    public void onScrollingFingerToRight(RecyclerView recyclerView, int dy) {
+        LogUtils.log("onScrollingFingerToRight");
     }
 
     public void onIdle(RecyclerView recyclerView, PositionHolder positionHolder) {

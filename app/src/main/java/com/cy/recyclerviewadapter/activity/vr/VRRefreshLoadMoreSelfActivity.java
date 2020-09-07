@@ -17,9 +17,9 @@ import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
-import com.cy.rvadapterniubility.recyclerview.OnRVLoadMoreListener;
+import com.cy.rvadapterniubility.recyclerview.OnLinearLoadMoreListener;
 import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
-import com.cy.rvadapterniubility.refreshrv.VerticalRefreshLayout;
+import com.cy.rvadapterniubility.refreshrv.LinearRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
 public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
 
     private MultiAdapter<SimpleAdapter> multiAdapter;
-    private VerticalRefreshLayout verticalRefreshLayout;
+    private LinearRefreshLayout verticalRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +103,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                     }
                 }, 2000);
             }
-        }, new OnRVLoadMoreListener(multiAdapter, 6) {
+        }, new OnLinearLoadMoreListener(multiAdapter, 6) {
             @Override
             public void onLoadMoreStart() {
                 new Handler().postDelayed(new Runnable() {

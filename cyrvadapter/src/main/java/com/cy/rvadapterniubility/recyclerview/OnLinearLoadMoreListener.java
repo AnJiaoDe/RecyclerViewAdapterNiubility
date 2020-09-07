@@ -11,6 +11,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.BaseAdapter.R;
@@ -18,6 +19,7 @@ import com.cy.refreshlayoutniubility.IAnimationView;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
 
 /**
  * @Description:仿头条LoadMore丝滑体验
@@ -28,7 +30,7 @@ import com.cy.rvadapterniubility.adapter.SimpleAdapter;
  * @UpdateRemark:
  * @Version:
  */
-public abstract class OnRVLoadMoreListener extends OnVerticalScrollListener {
+public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     private SimpleAdapter<String> loadMoreAdapter;
     private MultiAdapter<SimpleAdapter> multiAdapter;
     private int count_remain = 0;
@@ -36,18 +38,19 @@ public abstract class OnRVLoadMoreListener extends OnVerticalScrollListener {
     private OnCloseLoadMoreCallback onCloseLoadMoreCallback;
     private final String CLEAR = "CLEAR";
     private RecyclerView recyclerView;
-
-    public OnRVLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
+    private int orientation=RecyclerView.VERTICAL;
+    public OnLinearLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
         loadMoreAdapter = new SimpleAdapter<String>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected) {
-                OnRVLoadMoreListener.this.bindDataToLoadMore(holder, bean);
+                OnLinearLoadMoreListener.this.bindDataToLoadMore(holder, bean);
             }
 
             @Override
             public int getItemLayoutID(int position, String bean) {
-                return OnRVLoadMoreListener.this.getLoadMoreLayoutID();
+                if(orientation==RecyclerView.VERTICAL)return OnLinearLoadMoreListener.this.getVerticalLoadMoreLayoutID();
+                return OnLinearLoadMoreListener.this.getHorizontalLoadMoreLayoutID();
             }
 
             @Override
@@ -58,7 +61,7 @@ public abstract class OnRVLoadMoreListener extends OnVerticalScrollListener {
         multiAdapter.addAdapter(multiAdapter.getAdapters().size(), loadMoreAdapter);
     }
 
-    public OnRVLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter, int count_remain) {
+    public OnLinearLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter, int count_remain) {
         this(multiAdapter);
         this.count_remain = count_remain;
     }
@@ -73,16 +76,29 @@ public abstract class OnRVLoadMoreListener extends OnVerticalScrollListener {
     public final void onDragging(RecyclerView recyclerView, PositionHolder positionHolder) {
         super.onDragging(recyclerView, positionHolder);
         this.recyclerView = recyclerView;
+        LinearLayoutManager linearLayoutManager= (LinearLayoutManager) recyclerView.getLayoutManager();
+        orientation=linearLayoutManager.getOrientation();
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
-            if (holder != null && holder.itemView.getBottom() >= recyclerView.getHeight()) {
-                if (loadMoreAdapter.getItemCount() == 0) {
-                    loadMoreAdapter.add("");
+
+            if(orientation==RecyclerView.VERTICAL){
+                if (holder != null && holder.itemView.getBottom() >= recyclerView.getHeight()) {
+                    if (loadMoreAdapter.getItemCount() == 0) {
+                        loadMoreAdapter.add("");
+                    }
+                    return;
                 }
-                return;
+            }else {
+                if (holder != null && holder.itemView.getRight() >= recyclerView.getWidth()) {
+                    if (loadMoreAdapter.getItemCount() == 0) {
+                        loadMoreAdapter.add("");
+                    }
+                    return;
+                }
             }
+
         }
     }
 
@@ -92,7 +108,11 @@ public abstract class OnRVLoadMoreListener extends OnVerticalScrollListener {
         this.recyclerView = recyclerView;
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder =  recyclerView.findViewHolderForAdapterPosition(position);
-            if (holder!=null&&holder.itemView.getBottom() < recyclerView.getHeight()) continue;
+            if(orientation==RecyclerView.VERTICAL){
+                if (holder!=null&&holder.itemView.getBottom() < recyclerView.getHeight()) continue;
+            }else {
+                if (holder!=null&&holder.itemView.getRight() < recyclerView.getWidth()) continue;
+            }
             //说明最后一个item-count_remain可见了，可以开始loadMore了
             if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - getCount_remain()) {
                 if (loadMoreAdapter.getItemCount() == 0) {
@@ -134,7 +154,9 @@ public abstract class OnRVLoadMoreListener extends OnVerticalScrollListener {
             switch (bean) {
                 case CLEAR:
                     final ObjectAnimator objectAnimator_alpha = ObjectAnimator.ofFloat(holder.itemView, "alpha", 1, 0);
-                    final ObjectAnimator objectAnimator_transY = ObjectAnimator.ofFloat(holder.itemView, "translationY", 0, holder.itemView.getHeight());
+                    final ObjectAnimator objectAnimator_transY =orientation==RecyclerView.VERTICAL?
+                            ObjectAnimator.ofFloat(holder.itemView, "translationY", 0, holder.itemView.getHeight())
+                            : ObjectAnimator.ofFloat(holder.itemView, "translationX", 0, holder.itemView.getWidth());
                     final AnimatorSet animatorSet = new AnimatorSet();
                     animatorSet.setDuration(500);
                     animatorSet.playTogether(objectAnimator_alpha, objectAnimator_transY);
@@ -145,6 +167,7 @@ public abstract class OnRVLoadMoreListener extends OnVerticalScrollListener {
                             super.onAnimationEnd(animation);
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
+                            holder.itemView.setTranslationX(0);
                             holder.itemView.setTranslationY(0);
                             if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
                             loadMoreAdapter.clear();
@@ -169,8 +192,11 @@ public abstract class OnRVLoadMoreListener extends OnVerticalScrollListener {
 //    public void onLoadMoreAdded() {
 //    }
 
-    public int getLoadMoreLayoutID() {
-        return R.layout.cyrvadapter_loadmore_foot_default;
+    public int getVerticalLoadMoreLayoutID() {
+        return R.layout.cy_loadmore_vertical_foot_default;
+    }
+    public int getHorizontalLoadMoreLayoutID() {
+        return R.layout.cy_loadmore_horizontal_foot_default;
     }
 
     /**
