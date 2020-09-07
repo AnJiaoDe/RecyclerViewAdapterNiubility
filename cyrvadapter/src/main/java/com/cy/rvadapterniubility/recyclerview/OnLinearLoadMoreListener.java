@@ -38,7 +38,8 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     private OnCloseLoadMoreCallback onCloseLoadMoreCallback;
     private final String CLEAR = "CLEAR";
     private RecyclerView recyclerView;
-    private int orientation=RecyclerView.VERTICAL;
+    private int orientation = RecyclerView.VERTICAL;
+
     public OnLinearLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
         loadMoreAdapter = new SimpleAdapter<String>() {
@@ -49,13 +50,14 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
 
             @Override
             public int getItemLayoutID(int position, String bean) {
-                if(orientation==RecyclerView.VERTICAL)return OnLinearLoadMoreListener.this.getVerticalLoadMoreLayoutID();
+                if (orientation == RecyclerView.VERTICAL)
+                    return OnLinearLoadMoreListener.this.getVerticalLoadMoreLayoutID();
                 return OnLinearLoadMoreListener.this.getHorizontalLoadMoreLayoutID();
             }
 
             @Override
             public void onItemClick(BaseViewHolder holder, int position, String bean) {
-
+                onItemLoadMoreClick(holder);
             }
         };
         multiAdapter.addAdapter(multiAdapter.getAdapters().size(), loadMoreAdapter);
@@ -76,21 +78,21 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     public final void onDragging(RecyclerView recyclerView, PositionHolder positionHolder) {
         super.onDragging(recyclerView, positionHolder);
         this.recyclerView = recyclerView;
-        LinearLayoutManager linearLayoutManager= (LinearLayoutManager) recyclerView.getLayoutManager();
-        orientation=linearLayoutManager.getOrientation();
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        orientation = linearLayoutManager.getOrientation();
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
 
-            if(orientation==RecyclerView.VERTICAL){
+            if (orientation == RecyclerView.VERTICAL) {
                 if (holder != null && holder.itemView.getBottom() >= recyclerView.getHeight()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
                         loadMoreAdapter.add("");
                     }
                     return;
                 }
-            }else {
+            } else {
                 if (holder != null && holder.itemView.getRight() >= recyclerView.getWidth()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
                         loadMoreAdapter.add("");
@@ -107,11 +109,13 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         super.onIdle(recyclerView, positionHolder);
         this.recyclerView = recyclerView;
         for (int position : positionHolder.getLastVisibleItemPositions()) {
-            RecyclerView.ViewHolder holder =  recyclerView.findViewHolderForAdapterPosition(position);
-            if(orientation==RecyclerView.VERTICAL){
-                if (holder!=null&&holder.itemView.getBottom() < recyclerView.getHeight()) continue;
-            }else {
-                if (holder!=null&&holder.itemView.getRight() < recyclerView.getWidth()) continue;
+            RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
+            if (orientation == RecyclerView.VERTICAL) {
+                if (holder != null && holder.itemView.getBottom() < recyclerView.getHeight())
+                    continue;
+            } else {
+                if (holder != null && holder.itemView.getRight() < recyclerView.getWidth())
+                    continue;
             }
             //说明最后一个item-count_remain可见了，可以开始loadMore了
             if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - getCount_remain()) {
@@ -129,6 +133,9 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     }
 
     public abstract void onLoadMoreStart();
+
+    public void onItemLoadMoreClick(BaseViewHolder holder) {
+    }
 
     public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
         IAnimationView animationView = setAnimationView();
@@ -154,7 +161,7 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
             switch (bean) {
                 case CLEAR:
                     final ObjectAnimator objectAnimator_alpha = ObjectAnimator.ofFloat(holder.itemView, "alpha", 1, 0);
-                    final ObjectAnimator objectAnimator_transY =orientation==RecyclerView.VERTICAL?
+                    final ObjectAnimator objectAnimator_transY = orientation == RecyclerView.VERTICAL ?
                             ObjectAnimator.ofFloat(holder.itemView, "translationY", 0, holder.itemView.getHeight())
                             : ObjectAnimator.ofFloat(holder.itemView, "translationX", 0, holder.itemView.getWidth());
                     final AnimatorSet animatorSet = new AnimatorSet();
@@ -195,6 +202,7 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     public int getVerticalLoadMoreLayoutID() {
         return R.layout.cy_loadmore_vertical_foot_default;
     }
+
     public int getHorizontalLoadMoreLayoutID() {
         return R.layout.cy_loadmore_horizontal_foot_default;
     }
@@ -217,7 +225,7 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     public void setLoadMoreText(String text) {
         if (recyclerView == null) return;
         BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
-        if(baseViewHolder==null)return;
+        if (baseViewHolder == null) return;
         baseViewHolder.setGone(R.id.animView);
         baseViewHolder.setText(R.id.tv, text);
         baseViewHolder.setVisible(R.id.tv);
