@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.cy.rvadapterniubility.recyclerview.HorizontalGridRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/grvh"
     android:layout_width="match_parent"
     android:background="#eee"
     android:layout_height="wrap_content">
 
-</com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView>
+</com.cy.rvadapterniubility.recyclerview.HorizontalGridRecyclerView>
