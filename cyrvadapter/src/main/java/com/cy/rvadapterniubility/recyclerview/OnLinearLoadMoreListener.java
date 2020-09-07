@@ -39,6 +39,8 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     private final String CLEAR = "CLEAR";
     private RecyclerView recyclerView;
     private int orientation = RecyclerView.VERTICAL;
+    private int space_vertical;
+    private int space_horizontal;
 
     public OnLinearLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
@@ -67,7 +69,19 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         this(multiAdapter);
         this.count_remain = count_remain;
     }
-
+    private void checkRecyclerView(){
+        this.recyclerView = recyclerView;
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        orientation = linearLayoutManager.getOrientation();
+        space_vertical = 0;
+        space_horizontal = 0;
+        try {
+            LinearItemDecoration linearItemDecoration= (LinearItemDecoration) recyclerView.getItemDecorationAt(0);
+            space_vertical =linearItemDecoration.getSpace_vertical();
+            space_horizontal =linearItemDecoration.getSpace_horizontal();
+        }catch (Exception e){
+        }
+    }
     /**
      * 在onDragging中添加loadMore布局，是因为如果item很少，recyclerView有很多剩余空间，就要禁用loadMore
      *
@@ -77,23 +91,21 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     @Override
     public final void onDragging(RecyclerView recyclerView, PositionHolder positionHolder) {
         super.onDragging(recyclerView, positionHolder);
-        this.recyclerView = recyclerView;
-        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        orientation = linearLayoutManager.getOrientation();
+
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
 
             if (orientation == RecyclerView.VERTICAL) {
-                if (holder != null && holder.itemView.getBottom() >= recyclerView.getHeight()) {
+                if (holder != null && holder.itemView.getBottom() + 2 * space_vertical>= recyclerView.getHeight()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
                         loadMoreAdapter.add("");
                     }
                     return;
                 }
             } else {
-                if (holder != null && holder.itemView.getRight() >= recyclerView.getWidth()) {
+                if (holder != null && holder.itemView.getRight()+ 2 * space_horizontal >= recyclerView.getWidth()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
                         loadMoreAdapter.add("");
                     }
@@ -107,14 +119,13 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     @Override
     public void onIdle(RecyclerView recyclerView, PositionHolder positionHolder) {
         super.onIdle(recyclerView, positionHolder);
-        this.recyclerView = recyclerView;
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
             if (orientation == RecyclerView.VERTICAL) {
-                if (holder != null && holder.itemView.getBottom() < recyclerView.getHeight())
+                if (holder != null && holder.itemView.getBottom()+2 * space_vertical < recyclerView.getHeight())
                     continue;
             } else {
-                if (holder != null && holder.itemView.getRight() < recyclerView.getWidth())
+                if (holder != null && holder.itemView.getRight()+2 * space_horizontal < recyclerView.getWidth())
                     continue;
             }
             //说明最后一个item-count_remain可见了，可以开始loadMore了
