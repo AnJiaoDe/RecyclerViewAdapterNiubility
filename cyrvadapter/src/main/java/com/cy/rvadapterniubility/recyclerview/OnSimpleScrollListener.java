@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.cy.rvadapterniubility.LogUtils;
 
 
 /**
@@ -37,8 +36,6 @@ public class OnSimpleScrollListener {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                LogUtils.log("onScrolled", dx);
-                LogUtils.log("onScrolleddy", dy);
                 if (firstCallOnScrolled) {
                     computPosition(recyclerView);
                     onFirstScrolled(recyclerView,positionHolder);
@@ -166,35 +163,27 @@ public class OnSimpleScrollListener {
     }
 
     public void onScrollArrivedTop(RecyclerView recyclerView, PositionHolder positionHolder) {
-        LogUtils.log("onScrollArrivedTop");
 
     }
 
     public void onScrollArrivedBottom(RecyclerView recyclerView, PositionHolder positionHolder) {
-        LogUtils.log("onScrollArrivedBottom");
 
     }
     public void onScrollArrivedLeft(RecyclerView recyclerView, PositionHolder positionHolder) {
-        LogUtils.log("onScrollArrivedLeft");
     }
 
     public void onScrollArrivedRight(RecyclerView recyclerView, PositionHolder positionHolder) {
-        LogUtils.log("onScrollArrivedRight");
     }
 
     public void onScrollingFingerToBottom(RecyclerView recyclerView, int dy) {
-        LogUtils.log("onScrollingFingerToBottom");
     }
 
     public void onScrollingFingerToTop(RecyclerView recyclerView, int dy) {
-        LogUtils.log("onScrollingFingerToTop");
     }
     public void onScrollingFingerToLeft(RecyclerView recyclerView, int dy) {
-        LogUtils.log("onScrollingFingerToLeft");
     }
 
     public void onScrollingFingerToRight(RecyclerView recyclerView, int dy) {
-        LogUtils.log("onScrollingFingerToRight");
     }
 
     public void onIdle(RecyclerView recyclerView, PositionHolder positionHolder) {

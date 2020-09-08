@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.BaseAdapter.R;
 import com.cy.refreshlayoutniubility.IAnimationView;
-import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -97,10 +96,6 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
-
-            LogUtils.log(" holder.itemView.getBottom()", holder.itemView.getBottom());
-            LogUtils.log(" holder.itemView.getBottom()space_vertical", space_vertical);
-            LogUtils.log(" holder.itemView.getBottom()recyclerView.getHeight()", recyclerView.getHeight());
             if (orientation == RecyclerView.VERTICAL) {
                 if (holder != null && holder.itemView.getBottom() +  space_vertical>= recyclerView.getHeight()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
