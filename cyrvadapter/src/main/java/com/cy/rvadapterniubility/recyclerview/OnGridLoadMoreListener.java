@@ -190,6 +190,7 @@ public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
                             holder.itemView.setTranslationX(0);
                             holder.itemView.setTranslationY(0);
                             gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+                            isLoadMoreing = false;
                             if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
                             loadMoreAdapter.clear();
                         }
@@ -245,7 +246,6 @@ public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
      * 必须手动调用closeLoadMore()结束loadMore
      */
     public void closeLoadMore(OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
-        isLoadMoreing = false;
         this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
         if (loadMoreAdapter.getItemCount() != 0) {
             loadMoreAdapter.set(0, CLEAR);
