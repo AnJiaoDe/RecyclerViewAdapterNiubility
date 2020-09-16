@@ -21,6 +21,8 @@ import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
 
+import java.util.List;
+
 /**
  * @Description:仿头条LoadMore丝滑体验
  * @Author: cy
@@ -62,26 +64,37 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
                 onItemLoadMoreClick(holder);
             }
         };
-        multiAdapter.addAdapter(multiAdapter.getAdapters().size(), loadMoreAdapter);
     }
 
     public OnLinearLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter, int count_remain) {
         this(multiAdapter);
         this.count_remain = count_remain;
     }
-    private void checkRecyclerView(RecyclerView recyclerView){
+
+    public void addLoadMore() {
+        multiAdapter.addAdapter(multiAdapter.getAdapters().size(), loadMoreAdapter);
+        loadMoreAdapter.add("");
+    }
+
+    public void removeLoadMore() {
+        loadMoreAdapter.clear();
+        multiAdapter.getAdapters().remove(loadMoreAdapter);
+    }
+
+    private void checkRecyclerView(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         orientation = linearLayoutManager.getOrientation();
         space_vertical = 0;
         space_horizontal = 0;
         try {
-            LinearItemDecoration linearItemDecoration= (LinearItemDecoration) recyclerView.getItemDecorationAt(0);
-            space_vertical =linearItemDecoration.getSpace_vertical();
-            space_horizontal =linearItemDecoration.getSpace_horizontal();
-        }catch (Exception e){
+            LinearItemDecoration linearItemDecoration = (LinearItemDecoration) recyclerView.getItemDecorationAt(0);
+            space_vertical = linearItemDecoration.getSpace_vertical();
+            space_horizontal = linearItemDecoration.getSpace_horizontal();
+        } catch (Exception e) {
         }
     }
+
     /**
      * 在onDragging中添加loadMore布局，是因为如果item很少，recyclerView有很多剩余空间，就要禁用loadMore
      *
@@ -97,17 +110,13 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
             if (orientation == RecyclerView.VERTICAL) {
-                if (holder != null && holder.itemView.getBottom() +  space_vertical>= recyclerView.getHeight()) {
-                    if (loadMoreAdapter.getItemCount() == 0) {
-                        loadMoreAdapter.add("");
-                    }
+                if (holder != null && holder.itemView.getBottom() + space_vertical >= recyclerView.getHeight()) {
+                    if (loadMoreAdapter.getItemCount() == 0) addLoadMore();
                     return;
                 }
             } else {
-                if (holder != null && holder.itemView.getRight()+  space_horizontal >= recyclerView.getWidth()) {
-                    if (loadMoreAdapter.getItemCount() == 0) {
-                        loadMoreAdapter.add("");
-                    }
+                if (holder != null && holder.itemView.getRight() + space_horizontal >= recyclerView.getWidth()) {
+                    if (loadMoreAdapter.getItemCount() == 0) addLoadMore();
                     return;
                 }
             }
@@ -122,17 +131,15 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
             if (orientation == RecyclerView.VERTICAL) {
-                if (holder != null && holder.itemView.getBottom()+ space_vertical < recyclerView.getHeight())
+                if (holder != null && holder.itemView.getBottom() + space_vertical < recyclerView.getHeight())
                     continue;
             } else {
-                if (holder != null && holder.itemView.getRight()+space_horizontal < recyclerView.getWidth())
+                if (holder != null && holder.itemView.getRight() + space_horizontal < recyclerView.getWidth())
                     continue;
             }
             //说明最后一个item-count_remain可见了，可以开始loadMore了
             if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - getCount_remain()) {
-                if (loadMoreAdapter.getItemCount() == 0) {
-                    loadMoreAdapter.add("");
-                }
+                if (loadMoreAdapter.getItemCount() == 0) addLoadMore();
                 //防止频繁loadMore
                 if (!isLoadMoreing) {
                     isLoadMoreing = true;
@@ -189,7 +196,7 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
                             holder.itemView.setTranslationY(0);
                             isLoadMoreing = false;
                             if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
-                            loadMoreAdapter.clear();
+                            removeLoadMore();
                         }
                     });
                     animatorSet.start();
