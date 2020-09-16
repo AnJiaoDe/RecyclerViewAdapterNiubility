@@ -82,7 +82,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                         verticalRefreshLayout.finishRefresh(new RefreshFinishListener() {
                             @Override
                             public void onRefreshFinish(final FrameLayout headLayout) {
-                                for (int i = 0; i < 8; i++) {
+                                for (int i = 0; i < 1; i++) {
                                     multiAdapter.getAdapters().get(1).addToTopNoNotify(new VRBean("更新" + i));
                                 }
                                 multiAdapter.getAdapters().get(1).notifyDataSetChanged();
@@ -147,7 +147,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
         }
 
         final List<VRBean> list_content = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 17; i++) {
             list_content.add(new VRBean("内容" + i));
         }
 
