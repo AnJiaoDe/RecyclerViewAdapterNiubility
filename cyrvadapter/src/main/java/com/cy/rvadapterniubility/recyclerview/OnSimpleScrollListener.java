@@ -75,7 +75,7 @@ public abstract class OnSimpleScrollListener {
                 BaseRecyclerView baseRecyclerView = checkRecyclerView(recyclerView);
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
-                        onIdle(recyclerView, positionHolder, baseRecyclerView.getVelocity_x(), baseRecyclerView.getVelocity_y(),
+                        onIdleShouldResumePicLoad(recyclerView, positionHolder, baseRecyclerView.getVelocity_x(), baseRecyclerView.getVelocity_y(),
                                 baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                         if (orientation == RecyclerView.VERTICAL) {
                             if (!recyclerView.canScrollVertically(1)) {
@@ -204,9 +204,6 @@ public abstract class OnSimpleScrollListener {
     public void onScrollingFingerToRight(RecyclerView recyclerView, int dy, int offsetX, int offsetY) {
     }
 
-    public void onIdle(RecyclerView recyclerView, PositionHolder positionHolder,
-                       int velocity_x, int velocity_y, int offsetX, int offsetY) {
-    }
 
     public void onDragging(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
     }
@@ -223,6 +220,8 @@ public abstract class OnSimpleScrollListener {
     }
 
     public abstract void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder,
+                                                      int velocity_x, int velocity_y, int offsetX, int offsetY);
+    public abstract void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder,
                                                       int velocity_x, int velocity_y, int offsetX, int offsetY);
 
     public static class PositionHolder {

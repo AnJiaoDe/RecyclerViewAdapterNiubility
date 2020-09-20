@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
@@ -98,6 +100,17 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                 }, 2000);
             }
         }, new OnGridLoadMoreListener(multiAdapter) {
+
+            @Override
+            public void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
+
+            }
+
+            @Override
+            public void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
+
+            }
+
             @Override
             public void onLoadMoreStart() {
                 new Handler().postDelayed(new Runnable() {

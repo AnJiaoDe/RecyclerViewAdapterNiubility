@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
@@ -60,6 +62,16 @@ public class HRVActivity extends BaseActivity {
         ((HorizontalRecyclerView)findViewById(R.id.hrv)).addItemDecoration(
                 new LinearItemDecoration().setSpace_vertical(dpAdapt(10)).setSpace_horizontal(dpAdapt(10)));
         ((HorizontalRecyclerView)findViewById(R.id.hrv)).setAdapter(multiAdapter, new OnLinearLoadMoreListener(multiAdapter) {
+            @Override
+            public void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
+
+            }
+
+            @Override
+            public void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
+
+            }
+
             @Override
             public void onLoadMoreStart() {
                 new Handler().postDelayed(new Runnable() {

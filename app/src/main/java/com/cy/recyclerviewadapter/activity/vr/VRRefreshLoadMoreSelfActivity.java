@@ -117,6 +117,11 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
             }
 
             @Override
+            public void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
+
+            }
+
+            @Override
             public void onLoadMoreStart() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
