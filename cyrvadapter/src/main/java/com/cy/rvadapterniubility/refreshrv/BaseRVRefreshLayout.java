@@ -36,8 +36,8 @@ public abstract class BaseRVRefreshLayout<T extends BaseRecyclerView, V extends 
     public V addOnScrollListener() {
         addOnScrollListener(new OnSimpleScrollListener() {
             @Override
-            public void onScrollArrivedBottom(RecyclerView recyclerView, PositionHolder positionHolder) {
-                super.onScrollArrivedBottom(recyclerView, positionHolder);
+            public void onScrollArrivedBottom(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
+                super.onScrollArrivedBottom(recyclerView, positionHolder, offsetX, offsetY);
                 startLoadMore();
             }
         });

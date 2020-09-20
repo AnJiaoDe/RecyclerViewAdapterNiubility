@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.cy.recyclerviewadapter.BaseActivity;
+import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.refreshlayoutniubility.RefreshFinishListener;
@@ -73,6 +77,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
 //        verticalRefreshLayout.getRecyclerView().setAdapter(multiAdapter.getMergeAdapter());
 //        verticalRefreshLayout.getRecyclerView().addItemDecoration(new LinearItemDecoration().setSpace_vertical(60));
         verticalRefreshLayout.setAdapter(multiAdapter, new OnRefreshListener() {
+
             @Override
             public void onRefreshStart() {
                 new Handler().postDelayed(new Runnable() {
@@ -106,6 +111,14 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                 }, 2000);
             }
         }, new OnLinearLoadMoreListener(multiAdapter, 6) {
+            @Override
+            public void onSettling(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
+                super.onSettling(recyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
+                LogUtils.log("velocity_y", velocity_y);
+                LogUtils.log("velocity_yViewConfiguration", ViewConfiguration.get(recyclerView.getContext()).getScaledMaximumFlingVelocity());
+
+            }
+
             @Override
             public void onLoadMoreStart() {
                 new Handler().postDelayed(new Runnable() {

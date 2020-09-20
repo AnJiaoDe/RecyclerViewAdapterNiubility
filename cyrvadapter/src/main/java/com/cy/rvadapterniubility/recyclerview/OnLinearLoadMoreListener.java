@@ -82,6 +82,8 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         }catch (Exception e){
         }
     }
+
+
     /**
      * 在onDragging中添加loadMore布局，是因为如果item很少，recyclerView有很多剩余空间，就要禁用loadMore
      *
@@ -89,8 +91,8 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
      * @param positionHolder
      */
     @Override
-    public final void onDragging(RecyclerView recyclerView, PositionHolder positionHolder) {
-        super.onDragging(recyclerView, positionHolder);
+    public void onDragging(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
+        super.onDragging(recyclerView, positionHolder, offsetX, offsetY);
         checkRecyclerView(recyclerView);
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
@@ -116,8 +118,8 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     }
 
     @Override
-    public void onIdle(RecyclerView recyclerView, PositionHolder positionHolder) {
-        super.onIdle(recyclerView, positionHolder);
+    public void onIdle(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
+        super.onIdle(recyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
         checkRecyclerView(recyclerView);
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);

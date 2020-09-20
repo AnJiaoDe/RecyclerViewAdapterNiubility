@@ -1,7 +1,13 @@
 package com.cy.rvadapterniubility.recyclerview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -20,9 +26,12 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
     //永远<=0
     private int offsetX = 0;
     private int offsetY = 0;
-
+    private int velocity_x;
+    private int velocity_y;
     private ItemTouchHelper itemTouchHelper;
     private ItemAnimCallback itemAnimCallback;
+    private VelocityTracker velocityTracker;
+
 
     public BaseRecyclerView(Context context) {
         this(context, null);
@@ -40,7 +49,52 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
                 offsetY -= dy;
             }
         });
+
     }
+    public T addOnScrollListener(OnSimpleScrollListener onSimpleScrollListener) {
+        super.addOnScrollListener(onSimpleScrollListener.getOnScrollListener());
+        return (T) this;
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (velocityTracker == null) velocityTracker = VelocityTracker.obtain();
+        velocityTracker.addMovement(ev);
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_UP:
+                velocityTracker.computeCurrentVelocity(1000);
+                velocity_x = (int) velocityTracker.getXVelocity();
+                velocity_y = (int) velocityTracker.getYVelocity();
+//                LogUtils.log("velocity_x", velocity_x);
+//                LogUtils.log("velocity_y", velocity_y);
+                if (velocityTracker != null) {
+                    velocityTracker.recycle();
+                    velocityTracker = null;
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                if (velocityTracker != null) {
+                    velocityTracker.recycle();
+                    velocityTracker = null;
+                }
+                break;
+        }
+        return super.onTouchEvent(ev);
+    }
+
+    public int getVelocity_x() {
+        return velocity_x;
+    }
+
+    public int getVelocity_y() {
+        return velocity_y;
+    }
+
+    //    @Override
+//    public boolean onTouchEvent(MotionEvent e) {
+//        LogUtils.log("onTouchEvent");
+//
+//
+//    }
 
     public T setEnableAnimDefault(boolean enable) {
         SimpleItemAnimator simpleItemAnimator = (SimpleItemAnimator) getItemAnimator();
@@ -91,10 +145,7 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
         return (T) this;
     }
 
-    public T addOnScrollListener(OnSimpleScrollListener onSimpleScrollListener) {
-        super.addOnScrollListener(onSimpleScrollListener.getOnScrollListener());
-        return (T) this;
-    }
+
 
     public T addItemTouchAnim(final ItemAnimCallback itemAnimCallback) {
         this.itemAnimCallback = itemAnimCallback;

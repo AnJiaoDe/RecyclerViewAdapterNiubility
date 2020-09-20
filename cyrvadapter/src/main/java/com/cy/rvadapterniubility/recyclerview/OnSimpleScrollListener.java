@@ -1,18 +1,19 @@
 package com.cy.rvadapterniubility.recyclerview;
 
 
+import android.view.ViewConfiguration;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 
-
 /**
  * Created by lenovo on 2017/12/31.
  */
 
-public class OnSimpleScrollListener {
+public abstract class OnSimpleScrollListener {
     protected boolean firstCallOnScrolled = true;
 
     protected static enum LAYOUT_MANAGER_TYPE {
@@ -29,32 +30,34 @@ public class OnSimpleScrollListener {
 
     protected RecyclerView.OnScrollListener onScrollListener;
     private PositionHolder positionHolder;
-    private int orientation=RecyclerView.VERTICAL;
+    private int orientation = RecyclerView.VERTICAL;
+
     public OnSimpleScrollListener() {
         positionHolder = new PositionHolder(new int[1], new int[1], new int[1], new int[1]);
         onScrollListener = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                BaseRecyclerView baseRecyclerView = checkRecyclerView(recyclerView);
                 if (firstCallOnScrolled) {
                     computPosition(recyclerView);
-                    onFirstScrolled(recyclerView,positionHolder);
+                    onFirstScrolled(recyclerView, positionHolder, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                     firstCallOnScrolled = false;
                 }
                 if (dy < 0) { // 当前处于上滑状态
-                    onScrollingFingerToBottom(recyclerView,dy);
+                    onScrollingFingerToBottom(recyclerView, dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                     return;
                 }
                 if (dy > 0) { // 当前处于下滑状态
-                    onScrollingFingerToTop(recyclerView,dy);
+                    onScrollingFingerToTop(recyclerView, dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                     return;
                 }
                 if (dx < 0) { // 当前处于上滑状态
-                    onScrollingFingerToRight(recyclerView,dy);
+                    onScrollingFingerToRight(recyclerView, dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                     return;
                 }
                 if (dx > 0) { // 当前处于下滑状态
-                    onScrollingFingerToLeft(recyclerView,dy);
+                    onScrollingFingerToLeft(recyclerView, dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                     return;
                 }
             }
@@ -69,39 +72,52 @@ public class OnSimpleScrollListener {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 computPosition(recyclerView);
+                BaseRecyclerView baseRecyclerView = checkRecyclerView(recyclerView);
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
-                        onIdle(recyclerView,positionHolder);
-                        if(orientation==RecyclerView.VERTICAL){
+                        onIdle(recyclerView, positionHolder, baseRecyclerView.getVelocity_x(), baseRecyclerView.getVelocity_y(),
+                                baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
+                        if (orientation == RecyclerView.VERTICAL) {
                             if (!recyclerView.canScrollVertically(1)) {
-                                onScrollArrivedBottom(recyclerView,positionHolder);
+                                onScrollArrivedBottom(recyclerView, positionHolder, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                                 return;
                             }
                             if (!recyclerView.canScrollVertically(-1)) {
-                                onScrollArrivedTop(recyclerView,positionHolder);
+                                onScrollArrivedTop(recyclerView, positionHolder, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                                 return;
                             }
-                        }else {
+                        } else {
                             if (!recyclerView.canScrollHorizontally(1)) {
-                                onScrollArrivedRight(recyclerView,positionHolder);
+                                onScrollArrivedRight(recyclerView, positionHolder, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                                 return;
                             }
                             if (!recyclerView.canScrollHorizontally(-1)) {
-                                onScrollArrivedLeft(recyclerView,positionHolder);
+                                onScrollArrivedLeft(recyclerView, positionHolder, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                                 return;
                             }
                         }
 
                         break;
                     case RecyclerView.SCROLL_STATE_DRAGGING:
-                        onDragging(recyclerView,positionHolder);
+                        onDragging(recyclerView, positionHolder, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                         break;
                     case RecyclerView.SCROLL_STATE_SETTLING:
-                        onSettling(recyclerView,positionHolder);
+                        onSettling(recyclerView, positionHolder, baseRecyclerView.getVelocity_x(), baseRecyclerView.getVelocity_y(),
+                                baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                         break;
                 }
             }
         };
+    }
+
+    private BaseRecyclerView checkRecyclerView(RecyclerView recyclerView) {
+        BaseRecyclerView baseRecyclerView = null;
+        try {
+            baseRecyclerView = (BaseRecyclerView) recyclerView;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("You must use the class " + BaseRecyclerView.class.getName() + " or it's child class in " + getClass().getName());
+        }
+        return baseRecyclerView;
     }
 
     public PositionHolder computPosition(RecyclerView recyclerView) {
@@ -121,7 +137,7 @@ public class OnSimpleScrollListener {
         switch (layoutManagerType) {
             case LINEAR:
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-                orientation=linearLayoutManager.getOrientation();
+                orientation = linearLayoutManager.getOrientation();
                 positionHolder.getFirstVisibleItemPositions()[0] = (linearLayoutManager.findFirstVisibleItemPosition());
                 positionHolder.getFirstCompletelyVisibleItemPositions()[0] = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
                 positionHolder.getLastVisibleItemPositions()[0] = linearLayoutManager.findLastVisibleItemPosition();
@@ -129,7 +145,7 @@ public class OnSimpleScrollListener {
                 break;
             case GRID:
                 GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
-                orientation=gridLayoutManager.getOrientation();
+                orientation = gridLayoutManager.getOrientation();
                 positionHolder.getFirstVisibleItemPositions()[0] = (gridLayoutManager.findFirstVisibleItemPosition());
                 positionHolder.getFirstCompletelyVisibleItemPositions()[0] = gridLayoutManager.findFirstCompletelyVisibleItemPosition();
                 positionHolder.getLastVisibleItemPositions()[0] = gridLayoutManager.findLastVisibleItemPosition();
@@ -137,7 +153,7 @@ public class OnSimpleScrollListener {
                 break;
             case STAGGERED_GRID:
                 StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
-                orientation=staggeredGridLayoutManager.getOrientation();
+                orientation = staggeredGridLayoutManager.getOrientation();
 
                 /**
                  * Note that, this value is not affected by layout orientation or item order traversal.
@@ -159,41 +175,55 @@ public class OnSimpleScrollListener {
     }
 
 
-    public void onFirstScrolled(RecyclerView recyclerView, PositionHolder positionHolder) {
+    public void onFirstScrolled(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
     }
 
-    public void onScrollArrivedTop(RecyclerView recyclerView, PositionHolder positionHolder) {
+    public void onScrollArrivedTop(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
 
     }
 
-    public void onScrollArrivedBottom(RecyclerView recyclerView, PositionHolder positionHolder) {
+    public void onScrollArrivedBottom(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
 
     }
-    public void onScrollArrivedLeft(RecyclerView recyclerView, PositionHolder positionHolder) {
+
+    public void onScrollArrivedLeft(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
     }
 
-    public void onScrollArrivedRight(RecyclerView recyclerView, PositionHolder positionHolder) {
+    public void onScrollArrivedRight(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
     }
 
-    public void onScrollingFingerToBottom(RecyclerView recyclerView, int dy) {
+    public void onScrollingFingerToBottom(RecyclerView recyclerView, int dy, int offsetX, int offsetY) {
     }
 
-    public void onScrollingFingerToTop(RecyclerView recyclerView, int dy) {
-    }
-    public void onScrollingFingerToLeft(RecyclerView recyclerView, int dy) {
+    public void onScrollingFingerToTop(RecyclerView recyclerView, int dy, int offsetX, int offsetY) {
     }
 
-    public void onScrollingFingerToRight(RecyclerView recyclerView, int dy) {
+    public void onScrollingFingerToLeft(RecyclerView recyclerView, int dy, int offsetX, int offsetY) {
     }
 
-    public void onIdle(RecyclerView recyclerView, PositionHolder positionHolder) {
+    public void onScrollingFingerToRight(RecyclerView recyclerView, int dy, int offsetX, int offsetY) {
     }
 
-    public void onDragging(RecyclerView recyclerView, PositionHolder positionHolder) {
+    public void onIdle(RecyclerView recyclerView, PositionHolder positionHolder,
+                       int velocity_x, int velocity_y, int offsetX, int offsetY) {
     }
 
-    public void onSettling(RecyclerView recyclerView, PositionHolder positionHolder) {
+    public void onDragging(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
     }
+
+    public void onSettling(RecyclerView recyclerView, PositionHolder positionHolder,
+                           int velocity_x, int velocity_y, int offsetX, int offsetY) {
+        if (orientation == RecyclerView.VERTICAL) {
+            if (Math.abs(velocity_y) >= ViewConfiguration.get(recyclerView.getContext()).getScaledMaximumFlingVelocity() / 2)
+                onSettlingShouldPausePicLoad(recyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
+        } else {
+            if (Math.abs(velocity_x) >= ViewConfiguration.get(recyclerView.getContext()).getScaledMaximumFlingVelocity() / 2)
+                onSettlingShouldPausePicLoad(recyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
+        }
+    }
+
+    public abstract void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder,
+                                                      int velocity_x, int velocity_y, int offsetX, int offsetY);
 
     public static class PositionHolder {
         private int[] firstVisibleItemPositions;

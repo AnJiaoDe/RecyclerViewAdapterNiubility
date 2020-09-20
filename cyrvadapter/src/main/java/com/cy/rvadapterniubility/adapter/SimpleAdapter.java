@@ -10,7 +10,6 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cy.rvadapterniubility.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -377,7 +376,6 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     public SimpleAdapter<T> reduceFromTop(int threshold, int count_delete) {
         if (list_bean.size() > threshold) {
             for (int i = 0; i < count_delete&&i<list_bean.size(); i++) {
-                LogUtils.log("reduceFromTop", i);
                 remove(i);
             }
         }
@@ -389,7 +387,6 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         if (list_bean.size() > threshold) {
             int size=list_bean.size();
             for (int i = size - 1; i >= size - count_delete&&i>=0; i--) {
-                LogUtils.log("reduceFromBottom", i);
                 remove(i);
             }
         }
