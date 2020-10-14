@@ -18,7 +18,7 @@ import com.cy.rvadapterniubility.recyclerview.BaseRecyclerView;
  * Created by cy on 2017/7/2.此处不继承VerticalRecyclerView,是为避免多重继承带来的维护成本和强耦合
  */
 
-public class SwipeRecyclerView extends BaseRecyclerView {
+public class SwipeRecyclerView extends BaseRecyclerView<SwipeRecyclerView> {
     private float downX;
     private float downY;
     private SwipeAdapter swipeAdapter;

@@ -2,6 +2,7 @@ package com.cy.rvadapterniubility.refreshrv;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +19,7 @@ import com.cy.rvadapterniubility.recyclerview.OnSimpleScrollListener;
  * Created by lenovo on 2017/12/31.
  */
 
-public abstract class BaseRVRefreshLayout extends RefreshLayoutNiubility {
+public abstract class BaseRVRefreshLayout<V extends BaseRecyclerView> extends RefreshLayoutNiubility {
 
     public BaseRVRefreshLayout(Context context) {
         this(context, null);
@@ -28,7 +29,10 @@ public abstract class BaseRVRefreshLayout extends RefreshLayoutNiubility {
         super(context, attrs);
     }
 
-    public abstract <T extends BaseRecyclerView> T getRecyclerView();
+    public abstract V getRecyclerView();
+
+    public  abstract <T extends BaseRVRefreshLayout> T setRecyclerView(V recyclerView);
+
 
     /**
      *

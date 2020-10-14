@@ -22,7 +22,7 @@ import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
  * Created by cy on 2017/7/2.
  */
 
-public class BaseRecyclerView extends RecyclerView {
+public class BaseRecyclerView<T extends BaseRecyclerView>  extends RecyclerView{
     //永远<=0
     private int offsetX = 0;
     private int offsetY = 0;
@@ -51,7 +51,7 @@ public class BaseRecyclerView extends RecyclerView {
         });
 
     }
-    public <T extends BaseRecyclerView> T addOnScrollListener(OnSimpleScrollListener onSimpleScrollListener) {
+    public  T addOnScrollListener(OnSimpleScrollListener onSimpleScrollListener) {
         super.addOnScrollListener(onSimpleScrollListener.getOnScrollListener());
         return (T) this;
     }
@@ -96,7 +96,7 @@ public class BaseRecyclerView extends RecyclerView {
 //
 //    }
 
-    public <T extends BaseRecyclerView> T setEnableAnimDefault(boolean enable) {
+    public  T setEnableAnimDefault(boolean enable) {
         SimpleItemAnimator simpleItemAnimator = (SimpleItemAnimator) getItemAnimator();
         //去除难看的默认闪烁动画
         if (simpleItemAnimator != null) simpleItemAnimator.setSupportsChangeAnimations(enable);
@@ -135,26 +135,26 @@ public class BaseRecyclerView extends RecyclerView {
         return offsetY;
     }
 
-    public <T extends BaseRecyclerView> T setOffsetX(int offsetX) {
+    public  T setOffsetX(int offsetX) {
         this.offsetX = offsetX;
         return (T) this;
     }
 
-    public <T extends BaseRecyclerView> T setOffsetY(int offsetY) {
+    public T setOffsetY(int offsetY) {
         this.offsetY = offsetY;
         return (T) this;
     }
 
 
 
-    public <T extends BaseRecyclerView> T addItemTouchAnim(final ItemAnimCallback itemAnimCallback) {
+    public T addItemTouchAnim(final ItemAnimCallback itemAnimCallback) {
         this.itemAnimCallback = itemAnimCallback;
         itemTouchHelper = new ItemTouchHelper(itemAnimCallback);
         itemTouchHelper.attachToRecyclerView(this);
         return (T) this;
     }
 
-    public <T extends BaseRecyclerView> T setDragTouchView(final ViewHolder holder, View view) {
+    public T setDragTouchView(final ViewHolder holder, View view) {
         if (itemAnimCallback == null) return (T) this;
         itemAnimCallback.setLongPressDragEnabled(false);
         view.setOnLongClickListener(new OnLongClickListener() {
@@ -171,7 +171,7 @@ public class BaseRecyclerView extends RecyclerView {
         return itemTouchHelper;
     }
 
-    public <T extends BaseRecyclerView> T clear() {
+    public T clear() {
         itemTouchHelper = null;
         return (T) this;
     }

@@ -18,7 +18,7 @@ import com.cy.rvadapterniubility.adapter.MultiAdapter;
  * Created by cy on 2017/7/2.
  */
 
-public class HorizontalGridRecyclerView extends BaseRecyclerView {
+public class HorizontalGridRecyclerView extends BaseRecyclerView<HorizontalGridRecyclerView> {
     private int spanCount = 2;
     private SparseArray<Boolean> arrayFullSpan;
     private IGridItemDecoration gridItemDecoration;

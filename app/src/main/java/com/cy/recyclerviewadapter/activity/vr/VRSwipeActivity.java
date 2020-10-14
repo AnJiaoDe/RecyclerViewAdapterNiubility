@@ -82,8 +82,7 @@ public class VRSwipeActivity extends BaseActivity {
             }
         };
         ((SwipeRecyclerView) findViewById(R.id.srv))
-                .addItemTouchAnim(new ItemAnimCallback(swipeAdapter.getAdapter()));
-        ((SwipeRecyclerView) findViewById(R.id.srv)).setAdapter(swipeAdapter);
+                .addItemTouchAnim(new ItemAnimCallback(swipeAdapter.getAdapter())).setAdapter(swipeAdapter);
         swipeAdapter.getAdapter().add(list_bean);
 
     }
