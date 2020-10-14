@@ -13,7 +13,7 @@ import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
  * Created by lenovo on 2017/12/31.
  */
 
-public class GridRefreshLayout extends BaseRVRefreshLayout<VerticalGridRecyclerView,GridRefreshLayout> {
+public class GridRefreshLayout extends BaseRVRefreshLayout {
     private VerticalGridRecyclerView gridRecyclerView;
 
     public GridRefreshLayout(Context context) {
@@ -27,9 +27,10 @@ public class GridRefreshLayout extends BaseRVRefreshLayout<VerticalGridRecyclerV
     }
 
     @Override
-    public VerticalGridRecyclerView getRecyclerView() {
-        return gridRecyclerView;
+    public <T extends BaseRecyclerView> T getRecyclerView() {
+        return (T) gridRecyclerView;
     }
+
     public GridRefreshLayout setAdapter(SimpleAdapter simpleAdapter, OnRefreshListener onRefreshListener, OnGridLoadMoreListener onGridLoadMoreListener) {
         setEnableLoadMore(false);
         BaseRecyclerView baseRecyclerView = getRecyclerView();

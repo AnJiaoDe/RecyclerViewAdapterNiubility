@@ -15,7 +15,7 @@ import com.cy.refreshlayoutniubility.ScreenUtils;
  * Created by cy on 2017/7/2.
  */
 
-public class VerticalGridRecyclerView extends BaseRecyclerView<VerticalGridRecyclerView> {
+public class VerticalGridRecyclerView extends BaseRecyclerView {
     private int spanCount = 2;
     private SparseArray<Boolean> arrayFullSpan;
     private IGridItemDecoration gridItemDecoration;

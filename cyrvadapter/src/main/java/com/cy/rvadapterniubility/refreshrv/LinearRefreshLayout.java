@@ -12,7 +12,7 @@ import com.cy.rvadapterniubility.recyclerview.VerticalRecyclerView;
  * Created by lenovo on 2017/12/31.
  */
 
-public class LinearRefreshLayout extends BaseRVRefreshLayout<VerticalRecyclerView, LinearRefreshLayout> {
+public class LinearRefreshLayout extends BaseRVRefreshLayout {
     private VerticalRecyclerView verticalRecyclerView;
     public LinearRefreshLayout(Context context) {
         this(context, null);
@@ -24,9 +24,10 @@ public class LinearRefreshLayout extends BaseRVRefreshLayout<VerticalRecyclerVie
     }
 
     @Override
-    public VerticalRecyclerView getRecyclerView() {
-        return verticalRecyclerView;
+    public <T extends BaseRecyclerView> T getRecyclerView() {
+        return (T) verticalRecyclerView;
     }
+
     public LinearRefreshLayout setAdapter(MultiAdapter multiAdapter, OnLinearLoadMoreListener onRVLoadMoreListener) {
         setEnableRefresh(false);
         setEnableLoadMore(false);

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by cy on 2017/7/2.
  */
 
-public class VerticalRecyclerView extends BaseRecyclerView<VerticalRecyclerView>{
+public class VerticalRecyclerView extends BaseRecyclerView{
     public VerticalRecyclerView(Context context) {
         this(context, null);
     }
