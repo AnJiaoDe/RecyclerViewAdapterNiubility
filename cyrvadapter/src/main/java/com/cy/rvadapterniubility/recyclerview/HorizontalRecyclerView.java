@@ -61,13 +61,40 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
                     requestDisallowInterceptTouchEvent();
                     if ((dx > 0 && canScrollHorizontally(-1)) || (dx < 0 && canScrollHorizontally(1)))
                         return true;
+                }else {
+                    return false;
                 }
 
         }
         return super.onInterceptTouchEvent(ev);
     }
-
+//
 //    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
+//        switch (ev.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                downX = (int) ev.getX();
+//                downY = (int) ev.getY();
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                int moveX = (int) ev.getX();
+//                int moveY = (int) ev.getY();
+//
+//                int dx = moveX - downX;
+//                int dy = moveY - downY;
+//                downX = moveX;
+//                downY = moveY;
+//                if (Math.abs(dx) > Math.abs(dy)) {
+//                    requestDisallowInterceptTouchEvent();
+//                    if ((dx > 0 && canScrollHorizontally(-1)) || (dx < 0 && canScrollHorizontally(1)))
+//                        return true;
+//                }
+//
+//        }
+//        return super.onTouchEvent(ev);
+//    }
+
+    //    @Override
 //    public boolean onTouchEvent(MotionEvent ev) {
 //        switch (ev.getAction()) {
 //            case MotionEvent.ACTION_DOWN:
