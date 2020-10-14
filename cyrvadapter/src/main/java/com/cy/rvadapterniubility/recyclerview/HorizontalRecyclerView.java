@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 
 /**
@@ -45,9 +46,6 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
             case MotionEvent.ACTION_DOWN:
                 downX = (int) ev.getX();
                 downY = (int) ev.getY();
-                if (canScrollHorizontally(-1) || (canScrollHorizontally(1))) {
-                    requestDisallowInterceptTouchEvent();
-                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 int moveX = (int) ev.getX();
@@ -58,69 +56,18 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
                 downX = moveX;
                 downY = moveY;
                 if (Math.abs(dx) > Math.abs(dy)) {
-                    requestDisallowInterceptTouchEvent();
+                    requestDisallowInterceptTouch(true);
                     if ((dx > 0 && canScrollHorizontally(-1)) || (dx < 0 && canScrollHorizontally(1)))
                         return true;
-                }else {
-                    return false;
                 }
-
+                break;
         }
         return super.onInterceptTouchEvent(ev);
     }
-//
-//    @Override
-//    public boolean onTouchEvent(MotionEvent ev) {
-//        switch (ev.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                downX = (int) ev.getX();
-//                downY = (int) ev.getY();
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                int moveX = (int) ev.getX();
-//                int moveY = (int) ev.getY();
-//
-//                int dx = moveX - downX;
-//                int dy = moveY - downY;
-//                downX = moveX;
-//                downY = moveY;
-//                if (Math.abs(dx) > Math.abs(dy)) {
-//                    requestDisallowInterceptTouchEvent();
-//                    if ((dx > 0 && canScrollHorizontally(-1)) || (dx < 0 && canScrollHorizontally(1)))
-//                        return true;
-//                }
-//
-//        }
-//        return super.onTouchEvent(ev);
-//    }
 
-    //    @Override
-//    public boolean onTouchEvent(MotionEvent ev) {
-//        switch (ev.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                downX = (int) ev.getX();
-//                downY = (int) ev.getY();
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                int moveX = (int) ev.getX();
-//                int moveY = (int) ev.getY();
-//
-//                int dx = moveX - downX;
-//                int dy = moveY - downY;
-//                downX = moveX;
-//                downY = moveY;
-//                if (Math.abs(dx) > Math.abs(dy)) {
-//                    if ((dx > 0 && canScrollHorizontally(-1)) || (dx < 0 && canScrollHorizontally(1)))
-//                        return true;
-//                }
-//
-//        }
-//        return super.onTouchEvent(ev);
-//    }
-
-    private void requestDisallowInterceptTouchEvent() {
+    private void requestDisallowInterceptTouch(boolean disallowInterceptTouchEvent) {
         final ViewParent parent = getParent();
-        if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
+        if (parent != null) parent.requestDisallowInterceptTouchEvent(disallowInterceptTouchEvent);
     }
 
 }
