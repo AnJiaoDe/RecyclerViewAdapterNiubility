@@ -47,7 +47,6 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
                 downY = (int) ev.getY();
                 if (canScrollHorizontally(-1) || (canScrollHorizontally(1))) {
                     requestDisallowInterceptTouchEvent();
-                    return true;
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -67,6 +66,30 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
         }
         return super.onInterceptTouchEvent(ev);
     }
+
+//    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
+//        switch (ev.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                downX = (int) ev.getX();
+//                downY = (int) ev.getY();
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                int moveX = (int) ev.getX();
+//                int moveY = (int) ev.getY();
+//
+//                int dx = moveX - downX;
+//                int dy = moveY - downY;
+//                downX = moveX;
+//                downY = moveY;
+//                if (Math.abs(dx) > Math.abs(dy)) {
+//                    if ((dx > 0 && canScrollHorizontally(-1)) || (dx < 0 && canScrollHorizontally(1)))
+//                        return true;
+//                }
+//
+//        }
+//        return super.onTouchEvent(ev);
+//    }
 
     private void requestDisallowInterceptTouchEvent() {
         final ViewParent parent = getParent();
