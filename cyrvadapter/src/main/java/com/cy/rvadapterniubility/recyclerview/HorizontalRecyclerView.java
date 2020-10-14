@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 
 /**
