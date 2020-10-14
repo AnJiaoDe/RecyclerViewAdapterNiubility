@@ -54,10 +54,9 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
                 int dy = moveY - downY;
                 downX = moveX;
                 downY = moveY;
-                if (Math.abs(dx) > Math.abs(dy)) {
+                if (Math.abs(dx) > Math.abs(dy) &&
+                        ((dx > 0 && canScrollHorizontally(-1)) || (dx < 0 && canScrollHorizontally(1)))) {
                     requestDisallowInterceptTouch(true);
-                    if ((dx > 0 && canScrollHorizontally(-1)) || (dx < 0 && canScrollHorizontally(1)))
-                        return true;
                 }
                 break;
         }
