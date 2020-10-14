@@ -60,6 +60,12 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
         }
         return super.onInterceptTouchEvent(ev);
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        return true;
+    }
+
     private void requestDisallowInterceptTouchEvent() {
         final ViewParent parent = getParent();
         if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
