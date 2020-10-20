@@ -43,9 +43,6 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
             case MotionEvent.ACTION_DOWN:
                 downX = (int) ev.getX();
                 downY = (int) ev.getY();
-                if (canScrollHorizontally(-1)|| canScrollHorizontally(1)) {
-                    requestDisallowInterceptTouch(true);
-                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 int moveX = (int) ev.getX();
@@ -59,10 +56,6 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
                         ((dx > 0 && canScrollHorizontally(-1)) || (dx < 0 && canScrollHorizontally(1)))) {
                     requestDisallowInterceptTouch(true);
                 }
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                requestDisallowInterceptTouch(false);
                 break;
         }
         return super.onInterceptTouchEvent(ev);
