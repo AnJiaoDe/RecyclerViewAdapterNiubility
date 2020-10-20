@@ -32,19 +32,20 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
         setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         super.setAdapter(adapter);
     }
-
     public HorizontalRecyclerView setAdapter(MultiAdapter multiAdapter, OnLinearLoadMoreListener onRVLoadMoreListener) {
         addOnScrollListener(onRVLoadMoreListener);
         setAdapter(multiAdapter.getMergeAdapter());
         return this;
     }
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 downX = (int) ev.getX();
                 downY = (int) ev.getY();
+                if (canScrollHorizontally(-1)|| canScrollHorizontally(1)) {
+                    requestDisallowInterceptTouch(true);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 int moveX = (int) ev.getX();
@@ -59,10 +60,13 @@ public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerV
                     requestDisallowInterceptTouch(true);
                 }
                 break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                requestDisallowInterceptTouch(false);
+                break;
         }
         return super.onInterceptTouchEvent(ev);
     }
-
     private void requestDisallowInterceptTouch(boolean disallowInterceptTouchEvent) {
         final ViewParent parent = getParent();
         if (parent != null) parent.requestDisallowInterceptTouchEvent(disallowInterceptTouchEvent);
