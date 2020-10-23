@@ -19,7 +19,6 @@ import com.cy.refreshlayoutniubility.IAnimationView;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
-import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
 
 /**
  * @Description:仿头条LoadMore丝滑体验
@@ -35,13 +34,10 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     private MultiAdapter<SimpleAdapter> multiAdapter;
     private int count_remain = 0;
     private boolean isLoadMoreing = false;
-    private OnCloseLoadMoreCallback onCloseLoadMoreCallback;
-    private final String CLEAR = "CLEAR";
-    private RecyclerView recyclerView;
     private int orientation = RecyclerView.VERTICAL;
     private int space_vertical;
     private int space_horizontal;
-
+    private RecyclerView recyclerView;
     public OnLinearLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
         loadMoreAdapter = new SimpleAdapter<String>() {
@@ -70,7 +66,7 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         this.count_remain = count_remain;
     }
     private void checkRecyclerView(RecyclerView recyclerView){
-        this.recyclerView = recyclerView;
+        this.recyclerView=recyclerView;
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         orientation = linearLayoutManager.getOrientation();
         space_vertical = 0;
@@ -116,7 +112,6 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
 
         }
     }
-
     @Override
     public void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
         checkRecyclerView(recyclerView);
@@ -150,67 +145,7 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     }
 
     public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
-        IAnimationView animationView = setAnimationView();
-        if (animationView == null) {
-            animationView = holder.getView(R.id.animView);
-        } else {
-            animationView.getView().setId(R.id.animView);
-            FrameLayout root = (FrameLayout) holder.itemView;
-            root.addView(animationView.getView(), 0, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-        }
-        animationView.stopLoadAnimation();
-        animationView.getView().setVisibility(View.GONE);
-
-        TextView tv = setTextViewToast();
-        if (tv == null) {
-            tv = holder.getView(R.id.tv);
-        } else {
-            tv.setId(R.id.tv);
-            FrameLayout root = (FrameLayout) holder.itemView;
-            root.addView(tv, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-        }
-        if (bean != null && !bean.isEmpty()) {
-            switch (bean) {
-                case CLEAR:
-                    final ObjectAnimator objectAnimator_alpha = ObjectAnimator.ofFloat(holder.itemView, "alpha", 1, 0);
-                    final ObjectAnimator objectAnimator_transY = orientation == RecyclerView.VERTICAL ?
-                            ObjectAnimator.ofFloat(holder.itemView, "translationY", 0, holder.itemView.getHeight())
-                            : ObjectAnimator.ofFloat(holder.itemView, "translationX", 0, holder.itemView.getWidth());
-                    final AnimatorSet animatorSet = new AnimatorSet();
-                    animatorSet.setDuration(500);
-                    animatorSet.playTogether(objectAnimator_alpha, objectAnimator_transY);
-                    animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-                    animatorSet.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            //holder会被复用，所以动画还原到初始位置
-                            holder.itemView.setAlpha(1);
-                            holder.itemView.setTranslationX(0);
-                            holder.itemView.setTranslationY(0);
-                            isLoadMoreing = false;
-                            if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
-                            loadMoreAdapter.clear();
-                        }
-                    });
-                    animatorSet.start();
-                    break;
-                default:
-                    animationView.stopLoadAnimation();
-                    animationView.getView().setVisibility(View.GONE);
-                    tv.setText(bean);
-                    tv.setVisibility(View.VISIBLE);
-                    break;
-            }
-        } else {
-            animationView.getView().setVisibility(View.VISIBLE);
-            animationView.startLoadAnimation();
-            tv.setVisibility(View.GONE);
-        }
     }
-
-//    public void onLoadMoreAdded() {
-//    }
 
     public int getVerticalLoadMoreLayoutID() {
         return R.layout.cy_loadmore_vertical_foot_default;
@@ -227,49 +162,13 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         return count_remain;
     }
 
-    public IAnimationView setAnimationView() {
-        return null;
-    }
 
-    public TextView setTextViewToast() {
-        return null;
-    }
-
-    public void setLoadMoreText(String text) {
-        if (recyclerView == null) return;
-        BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
-        if (baseViewHolder == null) return;
-        baseViewHolder.setGone(R.id.animView);
-        baseViewHolder.setText(R.id.tv, text);
-        baseViewHolder.setVisible(R.id.tv);
-    }
 
     /**
      * 必须手动调用closeLoadMore()结束loadMore
      */
-    public void closeLoadMore(OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
-        this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
-        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, CLEAR);
-    }
-
-    /**
-     *
-     */
-
-    public void closeLoadMoreNoData() {
-        String toast = getLoadMoreNoDataToast();
-        toast = (toast == null || TextUtils.isEmpty(toast)) ? "没有更多了哦~" : toast;
-        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, toast);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                closeLoadMore(null);
-            }
-        }, 1000);
-    }
-
-    public String getLoadMoreNoDataToast() {
-        return "";
+    public void closeLoadMore() {
+        loadMoreAdapter.clear();
     }
 
 
@@ -277,4 +176,23 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         return loadMoreAdapter;
     }
 
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    public int getOrientation() {
+        return orientation;
+    }
+
+    public boolean isLoadMoreing() {
+        return isLoadMoreing;
+    }
+
+    public void setLoadMoreing(boolean loadMoreing) {
+        isLoadMoreing = loadMoreing;
+    }
+
+    public MultiAdapter<SimpleAdapter> getMultiAdapter() {
+        return multiAdapter;
+    }
 }

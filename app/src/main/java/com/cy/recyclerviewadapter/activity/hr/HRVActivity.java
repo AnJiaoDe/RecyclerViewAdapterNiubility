@@ -18,7 +18,9 @@ import com.cy.rvadapterniubility.recyclerview.HorizontalRecyclerView;
 import com.cy.rvadapterniubility.recyclerview.LinearItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
 import com.cy.rvadapterniubility.recyclerview.OnLinearLoadMoreListener;
+import com.cy.rvadapterniubility.recyclerview.OnSimpleLinearLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.OnSimpleScrollListener;
+import com.cy.rvadapterniubility.recyclerview.PositionHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +63,7 @@ public class HRVActivity extends BaseActivity {
         multiAdapter=new MultiAdapter<SimpleAdapter>().addAdapter(rvAdapter);
         ((HorizontalRecyclerView)findViewById(R.id.hrv)).addItemDecoration(
                 new LinearItemDecoration().setSpace_vertical(dpAdapt(10)).setSpace_horizontal(dpAdapt(10)));
-        ((HorizontalRecyclerView)findViewById(R.id.hrv)).setAdapter(multiAdapter, new OnLinearLoadMoreListener(multiAdapter) {
+        ((HorizontalRecyclerView)findViewById(R.id.hrv)).setAdapter(multiAdapter, new OnSimpleLinearLoadMoreListener(multiAdapter) {
             @Override
             public void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
 

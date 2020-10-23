@@ -13,6 +13,7 @@ import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.BaseRecyclerView;
 import com.cy.rvadapterniubility.recyclerview.OnSimpleScrollListener;
+import com.cy.rvadapterniubility.recyclerview.PositionHolder;
 
 
 /**

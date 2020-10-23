@@ -23,6 +23,8 @@ import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.LinearItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
 import com.cy.rvadapterniubility.recyclerview.OnLinearLoadMoreListener;
+import com.cy.rvadapterniubility.recyclerview.OnSimpleLinearLoadMoreListener;
+import com.cy.rvadapterniubility.recyclerview.PositionHolder;
 import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
 import com.cy.rvadapterniubility.refreshrv.LinearRefreshLayout;
 
@@ -110,7 +112,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                     }
                 }, 2000);
             }
-        }, new OnLinearLoadMoreListener(multiAdapter, 6) {
+        }, new OnSimpleLinearLoadMoreListener(multiAdapter, 6) {
             @Override
             public void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
 

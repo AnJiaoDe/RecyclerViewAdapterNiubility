@@ -22,6 +22,7 @@ import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.FullSpanGridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
 import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
+import com.cy.rvadapterniubility.recyclerview.PositionHolder;
 import com.cy.rvadapterniubility.refreshrv.GridRefreshLayout;
 import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
 
