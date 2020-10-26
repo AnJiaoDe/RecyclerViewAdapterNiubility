@@ -43,14 +43,14 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         loadMoreAdapter = new SimpleAdapter<String>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected) {
-                OnLinearLoadMoreListener.this.bindDataToLoadMore(holder, bean);
+                bindDataToLoadMore(holder, bean);
             }
 
             @Override
             public int getItemLayoutID(int position, String bean) {
                 if (orientation == RecyclerView.VERTICAL)
-                    return OnLinearLoadMoreListener.this.getVerticalLoadMoreLayoutID();
-                return OnLinearLoadMoreListener.this.getHorizontalLoadMoreLayoutID();
+                    return getVerticalLoadMoreLayoutID();
+                return getHorizontalLoadMoreLayoutID();
             }
 
             @Override
