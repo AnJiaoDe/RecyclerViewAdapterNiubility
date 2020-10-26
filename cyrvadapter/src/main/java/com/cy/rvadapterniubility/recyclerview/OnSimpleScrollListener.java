@@ -219,10 +219,10 @@ public abstract class OnSimpleScrollListener {
         }
     }
 
-    public abstract void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder,
-                                                      int velocity_x, int velocity_y, int offsetX, int offsetY);
-    public abstract void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder,
-                                                      int velocity_x, int velocity_y, int offsetX, int offsetY);
+    public  void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder,
+                                                      int velocity_x, int velocity_y, int offsetX, int offsetY){}
+    public  void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder,
+                                                      int velocity_x, int velocity_y, int offsetX, int offsetY){}
 
 
 }

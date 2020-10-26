@@ -144,8 +144,7 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     public void onItemLoadMoreClick(BaseViewHolder holder) {
     }
 
-    public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
-    }
+    public abstract void bindDataToLoadMore(final BaseViewHolder holder, String bean);
 
     public int getVerticalLoadMoreLayoutID() {
         return R.layout.cy_loadmore_vertical_foot_default;
