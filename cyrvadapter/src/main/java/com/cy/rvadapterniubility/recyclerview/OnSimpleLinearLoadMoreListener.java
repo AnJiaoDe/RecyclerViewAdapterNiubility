@@ -101,11 +101,11 @@ public abstract class OnSimpleLinearLoadMoreListener extends OnLinearLoadMoreLis
             tv.setVisibility(View.GONE);
         }
     }
-
+    @Override
     public int getVerticalLoadMoreLayoutID() {
         return R.layout.cy_loadmore_vertical_foot_default;
     }
-
+    @Override
     public int getHorizontalLoadMoreLayoutID() {
         return R.layout.cy_loadmore_horizontal_foot_default;
     }
