@@ -43,7 +43,6 @@ public abstract class OnSimpleLinearLoadMoreListener extends OnLinearLoadMoreLis
 
     @Override
     public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
-        super.bindDataToLoadMore(holder, bean);
         IAnimationView animationView = setAnimationView();
         if (animationView == null) {
             animationView = holder.getView(R.id.animView);
