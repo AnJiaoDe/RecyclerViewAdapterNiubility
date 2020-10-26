@@ -168,6 +168,7 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
      */
     public void closeLoadMore() {
         loadMoreAdapter.clear();
+        setLoadMoreing(false);
     }
 
 
