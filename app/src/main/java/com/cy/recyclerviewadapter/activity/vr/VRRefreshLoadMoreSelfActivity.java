@@ -81,6 +81,12 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
         verticalRefreshLayout.setAdapter(multiAdapter, new OnRefreshListener() {
 
             @Override
+            public void onRefreshFinish() {
+                super.onRefreshFinish();
+            }
+
+
+            @Override
             public void onRefreshStart() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -113,15 +119,6 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                 }, 2000);
             }
         }, new OnSimpleLinearLoadMoreListener(multiAdapter, 6) {
-            @Override
-            public void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
-
-            }
-
-            @Override
-            public void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
-
-            }
 
             @Override
             public void onLoadMoreStart() {

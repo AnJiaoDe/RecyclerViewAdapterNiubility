@@ -171,7 +171,14 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         setLoadMoreing(false);
     }
 
-
+    public void closeLoadMoreDelay(int ms) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                closeLoadMore();
+            }
+        }, ms);
+    }
     public SimpleAdapter<String> getLoadMoreAdapter() {
         return loadMoreAdapter;
     }

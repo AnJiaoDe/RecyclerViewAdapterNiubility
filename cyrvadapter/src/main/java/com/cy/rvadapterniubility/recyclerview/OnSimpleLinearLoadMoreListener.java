@@ -153,6 +153,8 @@ public abstract class OnSimpleLinearLoadMoreListener extends OnLinearLoadMoreLis
         }, 1000);
     }
 
+
+
     public String getLoadMoreNoDataToast() {
         return "";
     }
