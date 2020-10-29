@@ -19,31 +19,38 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
 
     public SwipeAdapter() {
     }
-
     private void dealSwipe(final BaseViewHolder holder, final T bean) {
         ((SwipeLayout) holder.itemView).getContentView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.onItemClick(holder, holder.getBindingAdapterPosition(), bean);
+                int position = holder.getBindingAdapterPosition();
+                if(position<0||position>=adapter.getAdapter().getList_bean().size())return;
+                adapter.onItemClick(holder, position, bean);
             }
         });
         ((SwipeLayout) holder.itemView).setOnSwipeListener(new OnSwipeListener() {
             @Override
             public void onScrolled(int dx) {
                 swipeLayout_scrolled = (SwipeLayout) holder.itemView;
-                SwipeAdapter.this.onScrolled(holder, holder.getBindingAdapterPosition(), bean, dx);
+                int position = holder.getBindingAdapterPosition();
+                if(position<0||position>=adapter.getAdapter().getList_bean().size())return;
+                SwipeAdapter.this.onScrolled(holder,position, bean, dx);
             }
 
             @Override
             public void onOpened() {
                 swipeLayout_opened = (SwipeLayout) holder.itemView;
-                SwipeAdapter.this.onOpened(holder, holder.getBindingAdapterPosition(), bean);
+                int position = holder.getBindingAdapterPosition();
+                if(position<0||position>=adapter.getAdapter().getList_bean().size())return;
+                SwipeAdapter.this.onOpened(holder, position, bean);
             }
 
             @Override
             public void onClosed() {
                 swipeLayout_opened = null;
-                SwipeAdapter.this.onClosed(holder, holder.getBindingAdapterPosition(), bean);
+                int position = holder.getBindingAdapterPosition();
+                if(position<0||position>=adapter.getAdapter().getList_bean().size())return;
+                SwipeAdapter.this.onClosed(holder, position, bean);
             }
         });
     }

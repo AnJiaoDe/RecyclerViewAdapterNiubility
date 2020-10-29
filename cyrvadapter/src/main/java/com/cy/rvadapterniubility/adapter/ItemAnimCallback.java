@@ -31,7 +31,10 @@ public  class ItemAnimCallback extends ItemTouchHelper.Callback {
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
         int position_from = viewHolder.getBindingAdapterPosition();
+        if(position_from<0||position_from>=simpleAdapter.getList_bean().size())return false;
         int position_to = target.getBindingAdapterPosition();
+        if(position_to<0||position_to>=simpleAdapter.getList_bean().size())return false;
+
         Collections.swap(simpleAdapter.getList_bean(), position_from, position_to);
         simpleAdapter.notifyItemMoved(position_from, position_to);
         return false;
@@ -39,7 +42,9 @@ public  class ItemAnimCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        simpleAdapter.remove(viewHolder.getBindingAdapterPosition());
+        int position = viewHolder.getBindingAdapterPosition();
+        if(position<0||position>=simpleAdapter.getList_bean().size())return;
+        simpleAdapter.remove(position);
     }
 
     @Override

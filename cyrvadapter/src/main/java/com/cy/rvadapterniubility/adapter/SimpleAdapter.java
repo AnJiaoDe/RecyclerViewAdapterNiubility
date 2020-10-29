@@ -66,6 +66,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             @Override
             public void onClick(View v) {
                 int position = holder.getBindingAdapterPosition();
+                if(position<0||position>=list_bean.size())return;
                 //设置选中的item
                 if (positionSelectedLast != position) {
                     positionSelected = position; //选择的position赋值给参数，
@@ -74,7 +75,6 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
                     positionSelectedLast = position;
                 }
                 onItemClick(holder, position, list_bean.get(position));
-
             }
         });
         //添加Item的长按事件
@@ -82,6 +82,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             @Override
             public boolean onLongClick(View v) {
                 int position = holder.getBindingAdapterPosition();
+                if(position<0||position>=list_bean.size())return false;
                 onItemLongClick(holder, position, list_bean.get(position));
                 return true;
                 //返回true，那么长按监听只执行长按监听中执行的代码，返回false，还会继续响应其他监听中的事件。
