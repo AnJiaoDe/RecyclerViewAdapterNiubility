@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
-import com.cy.refreshlayoutniubility.RefreshFinishListener;
+import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -25,6 +25,7 @@ import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.PositionHolder;
 import com.cy.rvadapterniubility.refreshrv.GridRefreshLayout;
 import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
+import com.cy.rvadapterniubility.refreshrv.OnSimpleRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,49 +69,21 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
         };
         multiAdapter=new MultiAdapter().addAdapter(rvAdapter);
         gridRefreshLayout.getRecyclerView().addItemDecoration(new FullSpanGridItemDecoration(dpAdapt(10)));
-        gridRefreshLayout.setAdapter(multiAdapter, new OnRefreshListener() {
+        gridRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
             @Override
             public void onRefreshStart() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        gridRefreshLayout.finishRefresh(new RefreshFinishListener() {
-                            @Override
-                            public void onRefreshFinish(final FrameLayout headLayout) {
-                                for (int i = 0; i < 8; i++) {
-                                    rvAdapter.addToTopNoNotify(new HRVBean(R.drawable.pic3));
-                                }
-                                rvAdapter.notifyDataSetChanged();
-
-                                final TextView textView = new TextView(headLayout.getContext());
-                                textView.setGravity(Gravity.CENTER);
-                                textView.setBackgroundColor(Color.WHITE);
-                                textView.setText("有8条更新");
-                                headLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        headLayout.removeView(textView);
-                                        gridRefreshLayout.closeRefresh();
-                                    }
-                                }, 1000);
-                            }
-                        });
+                        for (int i = 0; i < 8; i++) {
+                            rvAdapter.addToTopNoNotify(new HRVBean(R.drawable.pic3));
+                        }
+                        rvAdapter.notifyDataSetChanged();
+                        gridRefreshLayout.closeRefreshDelay("有8条更新",2000);
                     }
                 }, 2000);
             }
         }, new OnGridLoadMoreListener(multiAdapter) {
-
-            @Override
-            public void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
-
-            }
-
-            @Override
-            public void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
-
-            }
 
             @Override
             public void onLoadMoreStart() {

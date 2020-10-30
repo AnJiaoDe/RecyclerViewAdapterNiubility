@@ -1,9 +1,13 @@
 package com.cy.rvadapterniubility.refreshrv;
 
 
+import android.view.View;
+import android.widget.TextView;
+
+import com.cy.BaseAdapter.R;
 import com.cy.refreshlayoutniubility.OnPullListener;
 
-public abstract class OnRefreshListener extends OnPullListener {
+public abstract class OnRefreshListener<T> extends OnPullListener<T> {
     public abstract void onRefreshStart();
 
     public void onRefreshFinish() {
@@ -22,4 +26,5 @@ public abstract class OnRefreshListener extends OnPullListener {
 
     public void onLoadMoreCancel() {
     }
+
 }

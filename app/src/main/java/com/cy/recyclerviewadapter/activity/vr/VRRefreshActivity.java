@@ -11,6 +11,7 @@ import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
 import com.cy.rvadapterniubility.refreshrv.LinearRefreshLayout;
+import com.cy.rvadapterniubility.refreshrv.OnSimpleRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,18 +48,17 @@ public class VRRefreshActivity extends BaseActivity {
 
             }
         };
-        verticalRefreshLayout.setAdapter(rvAdapter, new OnRefreshListener() {
+        verticalRefreshLayout.setAdapter(rvAdapter, new OnSimpleRefreshListener() {
             @Override
             public void onRefreshStart() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
-                        verticalRefreshLayout.finishRefresh();
                         for (int i = 0; i < 8; i++) {
                             rvAdapter.getAdapter().addToTopNoNotify(new VRBean("更新" + i));
                         }
                         rvAdapter.getAdapter().notifyDataSetChanged();
+                        verticalRefreshLayout.closeRefreshDelay("有8条更新",2000);
                     }
                 }, 2000);
             }

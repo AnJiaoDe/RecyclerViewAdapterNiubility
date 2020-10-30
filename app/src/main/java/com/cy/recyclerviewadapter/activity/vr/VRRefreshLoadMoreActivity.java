@@ -15,10 +15,10 @@ import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.refreshlayoutniubility.LoadMoreFinishListener;
 import com.cy.refreshlayoutniubility.OnPullListener;
-import com.cy.refreshlayoutniubility.RefreshFinishListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.refreshrv.LinearRefreshLayout;
+import com.cy.rvadapterniubility.refreshrv.OnSimpleRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,36 +54,17 @@ public class VRRefreshLoadMoreActivity extends BaseActivity {
                 showToast("点击" + position);
             }
         };
-        verticalRefreshLayout.setAdapter(rvAdapter, new OnPullListener() {
+        verticalRefreshLayout.setAdapter(rvAdapter, new OnSimpleRefreshListener() {
             @Override
             public void onRefreshStart() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
-                        verticalRefreshLayout.finishRefresh(new RefreshFinishListener() {
-                            @Override
-                            public void onRefreshFinish(final FrameLayout headLayout) {
-                                for (int i = 0; i < 8; i++) {
-                                    rvAdapter.getAdapter().addToTopNoNotify(new VRBean("更新" + i));
-                                }
-                                rvAdapter.getAdapter().notifyDataSetChanged();
-
-                                final TextView textView = new TextView(headLayout.getContext());
-                                textView.setGravity(Gravity.CENTER);
-                                textView.setBackgroundColor(Color.WHITE);
-                                textView.setText("有8条更新");
-                                headLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        headLayout.removeView(textView);
-                                        verticalRefreshLayout.closeRefresh();
-                                    }
-                                }, 1000);
-                            }
-                        });
+                        for (int i = 0; i < 8; i++) {
+                            rvAdapter.getAdapter().addToTopNoNotify(new VRBean("更新" + i));
+                        }
+                        rvAdapter.getAdapter().notifyDataSetChanged();
+                        verticalRefreshLayout.closeRefreshDelay("有8条更新",2000);
                     }
                 }, 2000);
 

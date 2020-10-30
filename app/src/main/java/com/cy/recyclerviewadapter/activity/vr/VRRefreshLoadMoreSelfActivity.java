@@ -16,7 +16,6 @@ import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
-import com.cy.refreshlayoutniubility.RefreshFinishListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -78,45 +77,39 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
 //        verticalRefreshLayout.setEnableLoadMore(false);
 //        verticalRefreshLayout.getRecyclerView().setAdapter(multiAdapter.getMergeAdapter());
 //        verticalRefreshLayout.getRecyclerView().addItemDecoration(new LinearItemDecoration().setSpace_vertical(60));
-        verticalRefreshLayout.setAdapter(multiAdapter, new OnRefreshListener() {
+        verticalRefreshLayout.setAdapter(multiAdapter, new OnRefreshListener<String>() {
 
             @Override
             public void onRefreshFinish() {
                 super.onRefreshFinish();
             }
 
+            @Override
+            public void bindDataToRefreshFinishedLayout(View view, String msg) {
+                LogUtils.log("bindDataToRefreshFinishedLayout",msg);
+                TextView textView=view.findViewById(R.id.tv);
+                textView.setText(msg);
+            }
+
+            @Override
+            public int getRefreshFinishedLayoutID() {
+                LogUtils.log("getRefreshFinishedLayoutID");
+                return super.getRefreshFinishedLayoutID();
+            }
 
             @Override
             public void onRefreshStart() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        verticalRefreshLayout.finishRefresh(new RefreshFinishListener() {
-                            @Override
-                            public void onRefreshFinish(final FrameLayout headLayout) {
-                                for (int i = 0; i < 1; i++) {
-                                    multiAdapter.getAdapters().get(1).addToTopNoNotify(new VRBean("更新" + i));
-                                }
-                                multiAdapter.getAdapters().get(1).notifyDataSetChanged();
-
-                                final TextView textView = new TextView(headLayout.getContext());
-                                textView.setGravity(Gravity.CENTER);
-                                textView.setBackgroundColor(Color.WHITE);
-                                textView.setText("有8条更新");
-                                headLayout.addView(textView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        headLayout.removeView(textView);
-                                        verticalRefreshLayout.closeRefresh();
-                                    }
-                                }, 1000);
-                            }
-                        });
-                    }
-                }, 2000);
+                LogUtils.log("onRefreshStart");
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        for (int i = 0; i < 1; i++) {
+//                            multiAdapter.getAdapters().get(1).addToTopNoNotify(new VRBean("更新" + i));
+//                        }
+//                        multiAdapter.getAdapters().get(1).notifyDataSetChanged();
+                        verticalRefreshLayout.closeRefreshDelay("有8条更新",2000);
+//                    }
+//                }, 2000);
             }
         }, new OnSimpleLinearLoadMoreListener(multiAdapter, 6) {
 
@@ -146,7 +139,6 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                                     @Override
                                     public void onClosed() {
                                         multiAdapter.getAdapter(1).notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
-
                                     }
                                 });
                             }
