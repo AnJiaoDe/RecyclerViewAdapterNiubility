@@ -29,7 +29,7 @@ import com.cy.rvadapterniubility.adapter.SimpleAdapter;
  * @UpdateRemark:
  * @Version:
  */
-public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
+public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String> {
     private SimpleAdapter<String> loadMoreAdapter;
     private MultiAdapter<SimpleAdapter> multiAdapter;
     private int count_remain = 0;
@@ -38,6 +38,9 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
     private int space_vertical;
     private int space_horizontal;
     private RecyclerView recyclerView;
+    private OnCloseLoadMoreCallback onCloseLoadMoreCallback;
+    private final String CLEAR = "_C_L_E_A_R_";
+
     public OnLinearLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
         loadMoreAdapter = new SimpleAdapter<String>() {
@@ -65,17 +68,18 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         this(multiAdapter);
         this.count_remain = count_remain;
     }
-    private void checkRecyclerView(RecyclerView recyclerView){
-        this.recyclerView=recyclerView;
+
+    private void checkRecyclerView(RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         orientation = linearLayoutManager.getOrientation();
         space_vertical = 0;
         space_horizontal = 0;
         try {
-            LinearItemDecoration linearItemDecoration= (LinearItemDecoration) recyclerView.getItemDecorationAt(0);
-            space_vertical =linearItemDecoration.getSpace_vertical();
-            space_horizontal =linearItemDecoration.getSpace_horizontal();
-        }catch (Exception e){
+            LinearItemDecoration linearItemDecoration = (LinearItemDecoration) recyclerView.getItemDecorationAt(0);
+            space_vertical = linearItemDecoration.getSpace_vertical();
+            space_horizontal = linearItemDecoration.getSpace_horizontal();
+        } catch (Exception e) {
         }
     }
 
@@ -95,14 +99,14 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
             if (orientation == RecyclerView.VERTICAL) {
-                if (holder != null && holder.itemView.getBottom() +  space_vertical>= recyclerView.getHeight()) {
+                if (holder != null && holder.itemView.getBottom() + space_vertical >= recyclerView.getHeight()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
                         loadMoreAdapter.add("");
                     }
                     return;
                 }
             } else {
-                if (holder != null && holder.itemView.getRight()+  space_horizontal >= recyclerView.getWidth()) {
+                if (holder != null && holder.itemView.getRight() + space_horizontal >= recyclerView.getWidth()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
                         loadMoreAdapter.add("");
                     }
@@ -112,16 +116,17 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
 
         }
     }
+
     @Override
     public void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
         checkRecyclerView(recyclerView);
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
             if (orientation == RecyclerView.VERTICAL) {
-                if (holder != null && holder.itemView.getBottom()+ space_vertical < recyclerView.getHeight())
+                if (holder != null && holder.itemView.getBottom() + space_vertical < recyclerView.getHeight())
                     continue;
             } else {
-                if (holder != null && holder.itemView.getRight()+space_horizontal < recyclerView.getWidth())
+                if (holder != null && holder.itemView.getRight() + space_horizontal < recyclerView.getWidth())
                     continue;
             }
             //说明最后一个item-count_remain可见了，可以开始loadMore了
@@ -132,26 +137,77 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
                 //防止频繁loadMore
                 if (!isLoadMoreing) {
                     isLoadMoreing = true;
-                    onLoadMoreStart((BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount()-1));
+                    onLoadMoreStart((BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1));
                 }
                 return;
             }
         }
     }
 
-    public abstract void onLoadMoreStart(BaseViewHolder holder);
-
+    @Override
     public void onItemLoadMoreClick(BaseViewHolder holder) {
     }
 
-    public abstract void bindDataToLoadMore(final BaseViewHolder holder, String bean);
+    @Override
+    public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
+        IAnimationView animationView = holder.getView(R.id.animView);
+        if (animationView == null) return;
+//        if (animationView == null) {
+//            animationView = holder.getView(R.id.animView);
+//        } else {
+        animationView.getView().setId(R.id.animView);
+        FrameLayout root = (FrameLayout) holder.itemView;
+        root.addView(animationView.getView(), 0, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+//        }
+        animationView.stopLoadAnimation();
+        animationView.getView().setVisibility(View.GONE);
 
-    public int getVerticalLoadMoreLayoutID() {
-        return R.layout.cy_loadmore_vertical_foot_default;
-    }
-
-    public int getHorizontalLoadMoreLayoutID() {
-        return R.layout.cy_loadmore_horizontal_foot_default;
+        TextView tv = holder.getView(R.id.tv);
+//        if (tv == null) {
+//            tv = holder.getView(R.id.tv);
+//        } else {
+//        tv.setId(R.id.tv);
+//        FrameLayout root = (FrameLayout) holder.itemView;
+//        root.addView(tv, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+//        }
+        if (bean != null && !bean.isEmpty()) {
+            switch (bean) {
+                case CLEAR:
+                    final ObjectAnimator objectAnimator_alpha = ObjectAnimator.ofFloat(holder.itemView, "alpha", 1, 0);
+                    final ObjectAnimator objectAnimator_transY = getOrientation() == RecyclerView.VERTICAL ?
+                            ObjectAnimator.ofFloat(holder.itemView, "translationY", 0, holder.itemView.getHeight())
+                            : ObjectAnimator.ofFloat(holder.itemView, "translationX", 0, holder.itemView.getWidth());
+                    final AnimatorSet animatorSet = new AnimatorSet();
+                    animatorSet.setDuration(500);
+                    animatorSet.playTogether(objectAnimator_alpha, objectAnimator_transY);
+                    animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+                    animatorSet.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            //holder会被复用，所以动画还原到初始位置
+                            holder.itemView.setAlpha(1);
+                            holder.itemView.setTranslationX(0);
+                            holder.itemView.setTranslationY(0);
+                            setLoadMoreing(false);
+                            if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
+                            closeLoadMore();
+                        }
+                    });
+                    animatorSet.start();
+                    break;
+                default:
+                    animationView.stopLoadAnimation();
+                    animationView.getView().setVisibility(View.GONE);
+                    tv.setText(bean);
+                    tv.setVisibility(View.VISIBLE);
+                    break;
+            }
+        } else {
+            animationView.getView().setVisibility(View.VISIBLE);
+            animationView.startLoadAnimation();
+            tv.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -161,35 +217,88 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         return count_remain;
     }
 
+//    public IAnimationView setAnimationView() {
+//        return null;
+//    }
 
+//    public TextView setTextViewToast() {
+//        return null;
+//    }
+//
+//    private void setLoadMoreText(String text) {
+//        RecyclerView recyclerView = getRecyclerView();
+//        if (recyclerView == null) return;
+//        BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(getMultiAdapter().getMergeAdapter().getItemCount() - 1);
+//        if (baseViewHolder == null) return;
+//        IAnimationView animationView = baseViewHolder.getView(R.id.animView);
+//        TextView tv = baseViewHolder.getView(R.id.tv);
+//        if(animationView!=null)animationView.getView().setVisibility(View.GONE);
+//        if(tv!=null){
+//            baseViewHolder.setText(R.id.tv, text);
+//            baseViewHolder.setVisible(R.id.tv);
+//        }
+//    }
+
+
+
+    /**
+     *
+     */
+
+//    public void closeLoadMoreNoData() {
+//        String toast = getLoadMoreNoDataToast();
+//        toast = (toast == null || TextUtils.isEmpty(toast)) ? "没有更多了哦~" : toast;
+//        if (getLoadMoreAdapter().getItemCount() != 0) getLoadMoreAdapter().set(0, toast);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                closeLoadMore(null);
+//            }
+//        }, 1000);
+//    }
 
     /**
      * 必须手动调用closeLoadMore()结束loadMore
      */
+    @Override
     public void closeLoadMore() {
-        loadMoreAdapter.clear();
-        setLoadMoreing(false);
+        closeLoadMore(null);
     }
 
-    public void closeLoadMoreDelay(int ms) {
+    @Override
+    public void closeLoadMoreDelay(String msg, int ms) {
+        closeLoadMoreDelay(msg,ms,null);
+    }
+    /**
+     * 必须手动调用closeLoadMore()结束loadMore
+     */
+    public void closeLoadMore(OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
+        this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
+        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, CLEAR);
+    }
+
+    public void closeLoadMoreDelay(String text, int ms,OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
+        this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
+        if (loadMoreAdapter.getItemCount() != 0)loadMoreAdapter.set(0, text);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                closeLoadMore();
+                closeLoadMore(null);
             }
         }, ms);
     }
-    public SimpleAdapter<String> getLoadMoreAdapter() {
-        return loadMoreAdapter;
-    }
 
-    public RecyclerView getRecyclerView() {
-        return recyclerView;
-    }
+//    public SimpleAdapter<String> getLoadMoreAdapter() {
+//        return loadMoreAdapter;
+//    }
 
-    public int getOrientation() {
-        return orientation;
-    }
+//    public RecyclerView getRecyclerView() {
+//        return recyclerView;
+//    }
+
+//    public int getOrientation() {
+//        return orientation;
+//    }
 
     public boolean isLoadMoreing() {
         return isLoadMoreing;
@@ -199,7 +308,7 @@ public abstract class OnLinearLoadMoreListener extends OnSimpleScrollListener {
         isLoadMoreing = loadMoreing;
     }
 
-    public MultiAdapter<SimpleAdapter> getMultiAdapter() {
-        return multiAdapter;
-    }
+//    public MultiAdapter<SimpleAdapter> getMultiAdapter() {
+//        return multiAdapter;
+//    }
 }

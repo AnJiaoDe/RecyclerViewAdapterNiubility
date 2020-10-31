@@ -30,7 +30,7 @@ import com.cy.rvadapterniubility.adapter.SimpleAdapter;
  * @UpdateRemark:
  * @Version:
  */
-public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
+public abstract class OnGridLoadMoreListener extends OnLoadMoreListener {
     private SimpleAdapter<String> loadMoreAdapter;
     private MultiAdapter<SimpleAdapter> multiAdapter;
     private int count_remain = 0;
@@ -147,7 +147,7 @@ public abstract class OnGridLoadMoreListener extends OnSimpleScrollListener {
     }
 
     public abstract void onLoadMoreStart();
-
+    @Override
     public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
 
         IAnimationView animationView = setAnimationView();
