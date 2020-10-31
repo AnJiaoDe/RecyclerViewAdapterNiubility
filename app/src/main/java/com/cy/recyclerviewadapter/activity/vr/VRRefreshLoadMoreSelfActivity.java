@@ -16,6 +16,7 @@ import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnRefreshListener;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
@@ -78,11 +79,11 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
 //        verticalRefreshLayout.getRecyclerView().setAdapter(multiAdapter.getMergeAdapter());
 //        verticalRefreshLayout.getRecyclerView().addItemDecoration(new LinearItemDecoration().setSpace_vertical(60));
         verticalRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
-
 //            @Override
-//            public void onRefreshFinish() {
-//                super.onRefreshFinish();
+//            public void onRefreshFinish(IHeadView headView) {
+//                super.onRefreshFinish(headView);
 //            }
+
 
 //            @Override
 //            public void bindDataToRefreshFinishedLayout(View view, String msg) {
@@ -97,8 +98,9 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
 //                return super.getRefreshFinishedLayoutID();
 //            }
 
+
             @Override
-            public void onRefreshStart() {
+            public void onRefreshStart(IHeadView headView) {
                 LogUtils.log("onRefreshStart");
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -114,7 +116,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
         }, new OnSimpleLinearLoadMoreListener(multiAdapter, 6) {
             @Override
             public void onLoadMoreStart(BaseViewHolder holder) {
-                LogUtils.log("onLoadMoreStart");
+                LogUtils.log("onLoadMoreStart",holder.itemView.getWidth());
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

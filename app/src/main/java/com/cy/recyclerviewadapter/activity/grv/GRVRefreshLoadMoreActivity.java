@@ -16,6 +16,7 @@ import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
@@ -70,7 +71,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
         gridRefreshLayout.getRecyclerView().addItemDecoration(new FullSpanGridItemDecoration(dpAdapt(10)));
         gridRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
             @Override
-            public void onRefreshStart() {
+            public void onRefreshStart(IHeadView headView) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

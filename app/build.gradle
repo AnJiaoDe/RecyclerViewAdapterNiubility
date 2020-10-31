@@ -40,5 +40,5 @@ dependencies {
     api 'com.github.bumptech.glide:glide:4.11.0'
 
     api "androidx.recyclerview:recyclerview:1.2.0-alpha03"
-    api "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.3.4"
+    api "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.3.5"
 }
