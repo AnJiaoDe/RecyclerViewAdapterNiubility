@@ -21,26 +21,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="VR+head+foot" />
-    <Button
-        android:id="@+id/btn_vr_refreshloadmore"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="VR+refresh+loadmore" />
+<!--    <Button-->
+<!--        android:id="@+id/btn_vr_refreshloadmore"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="VR+refresh+loadmore" />-->
     <Button
         android:id="@+id/btn_vr_refreshloadmoreself"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="VR+refresh+loadmore_self" />
-    <Button
-        android:id="@+id/btn_vr_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="VR+refresh" />
-    <Button
-        android:id="@+id/btn_vr_more"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="VR+loadmore" />
+<!--    <Button-->
+<!--        android:id="@+id/btn_vr_refresh"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="VR+refresh" />-->
+<!--    <Button-->
+<!--        android:id="@+id/btn_vr_more"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="VR+loadmore" />-->
     <Button
         android:id="@+id/btn_swipe"
         android:layout_width="match_parent"

@@ -16,10 +16,10 @@ public class VRTypeActivity extends BaseActivity {
         findViewById(R.id.btn_vr).setOnClickListener(this);
         findViewById(R.id.btn_vr_multi).setOnClickListener(this);
         findViewById(R.id.btn_vr_head_foot).setOnClickListener(this);
-        findViewById(R.id.btn_vr_refreshloadmore).setOnClickListener(this);
+//        findViewById(R.id.btn_vr_refreshloadmore).setOnClickListener(this);
         findViewById(R.id.btn_vr_refreshloadmoreself).setOnClickListener(this);
-        findViewById(R.id.btn_vr_refresh).setOnClickListener(this);
-        findViewById(R.id.btn_vr_more).setOnClickListener(this);
+//        findViewById(R.id.btn_vr_refresh).setOnClickListener(this);
+//        findViewById(R.id.btn_vr_more).setOnClickListener(this);
         findViewById(R.id.btn_swipe).setOnClickListener(this);
         findViewById(R.id.btn_anim).setOnClickListener(this);
     }
@@ -39,21 +39,21 @@ public class VRTypeActivity extends BaseActivity {
 
                 startAppcompatActivity(VRHeadFootActivity.class);
                 break;
-            case R.id.btn_vr_refreshloadmore:
-
-                startAppcompatActivity(VRRefreshLoadMoreActivity.class);
-                break;
+//            case R.id.btn_vr_refreshloadmore:
+//
+//                startAppcompatActivity(VRRefreshLoadMoreActivity.class);
+//                break;
             case R.id.btn_vr_refreshloadmoreself:
                 startAppcompatActivity(VRRefreshLoadMoreSelfActivity.class);
                 break;
-            case R.id.btn_vr_refresh:
-
-                startAppcompatActivity(VRRefreshActivity.class);
-                break;
-            case R.id.btn_vr_more:
-
-                startAppcompatActivity(VRLoadMoreActivity.class);
-                break;
+//            case R.id.btn_vr_refresh:
+//
+//                startAppcompatActivity(VRRefreshActivity.class);
+//                break;
+//            case R.id.btn_vr_more:
+//
+//                startAppcompatActivity(VRLoadMoreActivity.class);
+//                break;
             case R.id.btn_swipe:
                 startAppcompatActivity(VRSwipeActivity.class);
                 break;

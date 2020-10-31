@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.cy.refreshlayoutniubility.OnRefreshListener;
 import com.cy.refreshlayoutniubility.RefreshLayoutNiubility;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -40,14 +41,12 @@ public class GridRefreshLayout extends BaseRVRefreshLayout<VerticalGridRecyclerV
     }
 
     public GridRefreshLayout setAdapter(SimpleAdapter simpleAdapter, OnRefreshListener onRefreshListener, OnGridLoadMoreListener onGridLoadMoreListener) {
-        setEnableLoadMore(false);
         verticalGridRecyclerView.addOnScrollListener(onGridLoadMoreListener);
         setOnRefreshListener(onRefreshListener);
         verticalGridRecyclerView.setAdapter(simpleAdapter);
         return  this;
     }
     public GridRefreshLayout setAdapter(MultiAdapter multiAdapter, OnRefreshListener onRefreshListener, OnGridLoadMoreListener onGridLoadMoreListener) {
-        setEnableLoadMore(false);
         verticalGridRecyclerView.addOnScrollListener(onGridLoadMoreListener);
         setOnRefreshListener(onRefreshListener);
         verticalGridRecyclerView.setAdapter(multiAdapter.getMergeAdapter());

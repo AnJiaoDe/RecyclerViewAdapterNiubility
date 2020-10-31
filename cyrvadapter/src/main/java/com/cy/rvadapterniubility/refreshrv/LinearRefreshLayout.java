@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.cy.refreshlayoutniubility.OnRefreshListener;
 import com.cy.refreshlayoutniubility.RefreshLayoutNiubility;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.recyclerview.BaseRecyclerView;
@@ -39,8 +40,6 @@ public class LinearRefreshLayout extends BaseRVRefreshLayout<VerticalRecyclerVie
     }
 
     public LinearRefreshLayout setAdapter(MultiAdapter multiAdapter, OnLinearLoadMoreListener onRVLoadMoreListener) {
-        setEnableRefresh(false);
-        setEnableLoadMore(false);
         verticalRecyclerView.addOnScrollListener(onRVLoadMoreListener);
         verticalRecyclerView.setAdapter(multiAdapter.getMergeAdapter());
         return  this;
@@ -48,7 +47,6 @@ public class LinearRefreshLayout extends BaseRVRefreshLayout<VerticalRecyclerVie
 
 
     public LinearRefreshLayout setAdapter(MultiAdapter multiAdapter, OnRefreshListener onRefreshListener, OnLinearLoadMoreListener onRVLoadMoreListener) {
-        setEnableLoadMore(false);
         verticalRecyclerView.addOnScrollListener(onRVLoadMoreListener);
         setOnRefreshListener(onRefreshListener);
         verticalRecyclerView.setAdapter(multiAdapter.getMergeAdapter());

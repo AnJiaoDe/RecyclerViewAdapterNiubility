@@ -16,6 +16,8 @@ import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.refreshlayoutniubility.OnRefreshListener;
+import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -24,7 +26,6 @@ import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
 import com.cy.rvadapterniubility.recyclerview.OnLinearLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.OnSimpleLinearLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.PositionHolder;
-import com.cy.rvadapterniubility.refreshrv.OnRefreshListener;
 import com.cy.rvadapterniubility.refreshrv.LinearRefreshLayout;
 
 import java.util.ArrayList;
@@ -74,47 +75,46 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
             }
         });
 
-//        verticalRefreshLayout.setEnableLoadMore(false);
 //        verticalRefreshLayout.getRecyclerView().setAdapter(multiAdapter.getMergeAdapter());
 //        verticalRefreshLayout.getRecyclerView().addItemDecoration(new LinearItemDecoration().setSpace_vertical(60));
-        verticalRefreshLayout.setAdapter(multiAdapter, new OnRefreshListener<String>() {
+        verticalRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
 
-            @Override
-            public void onRefreshFinish() {
-                super.onRefreshFinish();
-            }
+//            @Override
+//            public void onRefreshFinish() {
+//                super.onRefreshFinish();
+//            }
 
-            @Override
-            public void bindDataToRefreshFinishedLayout(View view, String msg) {
-                LogUtils.log("bindDataToRefreshFinishedLayout",msg);
-                TextView textView=view.findViewById(R.id.tv);
-                textView.setText(msg);
-            }
-
-            @Override
-            public int getRefreshFinishedLayoutID() {
-                LogUtils.log("getRefreshFinishedLayoutID");
-                return super.getRefreshFinishedLayoutID();
-            }
+//            @Override
+//            public void bindDataToRefreshFinishedLayout(View view, String msg) {
+//                LogUtils.log("bindDataToRefreshFinishedLayout",msg);
+//                TextView textView=view.findViewById(R.id.tv);
+//                textView.setText(msg);
+//            }
+//
+//            @Override
+//            public int getRefreshFinishedLayoutID() {
+//                LogUtils.log("getRefreshFinishedLayoutID");
+//                return super.getRefreshFinishedLayoutID();
+//            }
 
             @Override
             public void onRefreshStart() {
                 LogUtils.log("onRefreshStart");
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        for (int i = 0; i < 1; i++) {
-//                            multiAdapter.getAdapters().get(1).addToTopNoNotify(new VRBean("更新" + i));
-//                        }
-//                        multiAdapter.getAdapters().get(1).notifyDataSetChanged();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < 8; i++) {
+                            multiAdapter.getAdapters().get(1).addToTopNoNotify(new VRBean("更新" + i));
+                        }
+                        multiAdapter.getAdapters().get(1).notifyDataSetChanged();
                         verticalRefreshLayout.closeRefreshDelay("有8条更新",2000);
-//                    }
-//                }, 2000);
+                    }
+                }, 2000);
             }
         }, new OnSimpleLinearLoadMoreListener(multiAdapter, 6) {
-
             @Override
-            public void onLoadMoreStart() {
+            public void onLoadMoreStart(BaseViewHolder holder) {
+                LogUtils.log("onLoadMoreStart");
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

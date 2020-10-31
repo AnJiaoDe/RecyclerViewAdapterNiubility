@@ -64,18 +64,9 @@ public class HRVActivity extends BaseActivity {
         ((HorizontalRecyclerView)findViewById(R.id.hrv)).addItemDecoration(
                 new LinearItemDecoration().setSpace_vertical(dpAdapt(10)).setSpace_horizontal(dpAdapt(10)));
         ((HorizontalRecyclerView)findViewById(R.id.hrv)).setAdapter(multiAdapter, new OnSimpleLinearLoadMoreListener(multiAdapter) {
-            @Override
-            public void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
-
-            }
 
             @Override
-            public void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
-
-            }
-
-            @Override
-            public void onLoadMoreStart() {
+            public void onLoadMoreStart(BaseViewHolder holder) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
