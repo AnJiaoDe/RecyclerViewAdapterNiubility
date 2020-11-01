@@ -30,7 +30,7 @@ import com.cy.rvadapterniubility.adapter.SimpleAdapter;
  * @UpdateRemark:
  * @Version:
  */
-public abstract class OnGridLoadMoreListener extends OnLoadMoreListener {
+public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> {
     private SimpleAdapter<String> loadMoreAdapter;
     private MultiAdapter<SimpleAdapter> multiAdapter;
     private int count_remain = 0;
@@ -57,7 +57,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener {
 
             @Override
             public void onItemClick(BaseViewHolder holder, int position, String bean) {
-
+                onItemLoadMoreClick(holder);
             }
         };
         multiAdapter.addAdapter(multiAdapter.getAdapters().size(), loadMoreAdapter);
@@ -68,6 +68,9 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener {
         this.count_remain = count_remain;
     }
 
+    @Override
+    public void onItemLoadMoreClick(BaseViewHolder holder) {
+    }
     private void checkRecyclerView(RecyclerView recyclerView) {
         try {
             this.gridRecyclerView = (VerticalGridRecyclerView) recyclerView;
@@ -139,35 +142,20 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener {
                 //防止频繁loadMore
                 if (!isLoadMoreing) {
                     isLoadMoreing = true;
-                    onLoadMoreStart();
+                    onLoadMoreStart((BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1));
                 }
                 return;
             }
         }
     }
-
-    public abstract void onLoadMoreStart();
     @Override
     public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
-
-        IAnimationView animationView = setAnimationView();
-        if (animationView == null) {
-            animationView = holder.getView(R.id.animView);
-        } else {
-            animationView.getView().setId(R.id.animView);
-            FrameLayout root = (FrameLayout) holder.itemView;
-            root.addView(animationView.getView(), 0, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-        }
+        IAnimationView animationView = holder.getView(R.id.animView);
+        if (animationView == null) return;
         animationView.stopLoadAnimation();
         animationView.getView().setVisibility(View.GONE);
-        TextView tv = setTextViewToast();
-        if (tv == null) {
-            tv = holder.getView(R.id.tv);
-        } else {
-            tv.setId(R.id.tv);
-            FrameLayout root = (FrameLayout) holder.itemView;
-            root.addView(tv, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-        }
+
+        TextView tv = holder.getView(R.id.tv);
         if (bean != null && !bean.isEmpty()) {
             switch (bean) {
                 case CLEAR:
@@ -184,13 +172,13 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
+                            if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationX(0);
                             holder.itemView.setTranslationY(0);
                             gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
                             isLoadMoreing = false;
-                            if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
                             loadMoreAdapter.clear();
                         }
                     });
@@ -199,22 +187,17 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener {
                 default:
                     animationView.stopLoadAnimation();
                     animationView.getView().setVisibility(View.GONE);
-                    tv.setText(bean);
-                    tv.setVisibility(View.VISIBLE);
+                    if(tv!=null){
+                        tv.setText(bean);
+                        tv.setVisibility(View.VISIBLE);
+                    }
                     break;
             }
         } else {
             animationView.getView().setVisibility(View.VISIBLE);
             animationView.startLoadAnimation();
-            tv.setVisibility(View.GONE);
+            if(tv!=null)tv.setVisibility(View.GONE);
         }
-    }
-
-    public int getVerticalLoadMoreLayoutID() {
-        return R.layout.cy_loadmore_vertical_foot_default;
-    }
-    public int getHorizontalLoadMoreLayoutID() {
-        return R.layout.cy_loadmore_horizontal_foot_default;
     }
 
     /**
@@ -224,55 +207,91 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener {
         return count_remain;
     }
 
-    public IAnimationView setAnimationView() {
-        return null;
+    /**
+     * 必须手动调用closeLoadMore()结束loadMore
+     */
+    @Override
+    public void closeLoadMore() {
+        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, CLEAR);
     }
 
-    public TextView setTextViewToast() {
-        return null;
+    @Override
+    public void closeLoadMoreDelay(String msg, int ms) {
+        closeLoadMoreDelay(msg,ms,null);
     }
-
-    public void setLoadMoreText(String text) {
-        if (gridRecyclerView == null) return;
-        BaseViewHolder baseViewHolder = (BaseViewHolder) gridRecyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
-        if(baseViewHolder==null)return;
-        baseViewHolder.setGone(R.id.animView);
-        baseViewHolder.setText(R.id.tv, text);
-        baseViewHolder.setVisible(R.id.tv);
+    public void closeLoadMoreDelay(String msg) {
+        closeLoadMoreDelay(msg,1000,null);
     }
-
     /**
      * 必须手动调用closeLoadMore()结束loadMore
      */
     public void closeLoadMore(OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
         this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
-        if (loadMoreAdapter.getItemCount() != 0) {
-            loadMoreAdapter.set(0, CLEAR);
-        }
+        closeLoadMore();
     }
+
+    public void closeLoadMoreDelay(String msg, int ms, final OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
+        if (loadMoreAdapter.getItemCount() != 0)loadMoreAdapter.set(0, msg);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                closeLoadMore(onCloseLoadMoreCallback);
+            }
+        }, ms);
+    }
+    public void closeLoadMoreDelay(String msg, final OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
+        closeLoadMoreDelay(msg,1000,onCloseLoadMoreCallback);
+    }
+
+//    public IAnimationView setAnimationView() {
+//        return null;
+//    }
+//
+//    public TextView setTextViewToast() {
+//        return null;
+//    }
+//
+//    public void setLoadMoreText(String text) {
+//        if (gridRecyclerView == null) return;
+//        BaseViewHolder baseViewHolder = (BaseViewHolder) gridRecyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+//        if(baseViewHolder==null)return;
+//        baseViewHolder.setGone(R.id.animView);
+//        baseViewHolder.setText(R.id.tv, text);
+//        baseViewHolder.setVisible(R.id.tv);
+//    }
+
+    /**
+     * 必须手动调用closeLoadMore()结束loadMore
+     */
+//    public void closeLoadMore(OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
+//        this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
+//        if (loadMoreAdapter.getItemCount() != 0) {
+//            loadMoreAdapter.set(0, CLEAR);
+//        }
+//    }
 
     /**
      *
      */
 
-    public void closeLoadMoreNoData() {
-        closeLoadMoreNoData(null);
-    }
+//    public void closeLoadMoreNoData() {
+//        closeLoadMoreNoData(null);
+//    }
+//
+//
+//    public void closeLoadMoreNoData(String toast) {
+//        toast = (toast == null || TextUtils.isEmpty(toast)) ? "没有更多了哦~" : toast;
+//        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, toast);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                closeLoadMore(null);
+//            }
+//        }, 1000);
+//    }
 
-
-    public void closeLoadMoreNoData(String toast) {
-        toast = (toast == null || TextUtils.isEmpty(toast)) ? "没有更多了哦~" : toast;
-        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, toast);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                closeLoadMore(null);
-            }
-        }, 1000);
-    }
-
-    public SimpleAdapter<String> getLoadMoreAdapter() {
-        return loadMoreAdapter;
-    }
+//    public SimpleAdapter<String> getLoadMoreAdapter() {
+//        return loadMoreAdapter;
+//    }
 
 }

@@ -84,9 +84,8 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                 }, 2000);
             }
         }, new OnGridLoadMoreListener(multiAdapter) {
-
             @Override
-            public void onLoadMoreStart() {
+            public void onLoadMoreStart(BaseViewHolder holder) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -94,28 +93,21 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                          * 模拟没有更多的场景
                          */
                         if (multiAdapter.getMergeAdapter().getItemCount() > 120) {
-                            closeLoadMoreNoData();
+                            closeLoadMoreDelay("没有更多了哦~",1000);
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
                            rvAdapter.addNoNotify(new HRVBean(R.drawable.pic1));
                         }
-//                        rvAdapter.notifyDataSetChanged();
-                        setLoadMoreText("有8条更多");
-                        new Handler().postDelayed(new Runnable() {
+                        closeLoadMoreDelay("有8条更多", 1000, new OnCloseLoadMoreCallback() {
                             @Override
-                            public void run() {
+                            public void onClosed() {
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-                                closeLoadMore(new OnCloseLoadMoreCallback() {
-                                    @Override
-                                    public void onClosed() {
-                                        rvAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
-                                    }
-                                });
+                                rvAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
                             }
-                        }, 1000);
+                        });
                     }
                 }, 2000);
             }

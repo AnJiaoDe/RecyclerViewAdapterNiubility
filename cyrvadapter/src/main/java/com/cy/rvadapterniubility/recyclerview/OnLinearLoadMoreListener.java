@@ -155,9 +155,9 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
 //        if (animationView == null) {
 //            animationView = holder.getView(R.id.animView);
 //        } else {
-        animationView.getView().setId(R.id.animView);
-        FrameLayout root = (FrameLayout) holder.itemView;
-        root.addView(animationView.getView(), 0, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+//        animationView.getView().setId(R.id.animView);
+//        FrameLayout root = (FrameLayout) holder.itemView;
+//        root.addView(animationView.getView(), 0, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
 //        }
         animationView.stopLoadAnimation();
         animationView.getView().setVisibility(View.GONE);
@@ -174,7 +174,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
             switch (bean) {
                 case CLEAR:
                     final ObjectAnimator objectAnimator_alpha = ObjectAnimator.ofFloat(holder.itemView, "alpha", 1, 0);
-                    final ObjectAnimator objectAnimator_transY = getOrientation() == RecyclerView.VERTICAL ?
+                    final ObjectAnimator objectAnimator_transY = orientation == RecyclerView.VERTICAL ?
                             ObjectAnimator.ofFloat(holder.itemView, "translationY", 0, holder.itemView.getHeight())
                             : ObjectAnimator.ofFloat(holder.itemView, "translationX", 0, holder.itemView.getWidth());
                     final AnimatorSet animatorSet = new AnimatorSet();
@@ -185,13 +185,13 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
+                            if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationX(0);
                             holder.itemView.setTranslationY(0);
                             setLoadMoreing(false);
-                            if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
-                            closeLoadMore();
+                            loadMoreAdapter.clear();
                         }
                     });
                     animatorSet.start();
@@ -199,14 +199,16 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
                 default:
                     animationView.stopLoadAnimation();
                     animationView.getView().setVisibility(View.GONE);
-                    tv.setText(bean);
-                    tv.setVisibility(View.VISIBLE);
+                    if(tv!=null){
+                        tv.setText(bean);
+                        tv.setVisibility(View.VISIBLE);
+                    }
                     break;
             }
         } else {
             animationView.getView().setVisibility(View.VISIBLE);
             animationView.startLoadAnimation();
-            tv.setVisibility(View.GONE);
+            if(tv!=null)tv.setVisibility(View.GONE);
         }
     }
 
@@ -262,30 +264,35 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
      */
     @Override
     public void closeLoadMore() {
-        closeLoadMore(null);
+        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, CLEAR);
     }
 
     @Override
     public void closeLoadMoreDelay(String msg, int ms) {
         closeLoadMoreDelay(msg,ms,null);
     }
+    public void closeLoadMoreDelay(String msg) {
+        closeLoadMoreDelay(msg,1000,null);
+    }
     /**
      * 必须手动调用closeLoadMore()结束loadMore
      */
     public void closeLoadMore(OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
         this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
-        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, CLEAR);
+        closeLoadMore();
     }
 
-    public void closeLoadMoreDelay(String text, int ms,OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
-        this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
-        if (loadMoreAdapter.getItemCount() != 0)loadMoreAdapter.set(0, text);
+    public void closeLoadMoreDelay(String msg, int ms, final OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
+        if (loadMoreAdapter.getItemCount() != 0)loadMoreAdapter.set(0, msg);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                closeLoadMore(null);
+                closeLoadMore(onCloseLoadMoreCallback);
             }
         }, ms);
+    }
+    public void closeLoadMoreDelay(String msg, final OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
+        closeLoadMoreDelay(msg,1000,onCloseLoadMoreCallback);
     }
 
 //    public SimpleAdapter<String> getLoadMoreAdapter() {

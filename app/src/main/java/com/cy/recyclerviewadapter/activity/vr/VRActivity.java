@@ -3,6 +3,9 @@ package com.cy.recyclerviewadapter.activity.vr;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
@@ -31,9 +34,23 @@ public class VRActivity extends BaseActivity {
         final VerticalRecyclerView verticalRecyclerView=findViewById(R.id.vr);
         rvAdapter = new SimpleAdapter<VRBean>() {
             @Override
+            public void onViewRecycled(@NonNull BaseViewHolder holder) {
+                super.onViewRecycled(holder);
+                LogUtils.log("onViewRecycled",holder.getBindingAdapterPosition());
+            }
+
+            @NonNull
+            @Override
+            public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                LogUtils.log("onCreateViewHolder",viewType);
+
+                return super.onCreateViewHolder(parent, viewType);
+            }
+
+            @Override
             public void bindDataToView(final BaseViewHolder holder, int position, VRBean bean, boolean isSelected) {
                 holder.setText(R.id.tv, bean.getStr());
-                LogUtils.log("position",position);
+                LogUtils.log("bindDataToView",position);
             }
 
             @Override

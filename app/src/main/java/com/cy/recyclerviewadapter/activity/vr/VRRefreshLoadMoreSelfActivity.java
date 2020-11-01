@@ -25,7 +25,6 @@ import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.LinearItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
 import com.cy.rvadapterniubility.recyclerview.OnLinearLoadMoreListener;
-import com.cy.rvadapterniubility.recyclerview.OnSimpleLinearLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.PositionHolder;
 import com.cy.rvadapterniubility.refreshrv.LinearRefreshLayout;
 
@@ -113,7 +112,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                     }
                 }, 2000);
             }
-        }, new OnSimpleLinearLoadMoreListener(multiAdapter, 6) {
+        }, new OnLinearLoadMoreListener(multiAdapter, 6) {
             @Override
             public void onLoadMoreStart(BaseViewHolder holder) {
                 LogUtils.log("onLoadMoreStart",holder.itemView.getWidth());
@@ -124,27 +123,33 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                          * 模拟没有更多的场景
                          */
                         if (multiAdapter.getMergeAdapter().getItemCount() > 120) {
-                            closeLoadMoreNoData();
+                            closeLoadMoreDelay("没有更多了哦~",1000);
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
                             multiAdapter.getAdapter(1).addNoNotify(new VRBean("更多" + i));
                         }
-                        setLoadMoreText("有8条更多");
-                        new Handler().postDelayed(new Runnable() {
+                        closeLoadMoreDelay("有8条更多", 1000, new OnCloseLoadMoreCallback() {
                             @Override
-                            public void run() {
+                            public void onClosed() {
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-                                closeLoadMore(new OnCloseLoadMoreCallback() {
-                                    @Override
-                                    public void onClosed() {
-                                        multiAdapter.getAdapter(1).notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
-                                    }
-                                });
+                                multiAdapter.getAdapter(1).notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
                             }
-                        }, 1000);
+                        });
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                                closeLoadMore(new OnCloseLoadMoreCallback() {
+//                                    @Override
+//                                    public void onClosed() {
+//                                        multiAdapter.getAdapter(1).notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
+//                                    }
+//                                });
+//                            }
+//                        }, 1000);
                     }
                 }, 2000);
             }
@@ -155,7 +160,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
         }
 
         final List<VRBean> list_content = new ArrayList<>();
-        for (int i = 0; i < 17; i++) {
+        for (int i = 0; i < 100; i++) {
             list_content.add(new VRBean("内容" + i));
         }
 
