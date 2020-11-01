@@ -114,8 +114,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
             }
         }, new OnLinearLoadMoreListener(multiAdapter, 6) {
             @Override
-            public void onLoadMoreStart(BaseViewHolder holder) {
-                LogUtils.log("onLoadMoreStart",holder.itemView.getWidth());
+            public void onLoadMoreStart() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

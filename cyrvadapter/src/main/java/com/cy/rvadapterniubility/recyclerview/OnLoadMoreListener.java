@@ -21,7 +21,7 @@ import com.cy.rvadapterniubility.adapter.SimpleAdapter;
  */
 public abstract class OnLoadMoreListener<T> extends OnSimpleScrollListener {
 
-    public abstract void onLoadMoreStart(BaseViewHolder holder);
+    public abstract void onLoadMoreStart();
 
     public abstract void onItemLoadMoreClick(BaseViewHolder holder);
 

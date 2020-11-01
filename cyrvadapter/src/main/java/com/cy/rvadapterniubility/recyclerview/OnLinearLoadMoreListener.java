@@ -137,7 +137,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
                 //防止频繁loadMore
                 if (!isLoadMoreing) {
                     isLoadMoreing = true;
-                    onLoadMoreStart((BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1));
+                    onLoadMoreStart();
                 }
                 return;
             }

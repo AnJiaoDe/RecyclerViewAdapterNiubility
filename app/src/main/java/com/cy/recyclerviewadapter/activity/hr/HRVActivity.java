@@ -65,7 +65,7 @@ public class HRVActivity extends BaseActivity {
         ((HorizontalRecyclerView)findViewById(R.id.hrv)).setAdapter(multiAdapter, new OnLinearLoadMoreListener(multiAdapter) {
 
             @Override
-            public void onLoadMoreStart(BaseViewHolder holder) {
+            public void onLoadMoreStart() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

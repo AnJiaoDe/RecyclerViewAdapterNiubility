@@ -85,7 +85,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
             }
         }, new OnGridLoadMoreListener(multiAdapter) {
             @Override
-            public void onLoadMoreStart(BaseViewHolder holder) {
+            public void onLoadMoreStart() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
