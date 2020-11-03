@@ -295,9 +295,9 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         closeLoadMoreDelay(msg,1000,onCloseLoadMoreCallback);
     }
 
-//    public SimpleAdapter<String> getLoadMoreAdapter() {
-//        return loadMoreAdapter;
-//    }
+    public SimpleAdapter<String> getLoadMoreAdapter() {
+        return loadMoreAdapter;
+    }
 
 //    public RecyclerView getRecyclerView() {
 //        return recyclerView;

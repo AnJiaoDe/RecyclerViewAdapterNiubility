@@ -290,8 +290,8 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
 //        }, 1000);
 //    }
 
-//    public SimpleAdapter<String> getLoadMoreAdapter() {
-//        return loadMoreAdapter;
-//    }
+    public SimpleAdapter<String> getLoadMoreAdapter() {
+        return loadMoreAdapter;
+    }
 
 }
