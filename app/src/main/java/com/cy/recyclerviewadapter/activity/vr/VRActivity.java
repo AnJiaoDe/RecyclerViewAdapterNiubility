@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
@@ -14,6 +15,8 @@ import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.LinearItemDecoration;
+import com.cy.rvadapterniubility.recyclerview.OnSimpleScrollListener;
+import com.cy.rvadapterniubility.recyclerview.PositionHolder;
 import com.cy.rvadapterniubility.recyclerview.VerticalRecyclerView;
 
 import java.util.ArrayList;
@@ -43,7 +46,6 @@ public class VRActivity extends BaseActivity {
             @Override
             public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 LogUtils.log("onCreateViewHolder",viewType);
-
                 return super.onCreateViewHolder(parent, viewType);
             }
 
@@ -63,6 +65,36 @@ public class VRActivity extends BaseActivity {
                 showToast("点击" + position);
             }
         };
+        ((VerticalRecyclerView) findViewById(R.id.vr)).addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        LogUtils.log("SCROLL_STATE_IDLE");
+                        break;
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        LogUtils.log("SCROLL_STATE_DRAGGING");
+                        break;
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        LogUtils.log("SCROLL_STATE_SETTLING");
+                        break;
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LogUtils.log("SCROLL");
+            }
+        });
+        ((VerticalRecyclerView) findViewById(R.id.vr)).addOnScrollListener(new OnSimpleScrollListener() {
+            @Override
+            public void onItemShow(RecyclerView recyclerView, int position, PositionHolder positionHolder) {
+                super.onItemShow(recyclerView, position, positionHolder);
+                LogUtils.log("onItemShow",position);
+            }
+        });
         ((VerticalRecyclerView) findViewById(R.id.vr)).addItemDecoration(
                 new LinearItemDecoration().setSpace_vertical(dpAdapt(10)).setSpace_horizontal(dpAdapt(10)));
         ((VerticalRecyclerView) findViewById(R.id.vr)).setAdapter(rvAdapter);

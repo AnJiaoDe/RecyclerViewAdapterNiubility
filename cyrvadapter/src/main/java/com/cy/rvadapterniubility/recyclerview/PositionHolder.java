@@ -1,5 +1,7 @@
 package com.cy.rvadapterniubility.recyclerview;
 
+import androidx.annotation.NonNull;
+
 /**
  * @Description:
  * @Author: cy
@@ -57,4 +59,5 @@ public class PositionHolder {
         this.lastCompletelyVisibleItemPositions = lastCompletelyVisibleItemPositions;
         return this;
     }
+
 }
