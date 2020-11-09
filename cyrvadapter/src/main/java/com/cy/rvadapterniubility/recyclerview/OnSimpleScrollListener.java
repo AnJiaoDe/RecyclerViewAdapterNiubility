@@ -45,19 +45,19 @@ public abstract class OnSimpleScrollListener {
                     firstCallOnScrolled = false;
                 }
                 if (dy < 0) { // 当前处于上滑状态
-                    onScrollingFingerToBottom(recyclerView, dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
+                    onScrollingFingerToBottom(recyclerView, positionHolder,dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                     return;
                 }
                 if (dy > 0) { // 当前处于下滑状态
-                    onScrollingFingerToTop(recyclerView, dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
+                    onScrollingFingerToTop(recyclerView,positionHolder, dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                     return;
                 }
                 if (dx < 0) { // 当前处于上滑状态
-                    onScrollingFingerToRight(recyclerView, dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
+                    onScrollingFingerToRight(recyclerView,positionHolder, dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                     return;
                 }
                 if (dx > 0) { // 当前处于下滑状态
-                    onScrollingFingerToLeft(recyclerView, dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
+                    onScrollingFingerToLeft(recyclerView,positionHolder, dy, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                     return;
                 }
             }
@@ -192,16 +192,16 @@ public abstract class OnSimpleScrollListener {
     public void onScrollArrivedRight(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
     }
 
-    public void onScrollingFingerToBottom(RecyclerView recyclerView, int dy, int offsetX, int offsetY) {
+    public void onScrollingFingerToBottom(RecyclerView recyclerView,PositionHolder positionHolder,  int dy, int offsetX, int offsetY) {
     }
 
-    public void onScrollingFingerToTop(RecyclerView recyclerView, int dy, int offsetX, int offsetY) {
+    public void onScrollingFingerToTop(RecyclerView recyclerView, PositionHolder positionHolder, int dy, int offsetX, int offsetY) {
     }
 
-    public void onScrollingFingerToLeft(RecyclerView recyclerView, int dy, int offsetX, int offsetY) {
+    public void onScrollingFingerToLeft(RecyclerView recyclerView,PositionHolder positionHolder,  int dy, int offsetX, int offsetY) {
     }
 
-    public void onScrollingFingerToRight(RecyclerView recyclerView, int dy, int offsetX, int offsetY) {
+    public void onScrollingFingerToRight(RecyclerView recyclerView,PositionHolder positionHolder,  int dy, int offsetX, int offsetY) {
     }
 
 
