@@ -1,6 +1,6 @@
 package com.cy.rvadapterniubility.adapter;
 
-import androidx.recyclerview.widget.MergeAdapter;
+import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import java.util.List;
@@ -15,41 +15,41 @@ import java.util.List;
  * @Version: 1.0
  */
 public class MultiAdapter<T extends Adapter>  {
-    private MergeAdapter mergeAdapter;
+    private ConcatAdapter concatAdapter;
 
     public MultiAdapter() {
-        mergeAdapter = new MergeAdapter();
+        concatAdapter = new ConcatAdapter();
     }
 
     public MultiAdapter<T> addAdapter(T adapter) {
-        mergeAdapter.addAdapter(adapter);
+        concatAdapter.addAdapter(adapter);
         return this;
     }
 
     public MultiAdapter<T> addAdapter(int index, T adapter) {
-        mergeAdapter.addAdapter(index, adapter);
+        concatAdapter.addAdapter(index, adapter);
         return this;
     }
 
     public MultiAdapter<T> removeAdapter(T adapter) {
-        mergeAdapter.removeAdapter(adapter);
+        concatAdapter.removeAdapter(adapter);
         return this;
     }
     public MultiAdapter<T> removeAllAdapter() {
         getAdapters().clear();
-        mergeAdapter.notifyDataSetChanged();
+        concatAdapter.notifyDataSetChanged();
         return this;
     }
 
     public List<T> getAdapters() {
-        return  (List<T>) mergeAdapter.getAdapters();
+        return  (List<T>) concatAdapter.getAdapters();
     }
 
     public  T  getAdapter(int index) {
-        return (T) mergeAdapter.getAdapters().get(index);
+        return (T) concatAdapter.getAdapters().get(index);
     }
 
-    public MergeAdapter getMergeAdapter() {
-        return mergeAdapter;
+    public ConcatAdapter getMergeAdapter() {
+        return concatAdapter;
     }
 }
