@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.cy.BaseAdapter.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +39,13 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
         handleClick(holder);
+        if(position<0||position>=list_bean.size())return;
         bindDataToView(holder, position, list_bean.get(position), position == positionSelected);
     }
 
     @Override
     public int getItemViewType(int position) {
+        if(position<0||position>=list_bean.size())return R.layout.cy_staggerd_item_0;
         return getItemLayoutID(position, list_bean.get(position));
     }
 
