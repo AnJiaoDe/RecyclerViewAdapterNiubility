@@ -40,6 +40,6 @@ dependencies {
 
 //    api "androidx.recyclerview:recyclerview:1.1.0"
     compileOnly "androidx.recyclerview:recyclerview:1.2.0-alpha05"
-    compileOnly "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.3.5"
+    compileOnly "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.4.3"
 
 }
