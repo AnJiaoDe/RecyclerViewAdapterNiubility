@@ -70,12 +70,12 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
                 int position = holder.getBindingAdapterPosition();
                 if(position<0||position>=list_bean.size())return;
                 //设置选中的item
-                if (positionSelectedLast != position) {
-                    positionSelected = position; //选择的position赋值给参数，
-                    notifyItemChanged(positionSelected);
-                    notifyItemChanged(positionSelectedLast);
-                    positionSelectedLast = position;
-                }
+//                if (positionSelectedLast != position) {
+//                    positionSelected = position; //选择的position赋值给参数，
+//                    notifyItemChanged(positionSelected);
+//                    notifyItemChanged(positionSelectedLast);
+//                    positionSelectedLast = position;
+//                }
                 onItemClick(holder, position, list_bean.get(position));
             }
         });
