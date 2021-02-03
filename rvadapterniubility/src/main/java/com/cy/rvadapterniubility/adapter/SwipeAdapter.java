@@ -26,6 +26,12 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
             }
 
             @Override
+            public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
+                super.onViewRecycled(holder, position, bean);
+                SwipeAdapter.this.onViewRecycled(holder,position,bean);
+            }
+
+            @Override
             public int getItemLayoutID(int position, T bean) {
                 return SwipeAdapter.this.getItemLayoutID(position, bean);
             }
@@ -82,6 +88,11 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
                 SwipeAdapter.this.onClosed(holder, position, bean);
             }
         });
+    }
+
+    @Override
+    public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
+
     }
 
     public void onScrolled(BaseViewHolder holder, int position, T bean, int dx) {

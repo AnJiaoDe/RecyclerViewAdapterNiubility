@@ -57,6 +57,11 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     }
 
     @Override
+    public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
+
+    }
+
+    @Override
     public int getItemCount() {
         return list_bean.size();
     }
