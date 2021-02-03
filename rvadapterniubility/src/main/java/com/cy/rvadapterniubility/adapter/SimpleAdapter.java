@@ -48,6 +48,13 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         return getItemLayoutID(position, list_bean.get(position));
     }
 
+    @Override
+    public void onViewRecycled(@NonNull BaseViewHolder holder) {
+        super.onViewRecycled(holder);
+        int position=holder.getAbsoluteAdapterPosition();
+        if(position<0||position>=list_bean.size())return;
+        onViewRecycled(holder, position,list_bean.get(position));
+    }
 
     @Override
     public int getItemCount() {

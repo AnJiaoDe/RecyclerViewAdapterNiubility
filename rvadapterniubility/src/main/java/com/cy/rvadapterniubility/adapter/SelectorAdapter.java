@@ -24,6 +24,11 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
             }
 
             @Override
+            public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
+                SelectorAdapter.this.onViewRecycled(holder, position, bean);
+            }
+
+            @Override
             protected void handleClick(final BaseViewHolder holder) {
                 /**
                  *
@@ -79,6 +84,11 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
 
             }
         };
+    }
+
+    @Override
+    public final void bindDataToView(BaseViewHolder holder, int position, T bean) {
+
     }
 
     public abstract void bindDataToView(BaseViewHolder holder, int position, T bean, boolean isSelected);
