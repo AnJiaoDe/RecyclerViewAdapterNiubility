@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 
-
 /**
  * Created by lenovo on 2017/12/31.
  */
@@ -43,7 +42,7 @@ public abstract class OnSimpleScrollListener {
                 BaseRecyclerView baseRecyclerView = checkRecyclerView(recyclerView);
 
                 if (firstCallOnScrolled) {
-                    positionHolder=computPosition(recyclerView);
+                    positionHolder = computPosition(recyclerView);
                     onFirstScrolled(recyclerView, positionHolder, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                     firstCallOnScrolled = false;
 
@@ -58,7 +57,7 @@ public abstract class OnSimpleScrollListener {
 //                    positionHolder_last.setFirstVisibleItemPositions(positionHolder.getFirstVisibleItemPositions());
 //                    positionHolder_last.setLastCompletelyVisibleItemPositions(positionHolder.getLastCompletelyVisibleItemPositions());
 //                    positionHolder_last.setLastVisibleItemPositions(positionHolder.getLastVisibleItemPositions());
-                    positionHolder_last=positionHolder;
+                    positionHolder_last = positionHolder;
                 }
 
                 if (dy < 0) { // 当前处于上滑状态
@@ -88,42 +87,37 @@ public abstract class OnSimpleScrollListener {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                positionHolder=computPosition(recyclerView);
+                positionHolder = computPosition(recyclerView);
 
-                int[] firstVisibleItemPositions_last = positionHolder_last.getFirstVisibleItemPositions();
-                int[] firstVisibleItemPositions = positionHolder.getFirstVisibleItemPositions();
+                if (positionHolder_last != null) {
+                    int[] firstVisibleItemPositions_last = positionHolder_last.getFirstVisibleItemPositions();
+                    int[] firstVisibleItemPositions = positionHolder.getFirstVisibleItemPositions();
 
-                int[] lastVisibleItemPositions_last = positionHolder_last.getLastVisibleItemPositions();
-                int[] lastVisibleItemPositions = positionHolder.getLastVisibleItemPositions();
-
+                    int[] lastVisibleItemPositions_last = positionHolder_last.getLastVisibleItemPositions();
+                    int[] lastVisibleItemPositions = positionHolder.getLastVisibleItemPositions();
 
 //                LogUtils.log("firstVisibleItemPositions_last", firstVisibleItemPositions_last[0]);
 //                LogUtils.log("firstVisibleItemPositions", firstVisibleItemPositions[0]);
 //                LogUtils.log("lastVisibleItemPositions_last", lastVisibleItemPositions_last[0]);
 //                LogUtils.log("lastVisibleItemPositions", lastVisibleItemPositions[0]);
 
-                //onScrollingFingerToBottom
-                if (firstVisibleItemPositions[0] >= 0 && (firstVisibleItemPositions_last[0] > firstVisibleItemPositions[0])) {
+                    //onScrollingFingerToBottom
+                    if (firstVisibleItemPositions[0] >= 0 && (firstVisibleItemPositions_last[0] > firstVisibleItemPositions[0])) {
 //                    LogUtils.log("onScrollingFingerToBottom", firstVisibleItemPositions[0] + "  " + firstVisibleItemPositions_last[0]);
-                    for (int p = firstVisibleItemPositions_last[0] - 1; p >= firstVisibleItemPositions[0]; p--) {
-                        onItemShow(recyclerView, p, positionHolder);
-                    }
-                } else if (lastVisibleItemPositions[0] >= 0 &&
-                        (lastVisibleItemPositions[lastVisibleItemPositions.length - 1] > lastVisibleItemPositions_last[lastVisibleItemPositions_last.length - 1])) {
-                    //onScrollingFingerToTop
+                        for (int p = firstVisibleItemPositions_last[0] - 1; p >= firstVisibleItemPositions[0]; p--) {
+                            onItemShow(recyclerView, p, positionHolder);
+                        }
+                    } else if (lastVisibleItemPositions[0] >= 0 &&
+                            (lastVisibleItemPositions[lastVisibleItemPositions.length - 1] > lastVisibleItemPositions_last[lastVisibleItemPositions_last.length - 1])) {
+                        //onScrollingFingerToTop
 //                    LogUtils.log("onScrollingFingerToTop", lastVisibleItemPositions[0] + "  " + lastVisibleItemPositions_last[0]);
-                    for (int p = lastVisibleItemPositions_last[lastVisibleItemPositions_last.length - 1] + 1;
-                         p <= lastVisibleItemPositions[lastVisibleItemPositions.length - 1]; p++) {
-                        onItemShow(recyclerView, p, positionHolder);
+                        for (int p = lastVisibleItemPositions_last[lastVisibleItemPositions_last.length - 1] + 1;
+                             p <= lastVisibleItemPositions[lastVisibleItemPositions.length - 1]; p++) {
+                            onItemShow(recyclerView, p, positionHolder);
+                        }
                     }
                 }
-
-                //                    positionHolder_last = new PositionHolder(new int[1], new int[1], new int[1], new int[1]);
-//                    positionHolder_last.setFirstCompletelyVisibleItemPositions(positionHolder.getFirstCompletelyVisibleItemPositions());
-//                    positionHolder_last.setFirstVisibleItemPositions(positionHolder.getFirstVisibleItemPositions());
-//                    positionHolder_last.setLastCompletelyVisibleItemPositions(positionHolder.getLastCompletelyVisibleItemPositions());
-//                    positionHolder_last.setLastVisibleItemPositions(positionHolder.getLastVisibleItemPositions());
-                positionHolder_last=positionHolder;
+                positionHolder_last = positionHolder;
 
                 BaseRecyclerView baseRecyclerView = checkRecyclerView(recyclerView);
                 switch (newState) {

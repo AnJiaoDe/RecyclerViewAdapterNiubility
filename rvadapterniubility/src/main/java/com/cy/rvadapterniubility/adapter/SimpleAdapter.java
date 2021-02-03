@@ -23,8 +23,7 @@ import java.util.List;
 public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> implements IAdapter<T, BaseViewHolder, SimpleAdapter>{
 
     private List<T> list_bean;//数据源
-    private int positionSelectedLast = 0;
-    private int positionSelected = 0;
+
 
     public SimpleAdapter() {
         list_bean = new ArrayList<>();//数据源
@@ -40,7 +39,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
         handleClick(holder);
         if(position<0||position>=list_bean.size())return;
-        bindDataToView(holder, position, list_bean.get(position), position == positionSelected);
+        bindDataToView(holder, position, list_bean.get(position));
     }
 
     @Override
@@ -69,13 +68,6 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             public void onClick(View v) {
                 int position = holder.getBindingAdapterPosition();
                 if(position<0||position>=list_bean.size())return;
-                //设置选中的item
-//                if (positionSelectedLast != position) {
-//                    positionSelected = position; //选择的position赋值给参数，
-//                    notifyItemChanged(positionSelected);
-//                    notifyItemChanged(positionSelectedLast);
-//                    positionSelectedLast = position;
-//                }
                 onItemClick(holder, position, list_bean.get(position));
             }
         });
@@ -139,38 +131,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     /**
      * ---------------------------------------------------------------------------------
      */
-    public int getPositionSelectedLast() {
-        return positionSelectedLast;
-    }
 
-    public void setPositionSelectedLast(int positionSelectedLast) {
-        this.positionSelectedLast = positionSelectedLast;
-    }
-
-    public int getPositionSelected() {
-        return positionSelected;
-    }
-
-    public void setPositionSelected(int positionSelected) {
-        if (positionSelectedLast != positionSelected) {
-            this.positionSelected = positionSelected;
-            notifyItemChanged(positionSelected);
-            notifyItemChanged(positionSelectedLast);
-            positionSelectedLast = positionSelected;
-        }
-    }
-
-    public void setPositionSelectedNoNotify(int positionSelected) {
-        this.positionSelected = positionSelected;
-    }
-
-    public void setPositionSelectedNotifyAll(int positionSelected) {
-        if (positionSelectedLast != positionSelected) {
-            this.positionSelected = positionSelected;
-            notifyDataSetChanged();
-            positionSelectedLast = positionSelected;
-        }
-    }
 
 
     /**

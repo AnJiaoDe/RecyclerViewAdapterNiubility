@@ -52,7 +52,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
         }
         rvAdapter=new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
                 holder.setImageResource(R.id.iv,bean.getResID());
             }
 

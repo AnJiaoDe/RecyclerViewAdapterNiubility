@@ -26,7 +26,7 @@ public class VRHeadFootActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
                 holder.setText(R.id.tv, "head" + position);
             }
 
@@ -43,9 +43,9 @@ public class VRHeadFootActivity extends BaseActivity {
         }).addAdapter(new SimpleAdapter<VRHeadFootBean>() {
 
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRHeadFootBean bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, VRHeadFootBean bean) {
 
-                holder.setText(R.id.tv,bean.getStr());
+                holder.setText(R.id.tv, bean.getStr());
             }
 
             @Override
@@ -67,9 +67,8 @@ public class VRHeadFootActivity extends BaseActivity {
 
         }).addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
                 holder.setText(R.id.tv, "foot" + position);
-
             }
 
             @Override
@@ -85,9 +84,6 @@ public class VRHeadFootActivity extends BaseActivity {
             }
         });
         ((VerticalRecyclerView) findViewById(R.id.vr)).setAdapter(multiAdapter.getMergeAdapter());
-
-
-
 
 
         final List<String> list_head = new ArrayList<>();

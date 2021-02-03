@@ -28,7 +28,7 @@ public class GRVHeadFootActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
                 holder.setText(R.id.tv, "head" + position);
             }
 
@@ -43,7 +43,7 @@ public class GRVHeadFootActivity extends BaseActivity {
         }).addAdapter(new SimpleAdapter<HRVBean>() {
 
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
 
                 holder.setImageResource(R.id.iv, bean.getResID());
             }
@@ -66,7 +66,7 @@ public class GRVHeadFootActivity extends BaseActivity {
             }
         }).addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean,boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
                 holder.setText(R.id.tv, "foot" + position);
 
             }

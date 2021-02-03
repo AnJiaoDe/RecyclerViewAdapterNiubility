@@ -71,7 +71,7 @@ public class VRMultiActivity extends BaseActivity {
                 new int[]{R.drawable.pic1, R.drawable.pic2, R.drawable.pic3}, 1));
         rvAdapter = new SimpleAdapter<VRMultiBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRMultiBean bean, boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, VRMultiBean bean) {
                 switch (bean.getView_type()) {
                     case 1:
                         holder.setText(R.id.tv, bean.getTitle());
@@ -119,7 +119,7 @@ public class VRMultiActivity extends BaseActivity {
                         }
                         SimpleAdapter simpleAdapter = new SimpleAdapter<HRVBean>() {
                             @Override
-                            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected) {
+                            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
 
                                 holder.setImageResource(R.id.iv, bean.getResID());
 

@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public interface IAdapter<T, V extends RecyclerView.ViewHolder,A extends RecyclerView.Adapter> {
 
-    public void bindDataToView(V holder, int position, T bean, boolean isSelected);
+    public void bindDataToView(V holder, int position, T bean);
 
     public int getItemLayoutID(int position, T bean);
 

@@ -30,7 +30,7 @@ public class VRSwipeActivity extends BaseActivity {
 
         swipeAdapter = new SwipeAdapter<VRBean>() {
             @Override
-            public void bindDataToView(final BaseViewHolder holder, final int position, VRBean bean, boolean isSelected) {
+            public void bindDataToView(final BaseViewHolder holder, final int position, VRBean bean) {
                 holder.setText(R.id.tv, bean.getStr());
 
                 holder.setOnClickListener(R.id.tv_zhiding, new View.OnClickListener() {

@@ -13,19 +13,48 @@ import com.cy.rvadapterniubility.swipelayout.SwipeLayout;
  */
 
 public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, SimpleAdapter> {
-    private IAdapter<T, BaseViewHolder, SimpleAdapter> adapter;
+    private SimpleAdapter<T> simpleAdapter;
     private SwipeLayout swipeLayout_opened;
     private SwipeLayout swipeLayout_scrolled;
 
     public SwipeAdapter() {
+        simpleAdapter = new SimpleAdapter<T>() {
+            @Override
+            public void bindDataToView(final BaseViewHolder holder, int position, T bean) {
+                dealSwipe(holder, bean);
+                SwipeAdapter.this.bindDataToView(holder, position, bean);
+            }
+
+            @Override
+            public int getItemLayoutID(int position, T bean) {
+                return SwipeAdapter.this.getItemLayoutID(position, bean);
+            }
+
+            @Override
+            public void onItemClick(BaseViewHolder holder, int position, T bean) {
+                SwipeAdapter.this.onItemClick(holder, position, bean);
+            }
+
+            @Override
+            public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
+                SwipeAdapter.this.onItemLongClick(holder, position, bean);
+            }
+
+            @Override
+            public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
+                super.onViewAttachedToWindow(holder);
+                SwipeAdapter.this.onViewAttachedToWindow(holder);
+
+            }
+        };
     }
     private void dealSwipe(final BaseViewHolder holder, final T bean) {
         ((SwipeLayout) holder.itemView).getContentView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=adapter.getAdapter().getList_bean().size())return;
-                adapter.onItemClick(holder, position, bean);
+                if(position<0||position>=simpleAdapter.getAdapter().getList_bean().size())return;
+                simpleAdapter.onItemClick(holder, position, bean);
             }
         });
         ((SwipeLayout) holder.itemView).setOnSwipeListener(new OnSwipeListener() {
@@ -33,7 +62,7 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
             public void onScrolled(int dx) {
                 swipeLayout_scrolled = (SwipeLayout) holder.itemView;
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=adapter.getAdapter().getList_bean().size())return;
+                if(position<0||position>=simpleAdapter.getAdapter().getList_bean().size())return;
                 SwipeAdapter.this.onScrolled(holder,position, bean, dx);
             }
 
@@ -41,7 +70,7 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
             public void onOpened() {
                 swipeLayout_opened = (SwipeLayout) holder.itemView;
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=adapter.getAdapter().getList_bean().size())return;
+                if(position<0||position>=simpleAdapter.getAdapter().getList_bean().size())return;
                 SwipeAdapter.this.onOpened(holder, position, bean);
             }
 
@@ -49,7 +78,7 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
             public void onClosed() {
                 swipeLayout_opened = null;
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=adapter.getAdapter().getList_bean().size())return;
+                if(position<0||position>=simpleAdapter.getAdapter().getList_bean().size())return;
                 SwipeAdapter.this.onClosed(holder, position, bean);
             }
         });
@@ -105,36 +134,6 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
 
     @Override
     public SimpleAdapter<T> getAdapter() {
-        if (adapter == null)
-            adapter = new SimpleAdapter<T>() {
-                @Override
-                public void bindDataToView(final BaseViewHolder holder, int position, T bean, boolean isSelected) {
-                    dealSwipe(holder, bean);
-                    SwipeAdapter.this.bindDataToView(holder, position, bean, position == getPositionSelected());
-                }
-
-                @Override
-                public int getItemLayoutID(int position, T bean) {
-                    return SwipeAdapter.this.getItemLayoutID(position, bean);
-                }
-
-                @Override
-                public void onItemClick(BaseViewHolder holder, int position, T bean) {
-                    SwipeAdapter.this.onItemClick(holder, position, bean);
-                }
-
-                @Override
-                public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
-                    SwipeAdapter.this.onItemLongClick(holder, position, bean);
-                }
-
-                @Override
-                public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
-                    super.onViewAttachedToWindow(holder);
-                    SwipeAdapter.this.onViewAttachedToWindow(holder);
-
-                }
-            };
-        return (SimpleAdapter<T>) adapter;
+        return simpleAdapter;
     }
 }
