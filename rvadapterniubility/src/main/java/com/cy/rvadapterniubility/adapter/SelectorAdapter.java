@@ -108,6 +108,11 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
 
     }
 
+    @Override
+    public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
+
+    }
+
     public int getPositionSelectedLast() {
         return positionSelectedLast;
     }
