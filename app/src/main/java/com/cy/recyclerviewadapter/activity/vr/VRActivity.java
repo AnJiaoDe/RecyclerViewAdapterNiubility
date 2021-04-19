@@ -14,6 +14,7 @@ import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.recyclerview.BaseRecyclerView;
 import com.cy.rvadapterniubility.recyclerview.LinearItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnSimpleScrollListener;
 import com.cy.rvadapterniubility.recyclerview.PositionHolder;
@@ -90,8 +91,8 @@ public class VRActivity extends BaseActivity {
         });
         ((VerticalRecyclerView) findViewById(R.id.vr)).addOnScrollListener(new OnSimpleScrollListener() {
             @Override
-            public void onItemShow(RecyclerView recyclerView, int position, PositionHolder positionHolder) {
-                super.onItemShow(recyclerView, position, positionHolder);
+            public void onItemShow(BaseRecyclerView baseRecyclerView, int position, PositionHolder positionHolder) {
+                super.onItemShow(baseRecyclerView, position, positionHolder);
                 LogUtils.log("onItemShow",position);
             }
         });

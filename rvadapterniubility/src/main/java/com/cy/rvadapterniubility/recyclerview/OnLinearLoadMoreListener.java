@@ -83,30 +83,29 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         }
     }
 
-
     /**
      * 在onDragging中添加loadMore布局，是因为如果item很少，recyclerView有很多剩余空间，就要禁用loadMore
      *
-     * @param recyclerView
+     * @param baseRecyclerView
      * @param positionHolder
      */
     @Override
-    public void onDragging(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
-        super.onDragging(recyclerView, positionHolder, offsetX, offsetY);
-        checkRecyclerView(recyclerView);
+    public void onDragging(BaseRecyclerView baseRecyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
+        super.onDragging(baseRecyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
+        checkRecyclerView(baseRecyclerView);
         for (int position : positionHolder.getLastVisibleItemPositions()) {
-            RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
+            RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
             if (orientation == RecyclerView.VERTICAL) {
-                if (holder != null && holder.itemView.getBottom() + space_vertical >= recyclerView.getHeight()) {
+                if (holder != null && holder.itemView.getBottom() + space_vertical >= baseRecyclerView.getHeight()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
                         loadMoreAdapter.add("");
                     }
                     return;
                 }
             } else {
-                if (holder != null && holder.itemView.getRight() + space_horizontal >= recyclerView.getWidth()) {
+                if (holder != null && holder.itemView.getRight() + space_horizontal >= baseRecyclerView.getWidth()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
                         loadMoreAdapter.add("");
                     }
@@ -118,15 +117,16 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
     }
 
     @Override
-    public void onShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
-        checkRecyclerView(recyclerView);
+    public void onIdle(BaseRecyclerView baseRecyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
+        super.onIdle(baseRecyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
+        checkRecyclerView(baseRecyclerView);
         for (int position : positionHolder.getLastVisibleItemPositions()) {
-            RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
+            RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
             if (orientation == RecyclerView.VERTICAL) {
-                if (holder != null && holder.itemView.getBottom() + space_vertical < recyclerView.getHeight())
+                if (holder != null && holder.itemView.getBottom() + space_vertical < baseRecyclerView.getHeight())
                     continue;
             } else {
-                if (holder != null && holder.itemView.getRight() + space_horizontal < recyclerView.getWidth())
+                if (holder != null && holder.itemView.getRight() + space_horizontal < baseRecyclerView.getWidth())
                     continue;
             }
             //说明最后一个item-count_remain可见了，可以开始loadMore了

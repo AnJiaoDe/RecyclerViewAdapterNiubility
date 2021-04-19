@@ -39,22 +39,7 @@ public abstract class BaseRVRefreshLayout<V extends BaseRecyclerView> extends Re
      *
      */
     public <T extends BaseRVRefreshLayout> T addOnScrollListener() {
-        addOnScrollListener(new OnSimpleScrollListener() {
-            @Override
-            public void onScrollArrivedBottom(RecyclerView recyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
-                super.onScrollArrivedBottom(recyclerView, positionHolder, offsetX, offsetY);
-            }
-
-            @Override
-            public void onSettlingShouldPausePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
-
-            }
-
-            @Override
-            public void onShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
-
-            }
-        });
+        addOnScrollListener(new OnSimpleScrollListener());
         return (T) this;
     }
 
