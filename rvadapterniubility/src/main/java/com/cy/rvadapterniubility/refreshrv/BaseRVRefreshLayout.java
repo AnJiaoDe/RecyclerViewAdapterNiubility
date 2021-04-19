@@ -51,7 +51,7 @@ public abstract class BaseRVRefreshLayout<V extends BaseRecyclerView> extends Re
             }
 
             @Override
-            public void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
+            public void onShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
 
             }
         });

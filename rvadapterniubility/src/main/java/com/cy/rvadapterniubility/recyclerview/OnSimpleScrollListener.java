@@ -122,8 +122,8 @@ public abstract class OnSimpleScrollListener {
                 BaseRecyclerView baseRecyclerView = checkRecyclerView(recyclerView);
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
-                        onIdleShouldResumePicLoad(recyclerView, positionHolder, baseRecyclerView.getVelocity_x(), baseRecyclerView.getVelocity_y(),
-                                baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
+//                        onShouldResumePicLoad(recyclerView, positionHolder, baseRecyclerView.getVelocity_x(), baseRecyclerView.getVelocity_y(),
+//                                baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
                         if (orientation == RecyclerView.VERTICAL) {
                             if (!recyclerView.canScrollVertically(1)) {
                                 onScrollArrivedBottom(recyclerView, positionHolder, baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
@@ -262,11 +262,19 @@ public abstract class OnSimpleScrollListener {
     public void onSettling(RecyclerView recyclerView, PositionHolder positionHolder,
                            int velocity_x, int velocity_y, int offsetX, int offsetY) {
         if (orientation == RecyclerView.VERTICAL) {
-            if (Math.abs(velocity_y) >= ViewConfiguration.get(recyclerView.getContext()).getScaledMaximumFlingVelocity() / 2)
+            if (Math.abs(velocity_y) >= ViewConfiguration.get(recyclerView.getContext()).getScaledMaximumFlingVelocity() *3f/ 4){
                 onSettlingShouldPausePicLoad(recyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
+                return;
+            }
+            if (Math.abs(velocity_y) < ViewConfiguration.get(recyclerView.getContext()).getScaledMaximumFlingVelocity()*1f / 4)
+                onShouldResumePicLoad(recyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
         } else {
-            if (Math.abs(velocity_x) >= ViewConfiguration.get(recyclerView.getContext()).getScaledMaximumFlingVelocity() / 2)
+            if (Math.abs(velocity_x) >= ViewConfiguration.get(recyclerView.getContext()).getScaledMaximumFlingVelocity() *3f/ 4){
                 onSettlingShouldPausePicLoad(recyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
+                return;
+            }
+            if (Math.abs(velocity_x) < ViewConfiguration.get(recyclerView.getContext()).getScaledMaximumFlingVelocity() *1f/ 4)
+                onShouldResumePicLoad(recyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
         }
     }
 
@@ -274,8 +282,8 @@ public abstract class OnSimpleScrollListener {
                                              int velocity_x, int velocity_y, int offsetX, int offsetY) {
     }
 
-    public void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder,
-                                          int velocity_x, int velocity_y, int offsetX, int offsetY) {
+    public void onShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder,
+                                      int velocity_x, int velocity_y, int offsetX, int offsetY) {
     }
 
 

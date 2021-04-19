@@ -120,7 +120,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     }
 
     @Override
-    public void onIdleShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
+    public void onShouldResumePicLoad(RecyclerView recyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
         checkRecyclerView(recyclerView);
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(position);
