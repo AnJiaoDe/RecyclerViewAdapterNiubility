@@ -29,6 +29,16 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
             }
 
             @Override
+            public long getItemId(int position) {
+                return SelectorAdapter.this.getItemId(position);
+            }
+
+            @Override
+            public boolean hasStableIds_() {
+                return SelectorAdapter.this.hasStableIds_();
+            }
+
+            @Override
             protected void handleClick(final BaseViewHolder holder) {
                 /**
                  *
@@ -84,6 +94,16 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
 
             }
         };
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return simpleAdapter.getList_bean().get(position).hashCode();
+    }
+
+    @Override
+    public boolean hasStableIds_() {
+        return true;
     }
 
     @Override

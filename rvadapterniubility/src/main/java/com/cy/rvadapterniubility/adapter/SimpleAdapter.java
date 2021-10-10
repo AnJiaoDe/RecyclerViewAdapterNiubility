@@ -27,6 +27,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     public SimpleAdapter() {
         list_bean = new ArrayList<>();//数据源
+        setHasStableIds(hasStableIds_());
     }
 
     @NonNull
@@ -58,8 +59,22 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     @Override
     public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
-
     }
+
+    @Override
+    public long getItemId(int position) {
+        return list_bean.get(position).hashCode();
+    }
+
+    /**
+     *解决notify,item闪烁问题
+     * @return
+     */
+    @Override
+    public boolean hasStableIds_() {
+        return true;
+    }
+
 
     @Override
     public int getItemCount() {
@@ -131,10 +146,12 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         super.onViewAttachedToWindow(holder);
     }
 
+
     @Override
     public SimpleAdapter getAdapter() {
         return this;
     }
+
 
     /**
      * ------------------------------------------------------------------------------

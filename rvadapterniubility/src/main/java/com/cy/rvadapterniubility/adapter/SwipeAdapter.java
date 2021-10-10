@@ -37,6 +37,16 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
             }
 
             @Override
+            public long getItemId(int position) {
+                return SwipeAdapter.this.getItemId(position);
+            }
+
+            @Override
+            public boolean hasStableIds_() {
+                return SwipeAdapter.this.hasStableIds_();
+            }
+
+            @Override
             public void onItemClick(BaseViewHolder holder, int position, T bean) {
                 SwipeAdapter.this.onItemClick(holder, position, bean);
             }
@@ -54,12 +64,13 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
             }
         };
     }
+
     private void dealSwipe(final BaseViewHolder holder, final T bean) {
         ((SwipeLayout) holder.itemView).getContentView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=simpleAdapter.getAdapter().getList_bean().size())return;
+                if(position<0||position>=simpleAdapter.getList_bean().size())return;
                 simpleAdapter.onItemClick(holder, position, bean);
             }
         });
@@ -68,7 +79,7 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
             public void onScrolled(int dx) {
                 swipeLayout_scrolled = (SwipeLayout) holder.itemView;
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=simpleAdapter.getAdapter().getList_bean().size())return;
+                if(position<0||position>=simpleAdapter.getList_bean().size())return;
                 SwipeAdapter.this.onScrolled(holder,position, bean, dx);
             }
 
@@ -76,7 +87,7 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
             public void onOpened() {
                 swipeLayout_opened = (SwipeLayout) holder.itemView;
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=simpleAdapter.getAdapter().getList_bean().size())return;
+                if(position<0||position>=simpleAdapter.getList_bean().size())return;
                 SwipeAdapter.this.onOpened(holder, position, bean);
             }
 
@@ -84,7 +95,7 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
             public void onClosed() {
                 swipeLayout_opened = null;
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=simpleAdapter.getAdapter().getList_bean().size())return;
+                if(position<0||position>=simpleAdapter.getList_bean().size())return;
                 SwipeAdapter.this.onClosed(holder, position, bean);
             }
         });
@@ -107,6 +118,16 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
     @Override
     public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
 
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return simpleAdapter.getList_bean().get(position).hashCode();
+    }
+
+    @Override
+    public boolean hasStableIds_() {
+        return true;
     }
 
     /**
