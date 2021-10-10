@@ -1,11 +1,8 @@
 package com.cy.recyclerviewadapter.activity.grv;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.HorizontalScrollView;
 
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
@@ -14,8 +11,6 @@ import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.HorizontalGridRecyclerView;
-import com.cy.rvadapterniubility.recyclerview.HorizontalRecyclerView;
-import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;

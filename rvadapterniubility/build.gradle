@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 apply plugin: 'com.github.dcendents.android-maven'
 
-group='com.github.AnJiaoDe'
+group = 'com.github.AnJiaoDe'
 android {
     compileSdkVersion var.compileSdkVersion
 
@@ -38,8 +38,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:+'
     androidTestImplementation 'androidx.test.espresso:espresso-core:+'
 
-//    api "androidx.recyclerview:recyclerview:1.1.0"
-    compileOnly "androidx.recyclerview:recyclerview:1.2.0-alpha05"
+    compileOnly "androidx.recyclerview:recyclerview:1.2.1"
     compileOnly "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.4.3"
 
 }

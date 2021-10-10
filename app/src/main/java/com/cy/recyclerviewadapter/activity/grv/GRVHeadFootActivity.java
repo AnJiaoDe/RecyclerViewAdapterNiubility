@@ -11,7 +11,7 @@ import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
-import com.cy.rvadapterniubility.recyclerview.FullSpanGridItemDecoration;
+import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class GRVHeadFootActivity extends BaseActivity {
 
             @Override
             public int getItemLayoutID(int position, String bean) {
-                return R.layout.head;
+                return R.layout.foot;
             }
 
             @Override
@@ -68,7 +68,6 @@ public class GRVHeadFootActivity extends BaseActivity {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean) {
                 holder.setText(R.id.tv, "foot" + position);
-
             }
 
             @Override
@@ -77,15 +76,17 @@ public class GRVHeadFootActivity extends BaseActivity {
 
             }
 
+
             @Override
             public void onItemClick(BaseViewHolder holder, int position, String bean) {
             }
         });
 
-        ((VerticalGridRecyclerView) findViewById(R.id.grv)).addFullSpanPosition(0)
-                .addFullSpanPosition(101)
+        ((VerticalGridRecyclerView) findViewById(R.id.grv))
                 .setSpanCount(2)
-                .addItemDecoration(new FullSpanGridItemDecoration(dpAdapt(10)))
+                .putFullSpanPosition(0)
+                .putFullSpanPosition(101)
+                .addItemDecoration(new GridItemDecoration(dpAdapt(10)))
                 .setAdapter(multiAdapter.getMergeAdapter());
         final List<String> list_head = new ArrayList<>();
         for (int i = 0; i < 1; i++) {

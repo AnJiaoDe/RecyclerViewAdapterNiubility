@@ -1,211 +1,91 @@
-//package com.cy.rvadapterniubility.recyclerview;
-//
-//import android.content.Context;
-//import android.util.AttributeSet;
-//import android.view.MotionEvent;
-//import android.view.View;
-//import android.view.ViewGroup;
-//import android.widget.LinearLayout;
-//import android.widget.ScrollView;
-//import android.widget.TextView;
-//
-//import androidx.annotation.NonNull;
-//import androidx.annotation.Nullable;
-//import androidx.recyclerview.widget.LinearLayoutManager;
-//import androidx.recyclerview.widget.RecyclerView;
-//
-//import com.cy.BaseAdapter.R;
-//import com.cy.rvadapterniubility.LogUtils;
-//import com.cy.rvadapterniubility.adapter.BaseViewHolder;
-//import com.cy.rvadapterniubility.adapter.SimpleAdapter;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//
-///**
-// * Created by cy on 2018/4/8.
-// */
-//
-//public class StaggeredRecyclerView extends BaseRecyclerView<StaggeredRecyclerView> {
-//    private int orientation = RecyclerView.VERTICAL;
-//    private int spanCount = 2;
-//    private List<ILinearRecyclerView> listRV;
-//    private SimpleAdapter simpleAdapter0;
-//    private StaggeredAdapter<Object> staggeredAdapter;
-//    private SimpleAdapter simpleAdapter;
-//    private LinearLayout contentView;
-//    private int downX; // 按下时 X轴坐标值
-//    private int downY; // 按下时 Y 轴坐标值
-//
-//    public StaggeredRecyclerView(Context context) {
-//        this(context, null);
-//    }
-//
-//    public StaggeredRecyclerView(final Context context, @Nullable AttributeSet attrs) {
-//        super(context, attrs);
-//        listRV = new ArrayList<ILinearRecyclerView>();
-//
-//        contentView = new LinearLayout(context);
-//        contentView.setOrientation(LinearLayout.VERTICAL);
-//
-//        LinearLayout ll = new LinearLayout(context);
-//        ll.setOrientation(LinearLayout.HORIZONTAL);
-//        simpleAdapter = new SimpleAdapter<String>() {
-//            @Override
-//            public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected) {
-//                LogUtils.log("bindDataToView");
-//                contentView = (LinearLayout) holder.itemView;
-//                if (contentView.getChildCount() > 0) return;
-//                LogUtils.log("bindDataToView222");
-//
-//                LinearLayout ll = new LinearLayout(context);
-//                ll.setOrientation(LinearLayout.HORIZONTAL);
-//                for (int i = 0; i < spanCount; i++) {
-//                    listRV.get(i).getRecyclerView().setAdapter(staggeredAdapter.getListAdapter().get(i));
-//                    ll.addView(listRV.get(i).getRecyclerView(), new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+package com.cy.rvadapterniubility.recyclerview;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.util.SparseArray;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import com.cy.refreshlayoutniubility.ScreenUtils;
+import com.cy.rvadapterniubility.LogUtils;
+
+
+/**
+ * Created by cy on 2017/7/2.
+ */
+
+public class StaggeredRecyclerView<T extends StaggeredRecyclerView> extends BaseRecyclerView<T> {
+    private int spanCount = 2;
+    private StaggeredItemDecoration staggeredItemDecoration;
+
+    public StaggeredRecyclerView(Context context) {
+        this(context, null);
+    }
+
+    public StaggeredRecyclerView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        addItemDecoration(new StaggeredItemDecoration(ScreenUtils.dpAdapt(context, 10)));
+        addOnScrollListener(new OnSimpleScrollListener() {
+            //orientation vertical
+            @Override
+            public void onScrollArrivedTop(BaseRecyclerView baseRecyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
+                super.onScrollArrivedTop(baseRecyclerView, positionHolder, offsetX, offsetY);
+                LogUtils.log("onScrollArrivedTop");
+                //解决滑动回顶部的时候，item错位还原动画，item decoration错乱  的  问题
+                baseRecyclerView.getAdapter().notifyDataSetChanged();
+
+//                StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) getLayoutManager();
+//                //这个根本不灵
+////                staggeredGridLayoutManager.invalidateSpanAssignments();
+//                //这个虽然能解决滑动回顶部的时候，item decoration错乱  的  问题   但是不能解决item错位还原动画
+//                Object result = ReflexUtils.invoke(ReflexUtils.getDeclaredMethod(StaggeredGridLayoutManager.class.getName(),
+//                        "checkForGaps", new Class[]{}),
+//                        staggeredGridLayoutManager,
+//                        new Object[]{});
+//                Boolean r = false;
+//                try {
+//                    r = (Boolean) result;
+//                } catch (Exception e) {
+//                    return;
 //                }
-//                contentView.addView(ll, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//            }
-//
-//            @Override
-//            public int getItemLayoutID(int position, String bean) {
-//                return R.layout.cy_staggerd_item;
-//            }
-//
-//            @Override
-//            public void onItemClick(BaseViewHolder holder, int position, String bean) {
-//
-//            }
-//        };
-//        simpleAdapter.addNoNotify("");
-//
-////        addView(contentView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//    }
-//
-//
-//    LinearLayout getContentView() {
-//        return contentView;
-//    }
-//
-//    public StaggeredRecyclerView setSpanCount(int spanCount) {
-//        this.spanCount = spanCount;
-//        return this;
-//    }
-//
-//    public StaggeredRecyclerView setOrientation(int orientation) {
-//        this.orientation = orientation;
-//        return this;
-//    }
-//
-//    public int getOrientation() {
-//        return orientation;
-//    }
-//
-//    public int getSpanCount() {
-//        return spanCount;
-//    }
-//
-//    public <T extends Object> void setAdapter(@Nullable final StaggeredAdapter<T> staggeredAdapter) {
-//        this.staggeredAdapter = (StaggeredAdapter<Object>) staggeredAdapter;
-//        setLayoutManager(new LinearLayoutManager(getContext(), orientation, false));
-//        for (int i = 0; i < spanCount; i++) {
-//            final ILinearRecyclerView linearRecyclerView;
-//            if (orientation == RecyclerView.VERTICAL) {
-//                linearRecyclerView = new StaggeredVerticalRecyclerView(getContext());
-//            } else {
-//                linearRecyclerView = new StaggeredHorizontalRecyclerView(getContext());
-//            }
-//            listRV.add(linearRecyclerView);
-//
-//            if (i == 0) {
-//                simpleAdapter0 = new SimpleAdapter<T>() {
-//
-//                    @Override
-//                    public void bindDataToView(BaseViewHolder holder, int position, T bean, boolean isSelected) {
-//                        int remain = position % spanCount;
-//                        if (remain == 0) {
-//                            staggeredAdapter.bindDataToView(holder, position, getList_bean().get(position), isSelected);
-//                        } else {
-//                            staggeredAdapter.getListAdapter().get(remain).notifyItemChanged(position);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public int getItemLayoutID(int position, T bean) {
-//                        if (position % spanCount == 0) {
-//                            return staggeredAdapter.getItemLayoutID(position, getList_bean().get(position));
-//                        } else {
-//                            return R.layout.cy_staggerd_item_0;
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onItemClick(BaseViewHolder holder, int position, T bean) {
-//                        staggeredAdapter.onItemClick(holder, position, getList_bean().get(position));
-//                    }
-//
-//                    @Override
-//                    public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
-//                        super.onItemLongClick(holder, position, bean);
-//                        staggeredAdapter.onItemLongClick(holder, position, getList_bean().get(position));
-//                    }
-//
-//                    @Override
-//                    public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
-//                        super.onViewAttachedToWindow(holder);
-//                        if (holder.getBindingAdapterPosition() % spanCount == 0)
-//                            staggeredAdapter.onViewAttachedToWindow(holder);
-//                    }
-//                };
-//                staggeredAdapter.getListAdapter().add(simpleAdapter0);
-//            } else {
-//                staggeredAdapter.getListAdapter().add(new StaggeredInnerAdapter<T>(i) {
-//                    @Override
-//                    public void bindDataToView(BaseViewHolder holder, int position, T bean, boolean isSelected) {
-//                        if (position % spanCount == getIndex())
-//                            staggeredAdapter.bindDataToView(holder, position, getList_bean().get(position), isSelected);
-//                    }
-//
-//                    @Override
-//                    public int getItemLayoutID(int position, T bean) {
-//                        if (position % spanCount == getIndex()) {
-//                            return staggeredAdapter.getItemLayoutID(position, getList_bean().get(position));
-//                        } else {
-//                            return R.layout.cy_staggerd_item_0;
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onItemClick(BaseViewHolder holder, int position, T bean) {
-//                        staggeredAdapter.onItemClick(holder, position, getList_bean().get(position));
-//                    }
-//
-//                    @Override
-//                    public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
-//                        super.onItemLongClick(holder, position, bean);
-//                        staggeredAdapter.onItemLongClick(holder, position, getList_bean().get(position));
-//                    }
-//
-//                    @Override
-//                    public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
-//                        super.onViewAttachedToWindow(holder);
-//                        if (holder.getBindingAdapterPosition() % spanCount == getIndex())
-//                            staggeredAdapter.onViewAttachedToWindow(holder);
-//                    }
-//                }.setList_bean(simpleAdapter0.getList_bean()));
-//            }
-//            listRV.get(i).getRecyclerView().setAdapter(staggeredAdapter.getListAdapter().get(i));
-//        }
-//        super.setAdapter(simpleAdapter);
-//    }
-//
-//    List<ILinearRecyclerView> getListRV() {
-//        return listRV;
-//    }
-//
-//    @Override
-//    public void setAdapter(@Nullable RecyclerView.Adapter adapter) {
-//        throw new IllegalArgumentException("You must use " + StaggeredAdapter.class.getName() + " in " + getClass().getName());
-//    }
-//}
+//                if (r)
+//                    ReflexUtils.invoke(ReflexUtils.getDeclaredMethod(RecyclerView.class.getName(),
+//                            "markItemDecorInsetsDirty", new Class[]{}),
+//                            baseRecyclerView,
+//                            new Object[]{});
+            }
+            //orientation horinzontal
+            @Override
+            public void onScrollArrivedLeft(BaseRecyclerView baseRecyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
+                super.onScrollArrivedLeft(baseRecyclerView, positionHolder, offsetX, offsetY);
+                LogUtils.log("onScrollArrivedLeft");
+                //解决滑动回顶部的时候，item错位还原动画，item decoration错乱  的  问题
+                baseRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+    }
+
+    public T setSpanCount(int spanCount) {
+        this.spanCount = spanCount;
+        return (T) this;
+    }
+
+    public int getSpanCount() {
+        return spanCount;
+    }
+
+
+    public T addItemDecoration(StaggeredItemDecoration staggeredItemDecoration) {
+        if (this.staggeredItemDecoration != null)
+            removeItemDecoration(this.staggeredItemDecoration);
+        this.staggeredItemDecoration = staggeredItemDecoration;
+        super.addItemDecoration(staggeredItemDecoration);
+        return (T) this;
+    }
+
+    public StaggeredItemDecoration getStaggeredItemDecoration() {
+        return staggeredItemDecoration;
+    }
+}

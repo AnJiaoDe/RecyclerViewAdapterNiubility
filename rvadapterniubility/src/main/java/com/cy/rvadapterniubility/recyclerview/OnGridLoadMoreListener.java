@@ -37,7 +37,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     private boolean isLoadMoreing = false;
     private OnCloseLoadMoreCallback onCloseLoadMoreCallback;
     private final String CLEAR = "CLEAR";
-    private VerticalGridRecyclerView gridRecyclerView;
+    private GridRecyclerView gridRecyclerView;
     private int orientation=RecyclerView.VERTICAL;
     private int space;
 
@@ -73,12 +73,12 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     }
     private void checkRecyclerView(RecyclerView recyclerView) {
         try {
-            this.gridRecyclerView = (VerticalGridRecyclerView) recyclerView;
+            this.gridRecyclerView = (GridRecyclerView) recyclerView;
             GridLayoutManager gridLayoutManager= (GridLayoutManager) recyclerView.getLayoutManager();
             orientation=gridLayoutManager.getOrientation();
         } catch (Exception e) {
             throw new IllegalArgumentException(
-                    "You can only use " + getClass().getName() + " in " + VerticalGridRecyclerView.class.getName());
+                    "You can only use " + getClass().getName() + " in " + GridRecyclerView.class.getName()+"or its subclass!");
         }
         space = gridRecyclerView != null ? gridRecyclerView.getGridItemDecoration().getSpace() : 0;
     }
@@ -103,7 +103,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             if(orientation==RecyclerView.VERTICAL){
                 if (holder != null && holder.itemView.getBottom() +  space >= baseRecyclerView.getHeight()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
-                        gridRecyclerView.addFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
+                        gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                         loadMoreAdapter.add("");
                     }
                     return;
@@ -111,7 +111,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             }else {
                 if (holder != null && holder.itemView.getRight() +  space >= baseRecyclerView.getWidth()){
                     if (loadMoreAdapter.getItemCount() == 0) {
-                        gridRecyclerView.addFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
+                        gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                         loadMoreAdapter.add("");
                     }
                     return;
@@ -139,7 +139,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             //说明最后一个item-count_remain可见了，可以开始loadMore了
             if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - getCount_remain()) {
                 if (loadMoreAdapter.getItemCount() == 0) {
-                    gridRecyclerView.addFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
+                    gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                     loadMoreAdapter.add("");
                 }
                 //防止频繁loadMore
@@ -175,12 +175,12 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
+                            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
                             if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationX(0);
                             holder.itemView.setTranslationY(0);
-                            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
                             isLoadMoreing = false;
                             loadMoreAdapter.clear();
                         }

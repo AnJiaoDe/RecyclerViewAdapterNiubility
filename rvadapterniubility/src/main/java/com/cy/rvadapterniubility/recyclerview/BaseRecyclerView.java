@@ -16,7 +16,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
 /**
  * Created by cy on 2017/7/2.
@@ -51,6 +53,8 @@ public class BaseRecyclerView<T extends BaseRecyclerView>  extends RecyclerView{
         });
 
     }
+
+
     public  T addOnScrollListener(OnSimpleScrollListener onSimpleScrollListener) {
         super.addOnScrollListener(onSimpleScrollListener.getOnScrollListener());
         return (T) this;

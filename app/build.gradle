@@ -39,6 +39,6 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.6'
     api 'com.github.bumptech.glide:glide:4.11.0'
 
-    api "androidx.recyclerview:recyclerview:1.2.0-alpha05"
+    api "androidx.recyclerview:recyclerview:1.2.1"
     api "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.4.3"
 }

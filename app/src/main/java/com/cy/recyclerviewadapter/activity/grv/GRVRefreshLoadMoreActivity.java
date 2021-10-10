@@ -1,30 +1,21 @@
 package com.cy.recyclerviewadapter.activity.grv;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
-import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
-import com.cy.rvadapterniubility.recyclerview.FullSpanGridItemDecoration;
+import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
 import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
-import com.cy.rvadapterniubility.recyclerview.PositionHolder;
 import com.cy.rvadapterniubility.refreshrv.GridRefreshLayout;
 
 import java.util.ArrayList;
@@ -68,7 +59,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
             }
         };
         multiAdapter=new MultiAdapter().addAdapter(rvAdapter);
-        gridRefreshLayout.getRecyclerView().addItemDecoration(new FullSpanGridItemDecoration(dpAdapt(10)));
+        gridRefreshLayout.getRecyclerView().addItemDecoration(new GridItemDecoration(dpAdapt(10)));
         gridRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
             @Override
             public void onRefreshStart(IHeadView headView) {

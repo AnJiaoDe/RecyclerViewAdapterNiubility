@@ -31,9 +31,9 @@ public class LinearItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        final LinearLayoutManager layoutManager = (LinearLayoutManager) parent.getLayoutManager();
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) parent.getLayoutManager();
         RecyclerView.ViewHolder viewHolder = parent.getChildViewHolder(view);
-        int orientation= layoutManager.getOrientation();
+        int orientation= linearLayoutManager.getOrientation();
         int position = viewHolder.getAbsoluteAdapterPosition();
 
         switch (orientation) {

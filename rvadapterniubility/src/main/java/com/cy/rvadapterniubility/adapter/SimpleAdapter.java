@@ -44,7 +44,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     @Override
     public int getItemViewType(int position) {
-        if(position<0||position>=list_bean.size())return R.layout.cy_staggerd_item_0;
+//        if(position<0||position>=list_bean.size())return R.layout.cy_staggerd_item_0;
         return getItemLayoutID(position, list_bean.get(position));
     }
 

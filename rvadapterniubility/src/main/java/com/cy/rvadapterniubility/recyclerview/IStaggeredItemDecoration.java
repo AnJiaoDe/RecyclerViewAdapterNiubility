@@ -11,10 +11,10 @@
 // * @UpdateRemark:
 // * @Version:
 // */
-//public interface IGridItemDecoration {
+//public interface IStaggeredItemDecoration {
 //
 //    public int getSpace();
 //
-//    public <T extends RecyclerView.ItemDecoration> T getGridItemDecoration();
+//    public <T extends RecyclerView.ItemDecoration> T getStaggeredItemDecoration();
 //
 //}
