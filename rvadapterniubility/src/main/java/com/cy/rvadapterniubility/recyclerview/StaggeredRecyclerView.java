@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.cy.refreshlayoutniubility.ScreenUtils;
-import com.cy.rvadapterniubility.LogUtils;
 
 
 /**
@@ -32,7 +31,7 @@ public class StaggeredRecyclerView<T extends StaggeredRecyclerView> extends Base
             @Override
             public void onScrollArrivedTop(BaseRecyclerView baseRecyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
                 super.onScrollArrivedTop(baseRecyclerView, positionHolder, offsetX, offsetY);
-                LogUtils.log("onScrollArrivedTop");
+//                LogUtils.log("onScrollArrivedTop");
                 //解决滑动回顶部的时候，item错位还原动画，item decoration错乱  的  问题
                 baseRecyclerView.getAdapter().notifyDataSetChanged();
 
@@ -60,7 +59,7 @@ public class StaggeredRecyclerView<T extends StaggeredRecyclerView> extends Base
             @Override
             public void onScrollArrivedLeft(BaseRecyclerView baseRecyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
                 super.onScrollArrivedLeft(baseRecyclerView, positionHolder, offsetX, offsetY);
-                LogUtils.log("onScrollArrivedLeft");
+//                LogUtils.log("onScrollArrivedLeft");
                 //解决滑动回顶部的时候，item错位还原动画，item decoration错乱  的  问题
                 baseRecyclerView.getAdapter().notifyDataSetChanged();
             }

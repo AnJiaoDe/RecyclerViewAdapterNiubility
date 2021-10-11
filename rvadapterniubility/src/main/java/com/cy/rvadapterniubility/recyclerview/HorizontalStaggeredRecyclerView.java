@@ -7,9 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.cy.refreshlayoutniubility.ScreenUtils;
-import com.cy.rvadapterniubility.LogUtils;
-
 /**
  * Created by cy on 2017/7/2.
  */

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 
 
@@ -67,7 +66,7 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
         GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
         // 获取item在span中的下标,假如2个span,index 永远是从0--1,//不能用getAbsoluteAdapterPosition，因为是瀑布流
         int spanIndex = params.getSpanIndex();
-        LogUtils.log("spanIndex", spanIndex);
+//        LogUtils.log("spanIndex", spanIndex);
 
         int position = viewHolder.getAbsoluteAdapterPosition();
         int perSpace = (int) (space * 1f / spanCount);

@@ -23,7 +23,6 @@ public class GRVActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grv);
-        LogUtils.log("GRVActivity");
         List<HRVBean> list = new ArrayList<>();
         for (int i=0;i<100;i++){
             if (i%5==0){

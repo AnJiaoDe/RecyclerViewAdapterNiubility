@@ -15,8 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
-
-import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
