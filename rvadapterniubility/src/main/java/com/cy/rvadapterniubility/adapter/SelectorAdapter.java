@@ -98,7 +98,7 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
 
     @Override
     public long getItemId(int position) {
-        return simpleAdapter.getList_bean().get(position).hashCode();
+        return position;
     }
 
     @Override

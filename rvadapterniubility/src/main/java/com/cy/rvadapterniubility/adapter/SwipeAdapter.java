@@ -122,7 +122,7 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
 
     @Override
     public long getItemId(int position) {
-        return simpleAdapter.getList_bean().get(position).hashCode();
+        return position;
     }
 
     @Override

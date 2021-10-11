@@ -63,7 +63,8 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     @Override
     public long getItemId(int position) {
-        return list_bean.get(position).hashCode();
+        //返回position即可，
+        return position;
     }
 
     /**
