@@ -37,4 +37,10 @@ public class VerticalGridRecyclerView extends GridRecyclerView<VerticalGridRecyc
         setLayoutManager(layoutManager);
         super.setAdapter(adapter);
     }
+    public void setAdapter(@Nullable final Adapter adapter,GridLayoutManager.SpanSizeLookup spanSizeLookup) {
+        final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), getSpanCount(), RecyclerView.VERTICAL, false);
+        layoutManager.setSpanSizeLookup(spanSizeLookup);
+        setLayoutManager(layoutManager);
+        super.setAdapter(adapter);
+    }
 }

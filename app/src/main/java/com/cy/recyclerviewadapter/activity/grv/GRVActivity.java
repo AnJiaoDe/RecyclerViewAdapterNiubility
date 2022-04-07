@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
@@ -19,23 +21,24 @@ import java.util.List;
 public class GRVActivity extends BaseActivity {
 
     private SimpleAdapter<HRVBean> rvAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grv);
         List<HRVBean> list = new ArrayList<>();
-        for (int i=0;i<100;i++){
-            if (i%5==0){
+        for (int i = 0; i < 100; i++) {
+            if (i % 5 == 0) {
                 list.add(new HRVBean(R.drawable.pic3));
                 continue;
 
             }
             list.add(new HRVBean(R.drawable.pic1));
         }
-        rvAdapter=new SimpleAdapter<HRVBean>() {
+        rvAdapter = new SimpleAdapter<HRVBean>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
-                holder.setImageResource(R.id.iv,bean.getResID());
+                holder.setImageResource(R.id.iv, bean.getResID());
             }
 
             @Override
@@ -45,14 +48,20 @@ public class GRVActivity extends BaseActivity {
 
 
             @Override
-            public void onItemClick(BaseViewHolder holder,int position, HRVBean bean) {
+            public void onItemClick(BaseViewHolder holder, int position, HRVBean bean) {
                 showToast("点击" + position);
             }
         };
-        ((VerticalGridRecyclerView)findViewById(R.id.grv))
+        ((VerticalGridRecyclerView) findViewById(R.id.grv))
                 .setSpanCount(4)
                 .addItemDecoration(new GridItemDecoration(dpAdapt(10)));
-        ((VerticalGridRecyclerView)findViewById(R.id.grv)).setAdapter(rvAdapter);
+        ((VerticalGridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int i) {
+                if (i == 4) return 2;
+                return 1;
+            }
+        });
         rvAdapter.add(list);
     }
 
@@ -60,6 +69,7 @@ public class GRVActivity extends BaseActivity {
     public void onClick(View v) {
 
     }
+
     /**
      * --------------------------------------------------------------------------------
      */

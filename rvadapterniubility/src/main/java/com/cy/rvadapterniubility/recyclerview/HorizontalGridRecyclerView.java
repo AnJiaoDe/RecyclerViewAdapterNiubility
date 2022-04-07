@@ -37,4 +37,10 @@ public class HorizontalGridRecyclerView extends GridRecyclerView<HorizontalGridR
         setLayoutManager(layoutManager);
         super.setAdapter(adapter);
     }
+    public void setAdapter(@Nullable final Adapter adapter,GridLayoutManager.SpanSizeLookup spanSizeLookup) {
+        final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), getSpanCount(), RecyclerView.HORIZONTAL, false);
+        layoutManager.setSpanSizeLookup(spanSizeLookup);
+        setLayoutManager(layoutManager);
+        super.setAdapter(adapter);
+    }
 }
