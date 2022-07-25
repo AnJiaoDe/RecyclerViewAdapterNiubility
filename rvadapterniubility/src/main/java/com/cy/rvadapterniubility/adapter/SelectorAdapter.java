@@ -52,8 +52,10 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
                         //设置选中的item
                         if (positionSelectedLast != position) {
                             positionSelected = position; //选择的position赋值给参数，
-                            notifyItemChanged(positionSelected);
-                            notifyItemChanged(positionSelectedLast);
+                            notifyDataSetChanged();
+                            //notifyitemchange不灵
+//                            notifyItemChanged(positionSelected);
+//                            notifyItemChanged(positionSelectedLast);
                             positionSelectedLast = position;
                         }
                         onItemClick(holder, position, getList_bean().get(position));
@@ -148,8 +150,7 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
     public void setPositionSelected(int positionSelected) {
         if (positionSelectedLast != positionSelected) {
             this.positionSelected = positionSelected;
-            simpleAdapter.notifyItemChanged(positionSelected);
-            simpleAdapter.notifyItemChanged(positionSelectedLast);
+            simpleAdapter.notifyDataSetChanged();
             positionSelectedLast = positionSelected;
         }
     }

@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
 public class GRVTypeActivity extends BaseActivity {
 
