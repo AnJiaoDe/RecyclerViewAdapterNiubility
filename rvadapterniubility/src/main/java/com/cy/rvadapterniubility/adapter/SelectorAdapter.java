@@ -13,7 +13,7 @@ import com.cy.rvadapterniubility.swipelayout.SwipeLayout;
 
 public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, SimpleAdapter> {
     private SimpleAdapter<T> simpleAdapter;
-    private int positionSelectedLast = 0;
+    private int positionSelectedLast = -1;
     private int positionSelected = 0;
 
     public SelectorAdapter() {
