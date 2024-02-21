@@ -91,12 +91,6 @@ public class BaseRecyclerView<T extends BaseRecyclerView>  extends RecyclerView{
         return velocity_y;
     }
 
-    //    @Override
-//    public boolean onTouchEvent(MotionEvent e) {
-//        LogUtils.log("onTouchEvent");
-//
-//
-//    }
 
     public  T setEnableAnimDefault(boolean enable) {
         SimpleItemAnimator simpleItemAnimator = (SimpleItemAnimator) getItemAnimator();

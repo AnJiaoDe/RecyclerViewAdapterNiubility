@@ -12,6 +12,7 @@ import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.rvadapterniubility.adapter.AnimAdapter;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class VRAnimActivity extends BaseActivity {
 
-    private SimpleAdapter<VRBean> rvAdapter;
+    private AnimAdapter<VRBean> animAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +34,11 @@ public class VRAnimActivity extends BaseActivity {
             list.add(new VRBean("内容" + i));
         }
         final VerticalRecyclerView verticalRecyclerView=findViewById(R.id.vr);
-        rvAdapter = new SimpleAdapter<VRBean>() {
+        animAdapter = new AnimAdapter<VRBean>() {
             @Override
             public void bindDataToView(final BaseViewHolder holder, int position, VRBean bean) {
                 holder.setText(R.id.tv, bean.getStr());
-                verticalRecyclerView.setDragTouchView(holder,holder.getView(R.id.btn_drag));
+//                verticalRecyclerView.setDragTouchView(holder,holder.getView(R.id.btn_drag));
                 LogUtils.log("position",position);
             }
 
@@ -51,19 +52,18 @@ public class VRAnimActivity extends BaseActivity {
                 showToast("点击" + position);
             }
 
-            @Override
-            public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
-                super.onViewAttachedToWindow(holder);
-                startDefaultAttachedAnim(holder);
-            }
+//            @Override
+//            public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
+//                super.onViewAttachedToWindow(holder);
+//                startDefaultAttachedAnim(holder);
+//            }
 
         };
-        ((VerticalRecyclerView) findViewById(R.id.vr)).addItemTouchAnim(new ItemAnimCallback(rvAdapter) {
+        ((VerticalRecyclerView) findViewById(R.id.vr)).addItemTouchAnim(new ItemAnimCallback(animAdapter) {
             @Override
-            public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
-                super.onSelectedChanged(viewHolder, actionState);
-                if (actionState != ItemTouchHelper.ACTION_STATE_IDLE)
-                    viewHolder.itemView.setBackgroundColor(0xffeeeeee);
+            public void onSelectedChanged__(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+                super.onSelectedChanged__(viewHolder, actionState);
+                    viewHolder.itemView.setBackgroundColor(0xffd9d9d9);
             }
 
             @Override
@@ -71,8 +71,8 @@ public class VRAnimActivity extends BaseActivity {
                 super.clearView(recyclerView, viewHolder);
                 viewHolder.itemView.setBackgroundResource(R.drawable.line_bottom);
             }
-        }).setAdapter(rvAdapter);
-        rvAdapter.add(list);
+        }).setAdapter(animAdapter);
+        animAdapter.add(list);
     }
 
     @Override

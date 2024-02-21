@@ -27,6 +27,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     public SimpleAdapter() {
         list_bean = new ArrayList<>();//数据源
+        //防止刷新闪烁
         setHasStableIds(hasStableIds_());
     }
 

@@ -33,8 +33,7 @@ artifacts {
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compileOnly 'androidx.appcompat:appcompat:+'
+    compileOnly 'androidx.appcompat:appcompat:1.1.0'
     compileOnly "androidx.recyclerview:recyclerview:1.2.1"
     compileOnly "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.4.3"
-
 }
