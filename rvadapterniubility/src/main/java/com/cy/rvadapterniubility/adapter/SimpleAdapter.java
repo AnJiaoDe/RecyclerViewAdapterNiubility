@@ -14,13 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cy.BaseAdapter.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @param <T>
  */
 
-public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> implements IAdapter<T, BaseViewHolder, SimpleAdapter>{
+public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> implements IAdapter<T, BaseViewHolder, SimpleAdapter> {
 
     private List<T> list_bean;//数据源
 
@@ -40,7 +41,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
         handleClick(holder);
-        if(position<0||position>=list_bean.size())return;
+        if (position < 0 || position >= list_bean.size()) return;
         bindDataToView(holder, position, list_bean.get(position));
     }
 
@@ -53,9 +54,9 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     @Override
     public void onViewRecycled(@NonNull BaseViewHolder holder) {
         super.onViewRecycled(holder);
-        int position=holder.getAbsoluteAdapterPosition();
-        if(position<0||position>=list_bean.size())return;
-        onViewRecycled(holder, position,list_bean.get(position));
+        int position = holder.getAbsoluteAdapterPosition();
+        if (position < 0 || position >= list_bean.size()) return;
+        onViewRecycled(holder, position, list_bean.get(position));
     }
 
     @Override
@@ -69,7 +70,8 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     }
 
     /**
-     *解决notify,item闪烁问题
+     * 解决notify,item闪烁问题
+     *
      * @return
      */
     @Override
@@ -96,7 +98,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             @Override
             public void onClick(View v) {
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=list_bean.size())return;
+                if (position < 0 || position >= list_bean.size()) return;
                 onItemClick(holder, position, list_bean.get(position));
             }
         });
@@ -105,7 +107,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             @Override
             public boolean onLongClick(View v) {
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=list_bean.size())return false;
+                if (position < 0 || position >= list_bean.size()) return false;
                 onItemLongClick(holder, position, list_bean.get(position));
                 return true;
                 //返回true，那么长按监听只执行长按监听中执行的代码，返回false，还会继续响应其他监听中的事件。
@@ -163,7 +165,9 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * ---------------------------------------------------------------------------------
      */
 
-
+    public void swap(int i, int j) {
+        Collections.swap(list_bean, i, j);
+    }
 
     /**
      * @param list_bean

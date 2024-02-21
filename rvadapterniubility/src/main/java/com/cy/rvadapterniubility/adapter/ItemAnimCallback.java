@@ -71,7 +71,7 @@ public class ItemAnimCallback extends ItemTouchHelper.Callback {
         int fromPosition = srcHolder.getAbsoluteAdapterPosition();
         int toPosition = targetHolder.getAbsoluteAdapterPosition();
 
-        Collections.swap(simpleAdapter.getList_bean(), fromPosition, toPosition);
+        simpleAdapter.swap( fromPosition, toPosition);
         simpleAdapter.notifyItemMoved(fromPosition, toPosition);
         return true;// 返回true表示处理了并可以换位置，返回false表示你没有处理并不能换位置。
     }
