@@ -83,7 +83,7 @@ public class GRVHeadFootActivity extends BaseActivity {
         });
 
         ((VerticalGridRecyclerView) findViewById(R.id.grv))
-                .setSpanCount(2)
+                .setSpanCount(4)
                 .putFullSpanPosition(0)
                 .putFullSpanPosition(101)
                 .addItemDecoration(new GridItemDecoration(dpAdapt(10)))

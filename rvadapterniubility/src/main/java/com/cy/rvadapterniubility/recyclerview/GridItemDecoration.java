@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 
 
@@ -77,13 +78,15 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
         switch (orientation) {
             case RecyclerView.VERTICAL:
                 outRect.left = a * perSpace;
-                outRect.top = position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position - 1) != null ? 0 : (position < spanCount ? space : 0);
+                outRect.top = position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position - spanIndex - 1) != null ?
+                        0 : (position < spanCount ? space : 0);
                 outRect.right = b * perSpace;
                 outRect.bottom = space;
                 break;
             //HORIZONTAL的其实就是VERTICAL翻转一下
             case RecyclerView.HORIZONTAL:
-                outRect.left = position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position - 1) != null ? 0 : (position < spanCount ? space : 0);
+                outRect.left = position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position- spanIndex - 1) != null ?
+                        0 : (position < spanCount ? space : 0);
                 outRect.top = a * perSpace;
                 outRect.right = space;
                 outRect.bottom = b * perSpace;
