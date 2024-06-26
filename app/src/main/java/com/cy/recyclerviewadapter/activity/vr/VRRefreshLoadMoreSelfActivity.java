@@ -16,9 +16,11 @@ import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
+import com.cy.refreshlayoutniubility.IAnimationView;
 import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnRefreshListener;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
+import com.cy.refreshlayoutniubility.RefreshLayoutNiubility;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -74,7 +76,6 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                 showToast("点击" + position);
             }
         });
-
 //        verticalRefreshLayout.getRecyclerView().setAdapter(multiAdapter.getMergeAdapter());
 //        verticalRefreshLayout.getRecyclerView().addItemDecoration(new LinearItemDecoration().setSpace_vertical(60));
         verticalRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
@@ -113,6 +114,13 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                 }, 2000);
             }
         }, new OnLinearLoadMoreListener(multiAdapter, 6) {
+            @Override
+            public void bindDataToLoadMore(BaseViewHolder holder, String bean) {
+                IAnimationView animationView=holder.getView(R.id.animView);
+                animationView.setColor(Color.RED);
+                super.bindDataToLoadMore(holder, bean);
+            }
+
             @Override
             public void onLoadMoreStart() {
                 new Handler().postDelayed(new Runnable() {
