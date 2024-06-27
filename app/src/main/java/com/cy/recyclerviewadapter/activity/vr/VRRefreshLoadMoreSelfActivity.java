@@ -25,7 +25,6 @@ import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.LinearItemDecoration;
-import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
 import com.cy.rvadapterniubility.recyclerview.OnLinearLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.PositionHolder;
 import com.cy.rvadapterniubility.refreshrv.LinearRefreshLayout;
@@ -113,7 +112,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                     }
                 }, 2000);
             }
-        }, new OnLinearLoadMoreListener(multiAdapter, 6) {
+        }, new OnLinearLoadMoreListener(multiAdapter, 0) {
             @Override
             public void bindDataToLoadMore(BaseViewHolder holder, String bean) {
                 IAnimationView animationView=holder.getView(R.id.animView);
@@ -130,13 +129,24 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                          * 模拟没有更多的场景
                          */
                         if (multiAdapter.getMergeAdapter().getItemCount() > 120) {
-                            closeLoadMoreDelay("没有更多了哦~",1000);
+                            closeLoadMoreDelay("没有更多了哦~", 1000, new Callback() {
+                                @Override
+                                public void onClosed() {
+
+                                }
+                            });
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
                             multiAdapter.getAdapter(1).addNoNotify(new VRBean("更多" + i));
                         }
-                        closeLoadMoreDelay("有8条更多", 1000, new OnCloseLoadMoreCallback() {
+//                        closeLoadMore(new Callback() {
+//                            @Override
+//                            public void onClosed() {
+//                                multiAdapter.getAdapter(1).notifyDataSetChanged();
+//                            }
+//                        });
+                        closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override
                             public void onClosed() {
                                 /**

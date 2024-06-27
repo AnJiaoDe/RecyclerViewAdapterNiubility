@@ -11,6 +11,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,8 @@ import com.cy.refreshlayoutniubility.IAnimationView;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+
+import java.io.File;
 
 /**
  * @Description:仿头条LoadMore丝滑体验
@@ -38,7 +41,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
     private int space_vertical;
     private int space_horizontal;
     private RecyclerView recyclerView;
-    private OnCloseLoadMoreCallback onCloseLoadMoreCallback;
+    private Callback callback;
     private final String CLEAR = "_C_L_E_A_R_";
 
     public OnLinearLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
@@ -185,13 +188,14 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationX(0);
                             holder.itemView.setTranslationY(0);
                             setLoadMoreing(false);
                             loadMoreAdapter.clear();
+
+                            if (callback != null) callback.onClosed();
                         }
                     });
                     animatorSet.start();
@@ -199,7 +203,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
                 default:
                     animationView.stopLoadAnimation();
                     animationView.getView().setVisibility(View.GONE);
-                    if(tv!=null){
+                    if (tv != null) {
                         tv.setText(bean);
                         tv.setVisibility(View.VISIBLE);
                     }
@@ -208,7 +212,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         } else {
             animationView.getView().setVisibility(View.VISIBLE);
             animationView.startLoadAnimation();
-            if(tv!=null)tv.setVisibility(View.GONE);
+            if (tv != null) tv.setVisibility(View.GONE);
         }
     }
 
@@ -242,7 +246,6 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
 //    }
 
 
-
     /**
      *
      */
@@ -260,39 +263,24 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
 //    }
 
     /**
-     * 必须手动调用closeLoadMore()结束loadMore
+     * 必须要有回调，必须 loadmore完全关闭后才能notify data，否则会导致上一次的loadMore动画没有停止，也没有被remove
+     * @param callback
      */
     @Override
-    public void closeLoadMore() {
+    public void closeLoadMore(@NonNull Callback callback) {
+        this.callback=callback;
         if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, CLEAR);
     }
 
     @Override
-    public void closeLoadMoreDelay(String msg, int ms) {
-        closeLoadMoreDelay(msg,ms,null);
-    }
-    public void closeLoadMoreDelay(String msg) {
-        closeLoadMoreDelay(msg,1000,null);
-    }
-    /**
-     * 必须手动调用closeLoadMore()结束loadMore
-     */
-    public void closeLoadMore(OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
-        this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
-        closeLoadMore();
-    }
-
-    public void closeLoadMoreDelay(String msg, int ms, final OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
-        if (loadMoreAdapter.getItemCount() != 0)loadMoreAdapter.set(0, msg);
+    public void closeLoadMoreDelay(String msg, int ms, final @NonNull Callback callback) {
+        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, msg);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                closeLoadMore(onCloseLoadMoreCallback);
+                closeLoadMore(callback);
             }
         }, ms);
-    }
-    public void closeLoadMoreDelay(String msg, final OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
-        closeLoadMoreDelay(msg,1000,onCloseLoadMoreCallback);
     }
 
     public SimpleAdapter<String> getLoadMoreAdapter() {

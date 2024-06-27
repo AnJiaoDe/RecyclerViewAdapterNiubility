@@ -15,7 +15,6 @@ import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.HorizontalRecyclerView;
 import com.cy.rvadapterniubility.recyclerview.LinearItemDecoration;
-import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
 import com.cy.rvadapterniubility.recyclerview.OnLinearLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.VerticalRecyclerView;
 

@@ -11,6 +11,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,10 +36,10 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     private MultiAdapter<SimpleAdapter> multiAdapter;
     private int count_remain = 0;
     private boolean isLoadMoreing = false;
-    private OnCloseLoadMoreCallback onCloseLoadMoreCallback;
+    private Callback callback;
     private final String CLEAR = "CLEAR";
     private GridRecyclerView gridRecyclerView;
-    private int orientation=RecyclerView.VERTICAL;
+    private int orientation = RecyclerView.VERTICAL;
     private int space;
 
     public OnGridLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
@@ -51,7 +52,8 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
 
             @Override
             public int getItemLayoutID(int position, String bean) {
-                if(orientation==RecyclerView.VERTICAL)return OnGridLoadMoreListener.this.getVerticalLoadMoreLayoutID();
+                if (orientation == RecyclerView.VERTICAL)
+                    return OnGridLoadMoreListener.this.getVerticalLoadMoreLayoutID();
                 return OnGridLoadMoreListener.this.getHorizontalLoadMoreLayoutID();
             }
 
@@ -71,18 +73,18 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     @Override
     public void onItemLoadMoreClick(BaseViewHolder holder) {
     }
+
     private void checkRecyclerView(RecyclerView recyclerView) {
         try {
             this.gridRecyclerView = (GridRecyclerView) recyclerView;
-            GridLayoutManager gridLayoutManager= (GridLayoutManager) recyclerView.getLayoutManager();
-            orientation=gridLayoutManager.getOrientation();
+            GridLayoutManager gridLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+            orientation = gridLayoutManager.getOrientation();
         } catch (Exception e) {
             throw new IllegalArgumentException(
-                    "You can only use " + getClass().getName() + " in " + GridRecyclerView.class.getName()+"or its subclass!");
+                    "You can only use " + getClass().getName() + " in " + GridRecyclerView.class.getName() + "or its subclass!");
         }
         space = gridRecyclerView != null ? gridRecyclerView.getGridItemDecoration().getSpace() : 0;
     }
-
 
 
     /**
@@ -100,16 +102,16 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
 
-            if(orientation==RecyclerView.VERTICAL){
-                if (holder != null && holder.itemView.getBottom() +  space >= baseRecyclerView.getHeight()) {
+            if (orientation == RecyclerView.VERTICAL) {
+                if (holder != null && holder.itemView.getBottom() + space >= baseRecyclerView.getHeight()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
                         gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                         loadMoreAdapter.add("");
                     }
                     return;
                 }
-            }else {
-                if (holder != null && holder.itemView.getRight() +  space >= baseRecyclerView.getWidth()){
+            } else {
+                if (holder != null && holder.itemView.getRight() + space >= baseRecyclerView.getWidth()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
                         gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                         loadMoreAdapter.add("");
@@ -128,11 +130,11 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
 //            //数据太少，没有充满recyclerView,没有loadMore的必要
-            if(orientation==RecyclerView.VERTICAL){
-                if (holder!=null&&holder.itemView.getBottom() +  space < baseRecyclerView.getHeight())
+            if (orientation == RecyclerView.VERTICAL) {
+                if (holder != null && holder.itemView.getBottom() + space < baseRecyclerView.getHeight())
                     continue;
-            }else {
-                if (holder!=null&&holder.itemView.getRight() +  space < baseRecyclerView.getWidth())
+            } else {
+                if (holder != null && holder.itemView.getRight() + space < baseRecyclerView.getWidth())
                     continue;
             }
 
@@ -151,6 +153,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             }
         }
     }
+
     @Override
     public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
         IAnimationView animationView = holder.getView(R.id.animView);
@@ -163,7 +166,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             switch (bean) {
                 case CLEAR:
                     final ObjectAnimator objectAnimator_alpha = ObjectAnimator.ofFloat(holder.itemView, "alpha", 1, 0);
-                    final ObjectAnimator objectAnimator_transY =orientation==RecyclerView.VERTICAL?
+                    final ObjectAnimator objectAnimator_transY = orientation == RecyclerView.VERTICAL ?
                             ObjectAnimator.ofFloat(holder.itemView, "translationY", 0, holder.itemView.getHeight())
                             : ObjectAnimator.ofFloat(holder.itemView, "translationX", 0, holder.itemView.getWidth());
 
@@ -176,13 +179,14 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
                             gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
-                            if (onCloseLoadMoreCallback != null) onCloseLoadMoreCallback.onClosed();
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationX(0);
                             holder.itemView.setTranslationY(0);
                             isLoadMoreing = false;
                             loadMoreAdapter.clear();
+
+                            if (callback != null) callback.onClosed();
                         }
                     });
                     animatorSet.start();
@@ -190,7 +194,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                 default:
                     animationView.stopLoadAnimation();
                     animationView.getView().setVisibility(View.GONE);
-                    if(tv!=null){
+                    if (tv != null) {
                         tv.setText(bean);
                         tv.setVisibility(View.VISIBLE);
                     }
@@ -199,7 +203,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
         } else {
             animationView.getView().setVisibility(View.VISIBLE);
             animationView.startLoadAnimation();
-            if(tv!=null)tv.setVisibility(View.GONE);
+            if (tv != null) tv.setVisibility(View.GONE);
         }
     }
 
@@ -209,41 +213,25 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     public int getCount_remain() {
         return count_remain;
     }
-
     /**
-     * 必须手动调用closeLoadMore()结束loadMore
+     * 必须要有回调，必须 loadmore完全关闭后才能notify data，否则会导致上一次的loadMore动画没有停止，也没有被remove
+     * @param callback
      */
     @Override
-    public void closeLoadMore() {
+    public void closeLoadMore(@NonNull Callback callback) {
+        this.callback=callback;
         if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, CLEAR);
     }
 
     @Override
-    public void closeLoadMoreDelay(String msg, int ms) {
-        closeLoadMoreDelay(msg,ms,null);
-    }
-    public void closeLoadMoreDelay(String msg) {
-        closeLoadMoreDelay(msg,1000,null);
-    }
-    /**
-     * 必须手动调用closeLoadMore()结束loadMore
-     */
-    public void closeLoadMore(OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
-        this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
-        closeLoadMore();
-    }
-
-    public void closeLoadMoreDelay(String msg, int ms, final OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
-        if (loadMoreAdapter.getItemCount() != 0)loadMoreAdapter.set(0, msg);
+    public void closeLoadMoreDelay(String msg, int ms, @NonNull final Callback callback) {
+        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, msg);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                closeLoadMore(onCloseLoadMoreCallback);
+                closeLoadMore(callback);
             }
         }, ms);
-    }
-    public void closeLoadMoreDelay(String msg, final OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
-        closeLoadMoreDelay(msg,1000,onCloseLoadMoreCallback);
     }
 
 //    public IAnimationView setAnimationView() {
@@ -292,7 +280,6 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
 //            }
 //        }, 1000);
 //    }
-
     public SimpleAdapter<String> getLoadMoreAdapter() {
         return loadMoreAdapter;
     }

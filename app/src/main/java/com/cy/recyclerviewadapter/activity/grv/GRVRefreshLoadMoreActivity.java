@@ -14,7 +14,6 @@ import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
-import com.cy.rvadapterniubility.recyclerview.OnCloseLoadMoreCallback;
 import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
 import com.cy.rvadapterniubility.refreshrv.GridRefreshLayout;
 
@@ -84,13 +83,18 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                          * 模拟没有更多的场景
                          */
                         if (multiAdapter.getMergeAdapter().getItemCount() > 120) {
-                            closeLoadMoreDelay("没有更多了哦~",1000);
+                            closeLoadMoreDelay("没有更多了哦~", 1000, new Callback() {
+                                @Override
+                                public void onClosed() {
+
+                                }
+                            });
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
                            rvAdapter.addNoNotify(new HRVBean(R.drawable.pic1));
                         }
-                        closeLoadMoreDelay("有8条更多", 1000, new OnCloseLoadMoreCallback() {
+                        closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override
                             public void onClosed() {
                                 /**
