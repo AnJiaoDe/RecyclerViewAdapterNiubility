@@ -64,7 +64,7 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
 //            throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in GridLayoutManager  for " + VerticalGridRecyclerView.class.getName());
 //        }
         GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
-        // 获取item在span中的下标,假如2个span,index 永远是从0--1,//不能用getAbsoluteAdapterPosition，因为是瀑布流
+        // 获取item在span中的下标,假如2个span,index 永远是从0--1,//不能用getAbsoluteAdapterPosition，因为是grid
         int spanIndex = params.getSpanIndex();
 //        LogUtils.log("spanIndex", spanIndex);
 

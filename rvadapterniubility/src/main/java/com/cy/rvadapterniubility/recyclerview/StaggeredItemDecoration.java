@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 
 /**
@@ -18,7 +19,7 @@ import com.cy.rvadapterniubility.adapter.BaseViewHolder;
  * @UpdateRemark:
  * @Version:
  */
-public class StaggeredItemDecoration extends RecyclerView.ItemDecoration  {
+public class StaggeredItemDecoration extends RecyclerView.ItemDecoration {
     private int space;
     private SparseArray<Boolean> sparseArrayullSpan;
 
@@ -26,6 +27,7 @@ public class StaggeredItemDecoration extends RecyclerView.ItemDecoration  {
         this.space = space;
         sparseArrayullSpan = new SparseArray<>();
     }
+
     public int getSpace() {
         return space;
     }
@@ -52,47 +54,40 @@ public class StaggeredItemDecoration extends RecyclerView.ItemDecoration  {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         final StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) parent.getLayoutManager();
         BaseViewHolder viewHolder = (BaseViewHolder) parent.getChildViewHolder(view);
-//        int spanCount = 1;
-//        int orientation = RecyclerView.VERTICAL;
-//        if (layoutManager instanceof StaggeredGridLayoutManager) {
+        int position = viewHolder.getAbsoluteAdapterPosition();
+        sparseArrayullSpan.put(position, viewHolder.isFullSpan());
         int spanCount = staggeredGridLayoutManager.getSpanCount();
         int orientation = staggeredGridLayoutManager.getOrientation();
-//        } else {
-//            throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in StaggeredGridLayoutManager  for "
-//                    + StaggeredRecyclerView.class.getName() + "or "
-//                    + VerticalStaggeredRecyclerView.class.getName() + "or "
-//                    + HorizontalStaggeredRecyclerView.class.getName());
-//        }
-
         StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
-        // 获取item在span中的下标,假如2个span,index 永远是从0--1,//不能用getAbsoluteAdapterPosition，因为是瀑布流
+        // 获取item在span中的下标,假如2个span,从左到右，index 0--1,（注意：先从上面的开始绘制，如果右边的在上面就是先绘制1再绘制0）
         int spanIndex = params.getSpanIndex();
-//        LogUtils.log("spanIndex", spanIndex);
-
-        int position = viewHolder.getAbsoluteAdapterPosition();
         int perSpace = (int) (space * 1f / spanCount);
 
-        //每个position都put一下，因为有可能更新了viewholder
-        sparseArrayullSpan.put(position, viewHolder.isFullSpan());
 
         int a = spanCount - spanIndex % spanCount;
         int b = viewHolder.isFullSpan() ? spanCount : 1 + spanIndex % spanCount;
         switch (orientation) {
             case RecyclerView.VERTICAL:
                 outRect.left = a * perSpace;
-                outRect.top = position >= 1 && sparseArrayullSpan.get(position - 1) ? 0 : (position < spanCount ? space : 0);
+                if (position == 0) {
+                    outRect.top = space;
+                } else {
+                    outRect.top = position < spanCount ? (sparseArrayullSpan.get(0) ? 0 : space) : 0;
+                }
                 outRect.right = b * perSpace;
                 outRect.bottom = space;
                 break;
             //HORIZONTAL的其实就是VERTICAL翻转一下
             case RecyclerView.HORIZONTAL:
-                outRect.left = position >= 1 && sparseArrayullSpan.get(position - 1) ? 0 : (position < spanCount ? space : 0);
+                if (position == 0) {
+                    outRect.left = space;
+                } else {
+                    outRect.left = position < spanCount ? (sparseArrayullSpan.get(0) ? 0 : space) : 0;
+                }
                 outRect.top = a * perSpace;
                 outRect.right = space;
                 outRect.bottom = b * perSpace;
                 break;
         }
-
     }
-
 }
