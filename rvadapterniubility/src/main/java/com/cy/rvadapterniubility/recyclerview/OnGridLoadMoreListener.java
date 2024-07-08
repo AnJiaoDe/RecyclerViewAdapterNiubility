@@ -101,7 +101,6 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
-
             if (orientation == RecyclerView.VERTICAL) {
                 if (holder != null && holder.itemView.getBottom() + space >= baseRecyclerView.getHeight()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
@@ -178,7 +177,6 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationX(0);
@@ -220,12 +218,18 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     @Override
     public void closeLoadMore(@NonNull Callback callback) {
         this.callback=callback;
-        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, CLEAR);
+        if (loadMoreAdapter.getItemCount() != 0){
+            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+            loadMoreAdapter.set(0, CLEAR);
+        }
     }
 
     @Override
     public void closeLoadMoreDelay(String msg, int ms, @NonNull final Callback callback) {
-        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, msg);
+        if (loadMoreAdapter.getItemCount() != 0) {
+            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+            loadMoreAdapter.set(0, msg);
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
