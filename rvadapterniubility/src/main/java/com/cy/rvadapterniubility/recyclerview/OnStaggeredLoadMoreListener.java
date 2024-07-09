@@ -105,7 +105,6 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
             RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
-
             if(orientation==RecyclerView.VERTICAL){
                 if (holder != null && holder.itemView.getBottom() +  space >= baseRecyclerView.getHeight()) {
                     if (loadMoreAdapter.getAdapter().getItemCount() == 0) {
@@ -139,9 +138,8 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
                 if (holder!=null&&holder.itemView.getRight() +  space < baseRecyclerView.getWidth())
                     continue;
             }
-
             //说明最后一个item-count_remain可见了，可以开始loadMore了
-            if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - getCount_remain()) {
+            if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - count_remain) {
                 if (loadMoreAdapter.getAdapter().getItemCount() == 0) {
                     loadMoreAdapter.getAdapter().add("");
                 }
@@ -233,54 +231,6 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
             }
         }, ms);
     }
-
-//    public IAnimationView setAnimationView() {
-//        return null;
-//    }
-//
-//    public TextView setTextViewToast() {
-//        return null;
-//    }
-//
-//    public void setLoadMoreText(String text) {
-//        if (gridRecyclerView == null) return;
-//        BaseViewHolder baseViewHolder = (BaseViewHolder) gridRecyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
-//        if(baseViewHolder==null)return;
-//        baseViewHolder.setGone(R.id.animView);
-//        baseViewHolder.setText(R.id.tv, text);
-//        baseViewHolder.setVisible(R.id.tv);
-//    }
-
-    /**
-     * 必须手动调用closeLoadMore()结束loadMore
-     */
-//    public void closeLoadMore(OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
-//        this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
-//        if (loadMoreAdapter.getItemCount() != 0) {
-//            loadMoreAdapter.set(0, CLEAR);
-//        }
-//    }
-
-    /**
-     *
-     */
-
-//    public void closeLoadMoreNoData() {
-//        closeLoadMoreNoData(null);
-//    }
-//
-//
-//    public void closeLoadMoreNoData(String toast) {
-//        toast = (toast == null || TextUtils.isEmpty(toast)) ? "没有更多了哦~" : toast;
-//        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, toast);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                closeLoadMore(null);
-//            }
-//        }, 1000);
-//    }
-
 
     public StaggeredAdapter<String> getLoadMoreAdapter() {
         return loadMoreAdapter;

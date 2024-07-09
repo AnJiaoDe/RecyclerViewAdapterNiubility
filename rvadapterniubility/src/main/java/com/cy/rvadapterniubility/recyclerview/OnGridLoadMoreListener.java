@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.BaseAdapter.R;
 import com.cy.refreshlayoutniubility.IAnimationView;
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -86,9 +87,44 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
         space = gridRecyclerView != null ? gridRecyclerView.getGridItemDecoration().getSpace() : 0;
     }
 
+    /**
+     * 垂直布局时：下拉refresh时必须removeFullPostion，否则布局错乱，GG，故而滑动到顶部时必须removeFullPostion。
+     * @param baseRecyclerView
+     * @param positionHolder
+     * @param offsetX
+     * @param offsetY
+     */
+    @Override
+    public void onScrollArrivedTop(BaseRecyclerView baseRecyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
+        super.onScrollArrivedTop(baseRecyclerView, positionHolder, offsetX, offsetY);
+        if (loadMoreAdapter.getItemCount() > 0) {
+            //loadMoreAdapter.set()不一定会回调bindDataToView，因为loadmore布局还不可见，故而必须手动removeFullSpanPosition
+            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+            isLoadMoreing = false;
+            loadMoreAdapter.clear();
+        }
+    }
 
     /**
-     * 在onDragging中添加loadMore布局，是因为如果item很少，recyclerView有很多剩余空间，就要禁用loadMore
+     * 水平布局时：
+     * @param baseRecyclerView
+     * @param positionHolder
+     * @param offsetX
+     * @param offsetY
+     */
+    @Override
+    public void onScrollArrivedLeft(BaseRecyclerView baseRecyclerView, PositionHolder positionHolder, int offsetX, int offsetY) {
+        super.onScrollArrivedLeft(baseRecyclerView, positionHolder, offsetX, offsetY);
+        if (loadMoreAdapter.getItemCount() > 0) {
+            //loadMoreAdapter.set()不一定会回调bindDataToView，因为loadmore布局还不可见，故而必须手动removeFullSpanPosition
+            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+            isLoadMoreing = false;
+            loadMoreAdapter.clear();
+        }
+    }
+
+    /**
+     * 要在滑动过程中就add loadmore的布局，否则idle的时候不会显示loadmore布局，贼鸡儿尴尬，注意下拉refresh时必须removeFullPostion，否则GG
      *
      * @param baseRecyclerView
      * @param positionHolder
@@ -136,14 +172,13 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                 if (holder != null && holder.itemView.getRight() + space < baseRecyclerView.getWidth())
                     continue;
             }
-
             //说明最后一个item-count_remain可见了，可以开始loadMore了
-            if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - getCount_remain()) {
+            if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - count_remain) {
                 if (loadMoreAdapter.getItemCount() == 0) {
                     gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                     loadMoreAdapter.add("");
                 }
-                //防止频繁loadMore
+                //防止频繁loadMore,而且布应该在onDragging触发onLoadMoreStart
                 if (!isLoadMoreing) {
                     isLoadMoreing = true;
                     onLoadMoreStart();
@@ -177,6 +212,10 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
+                            LogUtils.log("OnGridLoadMoreListener onAnimationEnd");
+                            //必须判断，防止onScrollArrivedTop 时remove了
+//                            if (loadMoreAdapter.getItemCount() > 0)
+                            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationX(0);
@@ -211,25 +250,21 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     public int getCount_remain() {
         return count_remain;
     }
+
     /**
      * 必须要有回调，必须 loadmore完全关闭后才能notify data，否则会导致上一次的loadMore动画没有停止，也没有被remove
+     *
      * @param callback
      */
     @Override
     public void closeLoadMore(@NonNull Callback callback) {
-        this.callback=callback;
-        if (loadMoreAdapter.getItemCount() != 0){
-            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
-            loadMoreAdapter.set(0, CLEAR);
-        }
+        this.callback = callback;
+        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, CLEAR);
     }
 
     @Override
     public void closeLoadMoreDelay(String msg, int ms, @NonNull final Callback callback) {
-        if (loadMoreAdapter.getItemCount() != 0) {
-            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
-            loadMoreAdapter.set(0, msg);
-        }
+        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, msg);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -237,53 +272,6 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             }
         }, ms);
     }
-
-//    public IAnimationView setAnimationView() {
-//        return null;
-//    }
-//
-//    public TextView setTextViewToast() {
-//        return null;
-//    }
-//
-//    public void setLoadMoreText(String text) {
-//        if (gridRecyclerView == null) return;
-//        BaseViewHolder baseViewHolder = (BaseViewHolder) gridRecyclerView.findViewHolderForAdapterPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
-//        if(baseViewHolder==null)return;
-//        baseViewHolder.setGone(R.id.animView);
-//        baseViewHolder.setText(R.id.tv, text);
-//        baseViewHolder.setVisible(R.id.tv);
-//    }
-
-    /**
-     * 必须手动调用closeLoadMore()结束loadMore
-     */
-//    public void closeLoadMore(OnCloseLoadMoreCallback onCloseLoadMoreCallback) {
-//        this.onCloseLoadMoreCallback = onCloseLoadMoreCallback;
-//        if (loadMoreAdapter.getItemCount() != 0) {
-//            loadMoreAdapter.set(0, CLEAR);
-//        }
-//    }
-
-    /**
-     *
-     */
-
-//    public void closeLoadMoreNoData() {
-//        closeLoadMoreNoData(null);
-//    }
-//
-//
-//    public void closeLoadMoreNoData(String toast) {
-//        toast = (toast == null || TextUtils.isEmpty(toast)) ? "没有更多了哦~" : toast;
-//        if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, toast);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                closeLoadMore(null);
-//            }
-//        }, 1000);
-//    }
     public SimpleAdapter<String> getLoadMoreAdapter() {
         return loadMoreAdapter;
     }

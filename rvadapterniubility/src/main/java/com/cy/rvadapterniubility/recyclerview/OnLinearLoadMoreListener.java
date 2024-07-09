@@ -88,7 +88,6 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
 
     /**
      * 在onDragging中添加loadMore布局，是因为如果item很少，recyclerView有很多剩余空间，就要禁用loadMore
-     *
      * @param baseRecyclerView
      * @param positionHolder
      */
@@ -133,7 +132,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
                     continue;
             }
             //说明最后一个item-count_remain可见了，可以开始loadMore了
-            if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - getCount_remain()) {
+            if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 -count_remain) {
                 if (loadMoreAdapter.getItemCount() == 0) {
                     loadMoreAdapter.add("");
                 }
@@ -155,24 +154,10 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
     public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
         IAnimationView animationView = holder.getView(R.id.animView);
         if (animationView == null) return;
-//        if (animationView == null) {
-//            animationView = holder.getView(R.id.animView);
-//        } else {
-//        animationView.getView().setId(R.id.animView);
-//        FrameLayout root = (FrameLayout) holder.itemView;
-//        root.addView(animationView.getView(), 0, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-//        }
         animationView.stopLoadAnimation();
         animationView.getView().setVisibility(View.GONE);
 
         TextView tv = holder.getView(R.id.tv);
-//        if (tv == null) {
-//            tv = holder.getView(R.id.tv);
-//        } else {
-//        tv.setId(R.id.tv);
-//        FrameLayout root = (FrameLayout) holder.itemView;
-//        root.addView(tv, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-//        }
         if (bean != null && !bean.isEmpty()) {
             switch (bean) {
                 case CLEAR:
@@ -223,45 +208,6 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         return count_remain;
     }
 
-//    public IAnimationView setAnimationView() {
-//        return null;
-//    }
-
-//    public TextView setTextViewToast() {
-//        return null;
-//    }
-//
-//    private void setLoadMoreText(String text) {
-//        RecyclerView recyclerView = getRecyclerView();
-//        if (recyclerView == null) return;
-//        BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(getMultiAdapter().getMergeAdapter().getItemCount() - 1);
-//        if (baseViewHolder == null) return;
-//        IAnimationView animationView = baseViewHolder.getView(R.id.animView);
-//        TextView tv = baseViewHolder.getView(R.id.tv);
-//        if(animationView!=null)animationView.getView().setVisibility(View.GONE);
-//        if(tv!=null){
-//            baseViewHolder.setText(R.id.tv, text);
-//            baseViewHolder.setVisible(R.id.tv);
-//        }
-//    }
-
-
-    /**
-     *
-     */
-
-//    public void closeLoadMoreNoData() {
-//        String toast = getLoadMoreNoDataToast();
-//        toast = (toast == null || TextUtils.isEmpty(toast)) ? "没有更多了哦~" : toast;
-//        if (getLoadMoreAdapter().getItemCount() != 0) getLoadMoreAdapter().set(0, toast);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                closeLoadMore(null);
-//            }
-//        }, 1000);
-//    }
-
     /**
      * 必须要有回调，必须 loadmore完全关闭后才能notify data，否则会导致上一次的loadMore动画没有停止，也没有被remove
      * @param callback
@@ -287,13 +233,6 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         return loadMoreAdapter;
     }
 
-//    public RecyclerView getRecyclerView() {
-//        return recyclerView;
-//    }
-
-//    public int getOrientation() {
-//        return orientation;
-//    }
 
     public boolean isLoadMoreing() {
         return isLoadMoreing;
@@ -303,7 +242,4 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         isLoadMoreing = loadMoreing;
     }
 
-//    public MultiAdapter<SimpleAdapter> getMultiAdapter() {
-//        return multiAdapter;
-//    }
 }

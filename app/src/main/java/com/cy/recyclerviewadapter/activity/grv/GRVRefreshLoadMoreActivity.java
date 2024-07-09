@@ -10,6 +10,7 @@ import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -32,11 +33,14 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
 
         gridRefreshLayout=findViewById(R.id.grl);
         List<HRVBean> list = new ArrayList<>();
-        for (int i=0;i<100;i++){
+        for (int i=0;i<20;i++){
             if (i%5==0){
                 list.add(new HRVBean(R.drawable.pic3));
                 continue;
-
+            }
+            if (i%3==0){
+                list.add(new HRVBean(R.drawable.pic2));
+                continue;
             }
             list.add(new HRVBean(R.drawable.pic1));
         }
@@ -73,7 +77,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                     }
                 }, 2000);
             }
-        }, new OnGridLoadMoreListener(multiAdapter) {
+        }, new OnGridLoadMoreListener(multiAdapter,10) {
             @Override
             public void onLoadMoreStart() {
                 new Handler().postDelayed(new Runnable() {
@@ -97,6 +101,8 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override
                             public void onClosed() {
+                                LogUtils.log("onClosed");
+//                                rvAdapter.notifyDataSetChanged();
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
