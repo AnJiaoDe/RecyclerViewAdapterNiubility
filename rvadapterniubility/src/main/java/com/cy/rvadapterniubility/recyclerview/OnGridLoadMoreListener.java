@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.BaseAdapter.R;
 import com.cy.refreshlayoutniubility.IAnimationView;
-import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -212,7 +211,6 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            LogUtils.log("OnGridLoadMoreListener onAnimationEnd");
                             //必须判断，防止onScrollArrivedTop 时remove了
 //                            if (loadMoreAdapter.getItemCount() > 0)
                             gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
