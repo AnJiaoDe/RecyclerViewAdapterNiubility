@@ -86,7 +86,9 @@ public abstract class StaggeredAdapter<T> implements IAdapter<T, BaseViewHolder,
         return true;
     }
 
-    public abstract boolean isFullSpan(int itemLayoutID);
+    public  boolean isFullSpan(int itemLayoutID){
+        return false;
+    }
 
 
     @Override
