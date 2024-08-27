@@ -64,7 +64,7 @@ public class StaggeredItemDecoration extends RecyclerView.ItemDecoration {
 
 
         int a = spanCount - spanIndex % spanCount;
-        int b = viewHolder.isFullSpan() ? spanCount : 1 + spanIndex % spanCount;
+        int b = viewHolder.isFullSpan() ? spanCount : (1 + spanIndex % spanCount);
         switch (orientation) {
             case RecyclerView.VERTICAL:
                 outRect.left = a * perSpace;

@@ -41,4 +41,7 @@ dependencies {
 
     api "androidx.recyclerview:recyclerview:1.2.1"
     api "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.4.5"
+
+    api 'com.github.AnJiaoDe:AndroidView:V2.0.3'
+
 }

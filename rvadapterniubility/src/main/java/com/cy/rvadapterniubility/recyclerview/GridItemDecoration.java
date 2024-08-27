@@ -26,6 +26,7 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
         this.space = space;
     }
 
+
     public int getSpace() {
         return space;
     }
@@ -65,26 +66,28 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
 //        }
         GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
         // 获取item在span中的下标,假如2个span,index 永远是从0--1,//不能用getAbsoluteAdapterPosition，因为是grid
+        //如果3个span,假如第一个span占了两列，那么是0,2,否则就是0,1,2
+        //故而，左边第一个span 永远是0，最右边的span永远是spanCount-1
         int spanIndex = params.getSpanIndex();
 //        LogUtils.log("spanIndex", spanIndex);
 
         int position = viewHolder.getAbsoluteAdapterPosition();
         int perSpace = (int) (space * 1f / spanCount);
 
-
-        int a = spanCount - spanIndex % spanCount;
-        int b = gridRecyclerView.getSparseArrayFullSpan().get(position) != null ? spanCount : 1 + spanIndex % spanCount;
+        int a = spanCount - spanIndex;
+        int b = gridRecyclerView.getSparseArrayFullSpan().get(position) != null ? spanCount : (1 + spanIndex % spanCount);
+        boolean side = spanIndex == 0 || spanIndex == spanCount - 1;
         switch (orientation) {
             case RecyclerView.VERTICAL:
-                outRect.left = a * perSpace;
+                outRect.left = a * perSpace ;
                 outRect.top = position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position - spanIndex - 1) != null ?
                         0 : (position < spanCount ? space : 0);
-                outRect.right = b * perSpace;
+                outRect.right = b * perSpace ;
                 outRect.bottom = space;
                 break;
             //HORIZONTAL的其实就是VERTICAL翻转一下
             case RecyclerView.HORIZONTAL:
-                outRect.left = position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position- spanIndex - 1) != null ?
+                outRect.left = position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position - spanIndex - 1) != null ?
                         0 : (position < spanCount ? space : 0);
                 outRect.top = a * perSpace;
                 outRect.right = space;

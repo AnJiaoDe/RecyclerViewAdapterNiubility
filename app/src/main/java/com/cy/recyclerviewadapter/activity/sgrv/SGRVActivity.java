@@ -2,7 +2,12 @@ package com.cy.recyclerviewadapter.activity.sgrv;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+import com.cy.androidview.ScreenUtils;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
@@ -26,7 +31,12 @@ public class SGRVActivity extends BaseActivity {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
                 LogUtils.log("bindDataToView00000000000000",position);
-                holder.setImageResource(R.id.iv,bean.getResID());
+//                holder.setImageResource(R.id.iv,bean.getResID());
+
+                Glide.with(SGRVActivity.this)
+                        .load(bean.getResID())
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(ScreenUtils.dpAdapt(SGRVActivity.this,10)))) // 应用圆角效果
+                        .into((ImageView) holder.getView(R.id.iv));
             }
             @Override
             public int getItemLayoutID(int position, HRVBean bean) {

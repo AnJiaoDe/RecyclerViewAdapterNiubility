@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.cy.androidview.ScreenUtils;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
@@ -53,12 +54,12 @@ public class GRVActivity extends BaseActivity {
             }
         };
         ((VerticalGridRecyclerView) findViewById(R.id.grv))
-                .setSpanCount(4)
-                .addItemDecoration(new GridItemDecoration(dpAdapt(10)));
+                .setSpanCount(3)
+                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 6)));
         ((VerticalGridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int i) {
-                if (i == 4) return 2;
+                if (i == 4) return 1;
                 return 1;
             }
         });
@@ -67,24 +68,6 @@ public class GRVActivity extends BaseActivity {
 
     @Override
     public void onClick(View v) {
-
     }
 
-    /**
-     * --------------------------------------------------------------------------------
-     */
-    public int dpAdapt(float dp) {
-        return dpAdapt(dp, 360);
-    }
-
-    public int dpAdapt(float dp, float widthDpBase) {
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        int heightPixels = dm.heightPixels;//高的像素
-        int widthPixels = dm.widthPixels;//宽的像素
-        float density = dm.density;//density=dpi/160,密度比
-        float heightDP = heightPixels / density;//高度的dp
-        float widthDP = widthPixels / density;//宽度的dp
-        float w = widthDP > heightDP ? heightDP : widthDP;
-        return (int) (dp * w / widthDpBase * density + 0.5f);
-    }
 }
