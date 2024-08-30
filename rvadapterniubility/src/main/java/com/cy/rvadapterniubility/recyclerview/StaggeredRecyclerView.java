@@ -27,16 +27,16 @@ public class StaggeredRecyclerView<T extends StaggeredRecyclerView> extends Base
     public StaggeredRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         addItemDecoration(new StaggeredItemDecoration(ScreenUtils.dpAdapt(context, 10)));
-        addOnScrollListener(new OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                //防止第一行到顶部有空白区域
-                StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) getLayoutManager();
-                if (staggeredGridLayoutManager != null)
-                    staggeredGridLayoutManager.invalidateSpanAssignments();
-            }
-        });
+//        addOnScrollListener(new OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                //防止第一行到顶部有空白区域
+//                StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) getLayoutManager();
+//                if (staggeredGridLayoutManager != null)
+//                    staggeredGridLayoutManager.invalidateSpanAssignments();
+//            }
+//        });
 //        addOnScrollListener(new OnSimpleScrollListener() {
 //            onscr
 //            //orientation vertical

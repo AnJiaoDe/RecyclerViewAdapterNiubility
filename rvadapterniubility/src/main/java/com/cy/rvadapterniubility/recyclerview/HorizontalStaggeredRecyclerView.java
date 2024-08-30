@@ -24,7 +24,7 @@ public class HorizontalStaggeredRecyclerView extends StaggeredRecyclerView<Horiz
     public void setAdapter(final RecyclerView.Adapter adapter) {
         final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(getSpanCount(), RecyclerView.HORIZONTAL);
         //防止item 交换位置
-        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+//        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         setLayoutManager(layoutManager);
         super.setAdapter(adapter);
     }
