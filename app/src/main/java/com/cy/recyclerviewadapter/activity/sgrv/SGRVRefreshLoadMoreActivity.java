@@ -10,7 +10,9 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.GlideUtils;
 import com.cy.recyclerviewadapter.LogUtils;
@@ -19,9 +21,11 @@ import com.cy.recyclerviewadapter.bean.BingBean;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
+import com.cy.refreshlayoutniubility.ScreenUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+import com.cy.rvadapterniubility.adapter.StaggeredAdapter;
 import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.OnStaggeredLoadMoreListener;
 import com.cy.rvadapterniubility.refreshrv.GridRefreshLayout;
@@ -32,25 +36,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SGRVRefreshLoadMoreActivity extends BaseActivity {
-    private SimpleAdapter<HRVBean> rvAdapter;
+    private StaggeredAdapter<HRVBean> staggeredAdapter;
     private StaggeredRefreshLayout staggeredRefreshLayout;
     private MultiAdapter multiAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sgrvrefresh_load_more);
 
-        staggeredRefreshLayout=findViewById(R.id.StaggeredRefreshLayout);
+        staggeredRefreshLayout = findViewById(R.id.StaggeredRefreshLayout);
         List<HRVBean> list = new ArrayList<>();
-        for (int i=0;i<100;i++){
-            if (i%5==0){
+        for (int i = 0; i < 100; i++) {
+            if (i % 5 == 0) {
                 list.add(new HRVBean(R.drawable.pic7));
                 continue;
-
             }
             list.add(new HRVBean(R.drawable.pic1));
         }
-        rvAdapter=new SimpleAdapter<HRVBean>() {
+        staggeredAdapter = new StaggeredAdapter<HRVBean>() {
             @Override
             public void bindDataToView(final BaseViewHolder holder, int position, final HRVBean bean) {
 //                GlideUtils.getRequestManager(SGRVRefreshLoadMoreActivity.this, new GlideUtils.CallbackRequestManager() {
@@ -59,7 +63,40 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
 //                        requestManager.load(bean.getResID()).into((ImageView) holder.getView(R.id.iv));
 //                    }
 //                });
-                holder.setImageResource(R.id.iv,bean.getResID());
+                // 在加载图片之前设定好图片的宽高，防止出现item错乱及闪烁
+                ImageView iv = holder.getView(R.id.iv);
+                ViewGroup.LayoutParams layoutParams = iv.getLayoutParams();
+                int width_item = (int) ((ScreenUtils.getScreenWidth(SGRVRefreshLoadMoreActivity.this)
+                        - 3 * ScreenUtils.dpAdapt(SGRVRefreshLoadMoreActivity.this, 10)) * 0.5f);
+                switch (bean.getResID()) {
+                    case R.drawable.pic1:
+                        layoutParams.height = (int) (640.f / 771 * width_item);
+                        break;
+                    case R.drawable.pic3:
+                        layoutParams.height = (int) (640.f / 959 * width_item);
+                        break;
+                    case R.drawable.pic7:
+                        layoutParams.height = (int) (919.f / 640 * width_item);
+                        break;
+                }
+                iv.setLayoutParams(layoutParams);
+
+                //防止先展示别的图片再展示自己的，贼丑
+                holder.setImageBitmap(R.id.iv, null);
+                holder.getView(R.id.iv).setTag(bean.getResID());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (holder.getView(R.id.iv).getTag().equals(bean.getResID())) {
+                          // 使用 Glide 加载图片并应用渐变动画，下拉刷新，只能任凭闪烁了，即使添加动画看起来还是闪烁
+//                            Glide.with(SGRVRefreshLoadMoreActivity.this)
+//                                    .load(bean.getResID())
+//                                    .transition(DrawableTransitionOptions.withCrossFade(1000)) // 设置渐变效果
+//                                    .into((ImageView) holder.getView(R.id.iv));
+                            holder.setImageResource(R.id.iv,bean.getResID());
+                        }
+                    }
+                }, 100);
             }
 
             @Override
@@ -69,11 +106,11 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
 
 
             @Override
-            public void onItemClick(BaseViewHolder holder,int position, HRVBean bean) {
+            public void onItemClick(BaseViewHolder holder, int position, HRVBean bean) {
                 showToast("点击" + position);
             }
         };
-        multiAdapter=new MultiAdapter().addAdapter(rvAdapter);
+        multiAdapter = new MultiAdapter().addAdapter(staggeredAdapter.getAdapter());
 //        st.getRecyclerView().addItemDecoration(new FullSpanGridItemDecoration(dpAdapt(10)));
         staggeredRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
             @Override
@@ -81,11 +118,18 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        for (int i = 0; i < 8; i++) {
-                            rvAdapter.addToTopNoNotify(new HRVBean(R.drawable.pic3));
+                        List<HRVBean> list=new ArrayList<>();
+                        for (int i = 0; i < 6; i++) {
+                            if (i % 5 == 0) {
+                                list.add(new HRVBean(R.drawable.pic7));
+                                continue;
+                            }
+                            list.add(new HRVBean(R.drawable.pic3));
+//                            staggeredAdapter.getAdapter().addToTopNoNotify(new HRVBean(R.drawable.pic3));
                         }
-                        rvAdapter.notifyDataSetChanged();
-                        staggeredRefreshLayout.closeRefreshDelay("有8条更新",2000);
+                        staggeredAdapter.getAdapter().addToTop(list);
+                        staggeredRefreshLayout.getRecyclerView().scrollToPosition(0);
+                        staggeredRefreshLayout.closeRefreshDelay("有8条更新", 2000);
                     }
                 }, 2000);
             }
@@ -105,10 +149,16 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
 
                                 }
                             });
+//                            closeLoadMore(new Callback() {
+//                                @Override
+//                                public void onClosed() {
+//
+//                                }
+//                            });
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
-                            rvAdapter.addNoNotify(new HRVBean(R.drawable.pic1));
+                            staggeredAdapter.getAdapter().addNoNotify(new HRVBean(R.drawable.pic1));
                         }
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override
@@ -116,20 +166,21 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-                                rvAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
+                                staggeredAdapter.getAdapter().notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 8, 8);
                             }
                         });
                     }
                 }, 2000);
             }
         });
-        rvAdapter.add(list);
+        staggeredAdapter.getAdapter().add(list);
     }
 
     @Override
     public void onClick(View v) {
 
     }
+
     /**
      * --------------------------------------------------------------------------------
      */

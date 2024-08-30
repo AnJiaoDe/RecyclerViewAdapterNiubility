@@ -38,7 +38,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
     private Callback callback;
     private final String CLEAR = "CLEAR";
     private StaggeredRecyclerView staggeredRecyclerView;
-    private int orientation=RecyclerView.VERTICAL;
+    private int orientation = RecyclerView.VERTICAL;
     private int space;
 
     public OnStaggeredLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
@@ -51,7 +51,8 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
 
             @Override
             public int getItemLayoutID(int position, String bean) {
-                if(orientation==RecyclerView.VERTICAL)return OnStaggeredLoadMoreListener.this.getVerticalLoadMoreLayoutID();
+                if (orientation == RecyclerView.VERTICAL)
+                    return OnStaggeredLoadMoreListener.this.getVerticalLoadMoreLayoutID();
                 return OnStaggeredLoadMoreListener.this.getHorizontalLoadMoreLayoutID();
             }
 
@@ -76,23 +77,23 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
     @Override
     public void onItemLoadMoreClick(BaseViewHolder holder) {
     }
+
     private void checkRecyclerView(RecyclerView recyclerView) {
         try {
             this.staggeredRecyclerView = (StaggeredRecyclerView) recyclerView;
-            StaggeredGridLayoutManager staggeredGridLayoutManager= (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
-            orientation=staggeredGridLayoutManager.getOrientation();
+            StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+            orientation = staggeredGridLayoutManager.getOrientation();
         } catch (Exception e) {
             throw new IllegalArgumentException(
                     "You can only use " + getClass().getName() + " in " + StaggeredRecyclerView.class.getName()
-            +"or its subclass!");
+                            + "or its subclass!");
         }
         space = staggeredRecyclerView != null ? staggeredRecyclerView.getStaggeredItemDecoration().getSpace() : 0;
     }
 
 
-
     /**
-     * 在onDragging中添加loadMore布局，是因为如果item很少，recyclerView有很多剩余空间，就要禁用loadMore
+     * 要在滑动过程中就add loadmore的布局，否则idle的时候不会显示loadmore布局，贼鸡儿尴尬，注意下拉refresh时必须removeFullPostion，否则GG
      *
      * @param baseRecyclerView
      * @param positionHolder
@@ -105,15 +106,15 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
             RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
             //说明recyclerView没有剩余空间，需要添加loadMore
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
-            if(orientation==RecyclerView.VERTICAL){
-                if (holder != null && holder.itemView.getBottom() +  space >= baseRecyclerView.getHeight()) {
+            if (orientation == RecyclerView.VERTICAL) {
+                if (holder != null && holder.itemView.getBottom() + space >= baseRecyclerView.getHeight()) {
                     if (loadMoreAdapter.getAdapter().getItemCount() == 0) {
                         loadMoreAdapter.getAdapter().add("");
                     }
                     return;
                 }
-            }else {
-                if (holder != null && holder.itemView.getRight() +  space >= baseRecyclerView.getWidth()){
+            } else {
+                if (holder != null && holder.itemView.getRight() + space >= baseRecyclerView.getWidth()) {
                     if (loadMoreAdapter.getAdapter().getItemCount() == 0) {
                         loadMoreAdapter.getAdapter().add("");
                     }
@@ -131,11 +132,11 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
 //            //数据太少，没有充满recyclerView,没有loadMore的必要
-            if(orientation==RecyclerView.VERTICAL){
-                if (holder!=null&&holder.itemView.getBottom() +  space < baseRecyclerView.getHeight())
+            if (orientation == RecyclerView.VERTICAL) {
+                if (holder != null && holder.itemView.getBottom() + space < baseRecyclerView.getHeight())
                     continue;
-            }else {
-                if (holder!=null&&holder.itemView.getRight() +  space < baseRecyclerView.getWidth())
+            } else {
+                if (holder != null && holder.itemView.getRight() + space < baseRecyclerView.getWidth())
                     continue;
             }
             //说明最后一个item-count_remain可见了，可以开始loadMore了
@@ -143,7 +144,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
                 if (loadMoreAdapter.getAdapter().getItemCount() == 0) {
                     loadMoreAdapter.getAdapter().add("");
                 }
-                //防止频繁loadMore
+                //防止频繁loadMore,而且布应该在onDragging触发onLoadMoreStart
                 if (!isLoadMoreing) {
                     isLoadMoreing = true;
                     onLoadMoreStart();
@@ -152,19 +153,21 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
             }
         }
     }
+
     @Override
     public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
         IAnimationView animationView = holder.getView(R.id.animView);
         if (animationView == null) return;
+
         animationView.stopLoadAnimation();
         animationView.getView().setVisibility(View.GONE);
 
-        TextView tv = holder.getView(R.id.tv);
+        final TextView tv = holder.getView(R.id.tv);
         if (bean != null && !bean.isEmpty()) {
             switch (bean) {
                 case CLEAR:
                     final ObjectAnimator objectAnimator_alpha = ObjectAnimator.ofFloat(holder.itemView, "alpha", 1, 0);
-                    final ObjectAnimator objectAnimator_transY =orientation==RecyclerView.VERTICAL?
+                    final ObjectAnimator objectAnimator_transY = orientation == RecyclerView.VERTICAL ?
                             ObjectAnimator.ofFloat(holder.itemView, "translationY", 0, holder.itemView.getHeight())
                             : ObjectAnimator.ofFloat(holder.itemView, "translationX", 0, holder.itemView.getWidth());
 
@@ -176,12 +179,16 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
+                            //防止莫名奇妙地再显示一次没有更多字样才消失，原因不明
+                            if (tv != null) tv.setVisibility(View.GONE);
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationX(0);
                             holder.itemView.setTranslationY(0);
                             isLoadMoreing = false;
-                            loadMoreAdapter.getAdapter().clear();
+                            //千万不能notifydatasetchanged,否则整个列表都会被刷新，如果是比较耗时的加载图片，会闪烁
+                            loadMoreAdapter.getAdapter().clearNoNotify();
+                            loadMoreAdapter.getAdapter().notifyItemRemoved(0);
 
                             if (callback != null) callback.onClosed();
                         }
@@ -191,7 +198,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
                 default:
                     animationView.stopLoadAnimation();
                     animationView.getView().setVisibility(View.GONE);
-                    if(tv!=null){
+                    if (tv != null) {
                         tv.setText(bean);
                         tv.setVisibility(View.VISIBLE);
                     }
@@ -200,7 +207,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
         } else {
             animationView.getView().setVisibility(View.VISIBLE);
             animationView.startLoadAnimation();
-            if(tv!=null)tv.setVisibility(View.GONE);
+            if (tv != null) tv.setVisibility(View.GONE);
         }
     }
 
@@ -213,17 +220,20 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
 
     /**
      * 必须要有回调，必须 loadmore完全关闭后才能notify data，否则会导致上一次的loadMore动画没有停止，也没有被remove
+     *
      * @param callback
      */
     @Override
     public void closeLoadMore(@NonNull Callback callback) {
-        this.callback=callback;
-        if (loadMoreAdapter.getAdapter().getItemCount() != 0) loadMoreAdapter.getAdapter().set(0, CLEAR);
+        this.callback = callback;
+        if (loadMoreAdapter.getAdapter().getItemCount() != 0)
+            loadMoreAdapter.getAdapter().set(0, CLEAR);
     }
 
     @Override
     public void closeLoadMoreDelay(String msg, int ms, @NonNull final Callback callback) {
-        if (loadMoreAdapter.getAdapter().getItemCount() != 0)loadMoreAdapter.getAdapter().set(0, msg);
+        if (loadMoreAdapter.getAdapter().getItemCount() != 0)
+            loadMoreAdapter.getAdapter().set(0, msg);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

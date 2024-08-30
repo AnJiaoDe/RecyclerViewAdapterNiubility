@@ -18,9 +18,9 @@ public interface IAdapter<T, V extends RecyclerView.ViewHolder, A extends Recycl
 
     public void onViewAttachedToWindow(V holder);
 
-    public long getItemId(int position);
+//    public long getItemId(int position);
 
-    public boolean hasStableIds_();
+//    public boolean hasStableIds_();
 
     public A getAdapter();
 

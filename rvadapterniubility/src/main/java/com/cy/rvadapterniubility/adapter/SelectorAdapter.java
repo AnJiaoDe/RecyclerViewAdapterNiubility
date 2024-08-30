@@ -28,15 +28,15 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
                 SelectorAdapter.this.onViewRecycled(holder, position, bean);
             }
 
-            @Override
-            public long getItemId(int position) {
-                return SelectorAdapter.this.getItemId(position);
-            }
+//            @Override
+//            public long getItemId(int position) {
+//                return SelectorAdapter.this.getItemId(position);
+//            }
 
-            @Override
-            public boolean hasStableIds_() {
-                return SelectorAdapter.this.hasStableIds_();
-            }
+//            @Override
+//            public boolean hasStableIds_() {
+//                return SelectorAdapter.this.hasStableIds_();
+//            }
 
             @Override
             protected void handleClick(final BaseViewHolder holder) {
@@ -98,15 +98,15 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
         };
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public boolean hasStableIds_() {
-        return true;
-    }
+//    @Override
+//    public long getItemId(int position) {
+//        return position;
+//    }
+//
+//    @Override
+//    public boolean hasStableIds_() {
+//        return true;
+//    }
 
     @Override
     public final void bindDataToView(BaseViewHolder holder, int position, T bean) {

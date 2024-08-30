@@ -28,8 +28,8 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     public SimpleAdapter() {
         list_bean = new ArrayList<>();//数据源
-        //防止刷新闪烁
-        setHasStableIds(hasStableIds_());
+        //防止刷新闪烁，根本就不灵
+//        setHasStableIds(hasStableIds_());
     }
 
     @NonNull
@@ -63,21 +63,20 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
     }
 
-    @Override
-    public long getItemId(int position) {
-        //返回position即可，
-        return position;
-    }
+//    @Override
+//    public long getItemId(int position) {
+//        //返回position即可，
+//        return position;
+//    }
 
     /**
      * 解决notify,item闪烁问题
-     *
      * @return
      */
-    @Override
-    public boolean hasStableIds_() {
-        return true;
-    }
+//    @Override
+//    public boolean hasStableIds_() {
+//        return true;
+//    }
 
 
     @Override
@@ -173,8 +172,11 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * @param list_bean
      */
     public SimpleAdapter<T> setList_bean(List<T> list_bean) {
+        int size = list_bean.size();
+        list_bean.clear();
+        notifyItemRangeRemoved(0, size);
         this.list_bean = list_bean;
-        notifyDataSetChanged();
+        notifyItemRangeInserted(0, list_bean.size());
         return this;
     }
 
@@ -249,7 +251,37 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      */
     public SimpleAdapter<T> addToTop(T bean) {
         addToTopNoNotify(bean);
-        notifyItemChanged(0);
+        //必须notifyDataSetChanged
+        notifyDataSetChanged();
+        //瀑布流，间隔出问题
+//        notifyItemInserted(0);
+        return this;
+    }
+
+    /**
+     * 添加List到position 0
+     */
+
+    public SimpleAdapter<T> addToTopNoNotify(List<T> beans) {
+        list_bean.addAll(0, beans);
+        return this;
+    }
+
+    /**
+     * 添加List到position 0,并且notify
+     * 注意：千万不能notifydatasetchanged,否则整个列表都会被刷新，如果是比较耗时的加载图片，会闪烁
+     * 刷新时顶部留白
+     * 使用 notifyDataSetChanged()方法做刷新时，据说：会触发StaggeredGridLayoutManager 的onItemsChanged 方法，
+     * 导致item的spanIndex重现进行计算，item所在列的位置出现了变化，导致了顶部空白。
+     * 而用notifyItemRangeInserted，notifyItemRangeChanged做局部刷新时则不会引起变化。
+     */
+    public SimpleAdapter<T> addToTop(List<T> beans) {
+        addToTopNoNotify(beans);
+        //必须notifyDataSetChanged
+        notifyDataSetChanged();
+        //瀑布流，间隔出问题
+//        notifyItemRangeChanged(0, beans.size());
+//        notifyItemRangeInserted(0, beans.size());
         return this;
     }
 
@@ -280,13 +312,26 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         return this;
     }
 
+    /**
+     * 先清空后添加List,并且notify
+     */
+
+    public SimpleAdapter<T> clearAdd(List<T> beans) {
+        clearAddNoNotify(beans);
+        notifyDataSetChanged();
+        //这2个就不灵了
+//        notifyItemRangeRemoved(0, size);
+//        notifyItemRangeInserted(0, beans.size());
+        return this;
+    }
 
     /**
      * 先清空后添加
      */
 
     public SimpleAdapter<T> clearAddNoNotify(T bean) {
-        clearAdd(bean);
+        list_bean.clear();
+        list_bean.add(bean);
         return this;
     }
 
@@ -295,42 +340,14 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      */
 
     public SimpleAdapter<T> clearAdd(T bean) {
-        clearNoNotify();
-        addNoNotify(bean);
+        clearAddNoNotify(bean);
         notifyDataSetChanged();
+        //这2个就不灵了
+//        notifyItemRangeRemoved(0, size);
+//        notifyItemInserted(0);
         return this;
     }
 
-    /**
-     * 先清空后添加List,并且notify
-     */
-
-    public SimpleAdapter<T> clearAdd(List<T> beans) {
-        clearAddNoNotify(beans);
-        notifyDataSetChanged();
-        return this;
-    }
-
-    /**
-     * 添加List到position 0
-     */
-
-    public SimpleAdapter<T> addToTopNoNotify(List<T> beans) {
-        list_bean.addAll(0, beans);
-        return this;
-    }
-
-    /**
-     * 添加List到position 0,并且notify
-     */
-
-    public SimpleAdapter<T> addToTop(List<T> beans) {
-        addToTopNoNotify(beans);
-        //没有刷新的作用
-//        notifyItemRangeInserted(0, beans.size());
-        notifyDataSetChanged();
-        return this;
-    }
 
     /**
      * 清空list
@@ -344,8 +361,9 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * 清空list
      */
     public SimpleAdapter<T> clear() {
-        list_bean.clear();
-        notifyDataSetChanged();
+        int size = list_bean.size();
+        clearNoNotify();
+        notifyItemRangeRemoved(0, size);
         return this;
     }
 

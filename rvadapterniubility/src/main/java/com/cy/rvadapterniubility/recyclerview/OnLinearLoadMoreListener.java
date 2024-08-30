@@ -88,6 +88,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
 
     /**
      * 在onDragging中添加loadMore布局，是因为如果item很少，recyclerView有很多剩余空间，就要禁用loadMore
+     *
      * @param baseRecyclerView
      * @param positionHolder
      */
@@ -132,7 +133,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
                     continue;
             }
             //说明最后一个item-count_remain可见了，可以开始loadMore了
-            if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 -count_remain) {
+            if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - count_remain) {
                 if (loadMoreAdapter.getItemCount() == 0) {
                     loadMoreAdapter.add("");
                 }
@@ -157,7 +158,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         animationView.stopLoadAnimation();
         animationView.getView().setVisibility(View.GONE);
 
-        TextView tv = holder.getView(R.id.tv);
+        final TextView tv = holder.getView(R.id.tv);
         if (bean != null && !bean.isEmpty()) {
             switch (bean) {
                 case CLEAR:
@@ -173,12 +174,16 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
+                            //瀑布流会出现防止莫名奇妙地再显示一次没有更多字样才消失，原因不明，grid不知道会不会出现
+                            if (tv != null) tv.setVisibility(View.GONE);
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationX(0);
                             holder.itemView.setTranslationY(0);
-                            setLoadMoreing(false);
-                            loadMoreAdapter.clear();
+                            isLoadMoreing = false;
+                            //千万不能notifydatasetchanged,否则整个列表都会被刷新，如果是比较耗时的加载图片，会闪烁
+                            loadMoreAdapter.getAdapter().clearNoNotify();
+                            loadMoreAdapter.getAdapter().notifyItemRemoved(0);
 
                             if (callback != null) callback.onClosed();
                         }
@@ -210,11 +215,12 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
 
     /**
      * 必须要有回调，必须 loadmore完全关闭后才能notify data，否则会导致上一次的loadMore动画没有停止，也没有被remove
+     *
      * @param callback
      */
     @Override
     public void closeLoadMore(@NonNull Callback callback) {
-        this.callback=callback;
+        this.callback = callback;
         if (loadMoreAdapter.getItemCount() != 0) loadMoreAdapter.set(0, CLEAR);
     }
 
@@ -238,8 +244,8 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         return isLoadMoreing;
     }
 
-    public void setLoadMoreing(boolean loadMoreing) {
-        isLoadMoreing = loadMoreing;
-    }
+//    public void setLoadMoreing(boolean loadMoreing) {
+//        isLoadMoreing = loadMoreing;
+//    }
 
 }

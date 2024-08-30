@@ -106,7 +106,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-                                rvAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
+                                rvAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 8, 8);
                             }
                         });
                     }

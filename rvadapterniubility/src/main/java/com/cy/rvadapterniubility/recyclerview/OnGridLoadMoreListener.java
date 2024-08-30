@@ -88,6 +88,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
 
     /**
      * 垂直布局时：下拉refresh时必须removeFullPostion，否则布局错乱，GG，故而滑动到顶部时必须removeFullPostion。
+     *
      * @param baseRecyclerView
      * @param positionHolder
      * @param offsetX
@@ -106,6 +107,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
 
     /**
      * 水平布局时：
+     *
      * @param baseRecyclerView
      * @param positionHolder
      * @param offsetX
@@ -191,10 +193,11 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     public void bindDataToLoadMore(final BaseViewHolder holder, String bean) {
         IAnimationView animationView = holder.getView(R.id.animView);
         if (animationView == null) return;
+
         animationView.stopLoadAnimation();
         animationView.getView().setVisibility(View.GONE);
 
-        TextView tv = holder.getView(R.id.tv);
+        final TextView tv = holder.getView(R.id.tv);
         if (bean != null && !bean.isEmpty()) {
             switch (bean) {
                 case CLEAR:
@@ -211,17 +214,20 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            //必须判断，防止onScrollArrivedTop 时remove了
-//                            if (loadMoreAdapter.getItemCount() > 0)
+                            //瀑布流会出现防止莫名奇妙地再显示一次没有更多字样才消失，原因不明，grid不知道会不会出现
+                            if (tv != null) tv.setVisibility(View.GONE);
                             gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationX(0);
                             holder.itemView.setTranslationY(0);
                             isLoadMoreing = false;
-                            loadMoreAdapter.clear();
+                            //千万不能notifydatasetchanged,否则整个列表都会被刷新，如果是比较耗时的加载图片，会闪烁
+                            loadMoreAdapter.getAdapter().clearNoNotify();
+                            loadMoreAdapter.getAdapter().notifyItemRemoved(0);
 
                             if (callback != null) callback.onClosed();
+
                         }
                     });
                     animatorSet.start();
@@ -270,6 +276,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             }
         }, ms);
     }
+
     public SimpleAdapter<String> getLoadMoreAdapter() {
         return loadMoreAdapter;
     }
