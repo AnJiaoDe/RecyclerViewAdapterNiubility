@@ -15,14 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.BaseAdapter.R;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BaseViewHolder extends RecyclerView.ViewHolder {
     private SparseArray<View> array_view;
     private boolean isFullSpan = false;
+    private Map<Object, Bitmap> mapBitmap;
 
     public BaseViewHolder(View itemView) {
         super(itemView);
         array_view = new SparseArray<View>();
-
+        mapBitmap = new HashMap<>();
     }
 
     //获取View
@@ -47,6 +51,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     public void setFullSpan(boolean fullSpan) {
         isFullSpan = fullSpan;
     }
+
 //???????????????????????????????????????????????????????????????
 
 
@@ -67,38 +72,51 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         getView(res_id).setVisibility(View.GONE);
     }
 
-    public void setVisibility(@IdRes int res_id,  int visibility) {
+    public void setVisibility(@IdRes int res_id, int visibility) {
         getView(res_id).setVisibility(visibility);
     }
 
     //???????????????????????????????????????????????????????????????
 
 
-    public void setHeight(@IdRes int res_id,int height){
+    public void setHeight(@IdRes int res_id, int height) {
         // 在加载图片之前设定好图片的宽高，防止出现item错乱及闪烁
-        View view=getView(res_id);
+        View view = getView(res_id);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.height = height;
         view.setLayoutParams(layoutParams);
     }
-    public void setWidth(@IdRes int res_id,int width){
+
+    public void setWidth(@IdRes int res_id, int width) {
         // 在加载图片之前设定好图片的宽高，防止出现item错乱及闪烁
-        View view=getView(res_id);
+        View view = getView(res_id);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.width = width;
         view.setLayoutParams(layoutParams);
     }
-    public void setLayoutParams(@IdRes int res_id,int width,int height){
+
+    public void setLayoutParams(@IdRes int res_id, int width, int height) {
         // 在加载图片之前设定好图片的宽高，防止出现item错乱及闪烁
-        View view=getView(res_id);
+        View view = getView(res_id);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.width = width;
         layoutParams.height = height;
         view.setLayoutParams(layoutParams);
     }
+
+    public void putBitmap(Object key, Bitmap bitmap) {
+        mapBitmap.put(key, bitmap);
+    }
+
+    public void recycleBitmap(Object key) {
+        Bitmap bitmap = mapBitmap.get(key);
+        if (bitmap != null && !bitmap.isRecycled()) bitmap.recycle();
+        bitmap = null;
+        mapBitmap.remove(key);
+    }
+
     /**
      * 防止图片先显示复用ITEM的图片再显示自己的
-     *
      * @param res_id
      * @param tag
      * @param callbackIVTag
@@ -108,6 +126,16 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         if (getTag(res_id) != null && getTag(res_id).equals(tag))
             callbackIVTag.onTagEquls(tag);
     }
+
+    public void loadBitmapWithTag(@IdRes int res_id, Object tag, Bitmap bitmap) {
+        //防止图片先显示复用ITEM的图片再显示自己的
+        if (getTag(res_id) != null && getTag(res_id).equals(tag)) {
+            ImageView iv = getView(res_id);
+            iv.setImageBitmap(bitmap);
+            mapBitmap.put(tag, bitmap);
+        }
+    }
+
     /**
      * 防止图片先显示复用ITEM的图片再显示自己的
      *
@@ -115,7 +143,9 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
      * @param tag
      */
     public void setImageViewTag(@IdRes int res_id, Object tag) {
+        //注意顺序
         setImageBitmap(res_id, null);
+        recycleBitmap(tag);
         setTag(res_id, tag);
     }
 
