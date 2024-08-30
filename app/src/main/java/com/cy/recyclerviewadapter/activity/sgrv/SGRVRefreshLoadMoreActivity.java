@@ -88,7 +88,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
                     @Override
                     public void run() {
                         if (holder.getView(R.id.iv).getTag().equals(bean.getResID())) {
-                          // 使用 Glide 加载图片并应用渐变动画，下拉刷新，只能任凭闪烁了，即使添加动画看起来还是闪烁
+                          // 使用 Glide 加载图片并应用渐变动画，下拉刷新看起来就没那么闪烁，然而：快速滑动列表，看得眼花头晕，故而不用
 //                            Glide.with(SGRVRefreshLoadMoreActivity.this)
 //                                    .load(bean.getResID())
 //                                    .transition(DrawableTransitionOptions.withCrossFade(1000)) // 设置渐变效果

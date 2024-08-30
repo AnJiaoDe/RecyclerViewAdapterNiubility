@@ -25,8 +25,6 @@ public class VerticalStaggeredRecyclerView extends StaggeredRecyclerView<Vertica
     @Override
     public void setAdapter(final RecyclerView.Adapter adapter) {
         final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(getSpanCount(), RecyclerView.VERTICAL);
-        //防止item 交换位置
-//        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         setLayoutManager(layoutManager);
         super.setAdapter(adapter);
     }

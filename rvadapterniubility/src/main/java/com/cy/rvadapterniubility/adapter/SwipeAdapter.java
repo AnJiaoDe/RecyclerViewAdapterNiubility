@@ -36,16 +36,6 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
                 return SwipeAdapter.this.getItemLayoutID(position, bean);
             }
 
-//            @Override
-//            public long getItemId(int position) {
-//                return SwipeAdapter.this.getItemId(position);
-//            }
-//
-//            @Override
-//            public boolean hasStableIds_() {
-//                return SwipeAdapter.this.hasStableIds_();
-//            }
-
             @Override
             public void onItemClick(BaseViewHolder holder, int position, T bean) {
                 SwipeAdapter.this.onItemClick(holder, position, bean);
@@ -119,16 +109,6 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
     public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
 
     }
-
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
-//
-//    @Override
-//    public boolean hasStableIds_() {
-//        return true;
-//    }
 
     /**
      * 再次彰显面向多态编程的威力，接口的强扩展

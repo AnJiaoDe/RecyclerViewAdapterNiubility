@@ -37,16 +37,6 @@ public abstract class StaggeredAdapter<T> implements IAdapter<T, BaseViewHolder,
                 return StaggeredAdapter.this.getItemLayoutID(position, bean);
             }
 
-//            @Override
-//            public long getItemId(int position) {
-//                return StaggeredAdapter.this.getItemId(position);
-//            }
-//
-//            @Override
-//            public boolean hasStableIds_() {
-//                return StaggeredAdapter.this.hasStableIds_();
-//            }
-
             @Override
             public void bindDataToView(final BaseViewHolder holder, int position, T bean) {
                 StaggeredAdapter.this.bindDataToView(holder, position, bean);
@@ -75,16 +65,6 @@ public abstract class StaggeredAdapter<T> implements IAdapter<T, BaseViewHolder,
 
         };
     }
-
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
-
-//    @Override
-//    public boolean hasStableIds_() {
-//        return true;
-//    }
 
     public  boolean isFullSpan(int itemLayoutID){
         return false;
