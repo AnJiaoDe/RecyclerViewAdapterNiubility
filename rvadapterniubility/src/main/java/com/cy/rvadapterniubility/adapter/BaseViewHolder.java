@@ -73,18 +73,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     //???????????????????????????????????????????????????????????????
 
-    /**
-     * 防止图片先显示复用ITEM的图片再显示自己的
-     *
-     * @param res_id
-     * @param tag
-     * @param callbackIVTag
-     */
-    public void loadPicWithTag(@IdRes int res_id, Object tag, CallbackIVTag callbackIVTag) {
-        //防止图片先显示复用ITEM的图片再显示自己的
-        if (getTag(res_id) != null && getTag(res_id).equals(tag))
-            callbackIVTag.onTagEquls(tag);
-    }
+
     public void setHeight(@IdRes int res_id,int height){
         // 在加载图片之前设定好图片的宽高，防止出现item错乱及闪烁
         View view=getView(res_id);
@@ -107,7 +96,18 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         layoutParams.height = height;
         view.setLayoutParams(layoutParams);
     }
-
+    /**
+     * 防止图片先显示复用ITEM的图片再显示自己的
+     *
+     * @param res_id
+     * @param tag
+     * @param callbackIVTag
+     */
+    public void loadPicWithTag(@IdRes int res_id, Object tag, CallbackIVTag callbackIVTag) {
+        //防止图片先显示复用ITEM的图片再显示自己的
+        if (getTag(res_id) != null && getTag(res_id).equals(tag))
+            callbackIVTag.onTagEquls(tag);
+    }
     /**
      * 防止图片先显示复用ITEM的图片再显示自己的
      *
