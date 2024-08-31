@@ -132,6 +132,8 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void loadBitmapWithTag(@IdRes int res_id, Object tag, Bitmap bitmap) {
+        //回收之前持有的bitmap
+        recycleBitmap(getTag(res_id));
         //防止图片先显示复用ITEM的图片再显示自己的
         if (getTag(res_id) != null && getTag(res_id).equals(tag)) {
             ImageView iv = getView(res_id);
@@ -148,6 +150,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     public void setImageViewTag(@IdRes int res_id, Object tag) {
         //注意顺序
         setImageBitmap(res_id, null);
+        //回收之前持有的bitmap
         recycleBitmap(getTag(res_id));
         setTag(res_id, tag);
     }
