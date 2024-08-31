@@ -115,6 +115,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         mapBitmap.remove(key);
     }
 
+    public Map<Object, Bitmap> getMapBitmap() {
+        return mapBitmap;
+    }
+
     /**
      * 防止图片先显示复用ITEM的图片再显示自己的
      * @param res_id
