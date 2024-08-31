@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,11 +23,13 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     private SparseArray<View> array_view;
     private boolean isFullSpan = false;
     private Map<Object, Bitmap> mapBitmap;
+    private Object obj;
 
     public BaseViewHolder(View itemView) {
         super(itemView);
         array_view = new SparseArray<View>();
         mapBitmap = new HashMap<>();
+        obj = new Object();
     }
 
     //获取View
@@ -121,6 +124,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     /**
      * 防止图片先显示复用ITEM的图片再显示自己的
+     *
      * @param res_id
      * @param tag
      * @param callbackIVTag
@@ -144,6 +148,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     /**
      * 防止图片先显示复用ITEM的图片再显示自己的
+     *
      * @param res_id
      * @param tag
      */
@@ -155,14 +160,24 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         setTag(res_id, tag);
     }
 
-    public void setTag(@IdRes int res_id, Object tag) {
+    public <T> void setTag(@IdRes int res_id, T tag) {
         getView(res_id).setTag(tag);
     }
 
     @Nullable
-    public Object getTag(@IdRes int res_id) {
-        return getView(res_id).getTag();
+    public <T> T getTag(@IdRes int res_id) {
+        return (T) getView(res_id).getTag();
     }
+
+    public <T> void setObj(@NonNull T obj) {
+        this.obj = obj;
+    }
+
+    @NonNull
+    public <T> T getObj() {
+        return (T) obj;
+    }
+
 
     //null转空String
     public String nullToString(Object object) {
