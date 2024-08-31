@@ -175,12 +175,14 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      */
     public SimpleAdapter<T> remove(int position) {
         removeNoNotify(position);
+        //必须notifyDataSetChanged，否则瀑布流边距GG
+        notifyDataSetChanged();
         /**
          onBindViewHolder回调的position永远是最后一个可见的item的position,
          比如一次最多只能看到5个item,只要执行了notifyItemRemoved(position)，
          onBindViewHolder回调的position永远是4
          */
-        notifyItemRemoved(position);
+//        notifyItemRemoved(position);
         return this;
     }
 
