@@ -142,14 +142,13 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     /**
      * 防止图片先显示复用ITEM的图片再显示自己的
-     *
      * @param res_id
      * @param tag
      */
     public void setImageViewTag(@IdRes int res_id, Object tag) {
         //注意顺序
         setImageBitmap(res_id, null);
-        recycleBitmap(tag);
+        recycleBitmap(getTag(res_id));
         setTag(res_id, tag);
     }
 
