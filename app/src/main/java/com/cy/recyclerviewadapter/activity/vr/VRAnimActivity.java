@@ -12,7 +12,6 @@ import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
-import com.cy.rvadapterniubility.adapter.AnimAdapter;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -23,7 +22,7 @@ import java.util.List;
 
 public class VRAnimActivity extends BaseActivity {
 
-    private AnimAdapter<VRBean> animAdapter;
+    private SimpleAdapter<VRBean> simpleAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +33,7 @@ public class VRAnimActivity extends BaseActivity {
             list.add(new VRBean("内容" + i));
         }
         final VerticalRecyclerView verticalRecyclerView=findViewById(R.id.vr);
-        animAdapter = new AnimAdapter<VRBean>() {
+        simpleAdapter = new SimpleAdapter<VRBean>() {
             @Override
             public void bindDataToView(final BaseViewHolder holder, int position, VRBean bean) {
                 holder.setText(R.id.tv, bean.getStr());
@@ -59,7 +58,7 @@ public class VRAnimActivity extends BaseActivity {
 //            }
 
         };
-        ((VerticalRecyclerView) findViewById(R.id.vr)).addItemTouchAnim(new ItemAnimCallback(animAdapter) {
+        ((VerticalRecyclerView) findViewById(R.id.vr)).addItemTouchAnim(new ItemAnimCallback(simpleAdapter) {
             @Override
             public void onSelectedChanged__(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
                 super.onSelectedChanged__(viewHolder, actionState);
@@ -71,8 +70,8 @@ public class VRAnimActivity extends BaseActivity {
                 super.clearView(recyclerView, viewHolder);
                 viewHolder.itemView.setBackgroundResource(R.drawable.line_bottom);
             }
-        }).setAdapter(animAdapter);
-        animAdapter.add(list);
+        }).setAdapter(simpleAdapter);
+        simpleAdapter.add(list);
     }
 
     @Override

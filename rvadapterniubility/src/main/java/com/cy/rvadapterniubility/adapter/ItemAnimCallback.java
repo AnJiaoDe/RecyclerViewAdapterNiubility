@@ -80,7 +80,6 @@ public class ItemAnimCallback extends ItemTouchHelper.Callback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         simpleAdapter.remove(viewHolder.getBindingAdapterPosition());
     }
-
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         // 判断当前是否是swipe方式：侧滑。
