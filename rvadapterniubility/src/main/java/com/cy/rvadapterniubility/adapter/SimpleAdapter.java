@@ -104,6 +104,15 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     }
 
+    public final void onItemMove__(int fromPosition, int toPosition, RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
+        onItemMove(fromPosition, toPosition, (BaseViewHolder) srcHolder, (BaseViewHolder) targetHolder);
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
+
+    }
+
     public void startDefaultAttachedAnim(BaseViewHolder holder) {
 
         final ObjectAnimator objectAnimator_scaleX = ObjectAnimator.ofFloat(holder.itemView, "scaleX", 0.5f, 1);

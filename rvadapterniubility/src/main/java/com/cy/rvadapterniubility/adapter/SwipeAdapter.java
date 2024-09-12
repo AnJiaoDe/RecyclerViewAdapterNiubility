@@ -47,6 +47,12 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
             }
 
             @Override
+            public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
+                super.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
+                SwipeAdapter.this.onItemMove(fromPosition,toPosition,srcHolder,targetHolder);
+            }
+
+            @Override
             public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
                 super.onViewAttachedToWindow(holder);
                 SwipeAdapter.this.onViewAttachedToWindow(holder);
@@ -107,6 +113,11 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
 
     @Override
     public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
+
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
 
     }
 

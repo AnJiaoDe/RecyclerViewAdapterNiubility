@@ -16,6 +16,8 @@ public interface IAdapter<T, V extends RecyclerView.ViewHolder, A extends Recycl
 
     public void onItemLongClick(V holder, int position, T bean);
 
+    public void onItemMove(int fromPosition, int toPosition, V srcHolder, V targetHolder);
+
     public void onViewAttachedToWindow(V holder);
 
     public A getAdapter();

@@ -46,7 +46,7 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
                             notifyItemChanged(positionSelectedLast);
                             notifyItemChanged(positionSelected);
 
-                            positionSelectedLast=positionSelected;
+                            positionSelectedLast = positionSelected;
                         }
                         onItemClick(holder, position, getList_bean().get(position));
                     }
@@ -80,6 +80,12 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
             }
 
             @Override
+            public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
+                super.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
+                SelectorAdapter.this.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
+            }
+
+            @Override
             public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
                 super.onViewAttachedToWindow(holder);
                 SelectorAdapter.this.onViewAttachedToWindow(holder);
@@ -97,6 +103,11 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
 
     @Override
     public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
+
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
 
     }
 
@@ -133,7 +144,7 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
             simpleAdapter.notifyItemChanged(positionSelectedLast);
             simpleAdapter.notifyItemChanged(positionSelected);
 
-            positionSelectedLast=positionSelected;
+            positionSelectedLast = positionSelected;
         }
     }
 
