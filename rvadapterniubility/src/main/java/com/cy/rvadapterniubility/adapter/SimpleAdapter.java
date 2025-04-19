@@ -2,6 +2,7 @@ package com.cy.rvadapterniubility.adapter;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.os.Handler;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -180,6 +181,15 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     public SimpleAdapter<T> removeNoNotify(int position) {
         list_bean.remove(position);
         return this;
+    }
+
+    public void postNotifyDataSetChanged() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     /**
