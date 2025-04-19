@@ -183,6 +183,16 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         return this;
     }
 
+    /**
+     *返回 RecyclerView 当前是否正在计算布局。
+     * 如果此方法返回 true，则表示 RecyclerView 处于锁定状态，任何更新适配器内容的尝试都将导致异常，因为在 RecyclerView 尝试计算布局时无法更改适配器内容。
+     * 您的代码不太可能在此状态下运行，因为当发生布局遍历或 RecyclerView 响应系统事件（触摸、无障碍等）开始滚动时，框架会调用此代码。
+     * 如果您有一些自定义逻辑来响应可能在布局计算期间触发的 View 回调（例如焦点改变回调）来更改适配器内容，则可能会发生这种情况。在这些情况下，您应该使用 Handler 或类似机制推迟更改。
+     * 返回：
+     * 如果 RecyclerView 当前正在计算布局，则返回 true；否则返回 false
+     Cannot call this method while RecyclerView is computing a layout or scrolling
+     *
+     */
     public void postNotifyDataSetChanged() {
         new Handler().post(new Runnable() {
             @Override
