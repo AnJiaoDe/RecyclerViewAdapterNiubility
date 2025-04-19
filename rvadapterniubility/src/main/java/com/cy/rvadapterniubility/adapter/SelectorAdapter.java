@@ -20,11 +20,13 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
         simpleAdapter = new SimpleAdapter<T>() {
             @Override
             public void bindDataToView(final BaseViewHolder holder, int position, T bean) {
+                super.bindDataToView(holder, position, bean);
                 SelectorAdapter.this.bindDataToView(holder, position, bean, position == getPositionSelected());
             }
 
             @Override
             public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
+                super.onViewRecycled(holder, position, bean);
                 SelectorAdapter.this.onViewRecycled(holder, position, bean);
             }
 

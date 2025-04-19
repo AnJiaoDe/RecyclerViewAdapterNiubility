@@ -47,6 +47,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
         loadMoreAdapter = new SimpleAdapter<String>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean) {
+                super.bindDataToView(holder, position, bean);
                 OnGridLoadMoreListener.this.bindDataToLoadMore(holder, bean);
             }
 

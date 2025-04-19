@@ -39,6 +39,7 @@ public class GRVActivity extends BaseActivity {
         rvAdapter = new SimpleAdapter<HRVBean>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
+                super.bindDataToView(holder, position, bean);
                 holder.setImageResource(R.id.iv, bean.getResID());
             }
 

@@ -36,6 +36,7 @@ public class VRAnimActivity extends BaseActivity {
         simpleAdapter = new SimpleAdapter<VRBean>() {
             @Override
             public void bindDataToView(final BaseViewHolder holder, int position, VRBean bean) {
+                super.bindDataToView(holder, position, bean);
                 holder.setText(R.id.tv, bean.getStr());
 //                verticalRecyclerView.setDragTouchView(holder,holder.getView(R.id.btn_drag));
                 LogUtils.log("position",position);

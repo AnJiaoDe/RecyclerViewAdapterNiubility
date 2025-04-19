@@ -46,6 +46,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean) {
+                super.bindDataToView(holder, position, bean);
                 holder.setText(R.id.tv, "head" + position);
             }
 
@@ -62,6 +63,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
         }).addAdapter(new SimpleAdapter<VRBean>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, VRBean bean) {
+                super.bindDataToView(holder, position, bean);
                 holder.setText(R.id.tv, bean.getStr());
             }
 

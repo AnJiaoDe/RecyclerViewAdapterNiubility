@@ -34,6 +34,7 @@ public class GRVHorinzotalActivity extends BaseActivity {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
 
+                super.bindDataToView(holder, position, bean);
                 holder.setImageResource(R.id.iv,bean.getResID());
             }
 

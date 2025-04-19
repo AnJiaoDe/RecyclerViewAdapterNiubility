@@ -49,6 +49,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         loadMoreAdapter = new SimpleAdapter<String>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean) {
+                super.bindDataToView(holder, position, bean);
                 bindDataToLoadMore(holder, bean);
             }
 
