@@ -71,7 +71,6 @@ public class VRMultiActivity extends BaseActivity {
         rvAdapter = new SimpleAdapter<VRMultiBean>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, VRMultiBean bean) {
-                super.bindDataToView(holder, position, bean);
                 switch (bean.getView_type()) {
                     case 1:
                         holder.setText(R.id.tv, bean.getTitle());
@@ -120,8 +119,6 @@ public class VRMultiActivity extends BaseActivity {
                         SimpleAdapter simpleAdapter = new SimpleAdapter<HRVBean>() {
                             @Override
                             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
-
-                                super.bindDataToView(holder, position, bean);
                                 holder.setImageResource(R.id.iv, bean.getResID());
 
                             }

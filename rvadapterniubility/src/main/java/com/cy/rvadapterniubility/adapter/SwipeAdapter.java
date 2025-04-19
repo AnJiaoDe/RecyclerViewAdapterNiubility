@@ -21,7 +21,6 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
         simpleAdapter = new SimpleAdapter<T>() {
             @Override
             public void bindDataToView(final BaseViewHolder holder, int position, T bean) {
-                super.bindDataToView(holder, position, bean);
                 dealSwipe(holder, bean);
                 SwipeAdapter.this.bindDataToView(holder, position, bean);
             }

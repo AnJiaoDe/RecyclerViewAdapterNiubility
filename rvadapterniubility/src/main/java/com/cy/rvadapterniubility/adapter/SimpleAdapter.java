@@ -10,6 +10,7 @@ import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -27,11 +28,9 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     private List<T> list_bean;//数据源
 
-    private SparseArray<BaseViewHolder> sparseArrayHolder;
 
     public SimpleAdapter() {
         list_bean = new ArrayList<>();//数据源
-        sparseArrayHolder = new SparseArray<>();
     }
 
     @NonNull
@@ -62,28 +61,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     }
 
     @Override
-    @CallSuper
     public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
-        sparseArrayHolder.remove(position);
-    }
-
-    @Override
-    @CallSuper
-    public void bindDataToView(BaseViewHolder holder, int position, T bean) {
-        sparseArrayHolder.put(position,holder);
-    }
-
-    /**
-     * 用于更新数据到VIEW，避免直接调用notifydatasetchanged导致：
-     //只有一个item的时候，长按item会通知全选，崩溃,
-     Cannot call this method while RecyclerView is computing a layout or scrolling
-     */
-    public void notifyDataToView() {
-        int position;
-        for (int i = 0; i < sparseArrayHolder.size(); i++) {
-            position=sparseArrayHolder.keyAt(i);
-            bindDataToView(sparseArrayHolder.get(position),position, getList_bean().get(position));
-        }
     }
 
     @Override

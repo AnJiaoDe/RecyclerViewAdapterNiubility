@@ -39,7 +39,6 @@ public abstract class StaggeredAdapter<T> implements IAdapter<T, BaseViewHolder,
 
             @Override
             public void bindDataToView(final BaseViewHolder holder, int position, T bean) {
-                super.bindDataToView(holder, position, bean);
                 StaggeredAdapter.this.bindDataToView(holder, position, bean);
             }
 
