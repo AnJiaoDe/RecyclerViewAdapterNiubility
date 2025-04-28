@@ -164,6 +164,10 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
         super.onIdle(baseRecyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
         checkRecyclerView(baseRecyclerView);
         for (int position : positionHolder.getLastVisibleItemPositions()) {
+            //itemcount为0时，postion为-1
+            if (position < 0 ||
+                    (baseRecyclerView.getAdapter() != null && position >= baseRecyclerView.getAdapter().getItemCount()))
+                continue;
             RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
 //            //数据太少，没有充满recyclerView,没有loadMore的必要
             if (orientation == RecyclerView.VERTICAL) {

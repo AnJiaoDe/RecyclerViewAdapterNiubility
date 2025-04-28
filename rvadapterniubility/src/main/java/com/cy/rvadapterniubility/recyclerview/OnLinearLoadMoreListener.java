@@ -124,6 +124,10 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         super.onIdle(baseRecyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
         checkRecyclerView(baseRecyclerView);
         for (int position : positionHolder.getLastVisibleItemPositions()) {
+//            itemcount为0时，postion为-1
+            if (position < 0 ||
+                    (baseRecyclerView.getAdapter() != null && position >= baseRecyclerView.getAdapter().getItemCount()))
+                continue;
             RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
             if (orientation == RecyclerView.VERTICAL) {
                 if (holder != null && holder.itemView.getBottom() + space_vertical < baseRecyclerView.getHeight())
@@ -215,7 +219,6 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
 
     /**
      * 必须要有回调，必须 loadmore完全关闭后才能notify data，否则会导致上一次的loadMore动画没有停止，也没有被remove
-     *
      * @param callback
      */
     @Override

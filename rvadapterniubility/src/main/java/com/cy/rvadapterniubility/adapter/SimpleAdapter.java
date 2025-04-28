@@ -43,20 +43,28 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
         handleClick(holder);
+        //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
         if (position < 0 || position >= list_bean.size()) return;
         bindDataToView(holder, position, list_bean.get(position));
     }
 
     @Override
     public int getItemViewType(int position) {
-//        if(position<0||position>=list_bean.size())return R.layout.cy_staggerd_item_0;
+        //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
+        if (position < 0 || position >= list_bean.size()) return R.layout.cy_staggerd_item_0;
         return getItemLayoutID(position, list_bean.get(position));
     }
 
+    /**
+     * 注意：remove的item，是不会回调onViewRecycled的
+     *
+     * @param holder The ViewHolder for the view being recycled
+     */
     @Override
     public void onViewRecycled(@NonNull BaseViewHolder holder) {
         super.onViewRecycled(holder);
         int position = holder.getAbsoluteAdapterPosition();
+        //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
         if (position < 0 || position >= list_bean.size()) return;
         onViewRecycled(holder, position, list_bean.get(position));
     }
@@ -75,14 +83,12 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     }
 
     protected void handleClick(final BaseViewHolder holder) {
-        /**
-         *
-         */
         //添加Item的点击事件
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = holder.getBindingAdapterPosition();
+                //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
                 if (position < 0 || position >= list_bean.size()) return;
                 onItemClick(holder, position, list_bean.get(position));
             }
@@ -92,6 +98,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             @Override
             public boolean onLongClick(View v) {
                 int position = holder.getBindingAdapterPosition();
+                //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
                 if (position < 0 || position >= list_bean.size()) return false;
                 onItemLongClick(holder, position, list_bean.get(position));
                 return true;
@@ -135,22 +142,29 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     }
 
     @Override
-    public void onViewDetachedFromWindow(@NonNull BaseViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-    }
-
-    @Override
-    public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
-        super.onViewAttachedToWindow(holder);
-    }
-
-
-    @Override
     public SimpleAdapter getAdapter() {
         return this;
     }
 
 
+    /**
+     * 尽量用postNotifyDataSetChanged代替notifyDataSetChanged
+     * 返回 RecyclerView 当前是否正在计算布局。
+     * 如果此方法返回 true，则表示 RecyclerView 处于锁定状态，任何更新适配器内容的尝试都将导致异常，因为在 RecyclerView 尝试计算布局时无法更改适配器内容。
+     * 您的代码不太可能在此状态下运行，因为当发生布局遍历或 RecyclerView 响应系统事件（触摸、无障碍等）开始滚动时，框架会调用此代码。
+     * 如果您有一些自定义逻辑来响应可能在布局计算期间触发的 View 回调（例如焦点改变回调）来更改适配器内容，则可能会发生这种情况。在这些情况下，您应该使用 Handler 或类似机制推迟更改。
+     * 返回：
+     * 如果 RecyclerView 当前正在计算布局，则返回 true；否则返回 false
+     * Cannot call this method while RecyclerView is computing a layout or scrolling
+     */
+    public void postNotifyDataSetChanged() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
+    }
     /**
      * ------------------------------------------------------------------------------
      */
@@ -181,25 +195,6 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     public SimpleAdapter<T> removeNoNotify(int position) {
         list_bean.remove(position);
         return this;
-    }
-
-    /**
-     *返回 RecyclerView 当前是否正在计算布局。
-     * 如果此方法返回 true，则表示 RecyclerView 处于锁定状态，任何更新适配器内容的尝试都将导致异常，因为在 RecyclerView 尝试计算布局时无法更改适配器内容。
-     * 您的代码不太可能在此状态下运行，因为当发生布局遍历或 RecyclerView 响应系统事件（触摸、无障碍等）开始滚动时，框架会调用此代码。
-     * 如果您有一些自定义逻辑来响应可能在布局计算期间触发的 View 回调（例如焦点改变回调）来更改适配器内容，则可能会发生这种情况。在这些情况下，您应该使用 Handler 或类似机制推迟更改。
-     * 返回：
-     * 如果 RecyclerView 当前正在计算布局，则返回 true；否则返回 false
-     Cannot call this method while RecyclerView is computing a layout or scrolling
-     *
-     */
-    public void postNotifyDataSetChanged() {
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                notifyDataSetChanged();
-            }
-        });
     }
 
     /**

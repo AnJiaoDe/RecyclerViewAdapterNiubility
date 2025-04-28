@@ -122,6 +122,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
 
             @Override
             public void onLoadMoreStart() {
+                LogUtils.log("onLoadMoreStart");
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -172,14 +173,14 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
             }
         });
         final List<String> list_head = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            list_head.add("head" + i);
-        }
+//        for (int i = 0; i < 2; i++) {
+//            list_head.add("head" + i);
+//        }
 
         final List<VRBean> list_content = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            list_content.add(new VRBean("内容" + i));
-        }
+//        for (int i = 0; i < 100; i++) {
+//            list_content.add(new VRBean("内容" + i));
+//        }
 
         multiAdapter.getAdapter(0).add(list_head);
         multiAdapter.getAdapter(1).add(list_content);
