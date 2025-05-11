@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -146,18 +147,31 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
+//    /**
+//     * 防止图片先显示复用ITEM的图片再显示自己的
+//     *
+//     * @param view_id
+//     * @param tag
+//     */
+//    public void setImageViewTag(@IdRes int view_id, Object tag) {
+//        //注意顺序
+//        setImageBitmap(view_id, null);
+//        //回收之前持有的bitmap
+//        recycleBitmap(getTag(view_id));
+//        setTag(view_id, tag);
+//    }
     /**
      * 防止图片先显示复用ITEM的图片再显示自己的
      *
-     * @param res_id
+     * @param view_id
      * @param tag
      */
-    public void setImageViewTag(@IdRes int res_id, Object tag) {
+    public void setImageViewTag(@IdRes int view_id, @DrawableRes int resId, Object tag) {
         //注意顺序
-        setImageBitmap(res_id, null);
+        setImageResource(view_id, resId);
         //回收之前持有的bitmap
-        recycleBitmap(getTag(res_id));
-        setTag(res_id, tag);
+        recycleBitmap(getTag(view_id));
+        setTag(view_id, tag);
     }
 
     public <T> void setTag(@IdRes int res_id, T tag) {
