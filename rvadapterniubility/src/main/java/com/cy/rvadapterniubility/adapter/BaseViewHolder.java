@@ -166,9 +166,9 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
      * @param view_id
      * @param tag
      */
-    public void setImageViewTag(@IdRes int view_id, @DrawableRes int resId, Object tag) {
+    public void setImageViewTag(@IdRes int view_id, @DrawableRes int resId_plceholder, Object tag) {
         //注意顺序
-        setImageResource(view_id, resId);
+        setImageResource(view_id, resId_plceholder);
         //回收之前持有的bitmap
         recycleBitmap(getTag(view_id));
         setTag(view_id, tag);
