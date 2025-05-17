@@ -134,7 +134,6 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     /**
      * //防止图片先显示复用ITEM的图片再显示自己的
-     *
      * @param tag
      * @param callbackTag
      */
@@ -143,57 +142,40 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
             callbackTag.onTagEquls(tag);
     }
 
-//    /**
-//     * 防止图片先显示复用ITEM的图片再显示自己的
-//     *
-//     * @param res_id
-//     * @param tag
-//     * @param callbackTag
-//     */
-//    public void loadPicWithTag(@IdRes int res_id, Object tag, CallbackTag callbackTag) {
-//        //防止图片先显示复用ITEM的图片再显示自己的
-//        if (getTag(res_id) != null && getTag(res_id).equals(tag))
-//            callbackTag.onTagEquls(tag);
-//    }
-
-//    public void loadBitmapWithTag(@IdRes int res_id, Object tag, Bitmap bitmap) {
-//        //回收之前持有的bitmap
-//        recycleBitmap(getTag(res_id));
-//        //防止图片先显示复用ITEM的图片再显示自己的
-//        if (getTag(res_id) != null && getTag(res_id).equals(tag)) {
-//            ImageView iv = getView(res_id);
-//            iv.setImageBitmap(bitmap);
-//            mapBitmap.put(tag, bitmap);
-//        }
-//    }
-
-//    /**
-//     * 防止图片先显示复用ITEM的图片再显示自己的
-//     *
-//     * @param view_id
-//     * @param tag
-//     */
-//    public void setImageViewTag(@IdRes int view_id, Object tag) {
-//        //注意顺序
-//        setImageBitmap(view_id, null);
-//        //回收之前持有的bitmap
-//        recycleBitmap(getTag(view_id));
-//        setTag(view_id, tag);
-//    }
-
     /**
      * 防止图片先显示复用ITEM的图片再显示自己的
-     *
+     * @param res_id
+     * @param tag
+     * @param callbackTag
+     */
+    public void isEqualsViewTag(@IdRes int res_id, Object tag, CallbackTag callbackTag) {
+        //防止图片先显示复用ITEM的图片再显示自己的
+        if (getTag(res_id) != null && getTag(res_id).equals(tag))
+            callbackTag.onTagEquls(tag);
+    }
+
+    public void loadBitmapWithTag(@IdRes int res_id, Object tag, Bitmap bitmap) {
+        //回收之前持有的bitmap
+//        recycleBitmap(getTag(res_id));
+        //防止图片先显示复用ITEM的图片再显示自己的
+        if (getTag(res_id) != null && getTag(res_id).equals(tag)) {
+            ImageView iv = getView(res_id);
+            iv.setImageBitmap(bitmap);
+//            mapBitmap.put(tag, bitmap);
+        }
+    }
+    /**
+     * 防止图片先显示复用ITEM的图片再显示自己的
      * @param view_id
      * @param tag
      */
-//    public void setImageViewTag(@IdRes int view_id, @DrawableRes int resId_plceholder, Object tag) {
-//        //注意顺序
-//        setImageResource(view_id, resId_plceholder);
-//        //回收之前持有的bitmap
+    public void setImageViewTag(@IdRes int view_id, @DrawableRes int resId_plceholder, Object tag) {
+        //注意顺序
+        setImageResource(view_id, resId_plceholder);
+        //回收之前持有的bitmap
 //        recycleBitmap(getTag(view_id));
-//        setTag(view_id, tag);
-//    }
+        setTag(view_id, tag);
+    }
 
     public <T> void setTag(@IdRes int res_id, T tag) {
         getView(res_id).setTag(tag);
