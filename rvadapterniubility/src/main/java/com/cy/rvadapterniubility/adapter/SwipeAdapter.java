@@ -3,6 +3,7 @@ package com.cy.rvadapterniubility.adapter;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.rvadapterniubility.swipelayout.OnSwipeListener;
@@ -20,15 +21,20 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
     public SwipeAdapter() {
         simpleAdapter = new SimpleAdapter<T>() {
             @Override
-            public void bindDataToView(final BaseViewHolder holder, int position, T bean) {
-                dealSwipe(holder, bean);
-                SwipeAdapter.this.bindDataToView(holder, position, bean);
+            public void recycleData(@Nullable Object tag) {
+               SwipeAdapter.this.recycleData(tag);
+            }
+
+            @Nullable
+            @Override
+            public Object setHolderTagPreBindData(BaseViewHolder holder, int position, T bean) {
+                return SwipeAdapter.this.setHolderTagPreBindData(holder,position,bean);
             }
 
             @Override
-            public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
-                super.onViewRecycled(holder, position, bean);
-                SwipeAdapter.this.onViewRecycled(holder,position,bean);
+            public void bindDataToView(final BaseViewHolder holder, int position, T bean) {
+                dealSwipe(holder, bean);
+                SwipeAdapter.this.bindDataToView(holder, position, bean);
             }
 
             @Override
@@ -52,12 +58,6 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
                 SwipeAdapter.this.onItemMove(fromPosition,toPosition,srcHolder,targetHolder);
             }
 
-            @Override
-            public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
-                super.onViewAttachedToWindow(holder);
-                SwipeAdapter.this.onViewAttachedToWindow(holder);
-
-            }
         };
     }
 
@@ -97,10 +97,6 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
         });
     }
 
-    @Override
-    public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
-
-    }
 
     public void onScrolled(BaseViewHolder holder, int position, T bean, int dx) {
     }
@@ -117,20 +113,20 @@ public abstract class SwipeAdapter<T> implements IAdapter<T, BaseViewHolder, Sim
     }
 
     @Override
+    public void recycleData(@Nullable Object tag) {
+
+    }
+
+    @Nullable
+    @Override
+    public Object setHolderTagPreBindData(BaseViewHolder holder, int position, T bean) {
+        return null;
+    }
+
+    @Override
     public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
 
     }
-
-    /**
-     * 再次彰显面向多态编程的威力，接口的强扩展
-     *
-     * @param holder
-     */
-    @Override
-    public void onViewAttachedToWindow(BaseViewHolder holder) {
-
-    }
-
 
     public SwipeLayout getOpened() {
         return swipeLayout_opened;

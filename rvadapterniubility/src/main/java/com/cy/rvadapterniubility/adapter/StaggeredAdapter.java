@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 /**
@@ -38,15 +39,21 @@ public abstract class StaggeredAdapter<T> implements IAdapter<T, BaseViewHolder,
             }
 
             @Override
+            public void recycleData(@Nullable Object tag) {
+                StaggeredAdapter.this.recycleData(tag);
+            }
+
+            @Nullable
+            @Override
+            public Object setHolderTagPreBindData(BaseViewHolder holder, int position, T bean) {
+                return StaggeredAdapter.this.setHolderTagPreBindData(holder, position, bean);
+            }
+
+            @Override
             public void bindDataToView(final BaseViewHolder holder, int position, T bean) {
                 StaggeredAdapter.this.bindDataToView(holder, position, bean);
             }
 
-            @Override
-            public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
-                super.onViewRecycled(holder, position, bean);
-                StaggeredAdapter.this.onViewRecycled(holder, position, bean);
-            }
 
             @Override
             public void onItemClick(BaseViewHolder holder, int position, T bean) {
@@ -61,22 +68,26 @@ public abstract class StaggeredAdapter<T> implements IAdapter<T, BaseViewHolder,
             @Override
             public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
                 super.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
-                StaggeredAdapter.this.onItemMove(fromPosition,toPosition,srcHolder,targetHolder);
-            }
-
-            @Override
-            public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
-                super.onViewAttachedToWindow(holder);
-                StaggeredAdapter.this.onViewAttachedToWindow(holder);
+                StaggeredAdapter.this.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
             }
 
         };
     }
 
-    public  boolean isFullSpan(int itemLayoutID){
+    public boolean isFullSpan(int itemLayoutID) {
         return false;
     }
 
+    @Override
+    public void recycleData(@Nullable Object tag) {
+
+    }
+
+    @Nullable
+    @Override
+    public Object setHolderTagPreBindData(BaseViewHolder holder, int position, T bean) {
+        return null;
+    }
 
     @Override
     public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
@@ -87,22 +98,6 @@ public abstract class StaggeredAdapter<T> implements IAdapter<T, BaseViewHolder,
     public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
 
     }
-
-    /**
-     * 再次彰显面向多态编程的威力，接口的强扩展
-     *
-     * @param holder
-     */
-    @Override
-    public void onViewAttachedToWindow(BaseViewHolder holder) {
-
-    }
-
-    @Override
-    public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
-
-    }
-
 
     @Override
     public SimpleAdapter<T> getAdapter() {

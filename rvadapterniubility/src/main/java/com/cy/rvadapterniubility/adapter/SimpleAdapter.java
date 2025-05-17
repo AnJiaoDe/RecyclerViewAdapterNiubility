@@ -3,7 +3,6 @@ package com.cy.rvadapterniubility.adapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.os.Handler;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -42,10 +41,24 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
+        recycleData(holder.getTag());
         handleClick(holder);
         //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
         if (position < 0 || position >= list_bean.size()) return;
+        holder.setTag(setHolderTagPreBindData(holder, position, list_bean.get(position)));
         bindDataToView(holder, position, list_bean.get(position));
+    }
+
+    /**
+     * 可以在此处回收holder的tag对应的数据，比如bitmap,
+     *  当然主动持有bitmap显然是不明智的，当view detachwindow之后，bitmap自然就没有可达对象引用它了，会自动被垃圾回收
+     * @param holder Holder of the view being detached
+     */
+    @CallSuper
+    @Override
+    public void onViewDetachedFromWindow(@NonNull BaseViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        recycleData(holder.getTag());
     }
 
     @Override
@@ -55,23 +68,16 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         return getItemLayoutID(position, list_bean.get(position));
     }
 
-    /**
-     * 注意：remove的item，是不会回调onViewRecycled的
-     *
-     * @param holder The ViewHolder for the view being recycled
-     */
-    @Override
-    public void onViewRecycled(@NonNull BaseViewHolder holder) {
-        super.onViewRecycled(holder);
-        int position = holder.getAbsoluteAdapterPosition();
-        //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
-        if (position < 0 || position >= list_bean.size()) return;
-        onViewRecycled(holder, position, list_bean.get(position));
-    }
+    //get出来的position一般都是-1，故而不用
+//    @Override
+//    public void onViewRecycled(@NonNull BaseViewHolder holder) {
+//        super.onViewRecycled(holder);
+//        int position = holder.getAbsoluteAdapterPosition();
+//        //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
+//        if (position < 0 || position >= list_bean.size()) return;
+//        onViewRecycled(holder, position, list_bean.get(position));
+//    }
 
-    @Override
-    public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
-    }
 
     @Override
     public int getItemCount() {
@@ -108,8 +114,33 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     }
 
     /**
+     * 先于setHolderTagPreBindData被调用，可以在此处回收tag对应的数据，比如bitmap，
+     * 当然主动持有bitmap显然是不明智的，当view detachwindow之后，bitmap自然就没有可达对象引用它了，会自动被垃圾回收
+     * @param tag
+     */
+    @Override
+    public void recycleData(@Nullable Object tag) {
+
+    }
+    /**
+     * 给holder设置TAG，用于处理图片错乱
+     * @param holder
+     * @param position
+     * @param bean
+     * @return
+     */
+    @Nullable
+    @Override
+    public Object setHolderTagPreBindData(BaseViewHolder holder, int position, T bean) {
+        return null;
+    }
+
+
+
+    /**
      * ----------------------------------------------------------------------------------
      */
+
     @Override
     public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
 

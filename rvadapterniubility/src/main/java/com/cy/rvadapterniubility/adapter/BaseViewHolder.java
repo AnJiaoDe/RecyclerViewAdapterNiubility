@@ -15,22 +15,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cy.BaseAdapter.R;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class BaseViewHolder extends RecyclerView.ViewHolder {
     private SparseArray<View> array_view;
     private boolean isFullSpan = false;
-    private Map<Object, Bitmap> mapBitmap;
-    private Object obj;
+//    private Map<Object, Bitmap> mapBitmap;
+//    private Object obj;
+    private Object tag;
 
     public BaseViewHolder(View itemView) {
         super(itemView);
         array_view = new SparseArray<View>();
-        mapBitmap = new HashMap<>();
-        obj = new Object();
+//        mapBitmap = new HashMap<>();
+//        obj = new Object();
     }
 
     //获取View
@@ -58,6 +58,15 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
 //???????????????????????????????????????????????????????????????
 
+
+    @Nullable
+    public Object getTag() {
+        return tag;
+    }
+
+    public void setTag(@Nullable Object tag) {
+        this.tag = tag;
+    }
 
     //设置View显示
     public BaseViewHolder setVisible(@IdRes int res_id) {
@@ -108,44 +117,55 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         view.setLayoutParams(layoutParams);
     }
 
-    public void putBitmap(Object key, Bitmap bitmap) {
-        mapBitmap.put(key, bitmap);
-    }
+//    public void putBitmap(Object key, Bitmap bitmap) {
+//        mapBitmap.put(key, bitmap);
+//    }
 
-    public void recycleBitmap(Object key) {
-        Bitmap bitmap = mapBitmap.get(key);
-        if (bitmap != null && !bitmap.isRecycled()) bitmap.recycle();
-        bitmap = null;
-        mapBitmap.remove(key);
-    }
+//    public void recycleBitmap(Object key) {
+//        Bitmap bitmap = mapBitmap.get(key);
+//        if (bitmap != null && !bitmap.isRecycled()) bitmap.recycle();
+//        bitmap = null;
+//        mapBitmap.remove(key);
+//    }
 
-    public Map<Object, Bitmap> getMapBitmap() {
-        return mapBitmap;
-    }
+//    public Map<Object, Bitmap> getMapBitmap() {
+//        return mapBitmap;
+//    }
 
     /**
-     * 防止图片先显示复用ITEM的图片再显示自己的
+     * //防止图片先显示复用ITEM的图片再显示自己的
      *
-     * @param res_id
      * @param tag
-     * @param callbackIVTag
+     * @param callbackTag
      */
-    public void loadPicWithTag(@IdRes int res_id, Object tag, CallbackIVTag callbackIVTag) {
-        //防止图片先显示复用ITEM的图片再显示自己的
-        if (getTag(res_id) != null && getTag(res_id).equals(tag))
-            callbackIVTag.onTagEquls(tag);
+    public void isEqualsHolderTag(@NonNull Object tag, CallbackTag callbackTag) {
+        if (Objects.equals(this.tag, tag))
+            callbackTag.onTagEquls(tag);
     }
 
-    public void loadBitmapWithTag(@IdRes int res_id, Object tag, Bitmap bitmap) {
-        //回收之前持有的bitmap
-        recycleBitmap(getTag(res_id));
-        //防止图片先显示复用ITEM的图片再显示自己的
-        if (getTag(res_id) != null && getTag(res_id).equals(tag)) {
-            ImageView iv = getView(res_id);
-            iv.setImageBitmap(bitmap);
-            mapBitmap.put(tag, bitmap);
-        }
-    }
+//    /**
+//     * 防止图片先显示复用ITEM的图片再显示自己的
+//     *
+//     * @param res_id
+//     * @param tag
+//     * @param callbackTag
+//     */
+//    public void loadPicWithTag(@IdRes int res_id, Object tag, CallbackTag callbackTag) {
+//        //防止图片先显示复用ITEM的图片再显示自己的
+//        if (getTag(res_id) != null && getTag(res_id).equals(tag))
+//            callbackTag.onTagEquls(tag);
+//    }
+
+//    public void loadBitmapWithTag(@IdRes int res_id, Object tag, Bitmap bitmap) {
+//        //回收之前持有的bitmap
+//        recycleBitmap(getTag(res_id));
+//        //防止图片先显示复用ITEM的图片再显示自己的
+//        if (getTag(res_id) != null && getTag(res_id).equals(tag)) {
+//            ImageView iv = getView(res_id);
+//            iv.setImageBitmap(bitmap);
+//            mapBitmap.put(tag, bitmap);
+//        }
+//    }
 
 //    /**
 //     * 防止图片先显示复用ITEM的图片再显示自己的
@@ -160,19 +180,20 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 //        recycleBitmap(getTag(view_id));
 //        setTag(view_id, tag);
 //    }
+
     /**
      * 防止图片先显示复用ITEM的图片再显示自己的
      *
      * @param view_id
      * @param tag
      */
-    public void setImageViewTag(@IdRes int view_id, @DrawableRes int resId_plceholder, Object tag) {
-        //注意顺序
-        setImageResource(view_id, resId_plceholder);
-        //回收之前持有的bitmap
-        recycleBitmap(getTag(view_id));
-        setTag(view_id, tag);
-    }
+//    public void setImageViewTag(@IdRes int view_id, @DrawableRes int resId_plceholder, Object tag) {
+//        //注意顺序
+//        setImageResource(view_id, resId_plceholder);
+//        //回收之前持有的bitmap
+//        recycleBitmap(getTag(view_id));
+//        setTag(view_id, tag);
+//    }
 
     public <T> void setTag(@IdRes int res_id, T tag) {
         getView(res_id).setTag(tag);
@@ -183,14 +204,14 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return (T) getView(res_id).getTag();
     }
 
-    public <T> void setObj(@NonNull T obj) {
-        this.obj = obj;
-    }
+//    public <T> void setObj(@NonNull T obj) {
+//        this.obj = obj;
+//    }
 
-    @NonNull
-    public <T> T getObj() {
-        return (T) obj;
-    }
+//    @NonNull
+//    public <T> T getObj() {
+//        return (T) obj;
+//    }
 
 
     //null转空String

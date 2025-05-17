@@ -3,6 +3,8 @@ package com.cy.recyclerviewadapter.activity.vr;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
@@ -69,6 +71,12 @@ public class VRSwipeActivity extends BaseActivity {
                         });
                     }
                 });
+            }
+
+            @Nullable
+            @Override
+            public Object setHolderTagPreBindData(BaseViewHolder holder, int position, VRBean bean) {
+                return null;
             }
 
             @Override

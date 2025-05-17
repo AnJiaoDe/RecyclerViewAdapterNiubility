@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -97,6 +98,12 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
                         }
                     }
                 }, 100);
+            }
+
+            @Nullable
+            @Override
+            public Object setHolderTagPreBindData(BaseViewHolder holder, int position, HRVBean bean) {
+                return null;
             }
 
             @Override

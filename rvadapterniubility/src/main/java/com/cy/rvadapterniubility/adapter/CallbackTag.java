@@ -1,5 +1,5 @@
 package com.cy.rvadapterniubility.adapter;
 
-public interface CallbackIVTag {
+public interface CallbackTag {
     public void onTagEquls(Object tag);
 }

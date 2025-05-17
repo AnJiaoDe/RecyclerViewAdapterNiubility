@@ -3,6 +3,7 @@ package com.cy.rvadapterniubility.adapter;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.cy.rvadapterniubility.swipelayout.OnSwipeListener;
 import com.cy.rvadapterniubility.swipelayout.SwipeLayout;
@@ -19,14 +20,19 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
     public SelectorAdapter() {
         simpleAdapter = new SimpleAdapter<T>() {
             @Override
-            public void bindDataToView(final BaseViewHolder holder, int position, T bean) {
-                SelectorAdapter.this.bindDataToView(holder, position, bean, position == getPositionSelected());
+            public void recycleData(@Nullable Object tag) {
+                SelectorAdapter.this.recycleData(tag);
+            }
+
+            @Nullable
+            @Override
+            public Object setHolderTagPreBindData(BaseViewHolder holder, int position, T bean) {
+                return SelectorAdapter.this.setHolderTagPreBindData(holder,position,bean);
             }
 
             @Override
-            public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
-                super.onViewRecycled(holder, position, bean);
-                SelectorAdapter.this.onViewRecycled(holder, position, bean);
+            public void bindDataToView(final BaseViewHolder holder, int position, T bean) {
+                SelectorAdapter.this.bindDataToView(holder, position, bean, position == getPositionSelected());
             }
 
             @Override
@@ -85,14 +91,18 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
                 super.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
                 SelectorAdapter.this.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
             }
-
-            @Override
-            public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
-                super.onViewAttachedToWindow(holder);
-                SelectorAdapter.this.onViewAttachedToWindow(holder);
-
-            }
         };
+    }
+
+    @Override
+    public void recycleData(@Nullable Object tag) {
+
+    }
+
+    @Nullable
+    @Override
+    public Object setHolderTagPreBindData(BaseViewHolder holder, int position, T bean) {
+        return null;
     }
 
     @Override
@@ -112,20 +122,6 @@ public abstract class SelectorAdapter<T> implements IAdapter<T, BaseViewHolder, 
 
     }
 
-    /**
-     * 再次彰显面向多态编程的威力，接口的强扩展
-     *
-     * @param holder
-     */
-    @Override
-    public void onViewAttachedToWindow(BaseViewHolder holder) {
-
-    }
-
-    @Override
-    public void onViewRecycled(BaseViewHolder holder, int position, T bean) {
-
-    }
 
     public int getPositionSelectedLast() {
         return positionSelectedLast;

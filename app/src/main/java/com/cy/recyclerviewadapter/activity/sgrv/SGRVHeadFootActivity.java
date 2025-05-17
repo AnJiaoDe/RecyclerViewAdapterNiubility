@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
@@ -32,6 +34,12 @@ public class SGRVHeadFootActivity extends BaseActivity {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean) {
                 holder.setText(R.id.tv, "head" + position);
+            }
+
+            @Nullable
+            @Override
+            public Object setHolderTagPreBindData(BaseViewHolder holder, int position, String bean) {
+                return null;
             }
 
             @Override
@@ -69,6 +77,12 @@ public class SGRVHeadFootActivity extends BaseActivity {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean) {
                 holder.setText(R.id.tv, "foot" + position);
+            }
+
+            @Nullable
+            @Override
+            public Object setHolderTagPreBindData(BaseViewHolder holder, int position, String bean) {
+                return null;
             }
 
             @Override

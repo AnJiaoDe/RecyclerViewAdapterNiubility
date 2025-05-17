@@ -43,5 +43,5 @@ dependencies {
     api "com.github.AnJiaoDe:RefreshLayoutNiubility:V1.4.7"
 
     api 'com.github.AnJiaoDe:AndroidView:V2.0.3'
-
+    api 'pl.droidsonroids.gif:android-gif-drawable:1.2.28'
 }
