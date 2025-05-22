@@ -12,17 +12,21 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MotionEventCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
+
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
+
+import java.util.Objects;
 
 /**
  * Created by cy on 2017/7/2.
  */
 
-public class BaseRecyclerView<T extends BaseRecyclerView>  extends RecyclerView{
+public class BaseRecyclerView<T extends BaseRecyclerView<T>> extends RecyclerView {
     //永远<=0
     private int offsetX = 0;
     private int offsetY = 0;
@@ -31,7 +35,7 @@ public class BaseRecyclerView<T extends BaseRecyclerView>  extends RecyclerView{
     private ItemTouchHelper itemTouchHelper;
     private ItemAnimCallback itemAnimCallback;
     private VelocityTracker velocityTracker;
-
+    private boolean useDragSelect = false;
 
     public BaseRecyclerView(Context context) {
         this(context, null);
@@ -49,14 +53,63 @@ public class BaseRecyclerView<T extends BaseRecyclerView>  extends RecyclerView{
                 offsetY -= dy;
             }
         });
+        addOnItemTouchListener(new OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+                if (!useDragSelect || recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() == 0)
+                    return false;
+                switch (motionEvent.getActionMasked()) {
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                    case MotionEvent.ACTION_DOWN:
+                        reset();
+                        break;
+                }
+                return true;
+            }
 
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
+                if (!useDragSelect) return;
+                switch (motionEvent.getActionMasked()) {
+                    case MotionEvent.ACTION_MOVE:
+                        View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+                        if (child != null) {
+                            int position = recyclerView.getChildAdapterPosition(child);
+                            if (position != RecyclerView.NO_POSITION && mEnd != position) {
+                                mEnd = position;
+                                notifySelectRangeChange();
+                            }
+                        }
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_POINTER_UP:
+                        reset();
+                        break;
+                }
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
     }
 
+    public boolean isUseDragSelect() {
+        return useDragSelect;
+    }
 
-    public  T addOnScrollListener(OnSimpleScrollListener onSimpleScrollListener) {
+    public T setUseDragSelect(boolean useDragSelect) {
+        this.useDragSelect = useDragSelect;
+        return (T) this;
+    }
+
+    public T addOnScrollListener(OnSimpleScrollListener onSimpleScrollListener) {
         super.addOnScrollListener(onSimpleScrollListener.getOnScrollListener());
         return (T) this;
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (velocityTracker == null) velocityTracker = VelocityTracker.obtain();
@@ -92,7 +145,7 @@ public class BaseRecyclerView<T extends BaseRecyclerView>  extends RecyclerView{
     }
 
 
-    public  T setEnableAnimDefault(boolean enable) {
+    public T setEnableAnimDefault(boolean enable) {
         SimpleItemAnimator simpleItemAnimator = (SimpleItemAnimator) getItemAnimator();
         //去除难看的默认闪烁动画
         if (simpleItemAnimator != null) simpleItemAnimator.setSupportsChangeAnimations(enable);
@@ -131,7 +184,7 @@ public class BaseRecyclerView<T extends BaseRecyclerView>  extends RecyclerView{
         return offsetY;
     }
 
-    public  T setOffsetX(int offsetX) {
+    public T setOffsetX(int offsetX) {
         this.offsetX = offsetX;
         return (T) this;
     }
@@ -140,7 +193,6 @@ public class BaseRecyclerView<T extends BaseRecyclerView>  extends RecyclerView{
         this.offsetY = offsetY;
         return (T) this;
     }
-
 
 
     public T addItemTouchAnim(final ItemAnimCallback itemAnimCallback) {
