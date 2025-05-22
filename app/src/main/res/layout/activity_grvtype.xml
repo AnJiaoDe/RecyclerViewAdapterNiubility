@@ -26,5 +26,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="grv+refresh+loadmore" />
+    <Button
+        android:id="@+id/btn_drag_selector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="grv+drag_selector" />
 
 </LinearLayout>

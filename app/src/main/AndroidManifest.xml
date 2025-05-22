@@ -12,7 +12,10 @@
         android:networkSecurityConfig="@xml/network_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.tabrv.TabLayoutRVActivity"></activity>
+        <activity
+            android:name=".activity.grv.GRVDragSelectorActivity"
+            android:exported="false" />
+        <activity android:name=".activity.tabrv.TabLayoutRVActivity" />
         <activity android:name=".activity.grv.GRVHorinzotalActivity" />
         <activity android:name=".activity.vr.VRRefreshLoadMoreSelfActivity" />
         <activity android:name=".MainActivity">

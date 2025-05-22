@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_pic" />
+
+    <com.cy.androidview.selectorview.ImageViewSelector
+        android:id="@+id/ivs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:cy_srcChecked="@drawable/cb_selected_rect_blue"
+        app:cy_srcUnChecked="@drawable/cb_unselected_rect_white" />
+</FrameLayout>

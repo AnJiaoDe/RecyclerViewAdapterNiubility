@@ -18,6 +18,7 @@ public class GRVTypeActivity extends BaseActivity {
         findViewById(R.id.btn_grv_h).setOnClickListener(this);
         findViewById(R.id.btn_head).setOnClickListener(this);
         findViewById(R.id.btn_refresh_loadmore).setOnClickListener(this);
+        findViewById(R.id.btn_drag_selector).setOnClickListener(this);
     }
 
     @Override
@@ -37,6 +38,9 @@ public class GRVTypeActivity extends BaseActivity {
             case R.id.btn_refresh_loadmore:
                 startAppcompatActivity(GRVRefreshLoadMoreActivity.class);
 
+                break;
+            case R.id.btn_drag_selector:
+                startAppcompatActivity(GRVDragSelectorActivity.class);
                 break;
         }
 

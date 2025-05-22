@@ -28,12 +28,6 @@ public abstract class StaggeredAdapter<T> implements IAdapter<T, BaseViewHolder,
             }
 
             @Override
-            public int getItemViewType(int position) {
-                return super.getItemViewType(position);
-            }
-
-
-            @Override
             public int getItemLayoutID(int position, T bean) {
                 return StaggeredAdapter.this.getItemLayoutID(position, bean);
             }

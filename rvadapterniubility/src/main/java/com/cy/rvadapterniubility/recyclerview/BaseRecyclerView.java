@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import com.cy.rvadapterniubility.LogUtils;
+import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
@@ -26,7 +28,7 @@ import java.util.Objects;
  * Created by cy on 2017/7/2.
  */
 
-public class BaseRecyclerView<T extends BaseRecyclerView<T>> extends RecyclerView {
+public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
     //永远<=0
     private int offsetX = 0;
     private int offsetY = 0;
@@ -35,7 +37,8 @@ public class BaseRecyclerView<T extends BaseRecyclerView<T>> extends RecyclerVie
     private ItemTouchHelper itemTouchHelper;
     private ItemAnimCallback itemAnimCallback;
     private VelocityTracker velocityTracker;
-    private boolean useDragSelect = false;
+    //    private boolean useDragSelect = false;
+    private OnItemTouchListener onItemTouchListener;
 
     public BaseRecyclerView(Context context) {
         this(context, null);
@@ -53,15 +56,19 @@ public class BaseRecyclerView<T extends BaseRecyclerView<T>> extends RecyclerVie
                 offsetY -= dy;
             }
         });
-        addOnItemTouchListener(new OnItemTouchListener() {
+    }
+
+    public  T addOnItemTouchListener(final DragSelectorAdapter<?> dragSelectorAdapter) {
+        if (onItemTouchListener != null) removeOnItemTouchListener(onItemTouchListener);
+        addOnItemTouchListener(onItemTouchListener = new OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-                if (!useDragSelect || recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() == 0)
+                if (!dragSelectorAdapter.isUseDragSelect() || dragSelectorAdapter.getAdapter().getItemCount() == 0)
                     return false;
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_POINTER_DOWN:
                     case MotionEvent.ACTION_DOWN:
-                        reset();
+//                        reset();
                         break;
                 }
                 return true;
@@ -69,22 +76,22 @@ public class BaseRecyclerView<T extends BaseRecyclerView<T>> extends RecyclerVie
 
             @Override
             public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-                if (!useDragSelect) return;
+                if (!dragSelectorAdapter.isUseDragSelect()) return;
+                LogUtils.log("onTouchEvent");
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_MOVE:
                         View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
                         if (child != null) {
+                            LogUtils.log("onTouchEvent toggle");
                             int position = recyclerView.getChildAdapterPosition(child);
-                            if (position != RecyclerView.NO_POSITION && mEnd != position) {
-                                mEnd = position;
-                                notifySelectRangeChange();
-                            }
+                            dragSelectorAdapter.toggle(position,true);
                         }
+//                        processAutoScroll(e);
                         break;
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_POINTER_UP:
-                        reset();
+//                        reset();
                         break;
                 }
             }
@@ -94,16 +101,16 @@ public class BaseRecyclerView<T extends BaseRecyclerView<T>> extends RecyclerVie
 
             }
         });
-    }
-
-    public boolean isUseDragSelect() {
-        return useDragSelect;
-    }
-
-    public T setUseDragSelect(boolean useDragSelect) {
-        this.useDragSelect = useDragSelect;
         return (T) this;
     }
+    //    public boolean isUseDragSelect() {
+//        return useDragSelect;
+//    }
+//
+//    public T setUseDragSelect(boolean useDragSelect) {
+//        this.useDragSelect = useDragSelect;
+//        return (T) this;
+//    }
 
     public T addOnScrollListener(OnSimpleScrollListener onSimpleScrollListener) {
         super.addOnScrollListener(onSimpleScrollListener.getOnScrollListener());
