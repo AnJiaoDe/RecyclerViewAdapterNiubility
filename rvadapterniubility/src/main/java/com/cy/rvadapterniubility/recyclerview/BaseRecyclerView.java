@@ -58,49 +58,9 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
         });
     }
 
-    public  T addOnItemTouchListener(final DragSelectorAdapter<?> dragSelectorAdapter) {
+    public T addOnItemTouchListener(final DragSelectorAdapter<?> dragSelectorAdapter) {
         if (onItemTouchListener != null) removeOnItemTouchListener(onItemTouchListener);
-        addOnItemTouchListener(onItemTouchListener = new OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-                if (!dragSelectorAdapter.isUseDragSelect() || dragSelectorAdapter.getAdapter().getItemCount() == 0)
-                    return false;
-                switch (motionEvent.getActionMasked()) {
-                    case MotionEvent.ACTION_POINTER_DOWN:
-                    case MotionEvent.ACTION_DOWN:
-//                        reset();
-                        break;
-                }
-                return true;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent motionEvent) {
-                if (!dragSelectorAdapter.isUseDragSelect()) return;
-                LogUtils.log("onTouchEvent");
-                switch (motionEvent.getActionMasked()) {
-                    case MotionEvent.ACTION_MOVE:
-                        View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
-                        if (child != null) {
-                            LogUtils.log("onTouchEvent toggle");
-                            int position = recyclerView.getChildAdapterPosition(child);
-                            dragSelectorAdapter.toggle(position,true);
-                        }
-//                        processAutoScroll(e);
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_POINTER_UP:
-//                        reset();
-                        break;
-                }
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
+        addOnItemTouchListener(onItemTouchListener = dragSelectorAdapter);
         return (T) this;
     }
     //    public boolean isUseDragSelect() {
