@@ -17,6 +17,8 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
     private SimpleAdapter<T> simpleAdapter;
     private Set<Integer> setSelector;
     private boolean useDragSelect=false;
+    private int position_start=0,position_end=0;
+
     public DragSelectorAdapter() {
         setSelector=new HashSet<>();
         simpleAdapter = new SimpleAdapter<T>() {
@@ -63,8 +65,12 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         return useDragSelect;
     }
 
-    public void setUseDragSelect(boolean useDragSelect) {
-        this.useDragSelect = useDragSelect;
+    public void startDragSelect(int position_start) {
+        this.useDragSelect = true;
+        this.position_start=position_start;
+    }
+    public void stopDragSelect(){
+        useDragSelect=false;
     }
     public void toggle(final int position,boolean select){
         if(select){
@@ -77,6 +83,21 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
             @Override
             public void run() {
                 simpleAdapter.notifyItemChanged(position);
+            }
+        });
+    }
+    public void toggleRange(final int position_start, final int position_end, boolean select){
+        for (int i = position_start; i <= position_end; i++) {
+            if (select)
+                setSelector.add(i);
+            else
+                setSelector.remove(i);
+        }
+        //必须用handler，否则GG  Cannot call this method while RecyclerView is computing a layout or scrolling
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                simpleAdapter.notifyItemRangeChanged(position_start,position_end-position_start+1);
             }
         });
     }

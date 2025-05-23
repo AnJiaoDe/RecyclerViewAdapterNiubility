@@ -47,13 +47,13 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected) {
                 holder.setImageResource(R.id.iv, bean.getResID());
                 holder.setVisibility(R.id.ivs, isUseDragSelect() ? View.VISIBLE : View.GONE);
-                ImageViewSelector imageViewSelector=holder.getView(R.id.ivs);
+                ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
                 imageViewSelector.setChecked(isSelected);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
-                        LogUtils.log("onCheckedChanged",isChecked);
-                        toggle(position,isChecked);
+                        LogUtils.log("onCheckedChanged", isChecked);
+                        toggle(position, isChecked);
                     }
                 });
             }
@@ -72,7 +72,7 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(BaseViewHolder holder, int position, HRVBean bean) {
                 super.onItemLongClick(holder, position, bean);
-                setUseDragSelect(true);
+                startDragSelect(position);
                 getAdapter().postNotifyDataSetChanged();
             }
         };
