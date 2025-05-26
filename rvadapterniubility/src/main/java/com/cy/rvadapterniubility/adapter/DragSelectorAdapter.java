@@ -52,6 +52,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
     private Runnable runnableScroll;
     private int maxScrollDistance = 32;
     private int autoScrollDistance = (int) (Resources.getSystem().getDisplayMetrics().density * 56);
+    private boolean haveChildLongPress = false;
 
     public DragSelectorAdapter() {
         setSelector = new HashSet<>();
@@ -82,10 +83,10 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
                 DragSelectorAdapter.this.onItemClick(holder, position, bean);
             }
 
-            @Override
-            public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
-                DragSelectorAdapter.this.onItemLongClick(holder, position, bean);
-            }
+//            @Override
+//            public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
+//                DragSelectorAdapter.this.onItemLongClick(holder, position, bean);
+//            }
 
             @Override
             public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
@@ -107,46 +108,46 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
     @Override
     public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent event) {
         this.recyclerView = recyclerView;
+        if(true)return false;
         final ViewConfiguration viewConfiguration = ViewConfiguration.get(recyclerView.getContext());
         float touchSlop = viewConfiguration.getScaledTouchSlop();
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
                 LogUtils.log("onInterceptTouchEvent  ACTION_DOWN");
-                downX = event.getX();
-                downY = event.getY();
-                reset();
-
-                View child = recyclerView.findChildViewUnder(downX, downY);
-                if (child != null) {
-                    int position = recyclerView.getChildAdapterPosition(child);
-                    if (position != RecyclerView.NO_POSITION) {
-                        position_start = position;
-                        position_end = position;
-                        position_start_last = position;
-                        position_end_last = position;
-                    }
-                }
-
-                int height = recyclerView.getHeight();
-                topBoundFrom = 0;
-                topBoundTo = autoScrollDistance;
-                bottomBoundFrom = height - autoScrollDistance;
-                bottomBoundTo = height;
+//                downX = event.getX();
+//                downY = event.getY();
+//                reset();
+//
+//                View child = recyclerView.findChildViewUnder(downX, downY);
+//                if (child != null) {
+//                    int position = recyclerView.getChildAdapterPosition(child);
+//                    if (position != RecyclerView.NO_POSITION) {
+//                        position_start = position;
+//                        position_end = position;
+//                        position_start_last = position;
+//                        position_end_last = position;
+//                    }
+//                }
+//
+//                int height = recyclerView.getHeight();
+//                topBoundFrom = 0;
+//                topBoundTo = autoScrollDistance;
+//                bottomBoundFrom = height - autoScrollDistance;
+//                bottomBoundTo = height;
                 break;
             case MotionEvent.ACTION_MOVE:
                 LogUtils.log("onInterceptTouchEvent  ACTION_MOVE");
-                float moveX = event.getX();
-                float moveY = event.getY();
-                float dy = Math.abs(moveY - downY);
-                boolean moveV = dy > touchSlop && dy >= Math.abs(moveX - downX);
-                downX = moveX;
-                downY = moveY;
-//                if (!moveV)
+                if(haveChildLongPress)return true;
+//                float moveX = event.getX();
+//                float moveY = event.getY();
+//                float dy = Math.abs(moveY - downY);
+//                boolean moveV = dy > touchSlop && dy >= Math.abs(moveX - downX);
+//                downX = moveX;
+//                downY = moveY;
+//                if (!moveV) {
 //                    return true;
-                if (!moveV) {
-                    return true;
-                }
+//                }
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
@@ -159,76 +160,84 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
 
     @Override
     public void onTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent event) {
-        switch (event.getActionMasked()) {
-            case MotionEvent.ACTION_MOVE:
-                LogUtils.log("onTouchEvent  ACTION_MOVE");
-                float moveX = event.getX();
-                float moveY = event.getY();
-                if (useDragSelect && getAdapter().getItemCount() > 0 ) {
-                    if (!inTopScrollRange && !inBottomScrollRange)
-                        updateSelectedRange(event.getX(), event.getY());
-                    int y = (int) event.getY();
-                    if (y >= topBoundFrom && y <= topBoundTo) {
-                        x_last = event.getX();
-                        y_last = event.getY();
-                        scrollSpeedFactor = (((float) topBoundTo - (float) topBoundFrom) - ((float) y - (float) topBoundFrom))
-                                / ((float) topBoundTo - (float) topBoundFrom);
-                        scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor * -1f);
-                        if (!inTopScrollRange) {
-                            inTopScrollRange = true;
-                            startScroll();
-                        }
-                    } else if (y < topBoundFrom) {
-                        x_last = event.getX();
-                        y_last = event.getY();
-                        scrollDistance = maxScrollDistance * -1;
-                        if (!inTopScrollRange) {
-                            inTopScrollRange = true;
-                            startScroll();
-                        }
-                    } else if (y >= bottomBoundFrom && y <= bottomBoundTo) {
-                        x_last = event.getX();
-                        y_last = event.getY();
-                        scrollSpeedFactor = (((float) y - (float) bottomBoundFrom)) / ((float) bottomBoundTo - (float) bottomBoundFrom);
-                        scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor);
-                        if (!inBottomScrollRange) {
-                            inBottomScrollRange = true;
-                            startScroll();
-                        }
-                    } else if (y > bottomBoundTo) {
-                        x_last = event.getX();
-                        y_last = event.getY();
-                        scrollDistance = maxScrollDistance;
-                        if (!inBottomScrollRange) {
-                            inBottomScrollRange = true;
-                            startScroll();
-                        }
-                    } else {
-                        inTopScrollRange = false;
-                        inBottomScrollRange = false;
-                        x_last = -1;
-                        y_last = -1;
-                        stopScroll();
-                    }
-                } else {
-                    View c = recyclerView.findChildViewUnder(moveX, moveY);
-                    if (c != null) {
-                        int position = recyclerView.getChildAdapterPosition(c);
-                        if (position != RecyclerView.NO_POSITION) {
-                            position_start = position;
-                            position_end = position;
-                            position_start_last = position;
-                            position_end_last = position;
-                        }
-                    }
-                }
-                break;
-        }
+//        switch (event.getActionMasked()) {
+//            case MotionEvent.ACTION_MOVE:
+//                LogUtils.log("onTouchEvent  ACTION_MOVE");
+//                float moveX = event.getX();
+//                float moveY = event.getY();
+//                if (useDragSelect && getAdapter().getItemCount() > 0 ) {
+//                    if (!inTopScrollRange && !inBottomScrollRange)
+//                        updateSelectedRange(event.getX(), event.getY());
+//                    int y = (int) event.getY();
+//                    if (y >= topBoundFrom && y <= topBoundTo) {
+//                        x_last = event.getX();
+//                        y_last = event.getY();
+//                        scrollSpeedFactor = (((float) topBoundTo - (float) topBoundFrom) - ((float) y - (float) topBoundFrom))
+//                                / ((float) topBoundTo - (float) topBoundFrom);
+//                        scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor * -1f);
+//                        if (!inTopScrollRange) {
+//                            inTopScrollRange = true;
+//                            startScroll();
+//                        }
+//                    } else if (y < topBoundFrom) {
+//                        x_last = event.getX();
+//                        y_last = event.getY();
+//                        scrollDistance = maxScrollDistance * -1;
+//                        if (!inTopScrollRange) {
+//                            inTopScrollRange = true;
+//                            startScroll();
+//                        }
+//                    } else if (y >= bottomBoundFrom && y <= bottomBoundTo) {
+//                        x_last = event.getX();
+//                        y_last = event.getY();
+//                        scrollSpeedFactor = (((float) y - (float) bottomBoundFrom)) / ((float) bottomBoundTo - (float) bottomBoundFrom);
+//                        scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor);
+//                        if (!inBottomScrollRange) {
+//                            inBottomScrollRange = true;
+//                            startScroll();
+//                        }
+//                    } else if (y > bottomBoundTo) {
+//                        x_last = event.getX();
+//                        y_last = event.getY();
+//                        scrollDistance = maxScrollDistance;
+//                        if (!inBottomScrollRange) {
+//                            inBottomScrollRange = true;
+//                            startScroll();
+//                        }
+//                    } else {
+//                        inTopScrollRange = false;
+//                        inBottomScrollRange = false;
+//                        x_last = -1;
+//                        y_last = -1;
+//                        stopScroll();
+//                    }
+//                } else {
+//                    View c = recyclerView.findChildViewUnder(moveX, moveY);
+//                    if (c != null) {
+//                        int position = recyclerView.getChildAdapterPosition(c);
+//                        if (position != RecyclerView.NO_POSITION) {
+//                            position_start = position;
+//                            position_end = position;
+//                            position_start_last = position;
+//                            position_end_last = position;
+//                        }
+//                    }
+//                }
+//                break;
+//        }
     }
 
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
+    }
+
+    public boolean isHaveChildLongPress() {
+        return haveChildLongPress;
+    }
+
+    public void setHaveChildLongPress(boolean haveChildLongPress) {
+        this.haveChildLongPress = haveChildLongPress;
     }
 
     private void updateSelectedRange(float x, float y) {
@@ -380,6 +389,8 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
     public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
 
     }
+
+//    public abstract void onItemLongClick();
 
     @Override
     public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {

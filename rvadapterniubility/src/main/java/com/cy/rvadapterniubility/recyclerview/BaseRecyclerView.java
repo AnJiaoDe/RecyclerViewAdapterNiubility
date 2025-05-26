@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.cy.rvadapterniubility.LogUtils;
+import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.DragSelectFrameLayout;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -38,11 +40,12 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
     private ItemTouchHelper itemTouchHelper;
     private ItemAnimCallback itemAnimCallback;
     private VelocityTracker velocityTracker;
-    //    private boolean useDragSelect = false;
     private OnItemTouchListener onItemTouchListener;
+    private GestureDetector gestureDetector;
+    private boolean isLongPress = false;
     private float downX;
     private float downY;
-    private boolean moveV = true;
+    private float touchSlop;
 
     public BaseRecyclerView(Context context) {
         this(context, null);
@@ -60,6 +63,39 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
                 offsetY -= dy;
             }
         });
+
+        gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                return true;
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                LogUtils.log("onSingleTapUp");
+                return super.onSingleTapUp(e);
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                super.onLongPress(e);
+                LogUtils.log("onLongPress");
+
+                isLongPress = true;
+
+//                if (dragSelectorAdapter == null) return;
+//                dragSelectorAdapter.setHaveChildLongPress(true);
+//                int position = recyclerView.getChildAdapterPosition(DragSelectFrameLayout.this);
+//                if (position < 0 || position >= dragSelectorAdapter.getAdapter().getList_bean().size())
+//                    return;
+//                dragSelectorAdapter.onItemLongClick((BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position),
+//                        position, dragSelectorAdapter.getAdapter().getList_bean().get(position));
+            }
+
+        });
+
+        final ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
+        touchSlop = viewConfiguration.getScaledTouchSlop();
     }
 
     public T addOnItemTouchListener(final DragSelectorAdapter<?> dragSelectorAdapter) {
@@ -67,95 +103,94 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
         addOnItemTouchListener(onItemTouchListener = dragSelectorAdapter);
         return (T) this;
     }
-    //    public boolean isUseDragSelect() {
-//        return useDragSelect;
-//    }
-//
-//    public T setUseDragSelect(boolean useDragSelect) {
-//        this.useDragSelect = useDragSelect;
-//        return (T) this;
-//    }
 
     public T addOnScrollListener(OnSimpleScrollListener onSimpleScrollListener) {
         super.addOnScrollListener(onSimpleScrollListener.getOnScrollListener());
         return (T) this;
     }
 
-//    @Override
-//    public boolean onInterceptTouchEvent(MotionEvent event) {
-//        final ViewConfiguration viewConfiguration = ViewConfiguration.get(getContext());
-//        float touchSlop = viewConfiguration.getScaledTouchSlop();
-//        switch (event.getActionMasked()) {
-//            case MotionEvent.ACTION_POINTER_DOWN:
-//            case MotionEvent.ACTION_DOWN:
-//                LogUtils.log("onInterceptTouchEvent  ACTION_DOWN");
-//                downX = event.getX();
-//                downY = event.getY();
-//                moveV=true;
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                LogUtils.log("onInterceptTouchEvent  ACTION_MOVE");
-//                float moveX = event.getX();
-//                float moveY = event.getY();
-//                float dy = Math.abs(moveY - downY);
-//                moveV = dy > touchSlop && dy >= Math.abs(moveX - downX);
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_POINTER_DOWN:
+            case MotionEvent.ACTION_DOWN:
+                LogUtils.log("dispatchTouchEvent  ACTION_DOWN");
+                isLongPress = false;
+                downX = event.getX();
+                downY = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                LogUtils.log("dispatchTouchEvent  ACTION_MOVE");
+                float moveX = event.getX();
+                float moveY = event.getY();
+                float dy = Math.abs(moveY - downY);
+                boolean moveV = dy > touchSlop && dy >= Math.abs(moveX - downX);
+                downX = moveX;
+                downY = moveY;
+                if (!moveV) {
+                    return true;
+                }
+                if (isLongPress) return true;
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                LogUtils.log("dispatchTouchEvent  ACTION_CANCEL");
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
+                LogUtils.log("dispatchTouchEvent  ACTION_UP");
+                isLongPress = false;
+                break;
+        }
+        return super.dispatchTouchEvent(event);
+    }
 
-    /// /                downX = moveX;
-    /// /                downY = moveY;
-//                if (!moveV)
-//                    return true;
-//                break;
-//            case MotionEvent.ACTION_CANCEL:
-//            case MotionEvent.ACTION_UP:
-//            case MotionEvent.ACTION_POINTER_UP:
-//                break;
-//        }
-//        return super.onInterceptTouchEvent(event);
-//    }
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        final ViewConfiguration viewConfiguration = ViewConfiguration.get(getContext());
-//        float touchSlop = viewConfiguration.getScaledTouchSlop();
-//        if (velocityTracker == null) velocityTracker = VelocityTracker.obtain();
-//        velocityTracker.addMovement(event);
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_POINTER_DOWN:
-//            case MotionEvent.ACTION_DOWN:
-//                LogUtils.log("onTouchEvent  ACTION_DOWN");
-//                downX = event.getX();
-//                downY = event.getY();
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                LogUtils.log("onTouchEvent  ACTION_MOVE");
-//                float moveX = event.getX();
-//                float moveY = event.getY();
-//                float dx = Math.abs(moveX - downX);
-//                if (!moveV) moveV = dx > touchSlop && dx >= Math.abs(moveY - downY);
-//                downX = moveX;
-//                downY = moveY;
-//                if (moveV)
-//                    return true;
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                velocityTracker.computeCurrentVelocity(1000);
-//                velocity_x = (int) velocityTracker.getXVelocity();
-//                velocity_y = (int) velocityTracker.getYVelocity();
-////                LogUtils.log("velocity_x", velocity_x);
-////                LogUtils.log("velocity_y", velocity_y);
-//                if (velocityTracker != null) {
-//                    velocityTracker.recycle();
-//                    velocityTracker = null;
-//                }
-//                break;
-//            case MotionEvent.ACTION_CANCEL:
-//                if (velocityTracker != null) {
-//                    velocityTracker.recycle();
-//                    velocityTracker = null;
-//                }
-//                break;
-//        }
-//        return super.onTouchEvent(event);
-//    }
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_POINTER_DOWN:
+            case MotionEvent.ACTION_DOWN:
+                LogUtils.log("onInterceptTouchEvent  ACTION_DOWN");
+                break;
+            case MotionEvent.ACTION_MOVE:
+                LogUtils.log("onInterceptTouchEvent  ACTION_MOVE");
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                LogUtils.log("onInterceptTouchEvent  ACTION_CANCEL");
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
+                LogUtils.log("onInterceptTouchEvent  ACTION_UP");
+                break;
+        }
+        return super.onInterceptTouchEvent(event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (velocityTracker == null) velocityTracker = VelocityTracker.obtain();
+        velocityTracker.addMovement(ev);
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_UP:
+                velocityTracker.computeCurrentVelocity(1000);
+                velocity_x = (int) velocityTracker.getXVelocity();
+                velocity_y = (int) velocityTracker.getYVelocity();
+//                LogUtils.log("velocity_x", velocity_x);
+//                LogUtils.log("velocity_y", velocity_y);
+                if (velocityTracker != null) {
+                    velocityTracker.recycle();
+                    velocityTracker = null;
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                if (velocityTracker != null) {
+                    velocityTracker.recycle();
+                    velocityTracker = null;
+                }
+                break;
+        }
+        return super.onTouchEvent(ev);
+    }
 
     public int getVelocity_x() {
         return velocity_x;

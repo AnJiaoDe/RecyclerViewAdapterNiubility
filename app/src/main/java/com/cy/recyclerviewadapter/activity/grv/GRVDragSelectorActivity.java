@@ -17,6 +17,7 @@ import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.DragSelectFrameLayout;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
@@ -42,14 +43,19 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
             }
             list.add(new HRVBean(R.drawable.pic1));
         }
+        VerticalGridRecyclerView verticalGridRecyclerView = findViewById(R.id.VerticalGridRecyclerView);
         dragSelectorAdapter = new DragSelectorAdapter<HRVBean>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected) {
-                LogUtils.log("bindDataToView",position+":"+isSelected);
+                LogUtils.log("bindDataToView", position + ":" + isSelected);
+                DragSelectFrameLayout dragSelectFrameLayout = (DragSelectFrameLayout) holder.itemView;
+                dragSelectFrameLayout.with(verticalGridRecyclerView,this);
+
                 holder.setImageResource(R.id.iv, bean.getResID());
                 holder.setVisibility(R.id.ivs, isUseDragSelect() ? View.VISIBLE : View.GONE);
-                ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
-                imageViewSelector.setChecked(isSelected);
+                holder.setImageResource(R.id.ivs, isSelected ? R.drawable.cb_selected_rect_blue : R.drawable.cb_unselected_rect_white);
+//                ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
+//                imageViewSelector.setChecked(isSelected);
 //                imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
 //                    @Override
 //                    public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
@@ -73,14 +79,13 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(BaseViewHolder holder, int position, HRVBean bean) {
                 super.onItemLongClick(holder, position, bean);
-                startDragSelect(position);
-                getAdapter().postNotifyDataSetChanged();
+//                startDragSelect(position);
+//                getAdapter().postNotifyDataSetChanged();
             }
         };
-        ((VerticalGridRecyclerView) findViewById(R.id.VerticalGridRecyclerView))
-                .setSpanCount(4)
+        verticalGridRecyclerView.setSpanCount(3)
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 6)));
-        ((VerticalGridRecyclerView) findViewById(R.id.VerticalGridRecyclerView)).addOnItemTouchListener(dragSelectorAdapter)
+        verticalGridRecyclerView.addOnItemTouchListener(dragSelectorAdapter)
                 .setAdapter(dragSelectorAdapter.getAdapter(), new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int i) {
