@@ -6,20 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.cy.androidview.ScreenUtils;
-import com.cy.androidview.selectorview.ImageViewSelector;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectFrameLayout;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
-import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 
@@ -52,7 +46,7 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
                 dragSelectFrameLayout.with(verticalGridRecyclerView,this);
 
                 holder.setImageResource(R.id.iv, bean.getResID());
-                holder.setVisibility(R.id.ivs, isUseDragSelect() ? View.VISIBLE : View.GONE);
+                holder.setVisibility(R.id.ivs, isUsingSelector() ? View.VISIBLE : View.GONE);
                 holder.setImageResource(R.id.ivs, isSelected ? R.drawable.cb_selected_rect_blue : R.drawable.cb_unselected_rect_white);
 //                ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
 //                imageViewSelector.setChecked(isSelected);
@@ -79,20 +73,13 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(BaseViewHolder holder, int position, HRVBean bean) {
                 super.onItemLongClick(holder, position, bean);
-//                startDragSelect(position);
-//                getAdapter().postNotifyDataSetChanged();
+                startDragSelect(position);
             }
         };
         verticalGridRecyclerView.setSpanCount(3)
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 6)));
-        verticalGridRecyclerView.addOnItemTouchListener(dragSelectorAdapter)
-                .setAdapter(dragSelectorAdapter.getAdapter(), new GridLayoutManager.SpanSizeLookup() {
-                    @Override
-                    public int getSpanSize(int i) {
-                        if (i == 4) return 1;
-                        return 1;
-                    }
-                });
+        verticalGridRecyclerView.dragSelector( dragSelectorAdapter)
+                .setAdapter(dragSelectorAdapter.getAdapter());
         dragSelectorAdapter.getAdapter().add(list);
     }
 }

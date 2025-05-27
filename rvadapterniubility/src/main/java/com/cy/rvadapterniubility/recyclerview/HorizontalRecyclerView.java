@@ -15,7 +15,7 @@ import com.cy.rvadapterniubility.adapter.MultiAdapter;
  * Created by cy on 2017/7/2.
  */
 
-public class HorizontalRecyclerView extends BaseRecyclerView<HorizontalRecyclerView> {
+public class HorizontalRecyclerView extends DragSelectRecyclerView<HorizontalRecyclerView> {
     private int downX; // 按下时 X轴坐标值
     private int downY; // 按下时 Y 轴坐标值
 

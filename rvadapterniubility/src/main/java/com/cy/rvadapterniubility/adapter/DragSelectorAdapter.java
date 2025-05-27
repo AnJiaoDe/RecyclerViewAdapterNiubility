@@ -1,23 +1,17 @@
 package com.cy.rvadapterniubility.adapter;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
-import android.util.Log;
-import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.animation.LinearInterpolator;
 import android.widget.OverScroller;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
-import androidx.core.widget.ScrollerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cy.refreshlayoutniubility.ScreenUtils;
 import com.cy.rvadapterniubility.LogUtils;
 
 import java.util.HashSet;
@@ -30,7 +24,7 @@ import java.util.Set;
 public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHolder, SimpleAdapter>, RecyclerView.OnItemTouchListener {
     private SimpleAdapter<T> simpleAdapter;
     private Set<Integer> setSelector;
-    private boolean useDragSelect = false;
+    private boolean usingSelector = false;
     private int position_start = RecyclerView.NO_POSITION;
     private int position_end = RecyclerView.NO_POSITION;
     private int position_start_last = RecyclerView.NO_POSITION;
@@ -108,7 +102,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
     @Override
     public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent event) {
         this.recyclerView = recyclerView;
-        if(true)return false;
+        if (true) return false;
         final ViewConfiguration viewConfiguration = ViewConfiguration.get(recyclerView.getContext());
         float touchSlop = viewConfiguration.getScaledTouchSlop();
         switch (event.getActionMasked()) {
@@ -138,7 +132,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
                 break;
             case MotionEvent.ACTION_MOVE:
                 LogUtils.log("onInterceptTouchEvent  ACTION_MOVE");
-                if(haveChildLongPress)return true;
+                if (haveChildLongPress) return true;
 //                float moveX = event.getX();
 //                float moveY = event.getY();
 //                float dy = Math.abs(moveY - downY);
@@ -255,18 +249,18 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
                 newEnd = Math.max(position_start, position_end);
                 if (position_start_last == RecyclerView.NO_POSITION || position_end_last == RecyclerView.NO_POSITION) {
                     if (newEnd - newStart == 1)
-                        toggleRange(newStart, newStart, true);
+                        selectRange(newStart, newStart, true);
                     else
-                        toggleRange(newStart, newEnd, true);
+                        selectRange(newStart, newEnd, true);
                 } else {
                     if (newStart > position_start_last)
-                        toggleRange(position_start_last, newStart - 1, false);
+                        selectRange(position_start_last, newStart - 1, false);
                     else if (newStart < position_start_last)
-                        toggleRange(newStart, position_start_last - 1, true);
+                        selectRange(newStart, position_start_last - 1, true);
                     if (newEnd > position_end_last)
-                        toggleRange(position_end_last + 1, newEnd, true);
+                        selectRange(position_end_last + 1, newEnd, true);
                     else if (newEnd < position_end_last)
-                        toggleRange(newEnd + 1, position_end_last, false);
+                        selectRange(newEnd + 1, position_end_last, false);
                 }
                 position_start_last = newStart;
                 position_end_last = newEnd;
@@ -318,24 +312,40 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         }
     }
 
-    public boolean isUseDragSelect() {
-        return useDragSelect;
+    public boolean isUsingSelector() {
+        return usingSelector;
     }
 
     public void startDragSelect(int position) {
-        useDragSelect = true;
+        usingSelector = true;
         position_start = position;
         position_end = position;
         position_start_last = position;
         position_end_last = position;
-        toggle(position_start, true);
+        setSelector.add(position);
+        simpleAdapter.postNotifyDataSetChanged();
     }
 
     public void stopDragSelect() {
-        useDragSelect = false;
+        usingSelector = false;
     }
 
-    public void toggle(final int position, boolean select) {
+    public void toggle(final int position) {
+        if (setSelector.contains(position)) {
+            setSelector.remove(position);
+        } else {
+            setSelector.add(position);
+        }
+        //必须用handler，否则GG  Cannot call this method while RecyclerView is computing a layout or scrolling
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                simpleAdapter.notifyItemChanged(position);
+            }
+        });
+    }
+
+    public void select(final int position, boolean select) {
         if (select) {
             setSelector.add(position);
         } else {
@@ -350,7 +360,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         });
     }
 
-    public void toggleRange(final int start, final int end, boolean isSelected) {
+    public void selectRange(final int start, final int end, boolean isSelected) {
         LogUtils.log("updateSelectedRange toggleRange", start + "        " + end);
         for (int i = start; i <= end; i++) {
             if (isSelected)

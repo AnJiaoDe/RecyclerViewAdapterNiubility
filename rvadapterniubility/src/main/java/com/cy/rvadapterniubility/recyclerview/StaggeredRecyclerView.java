@@ -22,7 +22,7 @@ import com.cy.refreshlayoutniubility.ScreenUtils;
  * 4.间隔计算必须均分，否则GG
  */
 
-public class StaggeredRecyclerView<T extends StaggeredRecyclerView> extends BaseRecyclerView<T> {
+public class StaggeredRecyclerView<T extends StaggeredRecyclerView> extends DragSelectRecyclerView<T> {
     private int spanCount = 2;
     private StaggeredItemDecoration staggeredItemDecoration;
 

@@ -40,13 +40,6 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
     private ItemTouchHelper itemTouchHelper;
     private ItemAnimCallback itemAnimCallback;
     private VelocityTracker velocityTracker;
-    private OnItemTouchListener onItemTouchListener;
-    private GestureDetector gestureDetector;
-    private boolean isLongPress = false;
-    private float downX;
-    private float downY;
-    private float touchSlop;
-
     public BaseRecyclerView(Context context) {
         this(context, null);
     }
@@ -63,107 +56,11 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
                 offsetY -= dy;
             }
         });
-
-        gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                return true;
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                LogUtils.log("onSingleTapUp");
-                return super.onSingleTapUp(e);
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-                super.onLongPress(e);
-                LogUtils.log("onLongPress");
-
-                isLongPress = true;
-
-//                if (dragSelectorAdapter == null) return;
-//                dragSelectorAdapter.setHaveChildLongPress(true);
-//                int position = recyclerView.getChildAdapterPosition(DragSelectFrameLayout.this);
-//                if (position < 0 || position >= dragSelectorAdapter.getAdapter().getList_bean().size())
-//                    return;
-//                dragSelectorAdapter.onItemLongClick((BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position),
-//                        position, dragSelectorAdapter.getAdapter().getList_bean().get(position));
-            }
-
-        });
-
-        final ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
-        touchSlop = viewConfiguration.getScaledTouchSlop();
-    }
-
-    public T addOnItemTouchListener(final DragSelectorAdapter<?> dragSelectorAdapter) {
-        if (onItemTouchListener != null) removeOnItemTouchListener(onItemTouchListener);
-        addOnItemTouchListener(onItemTouchListener = dragSelectorAdapter);
-        return (T) this;
     }
 
     public T addOnScrollListener(OnSimpleScrollListener onSimpleScrollListener) {
         super.addOnScrollListener(onSimpleScrollListener.getOnScrollListener());
         return (T) this;
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        gestureDetector.onTouchEvent(event);
-        switch (event.getActionMasked()) {
-            case MotionEvent.ACTION_POINTER_DOWN:
-            case MotionEvent.ACTION_DOWN:
-                LogUtils.log("dispatchTouchEvent  ACTION_DOWN");
-                isLongPress = false;
-                downX = event.getX();
-                downY = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                LogUtils.log("dispatchTouchEvent  ACTION_MOVE");
-                float moveX = event.getX();
-                float moveY = event.getY();
-                float dy = Math.abs(moveY - downY);
-                boolean moveV = dy > touchSlop && dy >= Math.abs(moveX - downX);
-                downX = moveX;
-                downY = moveY;
-                if (!moveV) {
-                    return true;
-                }
-                if (isLongPress) return true;
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                LogUtils.log("dispatchTouchEvent  ACTION_CANCEL");
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_UP:
-                LogUtils.log("dispatchTouchEvent  ACTION_UP");
-                isLongPress = false;
-                break;
-        }
-        return super.dispatchTouchEvent(event);
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        switch (event.getActionMasked()) {
-            case MotionEvent.ACTION_POINTER_DOWN:
-            case MotionEvent.ACTION_DOWN:
-                LogUtils.log("onInterceptTouchEvent  ACTION_DOWN");
-                break;
-            case MotionEvent.ACTION_MOVE:
-                LogUtils.log("onInterceptTouchEvent  ACTION_MOVE");
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                LogUtils.log("onInterceptTouchEvent  ACTION_CANCEL");
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_UP:
-                LogUtils.log("onInterceptTouchEvent  ACTION_UP");
-                break;
-        }
-        return super.onInterceptTouchEvent(event);
     }
 
     @Override

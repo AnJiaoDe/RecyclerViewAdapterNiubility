@@ -15,7 +15,7 @@ import com.cy.refreshlayoutniubility.ScreenUtils;
  * Created by cy on 2017/7/2.
  */
 
-public class GridRecyclerView<T extends GridRecyclerView> extends BaseRecyclerView<T> {
+public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecyclerView<T> {
     private int spanCount = 2;
     private SparseArray<Boolean> sparseArrayFullSpan;
     private GridItemDecoration gridItemDecoration;
