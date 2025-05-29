@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.grv.GRVDragSelectorActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="false" />
         <activity android:name=".activity.tabrv.TabLayoutRVActivity" />
         <activity android:name=".activity.grv.GRVHorinzotalActivity" />

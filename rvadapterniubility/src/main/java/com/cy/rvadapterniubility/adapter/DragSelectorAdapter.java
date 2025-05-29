@@ -23,7 +23,6 @@ import java.util.Set;
 
 public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHolder, SimpleAdapter>, RecyclerView.OnItemTouchListener {
     private SimpleAdapter<T> simpleAdapter;
-    private Set<Integer> setSelector;
     private boolean usingSelector = false;
     private int position_start = RecyclerView.NO_POSITION;
     private int position_end = RecyclerView.NO_POSITION;
@@ -47,9 +46,11 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
     private int maxScrollDistance = 32;
     private int autoScrollDistance = (int) (Resources.getSystem().getDisplayMetrics().density * 56);
     private boolean haveChildLongPress = false;
+    private boolean isAllSelected = false;
+    private SetSelector setSelector;
 
     public DragSelectorAdapter() {
-        setSelector = new HashSet<>();
+        setSelector = new SetSelector();
         simpleAdapter = new SimpleAdapter<T>() {
             @Override
             public void recycleData(@Nullable Object tag) {
@@ -322,12 +323,31 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         position_end = position;
         position_start_last = position;
         position_end_last = position;
+        setSelector.clear();
         setSelector.add(position);
         simpleAdapter.postNotifyDataSetChanged();
     }
 
     public void stopDragSelect() {
         usingSelector = false;
+        simpleAdapter.postNotifyDataSetChanged();
+    }
+
+    public void selectAll(boolean isAllSelected) {
+        boolean noChange = this.isAllSelected == isAllSelected;
+        this.isAllSelected = isAllSelected;
+        if (noChange) return;
+        if (isAllSelected) {
+            for (int i = 0; i < simpleAdapter.getList_bean().size(); i++) {
+                setSelector.add(i);
+            }
+        } else {
+            setSelector.clear();
+        }
+        simpleAdapter.postNotifyDataSetChanged();
+    }
+    public boolean isAllSelected() {
+        return isAllSelected;
     }
 
     public void toggle(final int position) {
@@ -377,6 +397,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         });
     }
 
+
     @Override
     public void recycleData(@Nullable Object tag) {
 
@@ -400,6 +421,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
 
     }
 
+    public abstract void isAllSelected(boolean isAllSelected);
 //    public abstract void onItemLongClick();
 
     @Override
@@ -410,5 +432,38 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
     @Override
     public SimpleAdapter<T> getAdapter() {
         return simpleAdapter;
+    }
+
+    private class SetSelector {
+        private Set<Integer> set;
+
+        public SetSelector() {
+            set = new HashSet<>();
+        }
+
+        public void add(int position) {
+            set.add(position);
+            notifyIsAllSelected();
+        }
+
+        public void remove(int position) {
+            set.remove(position);
+            notifyIsAllSelected();
+        }
+
+        public boolean contains(int position) {
+            return set.contains(position);
+        }
+
+        public void clear() {
+            set.clear();
+            notifyIsAllSelected();
+        }
+
+        private void notifyIsAllSelected() {
+            boolean s = !set.isEmpty() && set.size() == simpleAdapter.getList_bean().size();
+            if (isAllSelected == s) return;
+            isAllSelected(isAllSelected = s);
+        }
     }
 }

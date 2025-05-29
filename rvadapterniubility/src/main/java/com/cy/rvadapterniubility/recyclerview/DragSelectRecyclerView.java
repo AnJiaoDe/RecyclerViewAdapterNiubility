@@ -88,6 +88,22 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 
         final ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
         touchSlop = viewConfiguration.getScaledTouchSlop();
+        overScroller = new OverScroller(context);
+        runnableScroll = new Runnable() {
+            @Override
+            public void run() {
+                if (overScroller != null && overScroller.computeScrollOffset()) {
+                    int s;
+                    if (scrollDistance > 0)
+                        s = Math.min(scrollDistance, maxScrollDistance);
+                    else
+                        s = Math.max(scrollDistance, -maxScrollDistance);
+                    scrollBy(0, s);
+                    updateSelectedRange(x_last, y_last);
+                    ViewCompat.postOnAnimation(DragSelectRecyclerView.this, this);
+                }
+            }
+        };
     }
 
     public T dragSelector(DragSelectorAdapter dragSelectorAdapter) {
@@ -101,6 +117,13 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             return super.dispatchTouchEvent(event);
         gestureDetector.onTouchEvent(event);
         if (!dragSelectorAdapter.isUsingSelector()) return super.dispatchTouchEvent(event);
+
+        int height = getHeight();
+        topBoundFrom = 0;
+        topBoundTo = autoScrollDistance;
+        bottomBoundFrom = height - autoScrollDistance;
+        bottomBoundTo = height;
+
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
@@ -120,6 +143,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                         position_end_last = position;
                     }
                 }
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 LogUtils.log("dispatchTouchEvent  ACTION_MOVE");
@@ -142,50 +166,49 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 
                             if (!inTopScrollRange && !inBottomScrollRange)
                                 updateSelectedRange(moveX, moveY);
-//                            int y = (int) event.getY();
-//                            if (y >= topBoundFrom && y <= topBoundTo) {
-//                                x_last = event.getX();
-//                                y_last = event.getY();
-//                                scrollSpeedFactor = (((float) topBoundTo - (float) topBoundFrom) - ((float) y - (float) topBoundFrom))
-//                                        / ((float) topBoundTo - (float) topBoundFrom);
-//                                scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor * -1f);
-//                                if (!inTopScrollRange) {
-//                                    inTopScrollRange = true;
-//                                    startScroll();
-//                                }
-//                            } else if (y < topBoundFrom) {
-//                                x_last = event.getX();
-//                                y_last = event.getY();
-//                                scrollDistance = maxScrollDistance * -1;
-//                                if (!inTopScrollRange) {
-//                                    inTopScrollRange = true;
-//                                    startScroll();
-//                                }
-//                            } else if (y >= bottomBoundFrom && y <= bottomBoundTo) {
-//                                x_last = event.getX();
-//                                y_last = event.getY();
-//                                scrollSpeedFactor = (((float) y - (float) bottomBoundFrom)) / ((float) bottomBoundTo - (float) bottomBoundFrom);
-//                                scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor);
-//                                if (!inBottomScrollRange) {
-//                                    inBottomScrollRange = true;
-//                                    startScroll();
-//                                }
-//                            } else if (y > bottomBoundTo) {
-//                                x_last = event.getX();
-//                                y_last = event.getY();
-//                                scrollDistance = maxScrollDistance;
-//                                if (!inBottomScrollRange) {
-//                                    inBottomScrollRange = true;
-//                                    startScroll();
-//                                }
-//                            } else {
-//                                inTopScrollRange = false;
-//                                inBottomScrollRange = false;
-//                                x_last = -1;
-//                                y_last = -1;
-//                                stopScroll();
-//
-//                            }
+                            int y = (int) event.getY();
+                            if (y >= topBoundFrom && y <= topBoundTo) {
+                                x_last = event.getX();
+                                y_last = event.getY();
+                                scrollSpeedFactor = (((float) topBoundTo - (float) topBoundFrom) - ((float) y - (float) topBoundFrom))
+                                        / ((float) topBoundTo - (float) topBoundFrom);
+                                scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor * -1f);
+                                if (!inTopScrollRange) {
+                                    inTopScrollRange = true;
+                                    startAutoScroll();
+                                }
+                            } else if (y < topBoundFrom) {
+                                x_last = event.getX();
+                                y_last = event.getY();
+                                scrollDistance = maxScrollDistance * -1;
+                                if (!inTopScrollRange) {
+                                    inTopScrollRange = true;
+                                    startAutoScroll();
+                                }
+                            } else if (y >= bottomBoundFrom && y <= bottomBoundTo) {
+                                x_last = event.getX();
+                                y_last = event.getY();
+                                scrollSpeedFactor = (((float) y - (float) bottomBoundFrom)) / ((float) bottomBoundTo - (float) bottomBoundFrom);
+                                scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor);
+                                if (!inBottomScrollRange) {
+                                    inBottomScrollRange = true;
+                                    startAutoScroll();
+                                }
+                            } else if (y > bottomBoundTo) {
+                                x_last = event.getX();
+                                y_last = event.getY();
+                                scrollDistance = maxScrollDistance;
+                                if (!inBottomScrollRange) {
+                                    inBottomScrollRange = true;
+                                    startAutoScroll();
+                                }
+                            } else {
+                                inTopScrollRange = false;
+                                inBottomScrollRange = false;
+                                x_last = -1;
+                                y_last = -1;
+                                stopAutoScroll();
+                            }
                         }
                     }
                 }
@@ -217,7 +240,6 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     }
 
     private void startAutoScroll() {
-        if (overScroller == null) overScroller = new OverScroller(getContext());
         if (overScroller.isFinished()) {
             removeCallbacks(runnableScroll);
             overScroller.startScroll(0, overScroller.getCurrY(), 0, 5000, 100000);
@@ -227,7 +249,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 
 
     private void stopAutoScroll() {
-        if (overScroller != null && !overScroller.isFinished()) {
+        if (!overScroller.isFinished()) {
             removeCallbacks(runnableScroll);
             overScroller.abortAnimation();
         }
