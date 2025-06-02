@@ -2,7 +2,9 @@ package com.cy.recyclerviewadapter.activity.grv;
 
 import static com.cy.recyclerviewadapter.ToastUtils.showToast;
 
+import android.app.Service;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +33,7 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grvdrag_selector);
         List<HRVBean> list = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 101; i++) {
             if (i % 5 == 0) {
                 list.add(new HRVBean(R.drawable.pic3));
                 continue;
@@ -82,6 +84,10 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(BaseViewHolder holder, int position, HRVBean bean) {
                 super.onItemLongClick(holder, position, bean);
+                LogUtils.log("dispatchTouchEvent  onItemLongClick");
+
+                Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
+                if(vibrator!=null)vibrator.vibrate(50);
                 layout_menu.setVisibility(View.VISIBLE);
                 startDragSelect(position);
             }
