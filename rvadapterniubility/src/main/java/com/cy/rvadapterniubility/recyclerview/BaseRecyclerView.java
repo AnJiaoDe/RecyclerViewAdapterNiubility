@@ -1,31 +1,18 @@
 package com.cy.rvadapterniubility.recyclerview;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
-import android.view.ViewConfiguration;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MotionEventCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
-import com.cy.rvadapterniubility.LogUtils;
-import com.cy.rvadapterniubility.adapter.BaseViewHolder;
-import com.cy.rvadapterniubility.adapter.DragSelectFrameLayout;
-import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 import com.cy.rvadapterniubility.adapter.ItemAnimCallback;
-import com.cy.rvadapterniubility.adapter.SimpleAdapter;
-
-import java.util.Objects;
 
 /**
  * Created by cy on 2017/7/2.

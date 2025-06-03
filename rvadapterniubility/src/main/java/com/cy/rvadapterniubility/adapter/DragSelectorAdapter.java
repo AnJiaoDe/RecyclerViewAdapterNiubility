@@ -1,16 +1,8 @@
 package com.cy.rvadapterniubility.adapter;
 
-import android.content.res.Resources;
 import android.os.Handler;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewConfiguration;
-import android.widget.OverScroller;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.rvadapterniubility.LogUtils;
 
@@ -24,8 +16,6 @@ import java.util.Set;
 public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHolder, SimpleAdapter> {
     private SimpleAdapter<T> simpleAdapter;
     private boolean usingSelector = false;
-    private Runnable runnableScroll;
-    private boolean haveChildLongPress = false;
     private boolean isAllSelected = false;
     private SetSelector setSelector;
 
@@ -58,25 +48,23 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
                 DragSelectorAdapter.this.onItemClick(holder, position, bean);
             }
 
+            /**
+             * 这里不能用了，否则GG
+             * @param fromPosition
+             * @param toPosition
+             * @param srcHolder
+             * @param targetHolder
+             */
 //            @Override
 //            public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
 //                DragSelectorAdapter.this.onItemLongClick(holder, position, bean);
 //            }
-
             @Override
             public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
                 super.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
                 DragSelectorAdapter.this.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
             }
         };
-    }
-
-    public boolean isHaveChildLongPress() {
-        return haveChildLongPress;
-    }
-
-    public void setHaveChildLongPress(boolean haveChildLongPress) {
-        this.haveChildLongPress = haveChildLongPress;
     }
 
     public boolean isUsingSelector() {
@@ -107,6 +95,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         }
         simpleAdapter.postNotifyDataSetChanged();
     }
+
     public boolean isAllSelected() {
         return isAllSelected;
     }
@@ -127,7 +116,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
     }
 
     public void select(final int position, boolean select) {
-        if(select==setSelector.contains(position))return;
+        if (select == setSelector.contains(position)) return;
         if (select) {
             setSelector.add(position);
         } else {
@@ -141,12 +130,12 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
             }
         });
     }
-    public boolean isSelected(int position){
+
+    public boolean isSelected(int position) {
         return setSelector.contains(position);
     }
 
     public void selectRange(final int start, final int end, boolean isSelected) {
-        LogUtils.log("updateSelectedRange selectRange", start + "        " + end);
         for (int i = start; i <= end; i++) {
             if (isSelected)
                 setSelector.add(i);
@@ -186,8 +175,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
 
     }
 
-    public abstract void isAllSelected(boolean isAllSelected);
-//    public abstract void onItemLongClick();
+    public abstract void onAllSelectChanged(boolean isAllSelected);
 
     @Override
     public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
@@ -228,7 +216,9 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         private void notifyIsAllSelected() {
             boolean s = !set.isEmpty() && set.size() == simpleAdapter.getList_bean().size();
             if (isAllSelected == s) return;
-            isAllSelected(isAllSelected = s);
+            LogUtils.log("notifyIsAllSelected",simpleAdapter.getList_bean().size());
+            LogUtils.log("notifyIsAllSelected set",set.size());
+            onAllSelectChanged(isAllSelected = s);
         }
     }
 }

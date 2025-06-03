@@ -15,7 +15,6 @@ import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
-import com.cy.rvadapterniubility.adapter.DragSelectFrameLayout;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
@@ -46,15 +45,14 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
         VerticalGridRecyclerView verticalGridRecyclerView = findViewById(R.id.VerticalGridRecyclerView);
         dragSelectorAdapter = new DragSelectorAdapter<HRVBean>() {
             @Override
-            public void isAllSelected(boolean selectedAll) {
+            public void onAllSelectChanged(boolean selectedAll) { 有毛病
+                LogUtils.log("onCheckedChanged isAllSelected", selectedAll);
                 imageViewSelector.setChecked(selectedAll);
             }
 
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected) {
                 LogUtils.log("bindDataToView", position + ":" + isSelected);
-                DragSelectFrameLayout dragSelectFrameLayout = (DragSelectFrameLayout) holder.itemView;
-                dragSelectFrameLayout.with(verticalGridRecyclerView, this);
 
                 holder.setImageResource(R.id.iv, bean.getResID());
                 holder.setVisibility(R.id.ivs, isUsingSelector() ? View.VISIBLE : View.GONE);
@@ -85,9 +83,8 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
             public void onItemLongClick(BaseViewHolder holder, int position, HRVBean bean) {
                 super.onItemLongClick(holder, position, bean);
                 LogUtils.log("dispatchTouchEvent  onItemLongClick");
-
                 Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
-                if(vibrator!=null)vibrator.vibrate(50);
+                if (vibrator != null) vibrator.vibrate(50);
                 layout_menu.setVisibility(View.VISIBLE);
                 startDragSelect(position);
             }
@@ -108,6 +105,7 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
         imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
+//                LogUtils.log("onCheckedChanged", isChecked);
                 dragSelectorAdapter.selectAll(isChecked);
             }
         });
