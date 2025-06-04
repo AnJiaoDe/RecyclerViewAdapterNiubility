@@ -45,6 +45,8 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     private int autoScrollDistance = (int) (Resources.getSystem().getDisplayMetrics().density * 56);
     private boolean downSelected = false;
     private boolean cancelSelect = false;
+//    private boolean overTopScrolling = false;
+//    private boolean overBottomScrolling = false;
 
     public DragSelectRecyclerView(Context context) {
         //注意是this,否则GG
@@ -107,6 +109,13 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                     scrollBy(0, s);
                     updateSelectedRange(x_last, y_last);
                     ViewCompat.postOnAnimation(DragSelectRecyclerView.this, this);
+                    //是否能下滑
+//                    LogUtils.log("computeScrollOffset",canScrollVertically(-1));
+                    //是否能上滑
+//                    LogUtils.log("computeScrollOffset 11111",canScrollVertically(1));
+                    if (scrollDistance > 0 && !canScrollVertically(1) || scrollDistance < 0 && !canScrollVertically(-1)) {
+                        stopAutoScroll();
+                    }
                 }
             }
         };
@@ -128,10 +137,13 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     }
 
     /**
+     * BUG:单击3个再
      * 1.长按、单击，switch当前item选中状态
      * 2.如果当前在选择模式下，非竖直滑动，移动能switch选中状态（手指按下时的当前item选中状态的！），往回移动都是非选中
      * 3.如果当前在选择模式下，非竖直滑动，手指移动后往下拖或者往上拖，如果超出边界，
-     *   需要滚动RV，顶部或者底部无法触摸到的item，都要switch选中状态
+     * 需要滚动RV，顶部或者底部无法触摸到的item，都要switch选中状态
+     * 4.如果当前在选择模式下，非竖直滑动，手指移动后往下拖或者往上拖，即使没有超出边界，没有触发滚动，也要能switch有空格的行
+     *
      * @param event The motion event to be dispatched.
      * @return
      */
@@ -158,10 +170,9 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                         position_end = position;
                         position_start_last = position;
                         position_end_last = position;
-                        downSelected = dragSelectorAdapter.isSelected(position_start);
                     }
+                    downSelected = dragSelectorAdapter.isSelected(position_start);
                 }
-
                 break;
             case MotionEvent.ACTION_MOVE:
                 float moveX = event.getX();
@@ -171,8 +182,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 boolean moveV = dy > touchSlop && dy >= dx;
                 downX = moveX;
                 downY = moveY;
-                //    横向滑动程度大于竖向滑动程度，横向滑动超过一定距离，选中当前ITEM，并且拦截竖直滑动，
-                //                    直到UP之后
+                //横向滑动程度大于竖向滑动程度，横向滑动超过一定距离，选中当前ITEM，并且拦截竖直滑动，直到UP之后
                 if (isSelectMoving || (!moveV && dx > touchSlop && dx >= dy)) {
                     View child = findChildViewUnder(moveX, moveY);
                     if (child != null) {
@@ -215,7 +225,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                                     inBottomScrollRange = true;
                                     startAutoScroll();
                                 }
-                                //手指在列表最底部外面，列表上滑
+                                //手指在列表最底部外面，列表最大速度上滑
                             } else if (y > bottomBoundTo) {
                                 x_last = event.getX();
                                 y_last = event.getY();
@@ -232,6 +242,9 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                                 stopAutoScroll();
                             }
                         }
+                    } else {
+                        LogUtils.log("child==null");
+                        updateSelectedRange(moveX, moveY);
                     }
                 }
                 break;
@@ -278,18 +291,26 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     private void updateSelectedRange(float x, float y) {
         View child = findChildViewUnder(x, y);
         if (child != null) {
+            LogUtils.log("canScrollVertically != null");
             int position = getChildAdapterPosition(child);
             if (position != NO_POSITION && position_start != RecyclerView.NO_POSITION && position_end != position) {
                 position_end = position;
             }
-        } else if (inBottomScrollRange && scrollDistance == maxScrollDistance && getAdapter() != null && getAdapter().getItemCount() > 0) {
-            position_end = getAdapter().getItemCount() - 1;
-        } else if (inTopScrollRange && scrollDistance == -maxScrollDistance) {
+            //如果正在触发滚动中，且不能上滑
+        } else if (!canScrollVertically(1)) {
+            LogUtils.log("canScrollVertically(1)");
+            position_end = dragSelectorAdapter.getAdapter().getList_bean().size() - 1;
+            //防止NO_POSITION导致全选，即使手指按下，在空白处滑动，依然能switch最后一个ITEM，其实这样体验更丝滑，华为手机系统相册就是真么干的
+//            position_start = Math.max(NO_POSITION, position_end);
+            //如果正在触发滚动中，且不能下滑
+        } else if (!canScrollVertically(-1)) {
+            LogUtils.log("canScrollVertically(----1)");
             position_end = 0;
+            //防止NO_POSITION导致全选
+//            position_start = Math.max(NO_POSITION, position_end);
         } else {
             return;
         }
-
         int newStart, newEnd;
         newStart = Math.min(position_start, position_end);
         newEnd = Math.max(position_start, position_end);

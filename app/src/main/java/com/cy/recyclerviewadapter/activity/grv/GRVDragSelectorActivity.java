@@ -45,7 +45,7 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
         VerticalGridRecyclerView verticalGridRecyclerView = findViewById(R.id.VerticalGridRecyclerView);
         dragSelectorAdapter = new DragSelectorAdapter<HRVBean>() {
             @Override
-            public void onAllSelectChanged(boolean selectedAll) { 有毛病
+            public void onAllSelectChanged(boolean selectedAll) {
                 LogUtils.log("onCheckedChanged isAllSelected", selectedAll);
                 imageViewSelector.setChecked(selectedAll);
             }

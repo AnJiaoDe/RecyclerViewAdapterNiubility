@@ -203,7 +203,6 @@ public  class OnSimpleScrollListener {
             case STAGGERED_GRID:
                 StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
                 orientation = staggeredGridLayoutManager.getOrientation();
-
                 /**
                  * Note that, this value is not affected by layout orientation or item order traversal.
                  *      * ({@link #setReverseLayout(boolean)}). Views are sorted by their positions in the adapter,
@@ -213,7 +212,6 @@ public  class OnSimpleScrollListener {
                 positionHolder.setFirstCompletelyVisibleItemPositions(staggeredGridLayoutManager.findFirstCompletelyVisibleItemPositions(null));
                 positionHolder.setLastVisibleItemPositions(staggeredGridLayoutManager.findLastVisibleItemPositions(null));
                 positionHolder.setLastCompletelyVisibleItemPositions(staggeredGridLayoutManager.findLastCompletelyVisibleItemPositions(null));
-
                 break;
         }
         return positionHolder;
