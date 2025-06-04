@@ -45,6 +45,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     private int autoScrollDistance = (int) (Resources.getSystem().getDisplayMetrics().density * 56);
     private boolean downSelected = false;
     private boolean cancelSelect = false;
+    private float y_end_bottom;
 //    private boolean overTopScrolling = false;
 //    private boolean overBottomScrolling = false;
 
@@ -269,6 +270,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         inBottomScrollRange = false;
         x_last = -1;
         y_last = -1;
+        y_end_bottom = -1;
         stopAutoScroll();
     }
 
@@ -288,29 +290,39 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         }
     }
 
+    /**
+     * if (position != RecyclerView.NO_POSITION && mEnd != position) {
+     * <p>
+     * if (mStart == RecyclerView.NO_POSITION || mEnd == RecyclerView.NO_POSITION)
+     *
+     * @param x
+     * @param y
+     */
     private void updateSelectedRange(float x, float y) {
         View child = findChildViewUnder(x, y);
         if (child != null) {
             LogUtils.log("canScrollVertically != null");
             int position = getChildAdapterPosition(child);
-            if (position != NO_POSITION && position_start != RecyclerView.NO_POSITION && position_end != position) {
+            if (position != NO_POSITION && position != position_end) {
                 position_end = position;
             }
-            //如果正在触发滚动中，且不能上滑
-        } else if (!canScrollVertically(1)) {
+            y_end_bottom = child.getBottom();
+            //如果正在触发滚动中，上滑，且不能再上滑
+        } else if ((scrollDistance > 0 || y > y_end_bottom) && !canScrollVertically(1)) {
             LogUtils.log("canScrollVertically(1)");
             position_end = dragSelectorAdapter.getAdapter().getList_bean().size() - 1;
             //防止NO_POSITION导致全选，即使手指按下，在空白处滑动，依然能switch最后一个ITEM，其实这样体验更丝滑，华为手机系统相册就是真么干的
 //            position_start = Math.max(NO_POSITION, position_end);
-            //如果正在触发滚动中，且不能下滑
-        } else if (!canScrollVertically(-1)) {
+            //如果正在触发滚动中，下滑，且不能再下滑
+        } else if (scrollDistance < 0 && !canScrollVertically(-1)) {
             LogUtils.log("canScrollVertically(----1)");
             position_end = 0;
             //防止NO_POSITION导致全选
 //            position_start = Math.max(NO_POSITION, position_end);
-        } else {
-            return;
         }
+        if (position_start == RecyclerView.NO_POSITION || position_end == RecyclerView.NO_POSITION)
+            return;
+
         int newStart, newEnd;
         newStart = Math.min(position_start, position_end);
         newEnd = Math.max(position_start, position_end);
