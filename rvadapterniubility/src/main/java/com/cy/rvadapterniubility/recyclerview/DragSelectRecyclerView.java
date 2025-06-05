@@ -290,14 +290,6 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         }
     }
 
-    /**
-     * if (position != RecyclerView.NO_POSITION && mEnd != position) {
-     * <p>
-     * if (mStart == RecyclerView.NO_POSITION || mEnd == RecyclerView.NO_POSITION)
-     *
-     * @param x
-     * @param y
-     */
     private void updateSelectedRange(float x, float y) {
         View child = findChildViewUnder(x, y);
         if (child != null) {
@@ -305,6 +297,10 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             int position = getChildAdapterPosition(child);
             if (position != NO_POSITION && position != position_end) {
                 position_end = position;
+                if (position_start == NO_POSITION) {
+                    position_start = position_end;
+                    dragSelectorAdapter.select(position_start, true);
+                }
             }
             y_end_bottom = child.getBottom();
             //如果正在触发滚动中，上滑，且不能再上滑
@@ -329,24 +325,30 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 
         if (position_start_last == NO_POSITION || position_end_last == NO_POSITION) {
             if (newEnd - newStart == 1) {
+                LogUtils.log("selectRange", "newEnd - newStart == 1");
                 dragSelectorAdapter.selectRange(newStart, newStart,
                         isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected);
             } else {
+                LogUtils.log("selectRange", "newEnd - newStart !!!!= 1");
                 dragSelectorAdapter.selectRange(newStart, newEnd,
                         isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected);
             }
         } else {
             if (newStart > position_start_last) {
+                LogUtils.log("selectRange", "newStart > position_start_last");
                 cancelSelect = true;
                 dragSelectorAdapter.selectRange(position_start_last, newStart - 1, false);
             } else if (newStart < position_start_last) {
+                LogUtils.log("selectRange", "newStart < position_start_last");
                 dragSelectorAdapter.selectRange(newStart, position_start_last - 1,
                         isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected);
             }
             if (newEnd > position_end_last) {
+                LogUtils.log("selectRange", "newEnd > position_end_last");
                 dragSelectorAdapter.selectRange(position_end_last + 1, newEnd,
                         isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected);
             } else if (newEnd < position_end_last) {
+                LogUtils.log("selectRange", "newEnd < position_end_last");
                 cancelSelect = true;
                 dragSelectorAdapter.selectRange(newEnd + 1, position_end_last, false);
             }
