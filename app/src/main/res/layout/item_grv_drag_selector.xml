@@ -11,21 +11,21 @@
         android:scaleType="centerCrop"
         android:src="@drawable/default_pic" />
 
-    <ImageView
-        android:id="@+id/ivs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:padding="10dp"
-        android:src="@drawable/cb_unselected_rect_white"
-        android:visibility="gone" />
-    <!--    <com.cy.androidview.selectorview.ImageViewSelector-->
-    <!--        android:id="@+id/ivs"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_gravity="right|bottom"-->
-    <!--        android:padding="10dp"-->
-    <!--        android:visibility="gone"-->
-    <!--        app:cy_srcChecked="@drawable/cb_selected_rect_blue"-->
-    <!--        app:cy_srcUnChecked="@drawable/cb_unselected_rect_white" />-->
+<!--    <ImageView-->
+<!--        android:id="@+id/ivs"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="right|bottom"-->
+<!--        android:padding="10dp"-->
+<!--        android:src="@drawable/cb_unselected_rect_white"-->
+<!--        android:visibility="gone" />-->
+        <com.cy.androidview.selectorview.ImageViewSelector
+            android:id="@+id/ivs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:padding="10dp"
+            android:visibility="gone"
+            app:cy_srcChecked="@drawable/cb_selected_rect_blue"
+            app:cy_srcUnChecked="@drawable/cb_unselected_rect_white" />
 </FrameLayout>

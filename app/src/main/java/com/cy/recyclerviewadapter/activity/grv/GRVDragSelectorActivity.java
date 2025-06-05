@@ -52,20 +52,20 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
 
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected) {
-                LogUtils.log("bindDataToView", position + ":" + isSelected);
+//                LogUtils.log("bindDataToView", getSelectedSize());
 
                 holder.setImageResource(R.id.iv, bean.getResID());
                 holder.setVisibility(R.id.ivs, isUsingSelector() ? View.VISIBLE : View.GONE);
-                holder.setImageResource(R.id.ivs, isSelected ? R.drawable.cb_selected_rect_blue : R.drawable.cb_unselected_rect_white);
-//                ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
-//                imageViewSelector.setChecked(isSelected);
-//                imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
-//                    @Override
-//                    public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
-//                        LogUtils.log("onCheckedChanged", isChecked);
-//                        toggle(position, isChecked);
-//                    }
-//                });
+//                holder.setImageResource(R.id.ivs, isSelected ? R.drawable.cb_selected_rect_blue : R.drawable.cb_unselected_rect_white);
+                ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
+                imageViewSelector.setChecked(isSelected);
+                imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
+                        LogUtils.log("onCheckedChanged", position);
+                        select(position,isChecked);
+                    }
+                });
             }
 
             @Override

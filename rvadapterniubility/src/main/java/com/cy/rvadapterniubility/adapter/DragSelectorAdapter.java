@@ -67,14 +67,18 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         };
     }
 
+    public int getSelectedSize() {
+        return setSelector.size();
+    }
+
     public boolean isUsingSelector() {
         return usingSelector;
     }
 
     public void startDragSelect(int position) {
         usingSelector = true;
-        toggle(position);
-        simpleAdapter.postNotifyDataSetChanged();
+        toggleNoNotify(position);
+        simpleAdapter.notifyDataSetChanged();
     }
 
     public void stopDragSelect() {
@@ -100,12 +104,16 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         return isAllSelected;
     }
 
-    public void toggle(final int position) {
+    public void toggleNoNotify(final int position) {
         if (setSelector.contains(position)) {
             setSelector.remove(position);
         } else {
             setSelector.add(position);
         }
+    }
+
+    public void toggle(final int position) {
+        toggleNoNotify(position);
         //必须用handler，否则GG  Cannot call this method while RecyclerView is computing a layout or scrolling
         new Handler().post(new Runnable() {
             @Override
@@ -194,8 +202,17 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
             set = new HashSet<>();
         }
 
+        public int size() {
+            return set.size();
+        }
+
         public void add(int position) {
             set.add(position);
+            LogUtils.log("add", position);
+            LogUtils.log("add set size", set.size());
+            for (int p : set) {
+                LogUtils.log("position", p);
+            }
             notifyIsAllSelected();
         }
 
@@ -216,8 +233,8 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         private void notifyIsAllSelected() {
             boolean s = !set.isEmpty() && set.size() == simpleAdapter.getList_bean().size();
             if (isAllSelected == s) return;
-            LogUtils.log("notifyIsAllSelected",simpleAdapter.getList_bean().size());
-            LogUtils.log("notifyIsAllSelected set",set.size());
+            LogUtils.log("notifyIsAllSelected", simpleAdapter.getList_bean().size());
+            LogUtils.log("notifyIsAllSelected set", set.size());
             onAllSelectChanged(isAllSelected = s);
         }
     }

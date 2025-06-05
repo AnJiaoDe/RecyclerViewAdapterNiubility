@@ -62,16 +62,16 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 return true;
             }
 
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                if (dragSelectorAdapter != null) {
-                    View child = findChildViewUnder(e.getX(), e.getY());
-                    int position = getChildAdapterPosition(child);
-                    if (position > 0 && position < dragSelectorAdapter.getAdapter().getList_bean().size())
-                        dragSelectorAdapter.toggle(position);
-                }
-                return super.onSingleTapUp(e);
-            }
+//            @Override
+//            public boolean onSingleTapUp(MotionEvent e) {
+//                if (dragSelectorAdapter != null) {
+//                    View child = findChildViewUnder(e.getX(), e.getY());
+//                    int position = getChildAdapterPosition(child);
+//                    if (position > 0 && position < dragSelectorAdapter.getAdapter().getList_bean().size())
+//                        dragSelectorAdapter.toggle(position);
+//                }
+//                return super.onSingleTapUp(e);
+//            }
 
             @Override
             public void onLongPress(MotionEvent e) {
@@ -163,6 +163,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 isSelectMoving = false;
                 downSelected = false;
                 cancelSelect = false;
+                scrollDistance=0;
                 View c = findChildViewUnder(downX, downY);
                 if (c != null) {
                     int position = getChildAdapterPosition(c);
@@ -189,6 +190,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                     if (child != null) {
                         int position = getChildAdapterPosition(child);
                         if (position != NO_POSITION) {
+                            LogUtils.log("isSelectMoving");
                             isSelectMoving = true;
                             if (position == position_start)
                                 dragSelectorAdapter.select(position, !cancelSelect && !downSelected);
@@ -268,6 +270,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         position_end_last = NO_POSITION;
         inTopScrollRange = false;
         inBottomScrollRange = false;
+        scrollDistance=0;
         x_last = -1;
         y_last = -1;
         y_end_bottom = -1;
@@ -297,10 +300,6 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             int position = getChildAdapterPosition(child);
             if (position != NO_POSITION && position != position_end) {
                 position_end = position;
-                if (position_start == NO_POSITION) {
-                    position_start = position_end;
-                    dragSelectorAdapter.select(position_start, true);
-                }
             }
             y_end_bottom = child.getBottom();
             //如果正在触发滚动中，上滑，且不能再上滑
@@ -318,6 +317,10 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         }
         if (position_start == RecyclerView.NO_POSITION || position_end == RecyclerView.NO_POSITION)
             return;
+
+        LogUtils.log("getSelectedSize",dragSelectorAdapter.getSelectedSize());
+        LogUtils.log("position_start",position_start);
+        LogUtils.log("position_end",position_end);
 
         int newStart, newEnd;
         newStart = Math.min(position_start, position_end);
