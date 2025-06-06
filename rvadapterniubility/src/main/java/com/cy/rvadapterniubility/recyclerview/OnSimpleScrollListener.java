@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
  * Created by lenovo on 2017/12/31.
  */
 
-public  class OnSimpleScrollListener {
+public class OnSimpleScrollListener {
     protected boolean firstCallOnScrolled = true;
 
-    protected static enum LAYOUT_MANAGER_TYPE {
+    protected enum LAYOUT_MANAGER_TYPE {
         LINEAR,
         GRID,
         STAGGERED_GRID
@@ -171,11 +171,11 @@ public  class OnSimpleScrollListener {
     public PositionHolder computPosition(RecyclerView recyclerView) {
         PositionHolder positionHolder = new PositionHolder(new int[1], new int[1], new int[1], new int[1]);
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-        if (layoutManagerType == null) {
-            if (layoutManager instanceof LinearLayoutManager) {
-                layoutManagerType = LAYOUT_MANAGER_TYPE.LINEAR;
-            } else if (layoutManager instanceof GridLayoutManager) {
+        if (layoutManager != null && layoutManagerType == null) {
+            if (layoutManager instanceof GridLayoutManager) {
                 layoutManagerType = LAYOUT_MANAGER_TYPE.GRID;
+            } else if (layoutManager instanceof LinearLayoutManager) {
+                layoutManagerType = LAYOUT_MANAGER_TYPE.LINEAR;
             } else if (layoutManager instanceof StaggeredGridLayoutManager) {
                 layoutManagerType = LAYOUT_MANAGER_TYPE.STAGGERED_GRID;
             } else {
@@ -255,7 +255,7 @@ public  class OnSimpleScrollListener {
 
     }
 
-    public void onDragging(BaseRecyclerView baseRecyclerView, PositionHolder positionHolder,int velocity_x, int velocity_y, int offsetX, int offsetY) {
+    public void onDragging(BaseRecyclerView baseRecyclerView, PositionHolder positionHolder, int velocity_x, int velocity_y, int offsetX, int offsetY) {
         onShouldResumePicLoad(baseRecyclerView, positionHolder, baseRecyclerView.getVelocity_x(), baseRecyclerView.getVelocity_y(),
                 baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
     }
@@ -270,8 +270,9 @@ public  class OnSimpleScrollListener {
                 onSettlingShouldPausePicLoad(baseRecyclerView, positionHolder, velocity_x, velocity_y, offsetX, offsetY);
         }
     }
+
     public void onIdle(BaseRecyclerView baseRecyclerView, PositionHolder positionHolder,
-                                    int velocity_x, int velocity_y, int offsetX, int offsetY) {
+                       int velocity_x, int velocity_y, int offsetX, int offsetY) {
         onShouldResumePicLoad(baseRecyclerView, positionHolder, baseRecyclerView.getVelocity_x(), baseRecyclerView.getVelocity_y(),
                 baseRecyclerView.getOffsetX(), baseRecyclerView.getOffsetY());
     }

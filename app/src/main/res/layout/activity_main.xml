@@ -30,17 +30,12 @@
         android:layout_height="wrap_content"
         android:text="StaggeredGridRecyclerview" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_code_adapter"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="纯代码布局的Adapter" />-->
+    <Button
+        android:id="@+id/btn_pic_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="图片列表刷新闪烁问题" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btn_extendsRV"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="extends RV" />-->
 
     <ImageView
         android:layout_width="match_parent"

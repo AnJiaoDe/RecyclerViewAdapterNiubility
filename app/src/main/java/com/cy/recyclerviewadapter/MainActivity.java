@@ -2,34 +2,18 @@ package com.cy.recyclerviewadapter;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.LruCache;
 import android.view.View;
-import android.widget.ImageView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
+import com.cy.recyclerviewadapter.activity.grv.GRVPicRefreshActivity;
 import com.cy.recyclerviewadapter.activity.grv.GRVTypeActivity;
 import com.cy.recyclerviewadapter.activity.hr.HRVActivity;
 import com.cy.recyclerviewadapter.activity.sgrv.SGRVTypeActivity;
 import com.cy.recyclerviewadapter.activity.vr.VRTypeActivity;
 
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
 import java.io.FilterInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.Executor;
-
-import javax.net.ssl.HttpsURLConnection;
 
 
 public class MainActivity extends BaseActivity {
@@ -42,8 +26,7 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn_horizontal).setOnClickListener(this);
         findViewById(R.id.btn_grid).setOnClickListener(this);
         findViewById(R.id.btn_staggeredGrid).setOnClickListener(this);
-//        findViewById(R.id.btn_code_adapter).setOnClickListener(this);
-//        findViewById(R.id.btn_extendsRV).setOnClickListener(this);
+        findViewById(R.id.btn_pic_refresh).setOnClickListener(this);
 
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
         Log.e("TAG", "Max memory is " + maxMemory + "MB");
@@ -149,12 +132,9 @@ public class MainActivity extends BaseActivity {
             case R.id.btn_staggeredGrid:
                 startAppcompatActivity(SGRVTypeActivity.class);
                 break;
-//            case R.id.btn_code_adapter:
-//                startAppcompatActivity(VRCodeViewActivity.class);
-//                break;
-//            case R.id.btn_extendsRV:
-//                startAppcompatActivity(ExtendsRVActivity.class);
-//                break;
+            case R.id.btn_pic_refresh:
+                startAppcompatActivity(GRVPicRefreshActivity.class);
+                break;
         }
     }
 

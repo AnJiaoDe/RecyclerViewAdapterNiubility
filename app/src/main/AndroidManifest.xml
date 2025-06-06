@@ -13,9 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.grv.GRVDragSelectorActivity"
+            android:name=".activity.grv.GRVPicRefreshActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="false" />
+        <activity
+            android:name=".activity.grv.GRVDragSelectorActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".activity.tabrv.TabLayoutRVActivity" />
         <activity android:name=".activity.grv.GRVHorinzotalActivity" />
         <activity android:name=".activity.vr.VRRefreshLoadMoreSelfActivity" />

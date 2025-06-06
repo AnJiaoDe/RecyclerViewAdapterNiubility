@@ -1,11 +1,7 @@
 package com.cy.rvadapterniubility.adapter;
-
 import android.os.Handler;
 
 import androidx.annotation.Nullable;
-
-import com.cy.rvadapterniubility.LogUtils;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,9 +14,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
     private boolean usingSelector = false;
     private boolean isAllSelected = false;
     private SetSelector setSelector;
-
     public DragSelectorAdapter() {
-        setSelector = new SetSelector();
         simpleAdapter = new SimpleAdapter<T>() {
             @Override
             public void recycleData(@Nullable Object tag) {
@@ -65,6 +59,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
                 DragSelectorAdapter.this.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
             }
         };
+        setSelector = new SetSelector();
     }
 
     public int getSelectedSize() {
@@ -78,7 +73,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
     public void startDragSelect(int position) {
         usingSelector = true;
         toggleNoNotify(position);
-        simpleAdapter.notifyDataSetChanged();
+        simpleAdapter.postNotifyDataSetChanged();
     }
 
     public void stopDragSelect() {
@@ -208,11 +203,11 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
 
         public void add(int position) {
             set.add(position);
-            LogUtils.log("add", position);
-            LogUtils.log("add set size", set.size());
-            for (int p : set) {
-                LogUtils.log("position", p);
-            }
+//            LogUtils.log("add", position);
+//            LogUtils.log("add set size", set.size());
+//            for (int p : set) {
+//                LogUtils.log("position", p);
+//            }
             notifyIsAllSelected();
         }
 
@@ -233,8 +228,8 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         private void notifyIsAllSelected() {
             boolean s = !set.isEmpty() && set.size() == simpleAdapter.getList_bean().size();
             if (isAllSelected == s) return;
-            LogUtils.log("notifyIsAllSelected", simpleAdapter.getList_bean().size());
-            LogUtils.log("notifyIsAllSelected set", set.size());
+//            LogUtils.log("notifyIsAllSelected", simpleAdapter.getList_bean().size());
+//            LogUtils.log("notifyIsAllSelected set", set.size());
             onAllSelectChanged(isAllSelected = s);
         }
     }
