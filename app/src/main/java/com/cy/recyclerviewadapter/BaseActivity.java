@@ -48,7 +48,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         editor = sharedPreferences.edit();
 
         context_applicaiton = getApplicationContext();
-
     }
 
     public Context getContext_applicaiton() {
