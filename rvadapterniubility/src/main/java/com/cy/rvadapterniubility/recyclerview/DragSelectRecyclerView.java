@@ -59,11 +59,6 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     public DragSelectRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                return true;
-            }
-
 //            @Override
 //            public boolean onSingleTapUp(MotionEvent e) {
 //                if (dragSelectorAdapter != null) {
@@ -146,15 +141,16 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
      * 需要滚动RV，顶部或者底部无法触摸到的item，都要switch选中状态
      * 4.如果当前在选择模式下，非竖直滑动，手指移动后往下拖或者往上拖，即使没有超出边界，没有触发滚动，也要能switch有空格的行
      * （目前是没有用findlastvisibleitems做判断，而是不能再上滑做的判断，虽然不完美，暂时这样吧，这玩意烦躁得很）
+     *
      * @param event The motion event to be dispatched.
      * @return
      */
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
+    public boolean onInterceptTouchEvent(MotionEvent event) {
         if (dragSelectorAdapter == null || dragSelectorAdapter.getAdapter().getList_bean().isEmpty())
-            return super.dispatchTouchEvent(event);
+            return super.onInterceptTouchEvent(event);
         LayoutManager layoutManager = getLayoutManager();
-        if (layoutManager == null) return super.dispatchTouchEvent(event);
+        if (layoutManager == null) return super.onInterceptTouchEvent(event);
         int orientation = 0;
         //注意：GridLayoutManager继承于LinearLayoutManager
         if (layoutManager instanceof LinearLayoutManager) {
@@ -162,10 +158,10 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         } else if (layoutManager instanceof StaggeredGridLayoutManager) {
             orientation = ((StaggeredGridLayoutManager) layoutManager).getOrientation();
         }
-        if (orientation != RecyclerView.VERTICAL) return super.dispatchTouchEvent(event);
+        if (orientation != RecyclerView.VERTICAL) return super.onInterceptTouchEvent(event);
 
         gestureDetector.onTouchEvent(event);
-        if (!dragSelectorAdapter.isUsingSelector()) return super.dispatchTouchEvent(event);
+        if (!dragSelectorAdapter.isUsingSelector()) return super.onInterceptTouchEvent(event);
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
@@ -272,7 +268,12 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         }
         //ACTION_UP ACTION_CANCEL 等也要拦截，否则会导致itemview如果只有down和up就成了itemview单击了，应该把up拦截掉，
         if (isLongPress || isSelectMoving) return true;
-        return super.dispatchTouchEvent(event);
+        return super.onInterceptTouchEvent(event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        return super.onTouchEvent(ev)
     }
 
     private void reset() {
