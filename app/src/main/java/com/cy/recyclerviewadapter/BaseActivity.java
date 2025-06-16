@@ -20,6 +20,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.cy.recyclerviewadapter.swipeview.SwipeBackLayout;
+import com.cy.refreshlayoutniubility.VibratorUtils;
+
 
 /**
  * Created by lenovo on 2017/4/25.
@@ -29,13 +32,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     private String toast_permission;
     private OnPermissionHaveListener onPermissionHaveListener;
     public SharedPreferences sharedPreferences;
-
-
     public SharedPreferences.Editor editor;
-
-
     public Context context_applicaiton;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +47,24 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
         context_applicaiton = getApplicationContext();
     }
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackLayout swipeBackLayout = new SwipeBackLayout(this, new SwipeBackLayout.Callback() {
+            //由于状态栏和导航栏，故而垂直方向有效触摸范围要设大点
+            @Override
+            public float getEdgeVSizeRatio() {
+                return 0.2f;
+            }
 
+            @Override
+            public void onEdgeTouched(int edgeTracking) {
+                super.onEdgeTouched(edgeTracking);
+                VibratorUtils.startVibrate(BaseActivity.this);
+            }
+        });
+        swipeBackLayout.attachActivity(this);
+    }
     public Context getContext_applicaiton() {
         return context_applicaiton;
     }
