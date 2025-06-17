@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.cy.androidview.ScreenUtils;
 import com.cy.androidview.selectorview.ImageViewSelector;
+import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
@@ -23,7 +24,7 @@ import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GRVDragSelectorActivity extends AppCompatActivity {
+public class GRVDragSelectorActivity extends BaseActivity {
 
     private DragSelectorAdapter<HRVBean> dragSelectorAdapter;
     private View layout_menu;
@@ -88,7 +89,7 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(BaseViewHolder holder, int position, HRVBean bean) {
-                showToast(GRVDragSelectorActivity.this, "点击" + position);
+                showToast( "点击" + position);
             }
 
             @Override
@@ -114,5 +115,10 @@ public class GRVDragSelectorActivity extends AppCompatActivity {
                 dragSelectorAdapter.stopDragSelect();
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

@@ -54,7 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             //由于状态栏和导航栏，故而垂直方向有效触摸范围要设大点
             @Override
             public float getEdgeVSizeRatio() {
-                return 0.2f;
+                return 0.15f;
             }
 
             @Override

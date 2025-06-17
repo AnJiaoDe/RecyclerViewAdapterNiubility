@@ -78,6 +78,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
 
     public void stopDragSelect() {
         usingSelector = false;
+        setSelector.clear();
         simpleAdapter.postNotifyDataSetChanged();
     }
 

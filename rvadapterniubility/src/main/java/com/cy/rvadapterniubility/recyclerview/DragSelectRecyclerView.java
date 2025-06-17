@@ -145,12 +145,14 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
      * @param event The motion event to be dispatched.
      * @return
      */
+    
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
+    public boolean dispatchTouchEvent(MotionEvent event) {
         if (dragSelectorAdapter == null || dragSelectorAdapter.getAdapter().getList_bean().isEmpty())
-            return super.onInterceptTouchEvent(event);
+            return super.dispatchTouchEvent(event);
         LayoutManager layoutManager = getLayoutManager();
-        if (layoutManager == null) return super.onInterceptTouchEvent(event);
+        if (layoutManager == null) return super.dispatchTouchEvent(event);
+        
         int orientation = 0;
         //注意：GridLayoutManager继承于LinearLayoutManager
         if (layoutManager instanceof LinearLayoutManager) {
@@ -158,10 +160,11 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         } else if (layoutManager instanceof StaggeredGridLayoutManager) {
             orientation = ((StaggeredGridLayoutManager) layoutManager).getOrientation();
         }
-        if (orientation != RecyclerView.VERTICAL) return super.onInterceptTouchEvent(event);
+        if (orientation != RecyclerView.VERTICAL) return super.dispatchTouchEvent(event);
 
         gestureDetector.onTouchEvent(event);
-        if (!dragSelectorAdapter.isUsingSelector()) return super.onInterceptTouchEvent(event);
+        if (!dragSelectorAdapter.isUsingSelector()) return super.dispatchTouchEvent(event);
+        
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
@@ -268,13 +271,9 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         }
         //ACTION_UP ACTION_CANCEL 等也要拦截，否则会导致itemview如果只有down和up就成了itemview单击了，应该把up拦截掉，
         if (isLongPress || isSelectMoving) return true;
-        return super.onInterceptTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        return super.onTouchEvent(ev)
-    }
 
     private void reset() {
         position_start = NO_POSITION;

@@ -32,7 +32,6 @@ public class SwipeLayout extends LinearLayout {
     private int duration_open = 200;
     private int duration_close = 200;
     private OnSwipeListener onSwipeListener;
-    protected SwipeBackLayout swipeBackLayout;
 
     public SwipeLayout(Context context) {
         this(context, null);
