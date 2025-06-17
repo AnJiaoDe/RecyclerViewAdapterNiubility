@@ -43,9 +43,9 @@ public class GRVDragSelectorActivity extends BaseActivity {
             list.add(new HRVBean(R.drawable.pic1));
         }
         layout_menu = findViewById(R.id.layout_menu);
-        VerticalGridRecyclerView verticalGridRecyclerView = findViewById(R.id.VerticalGridRecyclerView);
-        ImageViewSelector imageViewSelector = findViewById(R.id.ivs);
-        TextView tv_count=findViewById(R.id.tv_count);
+        VerticalGridRecyclerView verticalGridRecyclerView = (VerticalGridRecyclerView) findViewById(R.id.VerticalGridRecyclerView);
+        ImageViewSelector imageViewSelector = (ImageViewSelector) findViewById(R.id.ivs);
+        TextView tv_count= (TextView) findViewById(R.id.tv_count);
         imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {

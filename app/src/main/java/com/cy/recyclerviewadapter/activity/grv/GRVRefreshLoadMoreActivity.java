@@ -31,7 +31,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
         setContentView(R.layout.activity_grvrefresh_load_more);
 
 
-        gridRefreshLayout=findViewById(R.id.grl);
+        gridRefreshLayout= (GridRefreshLayout) findViewById(R.id.grl);
         List<HRVBean> list = new ArrayList<>();
         for (int i=0;i<20;i++){
             if (i%5==0){

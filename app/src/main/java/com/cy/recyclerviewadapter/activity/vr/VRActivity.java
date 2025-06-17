@@ -35,7 +35,7 @@ public class VRActivity extends BaseActivity {
         for (int i = 0; i < 100; i++) {
             list.add(new VRBean("内容" + i));
         }
-        final VerticalRecyclerView verticalRecyclerView=findViewById(R.id.vr);
+        final VerticalRecyclerView verticalRecyclerView= (VerticalRecyclerView) findViewById(R.id.vr);
         rvAdapter = new SimpleAdapter<VRBean>() {
 
             @Override

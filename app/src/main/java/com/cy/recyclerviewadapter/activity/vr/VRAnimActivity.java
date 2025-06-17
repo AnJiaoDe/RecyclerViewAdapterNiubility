@@ -32,7 +32,7 @@ public class VRAnimActivity extends BaseActivity {
         for (int i = 0; i < 100; i++) {
             list.add(new VRBean("内容" + i));
         }
-        final VerticalRecyclerView verticalRecyclerView=findViewById(R.id.vr);
+        final VerticalRecyclerView verticalRecyclerView= (VerticalRecyclerView) findViewById(R.id.vr);
         simpleAdapter = new SimpleAdapter<VRBean>() {
             @Override
             public void bindDataToView(final BaseViewHolder holder, int position, VRBean bean) {

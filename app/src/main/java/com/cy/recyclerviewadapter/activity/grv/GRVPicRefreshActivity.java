@@ -43,7 +43,7 @@ public class GRVPicRefreshActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grvload_pic);
-        gridRefreshLayout = findViewById(R.id.grl);
+        gridRefreshLayout = (GridRefreshLayout) findViewById(R.id.grl);
         List<String> list = new ArrayList<>();
         list.add("https://img0.baidu.com/it/u=1064515679,2989524044&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=725");
         list.add("https://img1.baidu.com/it/u=924730145,3669789419&fm=253&fmt=auto&app=120&f=JPEG?w=763&h=500");
@@ -63,9 +63,9 @@ public class GRVPicRefreshActivity extends BaseActivity {
         list.add("https://img2.baidu.com/it/u=3161270167,1354297607&fm=253&fmt=auto&app=138&f=JPEG?w=801&h=500");
 
         layout_menu = findViewById(R.id.layout_menu);
-        VerticalGridRecyclerView verticalGridRecyclerView = findViewById(R.id.VerticalGridRecyclerView);
-        ImageViewSelector imageViewSelector = findViewById(R.id.ivs);
-        TextView tv_count = findViewById(R.id.tv_count);
+        VerticalGridRecyclerView verticalGridRecyclerView = (VerticalGridRecyclerView) findViewById(R.id.VerticalGridRecyclerView);
+        ImageViewSelector imageViewSelector = (ImageViewSelector) findViewById(R.id.ivs);
+        TextView tv_count = (TextView) findViewById(R.id.tv_count);
         imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {

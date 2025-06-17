@@ -41,7 +41,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vrrefresh);
-        verticalRefreshLayout = findViewById(R.id.vrl);
+        verticalRefreshLayout = (LinearRefreshLayout) findViewById(R.id.vrl);
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override

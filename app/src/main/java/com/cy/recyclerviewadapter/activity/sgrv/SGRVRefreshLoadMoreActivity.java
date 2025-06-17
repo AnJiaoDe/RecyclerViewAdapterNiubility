@@ -46,7 +46,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sgrvrefresh_load_more);
 
-        staggeredRefreshLayout = findViewById(R.id.StaggeredRefreshLayout);
+        staggeredRefreshLayout = (StaggeredRefreshLayout) findViewById(R.id.StaggeredRefreshLayout);
         List<HRVBean> list = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             if (i % 5 == 0) {
