@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.TextView;
 
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+
 import com.cy.androidview.ScreenUtils;
 import com.cy.androidview.selectorview.ImageViewSelector;
 import com.cy.recyclerviewadapter.BaseActivity;
@@ -76,9 +79,11 @@ public class GRVPicRefreshActivity extends BaseActivity {
 
         dragSelectorAdapter = new DragSelectorAdapter<String>() {
             @Override
-            public void onAllSelectChanged(boolean selectedAll) {
-                LogUtils.log("onCheckedChanged isAllSelected", selectedAll);
-                imageViewSelector.setChecked(selectedAll);
+            public void onSelectCountChanged(boolean isAllSelected, int count_selected) {
+                imageViewSelector.setChecked(isAllSelected);
+//                tv_count.setText("已选择"+getSelectedSize()+"项");
+                //或者
+                tv_count.setText("已选择" + count_selected + "项");
             }
 
             @Override
@@ -101,7 +106,6 @@ public class GRVPicRefreshActivity extends BaseActivity {
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
                         LogUtils.log("onCheckedChanged", position);
                         select(position, isChecked);
-                        tv_count.setText("已选择" + getSelectedSize() + "项");
                     }
                 });
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
@@ -120,7 +124,7 @@ public class GRVPicRefreshActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemLongClick(BaseViewHolder holder, int position, String bean) {
+            public void onItemLongClick__(BaseViewHolder holder, int position, String bean) {
                 super.onItemLongClick(holder, position, bean);
                 LogUtils.log("dispatchTouchEvent  onItemLongClick");
                 Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);

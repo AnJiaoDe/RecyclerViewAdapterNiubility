@@ -1,64 +1,15 @@
 package com.cy.rvadapterniubility.adapter;
+
 import android.os.Handler;
 
-import androidx.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by cy on 2018/3/29.类似策略模式,引入IAdapter接口，面向多态编程
- */
-
-public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHolder, SimpleAdapter> {
-    private SimpleAdapter<T> simpleAdapter;
+public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     private boolean usingSelector = false;
-    private boolean isAllSelected = false;
     private SetSelector setSelector;
+
     public DragSelectorAdapter() {
-        simpleAdapter = new SimpleAdapter<T>() {
-            @Override
-            public void recycleData(@Nullable Object tag) {
-                DragSelectorAdapter.this.recycleData(tag);
-            }
-
-            @Nullable
-            @Override
-            public Object setHolderTagPreBindData(BaseViewHolder holder, int position, T bean) {
-                return DragSelectorAdapter.this.setHolderTagPreBindData(holder, position, bean);
-            }
-
-            @Override
-            public void bindDataToView(final BaseViewHolder holder, int position, T bean) {
-                DragSelectorAdapter.this.bindDataToView(holder, position, bean, setSelector.contains(position));
-            }
-
-            @Override
-            public int getItemLayoutID(int position, T bean) {
-                return DragSelectorAdapter.this.getItemLayoutID(position, bean);
-            }
-
-            @Override
-            public void onItemClick(BaseViewHolder holder, int position, T bean) {
-                DragSelectorAdapter.this.onItemClick(holder, position, bean);
-            }
-
-            /**
-             * 这里不能用了，否则GG
-             * @param fromPosition
-             * @param toPosition
-             * @param srcHolder
-             * @param targetHolder
-             */
-//            @Override
-//            public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
-//                DragSelectorAdapter.this.onItemLongClick(holder, position, bean);
-//            }
-            @Override
-            public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
-                super.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
-                DragSelectorAdapter.this.onItemMove(fromPosition, toPosition, srcHolder, targetHolder);
-            }
-        };
         setSelector = new SetSelector();
     }
 
@@ -73,31 +24,26 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
     public void startDragSelect(int position) {
         usingSelector = true;
         toggleNoNotify(position);
-        simpleAdapter.postNotifyDataSetChanged();
+        postNotifyDataSetChanged();
     }
 
     public void stopDragSelect() {
         usingSelector = false;
         setSelector.clear();
-        simpleAdapter.postNotifyDataSetChanged();
+        postNotifyDataSetChanged();
     }
 
     public void selectAll(boolean isAllSelected) {
-        boolean noChange = this.isAllSelected == isAllSelected;
-        this.isAllSelected = isAllSelected;
+        boolean noChange = (setSelector.size() == getList_bean().size()) == isAllSelected;
         if (noChange) return;
         if (isAllSelected) {
-            for (int i = 0; i < simpleAdapter.getList_bean().size(); i++) {
+            for (int i = 0; i < getList_bean().size(); i++) {
                 setSelector.add(i);
             }
         } else {
             setSelector.clear();
         }
-        simpleAdapter.postNotifyDataSetChanged();
-    }
-
-    public boolean isAllSelected() {
-        return isAllSelected;
+        postNotifyDataSetChanged();
     }
 
     public void toggleNoNotify(final int position) {
@@ -114,7 +60,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                simpleAdapter.notifyItemChanged(position);
+                notifyItemChanged(position);
             }
         });
     }
@@ -130,7 +76,7 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                simpleAdapter.notifyItemChanged(position);
+                notifyItemChanged(position);
             }
         });
     }
@@ -150,45 +96,35 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                simpleAdapter.notifyItemRangeChanged(start, end - start + 1);
+                notifyItemRangeChanged(start, end - start + 1);
             }
         });
     }
 
-
-    @Override
-    public void recycleData(@Nullable Object tag) {
-
-    }
-
-    @Nullable
-    @Override
-    public Object setHolderTagPreBindData(BaseViewHolder holder, int position, T bean) {
-        return null;
-    }
-
     @Override
     public final void bindDataToView(BaseViewHolder holder, int position, T bean) {
-
+        bindDataToView(holder, position, bean, setSelector.contains(position));
     }
 
     public abstract void bindDataToView(BaseViewHolder holder, int position, T bean, boolean isSelected);
 
+    /**
+     * ----------------这个不能在使用的时候实现了，否则会导致回调2次长按事件，因为在DragRecyclerView中也做了长按回调------------------------------------------------------------------
+     */
     @Override
-    public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
+    public final void onItemLongClick(BaseViewHolder holder, int position, T bean) {
 
     }
 
-    public abstract void onAllSelectChanged(boolean isAllSelected);
-
-    @Override
-    public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
+    public void onItemLongClick__(BaseViewHolder holder, int position, T bean) {
 
     }
+
+    public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
 
     @Override
     public SimpleAdapter<T> getAdapter() {
-        return simpleAdapter;
+        return this;
     }
 
     private class SetSelector {
@@ -204,17 +140,12 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
 
         public void add(int position) {
             set.add(position);
-//            LogUtils.log("add", position);
-//            LogUtils.log("add set size", set.size());
-//            for (int p : set) {
-//                LogUtils.log("position", p);
-//            }
-            notifyIsAllSelected();
+            notifyCountSelected();
         }
 
         public void remove(int position) {
             set.remove(position);
-            notifyIsAllSelected();
+            notifyCountSelected();
         }
 
         public boolean contains(int position) {
@@ -222,16 +153,14 @@ public abstract class DragSelectorAdapter<T> implements IAdapter<T, BaseViewHold
         }
 
         public void clear() {
+            int count_selected = set.size();
             set.clear();
-            notifyIsAllSelected();
+            if (count_selected != 0)
+                notifyCountSelected();
         }
 
-        private void notifyIsAllSelected() {
-            boolean s = !set.isEmpty() && set.size() == simpleAdapter.getList_bean().size();
-            if (isAllSelected == s) return;
-//            LogUtils.log("notifyIsAllSelected", simpleAdapter.getList_bean().size());
-//            LogUtils.log("notifyIsAllSelected set", set.size());
-            onAllSelectChanged(isAllSelected = s);
+        private void notifyCountSelected() {
+            onSelectCountChanged(getList_bean().size() == set.size(), set.size());
         }
     }
 }

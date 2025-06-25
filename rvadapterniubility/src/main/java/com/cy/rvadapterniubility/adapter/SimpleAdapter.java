@@ -11,6 +11,9 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.AsyncDifferConfig;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -28,10 +31,30 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     private List<T> list_bean;//数据源
 
-
     public SimpleAdapter() {
+//        super(new DiffUtil.ItemCallback<T>() {
+//            @Override
+//            public boolean areItemsTheSame(@NonNull T oldItem, @NonNull T newItem) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean areContentsTheSame(@NonNull T oldItem, @NonNull T newItem) {
+//                return false;
+//            }
+//
+//            @Nullable
+//            @Override
+//            public Object getChangePayload(@NonNull T oldItem, @NonNull T newItem) {
+//                return super.getChangePayload(oldItem, newItem);
+//            }
+//        });
         list_bean = new ArrayList<>();//数据源
     }
+//    public SimpleAdapter(@NonNull AsyncDifferConfig<T> config){
+//        super(config);
+//        list_bean = new ArrayList<>();//数据源
+//    }
 
     @NonNull
     @Override
@@ -47,6 +70,11 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         if (position < 0 || position >= list_bean.size()) return;
         holder.setTag(setHolderTagPreBindData(holder, position, list_bean.get(position)));
         bindDataToView(holder, position, list_bean.get(position));
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
     }
 
     /**
@@ -134,15 +162,8 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     public Object setHolderTagPreBindData(BaseViewHolder holder, int position, T bean) {
         return null;
     }
-
-
-
-    /**
-     * ----------------------------------------------------------------------------------
-     */
-
     @Override
-    public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
+    public  void onItemLongClick(BaseViewHolder holder, int position, T bean) {
 
     }
 

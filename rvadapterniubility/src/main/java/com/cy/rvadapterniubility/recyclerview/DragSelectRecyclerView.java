@@ -86,7 +86,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 position_start_last = position;
                 position_end_last = position;
 
-                dragSelectorAdapter.onItemLongClick((BaseViewHolder) findViewHolderForAdapterPosition(position),
+                dragSelectorAdapter.onItemLongClick__((BaseViewHolder) findViewHolderForAdapterPosition(position),
                         position, dragSelectorAdapter.getAdapter().getList_bean().get(position));
             }
 

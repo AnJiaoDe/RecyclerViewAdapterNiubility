@@ -45,7 +45,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
         layout_menu = findViewById(R.id.layout_menu);
         VerticalGridRecyclerView verticalGridRecyclerView = (VerticalGridRecyclerView) findViewById(R.id.VerticalGridRecyclerView);
         ImageViewSelector imageViewSelector = (ImageViewSelector) findViewById(R.id.ivs);
-        TextView tv_count= (TextView) findViewById(R.id.tv_count);
+        TextView tv_count = (TextView) findViewById(R.id.tv_count);
         imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
@@ -55,14 +55,16 @@ public class GRVDragSelectorActivity extends BaseActivity {
         });
         dragSelectorAdapter = new DragSelectorAdapter<HRVBean>() {
             @Override
-            public void onAllSelectChanged(boolean selectedAll) {
-                LogUtils.log("onCheckedChanged isAllSelected", selectedAll);
-                imageViewSelector.setChecked(selectedAll);
+            public void onSelectCountChanged(boolean isAllSelected, int count_selected) {
+                imageViewSelector.setChecked(isAllSelected);
+//                tv_count.setText("已选择"+getSelectedSize()+"项");
+                //或者
+                tv_count.setText("已选择" + count_selected + "项");
             }
 
             @Override
             public void bindDataToView(BaseViewHolder holder, final int position, HRVBean bean, boolean isSelected) {
-                LogUtils.log("bindDataToView", position+":"+isSelected);
+                LogUtils.log("bindDataToView", position + ":" + isSelected);
                 holder.setImageResource(R.id.iv, bean.getResID());
                 holder.setVisibility(R.id.ivs, isUsingSelector() ? View.VISIBLE : View.GONE);
 //                holder.setImageResource(R.id.ivs, isSelected ? R.drawable.cb_selected_rect_blue : R.drawable.cb_unselected_rect_white);
@@ -73,8 +75,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
                         LogUtils.log("onCheckedChanged", position);
-                        select(position,isChecked);
-                        tv_count.setText("已选择"+getSelectedSize()+"项");
+                        select(position, isChecked);
                     }
                 });
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
@@ -89,11 +90,11 @@ public class GRVDragSelectorActivity extends BaseActivity {
 
             @Override
             public void onItemClick(BaseViewHolder holder, int position, HRVBean bean) {
-                showToast( "点击" + position);
+                showToast("点击" + position);
             }
 
             @Override
-            public void onItemLongClick(BaseViewHolder holder, int position, HRVBean bean) {
+            public void onItemLongClick__(BaseViewHolder holder, int position, HRVBean bean) {
                 super.onItemLongClick(holder, position, bean);
                 LogUtils.log("dispatchTouchEvent  onItemLongClick");
                 Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
