@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.cy.recyclerviewadapter.BaseActivity;
@@ -45,7 +46,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
         }
         staggeredAdapter = new StaggeredAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(final BaseViewHolder holder, int position, final HRVBean bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
 //                GlideUtils.getRequestManager(SGRVRefreshLoadMoreActivity.this, new GlideUtils.CallbackRequestManager() {
 //                    @Override
 //                    public void onRequestManagerGeted(RequestManager requestManager) {
@@ -153,7 +154,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
-                            staggeredAdapter.addNoRefresh(new HRVBean(R.drawable.pic1));
+                            staggeredAdapter.addNoNotify(new HRVBean(R.drawable.pic1));
                         }
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override

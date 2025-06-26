@@ -3,6 +3,7 @@ package com.cy.recyclerviewadapter.activity.vr;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.cy.recyclerviewadapter.BaseActivity;
@@ -16,6 +17,7 @@ import com.cy.rvadapterniubility.swipelayout.OnSwipeListener;
 import com.cy.rvadapterniubility.swipelayout.SwipeRecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VRSwipeActivity extends BaseActivity {
     private SwipeAdapter<VRBean> swipeAdapter;
@@ -32,7 +34,7 @@ public class VRSwipeActivity extends BaseActivity {
 
         swipeAdapter = new SwipeAdapter<VRBean>() {
             @Override
-            public void bindDataToView__(BaseViewHolder holder, int position, VRBean bean) {
+            public void bindDataToView__(BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, bean.getStr());
 
                 holder.setOnClickListener(R.id.tv_zhiding, new View.OnClickListener() {

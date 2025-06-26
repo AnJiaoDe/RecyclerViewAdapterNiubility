@@ -22,6 +22,8 @@ import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
+import java.util.List;
+
 /**
  * @Description:仿头条LoadMore丝滑体验
  * @Author: cy
@@ -46,7 +48,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
         this.multiAdapter = multiAdapter;
         loadMoreAdapter = new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 OnGridLoadMoreListener.this.bindDataToLoadMore(holder, bean);
             }
 

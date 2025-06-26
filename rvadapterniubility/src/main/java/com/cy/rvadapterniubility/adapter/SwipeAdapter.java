@@ -4,21 +4,27 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.AsyncDifferConfig;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.rvadapterniubility.swipelayout.OnSwipeListener;
 import com.cy.rvadapterniubility.swipelayout.SwipeLayout;
 
+import java.util.List;
+
 public abstract class SwipeAdapter<T> extends SimpleAdapter<T> {
     private SwipeLayout swipeLayout_opened;
     private SwipeLayout swipeLayout_scrolled;
 
+
     @Override
-    public final void bindDataToView(BaseViewHolder holder, int position, T bean) {
+    public final void bindDataToView(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads) {
         dealSwipe(holder, bean);
-        bindDataToView__(holder, position, bean);
+        bindDataToView__(holder, position, bean,payloads);
     }
-    public abstract void bindDataToView__(BaseViewHolder holder, int position, T bean) ;
+
+    public abstract void bindDataToView__(BaseViewHolder holder, int position, T bean,@NonNull List<Object> payloads) ;
 
     private void dealSwipe(final BaseViewHolder holder, final T bean) {
         ((SwipeLayout) holder.itemView).getContentView().setOnClickListener(new View.OnClickListener() {

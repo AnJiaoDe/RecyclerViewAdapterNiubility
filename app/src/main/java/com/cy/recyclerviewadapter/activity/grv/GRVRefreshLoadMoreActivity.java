@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
@@ -46,7 +48,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
         }
         rvAdapter=new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
                 holder.setImageResource(R.id.iv,bean.getResID());
             }
 
@@ -96,7 +98,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
-                           rvAdapter.addNoRefresh(new HRVBean(R.drawable.pic1));
+                           rvAdapter.addNoNotify(new HRVBean(R.drawable.pic1));
                         }
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override

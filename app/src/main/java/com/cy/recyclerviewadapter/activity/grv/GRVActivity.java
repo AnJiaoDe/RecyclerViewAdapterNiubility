@@ -65,7 +65,7 @@ public class GRVActivity extends BaseActivity {
 //            }
 
             @Override
-            public void bindDataToView(final BaseViewHolder holder, int position, final HRVBean bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
 //                final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), bean.getResID());
 //                //假如这里加载bitmap是耗时操作，而且在回调中，就必须判断TAG，否则图片错乱
 //                holder.isEqualsHolderTag(bean.getResID(), new CallbackTag() {

@@ -5,7 +5,10 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.cy.recyclerviewadapter.BaseActivity;
+import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
@@ -37,7 +40,7 @@ public class HRVActivity extends BaseActivity {
         }
         rvAdapter = new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
                 holder.setImageResource(R.id.iv,bean.getResID());
 
             }
@@ -75,15 +78,16 @@ public class HRVActivity extends BaseActivity {
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
-                            multiAdapter.getAdapter(0).addNoRefresh(new HRVBean(R.drawable.pic1));
+                            multiAdapter.getAdapter(0).addNoNotify(new HRVBean(R.drawable.pic1));
                         }
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override
                             public void onClosed() {
+                                LogUtils.log("onClosed");
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-                                multiAdapter.getAdapter(0).notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
+                                multiAdapter.getAdapter(0).notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 8, 8);
                             }
                         });
 //                        setLoadMoreText("有8条更多");

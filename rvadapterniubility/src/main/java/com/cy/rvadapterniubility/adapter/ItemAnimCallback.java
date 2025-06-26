@@ -2,7 +2,6 @@ package com.cy.rvadapterniubility.adapter;
 
 
 import android.graphics.Canvas;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,10 +9,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.cy.rvadapterniubility.swipelayout.SwipeRecyclerView;
-
-import java.util.Collections;
 
 public class ItemAnimCallback extends ItemTouchHelper.Callback {
     private SimpleAdapter simpleAdapter;
@@ -72,7 +67,7 @@ public class ItemAnimCallback extends ItemTouchHelper.Callback {
         int fromPosition = srcHolder.getAbsoluteAdapterPosition();
         int toPosition = targetHolder.getAbsoluteAdapterPosition();
 
-        simpleAdapter.swapNoRefresh( fromPosition, toPosition);
+        simpleAdapter.swapNoNotify( fromPosition, toPosition);
         simpleAdapter.notifyItemMoved(fromPosition, toPosition);
         simpleAdapter.onItemMove__(fromPosition,toPosition,srcHolder,targetHolder);
         return true;// 返回true表示处理了并可以换位置，返回false表示你没有处理并不能换位置。

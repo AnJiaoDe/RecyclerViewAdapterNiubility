@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.recyclerviewadapter.BaseActivity;
@@ -37,11 +38,6 @@ public class VRActivity extends BaseActivity {
         }
         final VerticalRecyclerView verticalRecyclerView= (VerticalRecyclerView) findViewById(R.id.vr);
         rvAdapter = new SimpleAdapter<VRBean>() {
-            @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRBean bean) {
-
-            }
-
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, bean.getStr());

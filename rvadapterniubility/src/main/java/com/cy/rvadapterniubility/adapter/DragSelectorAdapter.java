@@ -2,12 +2,17 @@ package com.cy.rvadapterniubility.adapter;
 
 import android.os.Handler;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.AsyncDifferConfig;
+import androidx.recyclerview.widget.DiffUtil;
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     private boolean usingSelector = false;
-    private SetSelector setSelector;
+    private SetSelector setSelector ;
 
     public DragSelectorAdapter() {
         setSelector = new SetSelector();
@@ -102,11 +107,11 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     @Override
-    public final void bindDataToView(BaseViewHolder holder, int position, T bean) {
-        bindDataToView(holder, position, bean, setSelector.contains(position));
+    public final void bindDataToView(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads) {
+        bindDataToView(holder, position, bean, setSelector.contains(position), payloads);
     }
 
-    public abstract void bindDataToView(BaseViewHolder holder, int position, T bean, boolean isSelected);
+    public abstract void bindDataToView(BaseViewHolder holder, int position, T bean, boolean isSelected, @NonNull List<Object> payloads);
 
     /**
      * ----------------这个不能在使用的时候实现了，否则会导致回调2次长按事件，因为在DragRecyclerView中也做了长按回调------------------------------------------------------------------
@@ -116,7 +121,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     }
 
-    public abstract void onItemLongClick__(BaseViewHolder holder, int position, T bean) ;
+    public abstract void onItemLongClick__(BaseViewHolder holder, int position, T bean);
 
     public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
 

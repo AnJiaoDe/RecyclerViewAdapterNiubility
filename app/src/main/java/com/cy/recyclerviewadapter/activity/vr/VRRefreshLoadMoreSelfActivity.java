@@ -94,7 +94,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                         for (int i = 0; i < 8; i++) {
                             multiAdapter.getAdapters().get(1).addToTopNoNotify(new VRBean("更新" + i));
                         }
-                        multiAdapter.getAdapters().get(1).refresh();
+                        multiAdapter.getAdapters().get(1).notifyDataSetChanged();
                         verticalRefreshLayout.closeRefreshDelay("有8条更新",2000);
                     }
                 }, 2000);
@@ -126,7 +126,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
-                            multiAdapter.getAdapter(1).addNoRefresh(new VRBean("更多" + i));
+                            multiAdapter.getAdapter(1).addNoNotify(new VRBean("更多" + i));
                         }
 //                        closeLoadMore(new Callback() {
 //                            @Override
@@ -137,11 +137,10 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override
                             public void onClosed() {
-                                multiAdapter.getAdapter(1).refresh();
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-//                                multiAdapter.getAdapter(1).notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
+                                multiAdapter.getAdapter(1).notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
                             }
                         });
 //                        new Handler().postDelayed(new Runnable() {

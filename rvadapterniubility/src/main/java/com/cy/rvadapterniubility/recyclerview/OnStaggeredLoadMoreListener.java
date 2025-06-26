@@ -22,6 +22,8 @@ import com.cy.rvadapterniubility.adapter.StaggeredAdapter;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
+import java.util.List;
+
 /**
  * @Description:仿头条LoadMore丝滑体验
  * @Author: cy
@@ -46,7 +48,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
         this.multiAdapter = multiAdapter;
         loadMoreAdapter = new StaggeredAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 OnStaggeredLoadMoreListener.this.bindDataToLoadMore(holder, bean);
             }
 

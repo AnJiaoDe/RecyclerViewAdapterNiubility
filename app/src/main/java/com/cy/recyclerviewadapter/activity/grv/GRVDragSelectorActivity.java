@@ -8,6 +8,7 @@ import android.os.Vibrator;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cy.androidview.ScreenUtils;
@@ -63,7 +64,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
             }
 
             @Override
-            public void bindDataToView(BaseViewHolder holder, final int position, HRVBean bean, boolean isSelected) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected, @NonNull List<Object> payloads) {
                 LogUtils.log("bindDataToView", position + ":" + isSelected);
                 holder.setImageResource(R.id.iv, bean.getResID());
                 holder.setVisibility(R.id.ivs, isUsingSelector() ? View.VISIBLE : View.GONE);

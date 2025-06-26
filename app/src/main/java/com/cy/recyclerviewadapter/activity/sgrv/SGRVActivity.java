@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
@@ -29,7 +31,7 @@ public class SGRVActivity extends BaseActivity {
 
         rvAdapter = new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
                 holder.setImageResource(R.id.iv,bean.getResID());
 //                Glide.with(SGRVActivity.this)
 //                        .load(bean.getResID())

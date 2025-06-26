@@ -5,9 +5,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.AsyncDifferConfig;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 public abstract class StaggeredAdapter<T> extends SimpleAdapter<T>{
+
     @NonNull
     @Override
     public final BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

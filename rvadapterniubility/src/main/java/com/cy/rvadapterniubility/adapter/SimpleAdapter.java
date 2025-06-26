@@ -25,48 +25,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
  * @param <T>
  */
-
-public abstract class SimpleAdapter<T> extends ListAdapter<T, BaseViewHolder> {
-
-    //    private List<T> list_bean_temp;//数据源
+public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> {
     private List<T> list_bean;//数据源
-
-    /**
-     * 这个构造函数就不会默认有DiffUtil的高性能效果了，
-     * 如果对性能有要求，或者想解决刷新闪烁的问题，用另外2个构造函数
-     */
     public SimpleAdapter() {
-        this(new DiffUtil.ItemCallback<T>() {
-            @Override
-            public boolean areItemsTheSame(@NonNull T oldItem, @NonNull T newItem) {
-                return false;
-            }
-
-            @Override
-            public boolean areContentsTheSame(@NonNull T oldItem, @NonNull T newItem) {
-                return false;
-            }
-
-            @Nullable
-            @Override
-            public Object getChangePayload(@NonNull T oldItem, @NonNull T newItem) {
-                return super.getChangePayload(oldItem, newItem);
-            }
-        });
-    }
-
-    public SimpleAdapter(DiffUtil.ItemCallback<T> itemCallback) {
-        super(itemCallback);
         list_bean = new ArrayList<>();//数据源
     }
-
-    public SimpleAdapter(@NonNull AsyncDifferConfig<T> config) {
-        super(config);
-        list_bean = new ArrayList<>();//数据源
-    }
-
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -75,7 +41,7 @@ public abstract class SimpleAdapter<T> extends ListAdapter<T, BaseViewHolder> {
 
     @Override
     public final void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-        LogUtils.log("onBindViewHolder ", position);
+        LogUtils.log("onBindViewHolder", position);
 //        recycleData(holder.getTag());
 //        handleClick(holder);
 //        //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
@@ -160,11 +126,7 @@ public abstract class SimpleAdapter<T> extends ListAdapter<T, BaseViewHolder> {
         });
     }
 
-    public void bindDataToView(BaseViewHolder holder, int position, T bean) {
-    }
-
-    public void bindDataToView(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads) {
-    }
+    public abstract void bindDataToView(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads);
 
     public abstract int getItemLayoutID(int position, T bean);
 
@@ -248,8 +210,13 @@ public abstract class SimpleAdapter<T> extends ListAdapter<T, BaseViewHolder> {
     /**
      * ---------------------------------------------------------------------------------
      */
-    public SimpleAdapter<T> swapNoRefresh(int i, int j) {
+    public SimpleAdapter<T> swapNoNotify(int i, int j) {
         Collections.swap(list_bean, i, j);
+        return this;
+    }
+
+    public SimpleAdapter<T> setListBeanNoNotify(List<T> list_bean) {
+        this.list_bean = list_bean;
         return this;
     }
 

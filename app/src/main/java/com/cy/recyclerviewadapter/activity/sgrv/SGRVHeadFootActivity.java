@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.cy.recyclerviewadapter.BaseActivity;
@@ -32,7 +33,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new StaggeredAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, "head" + position);
             }
 
@@ -56,9 +57,8 @@ public class SGRVHeadFootActivity extends BaseActivity {
             public void onItemClick(BaseViewHolder holder, int position, String bean) {
             }
         }).addAdapter(new SimpleAdapter<HRVBean>() {
-
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
                 holder.setImageResource(R.id.iv, bean.getResID());
             }
 
@@ -75,7 +75,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
 
         }).addAdapter(new StaggeredAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, "foot" + position);
             }
 

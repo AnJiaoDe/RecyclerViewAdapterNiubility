@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
@@ -32,7 +34,7 @@ public class GRVHorinzotalActivity extends BaseActivity {
         }
         rvAdapter=new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
                 holder.setImageResource(R.id.iv,bean.getResID());
             }
 
