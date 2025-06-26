@@ -159,14 +159,14 @@ public class BaseRecyclerView<T extends BaseRecyclerView> extends RecyclerView {
         return itemTouchHelper;
     }
 
-    public T clear() {
-        itemTouchHelper = null;
-        return (T) this;
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        clear();
-    }
+//    public T clear() {
+//        itemTouchHelper = null;
+//        return (T) this;
+//    }
+//
+//    @Override
+//    protected void onDetachedFromWindow() {
+//        super.onDetachedFromWindow();
+//        clear();
+//    }
 }

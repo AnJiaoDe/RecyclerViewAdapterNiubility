@@ -3,14 +3,10 @@ package com.cy.recyclerviewadapter.activity.vr;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.LogUtils;
@@ -18,15 +14,11 @@ import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.refreshlayoutniubility.IAnimationView;
 import com.cy.refreshlayoutniubility.IHeadView;
-import com.cy.refreshlayoutniubility.OnRefreshListener;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
-import com.cy.refreshlayoutniubility.RefreshLayoutNiubility;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
-import com.cy.rvadapterniubility.recyclerview.LinearItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnLinearLoadMoreListener;
-import com.cy.rvadapterniubility.recyclerview.PositionHolder;
 import com.cy.rvadapterniubility.refreshrv.LinearRefreshLayout;
 
 import java.util.ArrayList;
@@ -45,7 +37,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, "head" + position);
             }
 
@@ -61,7 +53,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
             }
         }).addAdapter(new SimpleAdapter<VRBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRBean bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -82,22 +74,17 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
 //            public void onRefreshFinish(IHeadView headView) {
 //                super.onRefreshFinish(headView);
 //            }
-
-
 //            @Override
 //            public void bindDataToRefreshFinishedLayout(View view, String msg) {
 //                LogUtils.log("bindDataToRefreshFinishedLayout",msg);
 //                TextView textView=view.findViewById(R.id.tv);
 //                textView.setText(msg);
 //            }
-//
 //            @Override
 //            public int getRefreshFinishedLayoutID() {
 //                LogUtils.log("getRefreshFinishedLayoutID");
 //                return super.getRefreshFinishedLayoutID();
 //            }
-
-
             @Override
             public void onRefreshStart(IHeadView headView) {
                 LogUtils.log("onRefreshStart");
@@ -107,7 +94,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                         for (int i = 0; i < 8; i++) {
                             multiAdapter.getAdapters().get(1).addToTopNoNotify(new VRBean("更新" + i));
                         }
-                        multiAdapter.getAdapters().get(1).notifyDataSetChanged();
+                        multiAdapter.getAdapters().get(1).refresh();
                         verticalRefreshLayout.closeRefreshDelay("有8条更新",2000);
                     }
                 }, 2000);
@@ -139,7 +126,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
-                            multiAdapter.getAdapter(1).addNoNotify(new VRBean("更多" + i));
+                            multiAdapter.getAdapter(1).addNoRefresh(new VRBean("更多" + i));
                         }
 //                        closeLoadMore(new Callback() {
 //                            @Override
@@ -150,10 +137,11 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override
                             public void onClosed() {
+                                multiAdapter.getAdapter(1).refresh();
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-                                multiAdapter.getAdapter(1).notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
+//                                multiAdapter.getAdapter(1).notifyItemRangeInserted(multiAdapter.getAdapter(1).getItemCount() - 8, 8);
                             }
                         });
 //                        new Handler().postDelayed(new Runnable() {
@@ -173,14 +161,14 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
             }
         });
         final List<String> list_head = new ArrayList<>();
-//        for (int i = 0; i < 2; i++) {
-//            list_head.add("head" + i);
-//        }
+        for (int i = 0; i < 2; i++) {
+            list_head.add("head" + i);
+        }
 
         final List<VRBean> list_content = new ArrayList<>();
-//        for (int i = 0; i < 100; i++) {
-//            list_content.add(new VRBean("内容" + i));
-//        }
+        for (int i = 0; i < 100; i++) {
+            list_content.add(new VRBean("内容" + i));
+        }
 
         multiAdapter.getAdapter(0).add(list_head);
         multiAdapter.getAdapter(1).add(list_content);

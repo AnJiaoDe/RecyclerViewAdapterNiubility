@@ -166,7 +166,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             //itemcount为0时，postion为-1
             if (position < 0 ||
-                    (baseRecyclerView.getAdapter() != null && position >= baseRecyclerView.getAdapter().getItemCount()))
+                    (baseRecyclerView != null && position >= baseRecyclerView.getAdapter().getItemCount()))
                 continue;
             RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
 //            //数据太少，没有充满recyclerView,没有loadMore的必要
@@ -227,8 +227,8 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                             holder.itemView.setTranslationY(0);
                             isLoadMoreing = false;
                             //千万不能notifydatasetchanged,否则整个列表都会被刷新，如果是比较耗时的加载图片，会闪烁
-                            loadMoreAdapter.getAdapter().clearNoNotify();
-                            loadMoreAdapter.getAdapter().notifyItemRemoved(0);
+                            loadMoreAdapter.clearNoNotify();
+                            loadMoreAdapter.notifyItemRemoved(0);
 
                             if (callback != null) callback.onClosed();
 

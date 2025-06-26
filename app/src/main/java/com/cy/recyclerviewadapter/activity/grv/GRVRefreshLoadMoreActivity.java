@@ -96,7 +96,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
-                           rvAdapter.addNoNotify(new HRVBean(R.drawable.pic1));
+                           rvAdapter.addNoRefresh(new HRVBean(R.drawable.pic1));
                         }
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override

@@ -61,7 +61,7 @@ public class GRVHeadFootActivity extends BaseActivity {
             @Override
             public void onViewAttachedToWindow(BaseViewHolder holder) {
                 super.onViewAttachedToWindow(holder);
-                getAdapter().startDefaultAttachedAnim(holder);
+                startDefaultAttachedAnim(holder);
             }
         }).addAdapter(new SimpleAdapter<String>() {
             @Override

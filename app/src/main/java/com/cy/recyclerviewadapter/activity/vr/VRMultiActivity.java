@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.recyclerviewadapter.bean.VRMultiBean;
+import com.cy.refreshlayoutniubility.ScreenUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -68,9 +70,12 @@ public class VRMultiActivity extends BaseActivity {
                 new int[]{R.drawable.pic4, R.drawable.pic5, R.drawable.pic3}, 3));
         list.add(new VRMultiBean("忒囧途押金我积极偶就开个会积极自己交给鸡攻击huiyhuhuio8u9ehjkgh会祸害过",
                 new int[]{R.drawable.pic1, R.drawable.pic2, R.drawable.pic3}, 1));
+        LinearItemDecoration linearItemDecoration=new LinearItemDecoration()
+                .setSpace_horizontal(ScreenUtils.dpAdapt(VRMultiActivity.this, 10))
+                .setSpace_vertical(ScreenUtils.dpAdapt(VRMultiActivity.this, 10));
         rvAdapter = new SimpleAdapter<VRMultiBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRMultiBean bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, VRMultiBean bean, @NonNull List<Object> payloads) {
                 switch (bean.getView_type()) {
                     case 1:
                         holder.setText(R.id.tv, bean.getTitle());
@@ -118,9 +123,8 @@ public class VRMultiActivity extends BaseActivity {
                         }
                         SimpleAdapter simpleAdapter = new SimpleAdapter<HRVBean>() {
                             @Override
-                            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
+                            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
                                 holder.setImageResource(R.id.iv, bean.getResID());
-
                             }
 
                             @Override
@@ -133,7 +137,9 @@ public class VRMultiActivity extends BaseActivity {
                                 showToast("点击" + position);
                             }
                         };
-                        horizontalRecyclerView.addItemDecoration(new LinearItemDecoration().setSpace_horizontal(40).setSpace_vertical(40));
+                        //必须先remove,否则一直叠加
+                        horizontalRecyclerView.removeItemDecoration(linearItemDecoration);
+                        horizontalRecyclerView.addItemDecoration(linearItemDecoration);
                         horizontalRecyclerView.setAdapter(simpleAdapter);
                         simpleAdapter.add(list);
                         break;
@@ -158,7 +164,6 @@ public class VRMultiActivity extends BaseActivity {
 
             @Override
             public void onItemClick(BaseViewHolder holder, int position, VRMultiBean bean) {
-
                 if (position == 4) return;
                 showToast("点击" + position);
             }

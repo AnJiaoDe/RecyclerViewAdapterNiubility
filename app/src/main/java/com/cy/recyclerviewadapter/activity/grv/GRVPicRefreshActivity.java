@@ -66,9 +66,9 @@ public class GRVPicRefreshActivity extends BaseActivity {
         list.add("https://img2.baidu.com/it/u=3161270167,1354297607&fm=253&fmt=auto&app=138&f=JPEG?w=801&h=500");
 
         layout_menu = findViewById(R.id.layout_menu);
-        VerticalGridRecyclerView verticalGridRecyclerView = (VerticalGridRecyclerView) findViewById(R.id.VerticalGridRecyclerView);
-        ImageViewSelector imageViewSelector = (ImageViewSelector) findViewById(R.id.ivs);
-        TextView tv_count = (TextView) findViewById(R.id.tv_count);
+        VerticalGridRecyclerView verticalGridRecyclerView =  findViewById(R.id.VerticalGridRecyclerView);
+        ImageViewSelector imageViewSelector =  findViewById(R.id.ivs);
+        TextView tv_count =  findViewById(R.id.tv_count);
         imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
@@ -97,10 +97,7 @@ public class GRVPicRefreshActivity extends BaseActivity {
                     }
                 });
                 holder.setVisibility(R.id.ivs, isUsingSelector() ? View.VISIBLE : View.GONE);
-//                holder.setImageResource(R.id.ivs, isSelected ? R.drawable.cb_selected_rect_blue : R.drawable.cb_unselected_rect_white);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
-//                LogUtils.log("getTag",position+":::::"+imageViewSelector.getTag());
-//                imageViewSelector.setTag(position);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
@@ -133,11 +130,6 @@ public class GRVPicRefreshActivity extends BaseActivity {
                 startDragSelect(position);
             }
         };
-        gridRefreshLayout.getRecyclerView().setSpanCount(3)
-                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 6)));
-        gridRefreshLayout.getRecyclerView().dragSelector(dragSelectorAdapter);
-        dragSelectorAdapter.getAdapter().add(list);
-
         findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,15 +137,17 @@ public class GRVPicRefreshActivity extends BaseActivity {
                 dragSelectorAdapter.stopDragSelect();
             }
         });
-        multiAdapter = new MultiAdapter().addAdapter(dragSelectorAdapter.getAdapter());
-        gridRefreshLayout.getRecyclerView().addItemDecoration(new GridItemDecoration(dpAdapt(10)));
+        gridRefreshLayout.getRecyclerView().setSpanCount(3)
+                .dragSelector(dragSelectorAdapter)
+                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 6)));
+        multiAdapter = new MultiAdapter().addAdapter(dragSelectorAdapter);
         gridRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
             @Override
             public void onRefreshStart(IHeadView headView) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        dragSelectorAdapter.getAdapter().clearAdd(list);
+                        dragSelectorAdapter.clearAdd(list);
                         gridRefreshLayout.finishRefresh();
 //                        for (int i = 0; i < 8; i++) {
 //                            rvAdapter.addToTopNoNotify(new HRVBean(R.drawable.pic3));
@@ -192,14 +186,14 @@ public class GRVPicRefreshActivity extends BaseActivity {
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-                                dragSelectorAdapter.getAdapter().notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 8, 8);
+                                dragSelectorAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 8, 8);
                             }
                         });
                     }
                 }, 2000);
             }
         });
-        dragSelectorAdapter.getAdapter().add(list);
+        dragSelectorAdapter.add(list);
     }
 
     @Override

@@ -106,8 +106,8 @@ public class GRVDragSelectorActivity extends BaseActivity {
         verticalGridRecyclerView.setSpanCount(3)
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 6)));
         verticalGridRecyclerView.dragSelector(dragSelectorAdapter)
-                .setAdapter(dragSelectorAdapter.getAdapter());
-        dragSelectorAdapter.getAdapter().add(list);
+                .setAdapter(dragSelectorAdapter);
+        dragSelectorAdapter.add(list);
 
         findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
             @Override

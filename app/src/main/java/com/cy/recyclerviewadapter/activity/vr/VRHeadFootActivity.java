@@ -3,6 +3,8 @@ package com.cy.recyclerviewadapter.activity.vr;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
@@ -26,7 +28,7 @@ public class VRHeadFootActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, "head" + position);
             }
 
@@ -41,9 +43,8 @@ public class VRHeadFootActivity extends BaseActivity {
                 remove(position);
             }
         }).addAdapter(new SimpleAdapter<VRHeadFootBean>() {
-
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRHeadFootBean bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, VRHeadFootBean bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -66,7 +67,7 @@ public class VRHeadFootActivity extends BaseActivity {
 
         }).addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, "foot" + position);
             }
 

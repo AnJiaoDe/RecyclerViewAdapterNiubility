@@ -5,20 +5,15 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
-import com.cy.recyclerviewadapter.bean.VRBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.HorizontalRecyclerView;
 import com.cy.rvadapterniubility.recyclerview.LinearItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnLinearLoadMoreListener;
-import com.cy.rvadapterniubility.recyclerview.OnSimpleScrollListener;
-import com.cy.rvadapterniubility.recyclerview.PositionHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +75,7 @@ public class HRVActivity extends BaseActivity {
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
-                            multiAdapter.getAdapter(0).addNoNotify(new HRVBean(R.drawable.pic1));
+                            multiAdapter.getAdapter(0).addNoRefresh(new HRVBean(R.drawable.pic1));
                         }
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override

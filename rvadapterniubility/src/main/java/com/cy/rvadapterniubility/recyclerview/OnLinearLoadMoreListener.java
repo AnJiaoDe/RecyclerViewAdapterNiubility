@@ -22,6 +22,7 @@ import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @Description:仿头条LoadMore丝滑体验
@@ -48,7 +49,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         this.multiAdapter = multiAdapter;
         loadMoreAdapter = new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean) {
+            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 bindDataToLoadMore(holder, bean);
             }
 
@@ -126,7 +127,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         for (int position : positionHolder.getLastVisibleItemPositions()) {
 //            itemcount为0时，postion为-1
             if (position < 0 ||
-                    (baseRecyclerView.getAdapter() != null && position >= baseRecyclerView.getAdapter().getItemCount()))
+                    (baseRecyclerView != null && position >= baseRecyclerView.getAdapter().getItemCount()))
                 continue;
             RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
             if (orientation == RecyclerView.VERTICAL) {
@@ -186,8 +187,8 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
                             holder.itemView.setTranslationY(0);
                             isLoadMoreing = false;
                             //千万不能notifydatasetchanged,否则整个列表都会被刷新，如果是比较耗时的加载图片，会闪烁
-                            loadMoreAdapter.getAdapter().clearNoNotify();
-                            loadMoreAdapter.getAdapter().notifyItemRemoved(0);
+                            loadMoreAdapter.clearNoNotify();
+                            loadMoreAdapter.notifyItemRemoved(0);
 
                             if (callback != null) callback.onClosed();
                         }

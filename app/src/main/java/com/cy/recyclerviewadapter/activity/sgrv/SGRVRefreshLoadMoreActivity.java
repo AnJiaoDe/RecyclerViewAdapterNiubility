@@ -1,6 +1,5 @@
 package com.cy.recyclerviewadapter.activity.sgrv;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -9,29 +8,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.cy.recyclerviewadapter.BaseActivity;
-import com.cy.recyclerviewadapter.GlideUtils;
-import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.BingBean;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
 import com.cy.refreshlayoutniubility.ScreenUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
-import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.adapter.StaggeredAdapter;
-import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.OnStaggeredLoadMoreListener;
-import com.cy.rvadapterniubility.refreshrv.GridRefreshLayout;
 import com.cy.rvadapterniubility.refreshrv.StaggeredRefreshLayout;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,7 +105,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
                 showToast("点击" + position);
             }
         };
-        multiAdapter = new MultiAdapter().addAdapter(staggeredAdapter.getAdapter());
+        multiAdapter = new MultiAdapter().addAdapter(staggeredAdapter);
 //        st.getRecyclerView().addItemDecoration(new FullSpanGridItemDecoration(dpAdapt(10)));
         staggeredRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
             @Override
@@ -132,9 +120,9 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
                                 continue;
                             }
                             list.add(new HRVBean(R.drawable.pic3));
-//                            staggeredAdapter.getAdapter().addToTopNoNotify(new HRVBean(R.drawable.pic3));
+//                            staggeredAdapter.addToTopNoNotify(new HRVBean(R.drawable.pic3));
                         }
-                        staggeredAdapter.getAdapter().addToTop(list);
+                        staggeredAdapter.addToTop(list);
                         staggeredRefreshLayout.getRecyclerView().scrollToPosition(0);
                         staggeredRefreshLayout.closeRefreshDelay("有8条更新", 2000);
                     }
@@ -165,7 +153,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
                             return;
                         }
                         for (int i = 0; i < 8; i++) {
-                            staggeredAdapter.getAdapter().addNoNotify(new HRVBean(R.drawable.pic1));
+                            staggeredAdapter.addNoRefresh(new HRVBean(R.drawable.pic1));
                         }
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override
@@ -173,14 +161,14 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-                                staggeredAdapter.getAdapter().notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 8, 8);
+                                staggeredAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 8, 8);
                             }
                         });
                     }
                 }, 2000);
             }
         });
-        staggeredAdapter.getAdapter().add(list);
+        staggeredAdapter.add(list);
     }
 
     @Override

@@ -64,7 +64,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 //                if (dragSelectorAdapter != null) {
 //                    View child = findChildViewUnder(e.getX(), e.getY());
 //                    int position = getChildAdapterPosition(child);
-//                    if (position > 0 && position < dragSelectorAdapter.getAdapter().getList_bean().size())
+//                    if (position > 0 && position < dragSelectorAdapter.getList_bean().size())
 //                        dragSelectorAdapter.toggle(position);
 //                }
 //                return super.onSingleTapUp(e);
@@ -78,7 +78,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 if (dragSelectorAdapter == null) return;
                 View child = findChildViewUnder(e.getX(), e.getY());
                 int position = getChildAdapterPosition(child);
-                if (position < 0 || position >= dragSelectorAdapter.getAdapter().getList_bean().size())
+                if (position < 0 || position >= dragSelectorAdapter.getList_bean().size())
                     return;
 
                 position_start = position;
@@ -87,7 +87,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 position_end_last = position;
 
                 dragSelectorAdapter.onItemLongClick__((BaseViewHolder) findViewHolderForAdapterPosition(position),
-                        position, dragSelectorAdapter.getAdapter().getList_bean().get(position));
+                        position, dragSelectorAdapter.getList_bean().get(position));
             }
 
         });
@@ -145,14 +145,14 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
      * @param event The motion event to be dispatched.
      * @return
      */
-    
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (dragSelectorAdapter == null || dragSelectorAdapter.getAdapter().getList_bean().isEmpty())
+        if (dragSelectorAdapter == null || dragSelectorAdapter.getList_bean().isEmpty())
             return super.dispatchTouchEvent(event);
         LayoutManager layoutManager = getLayoutManager();
         if (layoutManager == null) return super.dispatchTouchEvent(event);
-        
+
         int orientation = 0;
         //注意：GridLayoutManager继承于LinearLayoutManager
         if (layoutManager instanceof LinearLayoutManager) {
@@ -164,7 +164,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 
         gestureDetector.onTouchEvent(event);
         if (!dragSelectorAdapter.isUsingSelector()) return super.dispatchTouchEvent(event);
-        
+
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
@@ -317,7 +317,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             //如果正在触发滚动中，上滑，且不能再上滑
         } else if ((scrollDistance > 0 || y > y_end_bottom) && !canScrollVertically(1)) {
 //            LogUtils.log("canScrollVertically(1)");
-            position_end = dragSelectorAdapter.getAdapter().getList_bean().size() - 1;
+            position_end = dragSelectorAdapter.getList_bean().size() - 1;
             //防止NO_POSITION导致全选，即使手指按下，在空白处滑动，依然能switch最后一个ITEM，其实这样体验更丝滑，华为手机系统相册就是真么干的
 //            position_start = Math.max(NO_POSITION, position_end);
             //如果正在触发滚动中，下滑，且不能再下滑

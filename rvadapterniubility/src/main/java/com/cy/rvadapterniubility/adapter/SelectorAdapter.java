@@ -69,9 +69,4 @@ public abstract class SelectorAdapter<T> extends SimpleAdapter<T> {
             positionSelectedLast = positionSelected;
         }
     }
-
-    @Override
-    public SimpleAdapter<T> getAdapter() {
-        return this;
-    }
 }

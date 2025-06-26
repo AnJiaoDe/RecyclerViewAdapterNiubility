@@ -30,11 +30,11 @@ public class SGRVActivity extends BaseActivity {
         rvAdapter = new SimpleAdapter<HRVBean>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
-//                holder.setImageResource(R.id.iv,bean.getResID());
-                Glide.with(SGRVActivity.this)
-                        .load(bean.getResID())
-                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(ScreenUtils.dpAdapt(SGRVActivity.this,10)))) // 应用圆角效果
-                        .into((ImageView) holder.getView(R.id.iv));
+                holder.setImageResource(R.id.iv,bean.getResID());
+//                Glide.with(SGRVActivity.this)
+//                        .load(bean.getResID())
+//                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(ScreenUtils.dpAdapt(SGRVActivity.this,10)))) // 应用圆角效果
+//                        .into((ImageView) holder.getView(R.id.iv));
             }
             @Override
             public int getItemLayoutID(int position, HRVBean bean) {
@@ -47,7 +47,7 @@ public class SGRVActivity extends BaseActivity {
         };
         ((VerticalStaggeredRecyclerView) findViewById(R.id.VerticalStaggeredRecyclerView)).setAdapter(rvAdapter);
         List<HRVBean> list = new ArrayList<>();
-        for (int i=0;i<10;i++){
+        for (int i=0;i<103;i++){
             if (i%5==0){
                 list.add(new HRVBean(R.drawable.pic7));
                 continue;

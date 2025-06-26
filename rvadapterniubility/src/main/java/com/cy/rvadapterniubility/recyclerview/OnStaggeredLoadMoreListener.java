@@ -67,7 +67,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
                 onItemLoadMoreClick(holder);
             }
         };
-        multiAdapter.addAdapter(multiAdapter.getAdapters().size(), loadMoreAdapter.getAdapter());
+        multiAdapter.addAdapter(multiAdapter.getAdapters().size(), loadMoreAdapter);
     }
 
     public OnStaggeredLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter, int count_remain) {
@@ -109,15 +109,15 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
             //此处产生BUG，因为clear后，recyclerView.findViewHolderForAdapterPosition(position)导致NULL,所以必须判断NULL
             if (orientation == RecyclerView.VERTICAL) {
                 if (holder != null && holder.itemView.getBottom() + space >= baseRecyclerView.getHeight()) {
-                    if (loadMoreAdapter.getAdapter().getItemCount() == 0) {
-                        loadMoreAdapter.getAdapter().add("");
+                    if (loadMoreAdapter.getItemCount() == 0) {
+                        loadMoreAdapter.add("");
                     }
                     return;
                 }
             } else {
                 if (holder != null && holder.itemView.getRight() + space >= baseRecyclerView.getWidth()) {
-                    if (loadMoreAdapter.getAdapter().getItemCount() == 0) {
-                        loadMoreAdapter.getAdapter().add("");
+                    if (loadMoreAdapter.getItemCount() == 0) {
+                        loadMoreAdapter.add("");
                     }
                     return;
                 }
@@ -133,7 +133,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
         for (int position : positionHolder.getLastVisibleItemPositions()) {
             //            itemcount为0时，postion为-1
             if (position < 0 ||
-                    (baseRecyclerView.getAdapter() != null && position >= baseRecyclerView.getAdapter().getItemCount()))
+                    (baseRecyclerView != null && position >= baseRecyclerView.getAdapter().getItemCount()))
                 continue;
             RecyclerView.ViewHolder holder = baseRecyclerView.findViewHolderForAdapterPosition(position);
 //            //数据太少，没有充满recyclerView,没有loadMore的必要
@@ -146,8 +146,8 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
             }
             //说明最后一个item-count_remain可见了，可以开始loadMore了
             if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - count_remain) {
-                if (loadMoreAdapter.getAdapter().getItemCount() == 0) {
-                    loadMoreAdapter.getAdapter().add("");
+                if (loadMoreAdapter.getItemCount() == 0) {
+                    loadMoreAdapter.add("");
                 }
                 //防止频繁loadMore,而且布应该在onDragging触发onLoadMoreStart
                 if (!isLoadMoreing) {
@@ -192,8 +192,8 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
                             holder.itemView.setTranslationY(0);
                             isLoadMoreing = false;
                             //千万不能notifydatasetchanged,否则整个列表都会被刷新，如果是比较耗时的加载图片，会闪烁
-                            loadMoreAdapter.getAdapter().clearNoNotify();
-                            loadMoreAdapter.getAdapter().notifyItemRemoved(0);
+                            loadMoreAdapter.clearNoNotify();
+                            loadMoreAdapter.notifyItemRemoved(0);
 
                             if (callback != null) callback.onClosed();
                         }
@@ -231,14 +231,14 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
     @Override
     public void closeLoadMore(@NonNull Callback callback) {
         this.callback = callback;
-        if (loadMoreAdapter.getAdapter().getItemCount() != 0)
-            loadMoreAdapter.getAdapter().set(0, CLEAR);
+        if (loadMoreAdapter.getItemCount() != 0)
+            loadMoreAdapter.set(0, CLEAR);
     }
 
     @Override
     public void closeLoadMoreDelay(String msg, int ms, @NonNull final Callback callback) {
-        if (loadMoreAdapter.getAdapter().getItemCount() != 0)
-            loadMoreAdapter.getAdapter().set(0, msg);
+        if (loadMoreAdapter.getItemCount() != 0)
+            loadMoreAdapter.set(0, msg);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -33,16 +33,15 @@ public class SwipeRecyclerView extends BaseRecyclerView<SwipeRecyclerView> {
         setLayoutManager(linearLayoutManager);
     }
 
-    public void setAdapter(SwipeAdapter swipeAdapter) {
+    public SwipeRecyclerView swipe(SwipeAdapter swipeAdapter) {
         this.swipeAdapter = swipeAdapter;
-        setAdapter(swipeAdapter.getAdapter());
+        return this;
     }
 
     @Override
     public final void setAdapter(RecyclerView.Adapter adapter) {
-        if(swipeAdapter==null)
-        throw new RuntimeException("You must call setAdapter(SwipeAdapter swipeAdapter)" +
-                " in " + getClass().getName());
+        if (swipeAdapter == null)
+            throw new RuntimeException("You must call swipe(SwipeAdapter swipeAdapter) first");
         super.setAdapter(adapter);
     }
 

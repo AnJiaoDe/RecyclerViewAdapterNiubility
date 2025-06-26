@@ -116,16 +116,9 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     }
 
-    public void onItemLongClick__(BaseViewHolder holder, int position, T bean) {
-
-    }
+    public abstract void onItemLongClick__(BaseViewHolder holder, int position, T bean) ;
 
     public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
-
-    @Override
-    public SimpleAdapter<T> getAdapter() {
-        return this;
-    }
 
     private class SetSelector {
         private Set<Integer> set;

@@ -32,7 +32,7 @@ public class VRSwipeActivity extends BaseActivity {
 
         swipeAdapter = new SwipeAdapter<VRBean>() {
             @Override
-            public void bindDataToView(final BaseViewHolder holder, final int position, VRBean bean) {
+            public void bindDataToView__(BaseViewHolder holder, int position, VRBean bean) {
                 holder.setText(R.id.tv, bean.getStr());
 
                 holder.setOnClickListener(R.id.tv_zhiding, new View.OnClickListener() {
@@ -66,7 +66,7 @@ public class VRSwipeActivity extends BaseActivity {
                                  * holder.getAdapterPosition()获取的position是当前holder在整个recyclerView中的正确位置，
                                  */
 //                                getSimpleAdapter().remove(position);
-                                getAdapter().remove(holder.getBindingAdapterPosition());
+                                remove(holder.getBindingAdapterPosition());
                             }
                         });
                     }
@@ -90,8 +90,8 @@ public class VRSwipeActivity extends BaseActivity {
             }
         };
         ((SwipeRecyclerView) findViewById(R.id.srv))
-                .addItemTouchAnim(new ItemAnimCallback(swipeAdapter.getAdapter())).setAdapter(swipeAdapter);
-        swipeAdapter.getAdapter().add(list_bean);
+                .addItemTouchAnim(new ItemAnimCallback(swipeAdapter)).swipe(swipeAdapter).setAdapter(swipeAdapter);
+        swipeAdapter.add(list_bean);
 
     }
 

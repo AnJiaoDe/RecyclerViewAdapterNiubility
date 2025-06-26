@@ -55,7 +55,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseViewHolder holder, int position, String bean) {
             }
-        }.getAdapter()).addAdapter(new SimpleAdapter<HRVBean>() {
+        }).addAdapter(new SimpleAdapter<HRVBean>() {
 
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean) {
@@ -98,7 +98,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseViewHolder holder, int position, String bean) {
             }
-        }.getAdapter());
+        });
         verticalStaggeredRecyclerView = (VerticalStaggeredRecyclerView) findViewById(R.id.VerticalStaggeredRecyclerView);
 
         verticalStaggeredRecyclerView.setSpanCount(2)
