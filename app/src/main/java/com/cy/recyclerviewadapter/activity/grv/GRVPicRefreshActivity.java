@@ -1,7 +1,5 @@
 package com.cy.recyclerviewadapter.activity.grv;
 
-import static com.cy.recyclerviewadapter.ToastUtils.showToast;
-
 import android.app.Service;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,8 +10,6 @@ import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DiffUtil;
 
 import com.cy.androidview.ScreenUtils;
 import com.cy.androidview.selectorview.ImageViewSelector;
@@ -21,15 +17,11 @@ import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.GlideUtils;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
-import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
-import com.cy.rvadapterniubility.adapter.CallbackDiffUtilSimple;
-import com.cy.rvadapterniubility.adapter.CallbackTag;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
-import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
@@ -66,6 +58,9 @@ public class GRVPicRefreshActivity extends BaseActivity {
         list.add("https://img0.baidu.com/it/u=1035818712,4106770352&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
         list.add("https://img0.baidu.com/it/u=2596934837,1532569852&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
         list.add("https://img2.baidu.com/it/u=3161270167,1354297607&fm=253&fmt=auto&app=138&f=JPEG?w=801&h=500");
+        list.add("https://img1.baidu.com/it/u=2603934083,3021636721&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+        list.add("https://img1.baidu.com/it/u=858214038,371193906&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
+        list.add("https://img2.baidu.com/it/u=2553853611,1255290940&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
 
         layout_menu = findViewById(R.id.layout_menu);
         VerticalGridRecyclerView verticalGridRecyclerView = findViewById(R.id.VerticalGridRecyclerView);
@@ -81,6 +76,23 @@ public class GRVPicRefreshActivity extends BaseActivity {
 
         dragSelectorAdapter = new DragSelectorAdapter<String>() {
             @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition, String beanOld, String beanNew) {
+                return true;
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition, String beanOld, String beanNew) {
+                return beanOld.equals(beanNew);
+            }
+
+            @Override
+            public Object getChangePayload(int oldItemPosition, int newItemPosition, String beanOld, String beanNew) {
+                LogUtils.log("getChangePayload",oldItemPosition);
+                LogUtils.log("getChangePayload newItemPosition",newItemPosition);
+                return new String("数据变化"+oldItemPosition+":"+newItemPosition);
+            }
+
+            @Override
             public void onSelectCountChanged(boolean isAllSelected, int count_selected) {
                 imageViewSelector.setChecked(isAllSelected);
 //                tv_count.setText("已选择"+getSelectedSize()+"项");
@@ -90,14 +102,8 @@ public class GRVPicRefreshActivity extends BaseActivity {
 
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected, @NonNull List<Object> payloads) {
-                LogUtils.log("bindDataToView", position + ":" + isSelected);
-                holder.setImageViewTag(R.id.iv, R.drawable.default_pic, bean);
-                holder.isEqualsViewTag(R.id.iv, bean, new CallbackTag() {
-                    @Override
-                    public void onTagEquls(Object tag) {
-                        GlideUtils.load(GRVPicRefreshActivity.this, bean, R.drawable.default_pic, holder.getView(R.id.iv));
-                    }
-                });
+                LogUtils.log("bindDataToView", position + ":" + isSelected+":"+(!payloads.isEmpty() ?payloads.get(0):""));
+                GlideUtils.load(GRVPicRefreshActivity.this, bean, R.drawable.default_pic, holder.getView(R.id.iv));
                 holder.setVisibility(R.id.ivs, isUsingSelector() ? View.VISIBLE : View.GONE);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
@@ -152,14 +158,7 @@ public class GRVPicRefreshActivity extends BaseActivity {
                         list.set(0, "https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
                         list.set(5, "https://img1.baidu.com/it/u=666159255,3156215465&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
                         if (list.size() == dragSelectorAdapter.getList_bean().size()) {
-                            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CallbackDiffUtilSimple<String>(dragSelectorAdapter.getList_bean(),list) {
-                                @Override
-                                public boolean areDataTheSame(int oldItemPosition, int newItemPosition, String beanOld, String beanNew) {
-                                    return beanOld.equals(beanNew);  此处
-                                }
-                            });
-                            //注意引用问题
-                            diffResult.dispatchUpdatesTo(dragSelectorAdapter.setListBeanNoNotify(new ArrayList<>(list)));
+                            dragSelectorAdapter.dispatchUpdatesTo(new ArrayList<>(list));
                             //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
 //                            dragSelectorAdapter.submitList(dragSelectorAdapter.getList_bean());
                         } else {
@@ -188,6 +187,7 @@ public class GRVPicRefreshActivity extends BaseActivity {
                             });
                             return;
                         }
+
                         dragSelectorAdapter.addNoNotify("https://img1.baidu.com/it/u=2683593527,2630972789&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667");
                         dragSelectorAdapter.addNoNotify("https://img2.baidu.com/it/u=2236665998,2672651341&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
                         dragSelectorAdapter.addNoNotify("https://img1.baidu.com/it/u=3543009939,2144310597&fm=253&fmt=auto&app=138&f=JPEG?w=704&h=500");
@@ -201,11 +201,11 @@ public class GRVPicRefreshActivity extends BaseActivity {
                             @Override
                             public void onClosed() {
                                 LogUtils.log("onClosed");
-//                                rvAdapter.notifyDataSetChanged();
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-                                dragSelectorAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 8, 8);
+//                                dragSelectorAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 8, 8);
+                                dragSelectorAdapter.notifyBehindInserted(8);
                             }
                         });
                     }

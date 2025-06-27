@@ -11,14 +11,11 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.AsyncDifferConfig;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.cy.BaseAdapter.R;
-import com.cy.rvadapterniubility.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,13 +23,16 @@ import java.util.List;
 
 /**
  * ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
+ *
  * @param <T>
  */
 public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> {
     private List<T> list_bean;//数据源
+
     public SimpleAdapter() {
         list_bean = new ArrayList<>();//数据源
     }
+
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,7 +41,6 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     @Override
     public final void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-        LogUtils.log("onBindViewHolder", position);
 //        recycleData(holder.getTag());
 //        handleClick(holder);
 //        //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
@@ -51,8 +50,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
-        LogUtils.log("onBindViewHolder payloads", position);
+    public final void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
         recycleData(holder.getTag());
         handleClick(holder);
         //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
@@ -203,6 +201,71 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             }
         });
     }
+
+    /**
+     * 注意引用问题，listNew引用坚决不能和List_bean一致，否则GG
+     //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
+     * @param listNew
+     */
+    public void dispatchUpdatesTo(@NonNull final List<T> listNew) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return list_bean.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return listNew.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return SimpleAdapter.this.areItemsTheSame(oldItemPosition, newItemPosition, list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return SimpleAdapter.this.areContentsTheSame(oldItemPosition, newItemPosition, list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+            }
+
+            @Nullable
+            @Override
+            public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+                return SimpleAdapter.this.getChangePayload(oldItemPosition, newItemPosition, list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+            }
+        });
+        list_bean = listNew;
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    /**
+     如果要用diffutil,尽量返回true,可以避免当前item被刷新，返回false的话，areContentsTheSame和getChangePayload不再回调
+     * @param oldItemPosition
+     * @param newItemPosition
+     * @param beanOld
+     * @param beanNew
+     * @return
+     */
+    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition, T beanOld, T beanNew) {
+        return false;
+    }
+
+    /**
+     * 返回false的话，getChangePayload不再回调
+     * @param oldItemPosition
+     * @param newItemPosition
+     * @param beanOld
+     * @param beanNew
+     * @return
+     */
+    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition, T beanOld, T beanNew) {
+        return false;
+    }
+
+    public Object getChangePayload(int oldItemPosition, int newItemPosition, T beanOld, T beanNew) {
+        return null;
+    }
     /**
      * ------------------------------------------------------------------------------
      */
@@ -210,6 +273,10 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     /**
      * ---------------------------------------------------------------------------------
      */
+    public SimpleAdapter<T> notifyBehindInserted(int count) {
+        notifyItemRangeInserted(list_bean.size() - count, count);
+        return this;
+    }
     public SimpleAdapter<T> swapNoNotify(int i, int j) {
         Collections.swap(list_bean, i, j);
         return this;
