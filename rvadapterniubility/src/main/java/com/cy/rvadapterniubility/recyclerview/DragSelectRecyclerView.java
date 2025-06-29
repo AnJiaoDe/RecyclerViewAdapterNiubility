@@ -3,6 +3,7 @@ package com.cy.rvadapterniubility.recyclerview;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 
@@ -273,7 +275,6 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         if (isLongPress || isSelectMoving) return true;
         return super.dispatchTouchEvent(event);
     }
-
 
     private void reset() {
         position_start = NO_POSITION;

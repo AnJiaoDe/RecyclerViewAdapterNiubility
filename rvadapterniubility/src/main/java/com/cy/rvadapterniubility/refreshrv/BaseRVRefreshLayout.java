@@ -20,7 +20,7 @@ import com.cy.rvadapterniubility.recyclerview.PositionHolder;
  * Created by lenovo on 2017/12/31.
  */
 
-public abstract class BaseRVRefreshLayout<V extends BaseRecyclerView> extends RefreshLayoutNiubility {
+public abstract class BaseRVRefreshLayout<V extends BaseRecyclerView> extends RefreshLayout {
 
     public BaseRVRefreshLayout(Context context) {
         this(context, null);
