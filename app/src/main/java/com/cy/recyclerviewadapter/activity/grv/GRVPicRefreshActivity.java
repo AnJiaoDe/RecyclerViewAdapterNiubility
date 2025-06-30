@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.cy.androidview.ScreenUtils;
 import com.cy.androidview.selectorview.ImageViewSelector;
@@ -110,20 +111,24 @@ public class GRVPicRefreshActivity extends BaseActivity {
         dragSelectorAdapter = new DragSelectorAdapter<String>() {
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition, String beanOld, String beanNew) {
-                return true;
-            }
-
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition, String beanOld, String beanNew) {
+                if (oldItemPosition == 2 && newItemPosition == 3 || oldItemPosition == 3 && newItemPosition == 2)
+                    LogUtils.log("areItemsTheSame", beanOld.equals(beanNew));
                 return beanOld.equals(beanNew);
             }
 
             @Override
-            public Object getChangePayload(int oldItemPosition, int newItemPosition, String beanOld, String beanNew) {
-                LogUtils.log("getChangePayload",oldItemPosition);
-                LogUtils.log("getChangePayload newItemPosition",newItemPosition);
-                return new String("数据变化"+oldItemPosition+":"+newItemPosition);
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition, String beanOld, String beanNew) {
+                if (oldItemPosition == 2 && newItemPosition == 3 || oldItemPosition == 3 && newItemPosition == 2)
+                LogUtils.log("areContentsTheSame", beanOld.equals(beanNew));
+                return beanOld.equals(beanNew);
             }
+
+//            @Override
+//            public Object getChangePayload(int oldItemPosition, int newItemPosition, String beanOld, String beanNew) {
+//                LogUtils.log("getChangePayload",oldItemPosition);
+//                LogUtils.log("getChangePayload newItemPosition",newItemPosition);
+//                return new String("数据变化"+oldItemPosition+":"+newItemPosition);
+//            }
 
             @Override
             public void onSelectCountChanged(boolean isAllSelected, int count_selected) {
@@ -135,7 +140,7 @@ public class GRVPicRefreshActivity extends BaseActivity {
 
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected, @NonNull List<Object> payloads) {
-                LogUtils.log("bindDataToView", position + ":" + isSelected+":"+(!payloads.isEmpty() ?payloads.get(0):""));
+                LogUtils.log("bindDataToView", position + ":" + isSelected + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
                 GlideUtils.load(GRVPicRefreshActivity.this, bean, R.drawable.default_pic, holder.getView(R.id.iv));
                 holder.setVisibility(R.id.ivs, isUsingSelector() ? View.VISIBLE : View.GONE);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
@@ -188,10 +193,12 @@ public class GRVPicRefreshActivity extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        list.set(0, "https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-                        list.set(5, "https://img1.baidu.com/it/u=666159255,3156215465&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+                        list.set(3, "https://img2.baidu.com/it/u=2886261971,4176733325&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667");
+                        list.set(2, "https://img2.baidu.com/it/u=2017833233,3595322493&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=750");
                         if (list.size() == dragSelectorAdapter.getList_bean().size()) {
-                            dragSelectorAdapter.dispatchUpdatesTo(new ArrayList<>(list));
+                            dragSelectorAdapter.clearAddNoNotify(list);
+                            dragSelectorAdapter.notifyItemRangeChanged(0,dragSelectorAdapter.getItemCount());
+//                            dragSelectorAdapter.dispatchUpdatesTo(new ArrayList<>(list));
                             //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
 //                            dragSelectorAdapter.submitList(dragSelectorAdapter.getList_bean());
                         } else {
@@ -199,6 +206,37 @@ public class GRVPicRefreshActivity extends BaseActivity {
                             dragSelectorAdapter.clearAdd(list);
                         }
                         gridRefreshLayout.closeRefreshDelay("有8条更新", 2000);
+
+
+
+                        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                            @Override
+                            public int getOldListSize() {
+                                return simpleAdapter.getList_bean().size();
+                            }
+
+                            @Override
+                            public int getNewListSize() {
+                                return listFolder.size();
+                            }
+
+                            @Override
+                            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                                com.cy.rvadapterniubility.LogUtils.log("areItemsTheSame",oldItemPosition);
+                                return simpleAdapter.getList_bean().get(oldItemPosition).getPath().equals(listFolder.get(newItemPosition).getPath())
+                                        && simpleAdapter.getList_bean().get(oldItemPosition).getPath().equals(listFolder.get(oldItemPosition).getPath())
+                                        && simpleAdapter.getList_bean().get(newItemPosition).getPath().equals(listFolder.get(newItemPosition).getPath());
+                            }
+
+                            @Override
+                            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                                return simpleAdapter.getList_bean().get(oldItemPosition).equals(listFolder.get(newItemPosition))
+                                        && simpleAdapter.getList_bean().get(oldItemPosition).equals(listFolder.get(oldItemPosition))
+                                        && simpleAdapter.getList_bean().get(newItemPosition).equals(listFolder.get(newItemPosition));
+                            }
+                        });
+                        simpleAdapter.setListBeanNoNotify(listFolder);
+                        diffResult.dispatchUpdatesTo(simpleAdapter);
                     }
                 }, 1000);
             }
