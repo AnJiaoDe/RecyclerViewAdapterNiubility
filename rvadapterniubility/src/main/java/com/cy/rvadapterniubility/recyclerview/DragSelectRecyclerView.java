@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 
