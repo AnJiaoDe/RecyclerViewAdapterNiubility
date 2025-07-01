@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 
@@ -166,13 +167,15 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         gestureDetector.onTouchEvent(event);
         if (!dragSelectorAdapter.isUsingSelector()) return super.dispatchTouchEvent(event);
 
+        LogUtils.log("isSelectMoving",isSelectMoving);
+        LogUtils.log("isLongPress",isLongPress);
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
                 isLongPress = false;
+                isSelectMoving = false;
                 downX = event.getX();
                 downY = event.getY();
-                isSelectMoving = false;
                 downSelected = false;
                 cancelSelect = false;
                 scrollDistance = 0;
@@ -193,11 +196,11 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 float moveY = event.getY();
                 float dx = Math.abs(moveX - downX);
                 float dy = Math.abs(moveY - downY);
-                boolean moveV = dy > touchSlop && dy >= dx;
+                boolean moveV = dy > touchSlop && dy > dx;
                 downX = moveX;
                 downY = moveY;
                 //横向滑动程度大于竖向滑动程度，横向滑动超过一定距离，选中当前ITEM，并且拦截竖直滑动，直到UP之后
-                if (isSelectMoving || (!moveV && dx > touchSlop && dx >= dy)) {
+                if (isLongPress||isSelectMoving || (!moveV && dx > touchSlop && dx >= dy)) {
                     View child = findChildViewUnder(moveX, moveY);
                     if (child != null) {
                         int position = getChildAdapterPosition(child);
@@ -267,6 +270,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 isLongPress = false;
+                isSelectMoving=false;
                 reset();
                 break;
         }

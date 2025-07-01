@@ -7,12 +7,14 @@ import androidx.recyclerview.widget.AsyncDifferConfig;
 import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     private boolean usingSelector = false;
-    private SetSelector setSelector ;
+    private SetSelector setSelector;
 
     public DragSelectorAdapter() {
         setSelector = new SetSelector();
@@ -30,6 +32,10 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         usingSelector = true;
         toggleNoNotify(position);
         postNotifyDataSetChanged();
+    }
+
+    public SetSelector getSetSelector() {
+        return setSelector;
     }
 
     public void stopDragSelect() {
@@ -125,40 +131,45 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
 
-    private class SetSelector {
-        private Set<Integer> set;
+    public class SetSelector {
+        //方便从后往前删除
+        private TreeSet<Integer> treeSet;
 
         public SetSelector() {
-            set = new HashSet<>();
+            treeSet = new TreeSet<>();
         }
 
         public int size() {
-            return set.size();
+            return treeSet.size();
         }
 
         public void add(int position) {
-            set.add(position);
+            treeSet.add(position);
             notifyCountSelected();
         }
 
         public void remove(int position) {
-            set.remove(position);
+            treeSet.remove(position);
             notifyCountSelected();
         }
 
         public boolean contains(int position) {
-            return set.contains(position);
+            return treeSet.contains(position);
         }
 
         public void clear() {
-            int count_selected = set.size();
-            set.clear();
+            int count_selected = treeSet.size();
+            treeSet.clear();
             if (count_selected != 0)
                 notifyCountSelected();
         }
 
         private void notifyCountSelected() {
-            onSelectCountChanged(getList_bean().size() == set.size(), set.size());
+            onSelectCountChanged(getList_bean().size() == treeSet.size(), treeSet.size());
+        }
+
+        public TreeSet<Integer> getTreeSet() {
+            return treeSet;
         }
     }
 }

@@ -61,6 +61,11 @@ public class GRVDragSelectorActivity extends BaseActivity {
 //                tv_count.setText("已选择"+getSelectedSize()+"项");
                 //或者
                 tv_count.setText("已选择" + count_selected + "项");
+
+                // 降序遍历，如果要删除，从后往前删除
+                for (int index : getSetSelector().getTreeSet().descendingSet()) {
+                    LogUtils.log("onSelectCountChanged", index);
+                }
             }
 
             @Override

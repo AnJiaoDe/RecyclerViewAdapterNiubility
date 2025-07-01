@@ -137,8 +137,12 @@ public class GRVPicRefreshActivity extends BaseActivity {
 //                tv_count.setText("已选择"+getSelectedSize()+"项");
                 //或者
                 tv_count.setText("已选择" + count_selected + "项");
-            }
 
+                // 降序遍历，如果要删除，从后往前删除
+                for (int index : getSetSelector().getTreeSet().descendingSet()) {
+                    LogUtils.log("onSelectCountChanged", index);
+                }
+            }
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected, @NonNull List<Object> payloads) {
                 LogUtils.log("bindDataToView", position + ":" + isSelected + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
