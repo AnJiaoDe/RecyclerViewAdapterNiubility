@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.cy.BaseAdapter.R;
+import com.cy.rvadapterniubility.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -204,66 +205,114 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     /**
      * 注意引用问题，listNew引用坚决不能和List_bean一致，否则GG
-     //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
+     * 比较的时候，比较的是新旧LIST的所有数据，所有数据都会回调
+     * //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
+     *
      * @param listNew
      */
     public void dispatchUpdatesTo(@NonNull final List<T> listNew) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+        ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<DiffUtil.DiffResult>() {
             @Override
-            public int getOldListSize() {
-                return list_bean.size();
+            public DiffUtil.DiffResult runThread() {
+                DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                    @Override
+                    public int getOldListSize() {
+                        return list_bean.size();
+                    }
+
+                    @Override
+                    public int getNewListSize() {
+                        return listNew.size();
+                    }
+
+                    @Override
+                    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                        return SimpleAdapter.this.areItemsTheSame( list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                        return SimpleAdapter.this.areContentsTheSame( list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+                    }
+
+                    @Nullable
+                    @Override
+                    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+                        return SimpleAdapter.this.getChangePayload( list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+                    }
+                });
+                return diffResult;
             }
 
             @Override
-            public int getNewListSize() {
-                return listNew.size();
-            }
-
-            @Override
-            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return SimpleAdapter.this.areItemsTheSame(oldItemPosition, newItemPosition, list_bean.get(oldItemPosition), listNew.get(newItemPosition));
-            }
-
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                return SimpleAdapter.this.areContentsTheSame(oldItemPosition, newItemPosition, list_bean.get(oldItemPosition), listNew.get(newItemPosition));
-            }
-
-            @Nullable
-            @Override
-            public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-                return SimpleAdapter.this.getChangePayload(oldItemPosition, newItemPosition, list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+            public void runUIThread(DiffUtil.DiffResult diffResult) {
+                list_bean = listNew;
+                diffResult.dispatchUpdatesTo(SimpleAdapter.this);
             }
         });
-        list_bean = listNew;
-        diffResult.dispatchUpdatesTo(this);
     }
 
     /**
-     如果要用diffutil,尽量返回true,可以避免当前item被刷新，返回false的话，areContentsTheSame和getChangePayload不再回调
-     * @param oldItemPosition
-     * @param newItemPosition
+     * 注意引用问题，listNew引用坚决不能和List_bean一致，否则GG
+     * //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
+     *这个是专供间隔均分的Grid布局和Staggered布局使用的，只要有一项数据不完全一样，就必须notifydatasetchanged，否则间隔错乱
+     * @param listNew
+     */
+    public void dispatchUpdatesToItemDecoration(@NonNull final List<T> listNew) {
+        ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<Boolean>() {
+            @Override
+            public Boolean runThread() {
+                if (list_bean.size() == listNew.size()) {
+                    for (int i = 0; i < list_bean.size(); i++) {
+                        if (!areItemsTheSameToItemDecoration(list_bean.get(i), listNew.get(i))) return true;
+                    }
+                    return false;
+                }
+                return true;
+            }
+
+            @Override
+            public void runUIThread(Boolean refresh) {
+                if (refresh) clearAdd(listNew);
+            }
+        });
+    }
+
+    /**
      * @param beanOld
      * @param beanNew
      * @return
      */
-    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition, T beanOld, T beanNew) {
+    public boolean areItemsTheSameToItemDecoration(T beanOld, T beanNew) {
+        return false;
+    }
+
+    /**
+     * 如果要用diffutil,尽量返回true,可以避免当前item被刷新，返回false的话，areContentsTheSame和getChangePayload不再回调
+     * @param beanOld
+     * @param beanNew
+     * @return
+     */
+    public boolean areItemsTheSame( T beanOld, T beanNew) {
         return false;
     }
 
     /**
      * 返回false的话，getChangePayload不再回调
-     * @param oldItemPosition
-     * @param newItemPosition
      * @param beanOld
      * @param beanNew
      * @return
      */
-    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition, T beanOld, T beanNew) {
+    public boolean areContentsTheSame( T beanOld, T beanNew) {
         return false;
     }
 
-    public Object getChangePayload(int oldItemPosition, int newItemPosition, T beanOld, T beanNew) {
+    /**
+     * @param beanOld
+     * @param beanNew
+     * @return
+     */
+    public Object getChangePayload( T beanOld, T beanNew) {
         return null;
     }
     /**
@@ -277,6 +326,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         notifyItemRangeInserted(list_bean.size() - count, count);
         return this;
     }
+
     public SimpleAdapter<T> swapNoNotify(int i, int j) {
         Collections.swap(list_bean, i, j);
         return this;
