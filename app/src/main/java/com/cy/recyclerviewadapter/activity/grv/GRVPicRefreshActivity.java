@@ -122,14 +122,14 @@ public class GRVPicRefreshActivity extends BaseActivity {
             @Override
             public boolean areItemsTheSame(String beanOld, String beanNew) {
                 if (layout_menu.getVisibility() == View.VISIBLE) return true;
-                return super.areItemsTheSame(beanOld, beanNew);
+                return beanOld.equals(beanNew);
             }
 
             //不刷新，直接回调bindDataToView
             @Override
             public boolean areContentsTheSame(String beanOld, String beanNew) {
                 if (layout_menu.getVisibility() == View.VISIBLE) return false;
-                return super.areContentsTheSame(beanOld, beanNew);
+                return beanOld.equals(beanNew);
             }
             //            @Override
 //            public Object getChangePayload(int oldItemPosition, int newItemPosition, String beanOld, String beanNew) {
@@ -194,13 +194,13 @@ public class GRVPicRefreshActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //不刷新，直接回调bindDataToView
-//                dragSelectorAdapter.stopDragSelectSilence();
+                dragSelectorAdapter.stopDragSelectSilence();
                 layout_menu.setVisibility(View.GONE);
             }
         });
         gridRefreshLayout.getRecyclerView().setSpanCount(3)
                 .dragSelector(dragSelectorAdapter)
-                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 6)));
+                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 12)));整个大间隔就不灵了
         multiAdapter = new MultiAdapter().addAdapter(dragSelectorAdapter);
         gridRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
             @Override
