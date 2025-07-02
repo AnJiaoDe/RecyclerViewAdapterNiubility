@@ -1,27 +1,22 @@
 package com.cy.rvadapterniubility.adapter;
 
 import android.os.Handler;
+import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.AsyncDifferConfig;
-import androidx.recyclerview.widget.DiffUtil;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     private boolean usingSelector = false;
-    private SetSelector setSelector;
+    private SparseArraySelector sparseArraySelector;
 
     public DragSelectorAdapter() {
-        setSelector = new SetSelector();
+        sparseArraySelector = new SparseArraySelector();
     }
 
     public int getSelectedSize() {
-        return setSelector.size();
+        return sparseArraySelector.size();
     }
 
     public boolean isUsingSelector() {
@@ -34,34 +29,34 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         postNotifyDataSetChanged();
     }
 
-    public SetSelector getSetSelector() {
-        return setSelector;
+    public SparseArraySelector getSparseArraySelector() {
+        return sparseArraySelector;
     }
 
     public void stopDragSelect() {
         usingSelector = false;
-        setSelector.clear();
+        sparseArraySelector.clear();
         postNotifyDataSetChanged();
     }
 
     public void selectAll(boolean isAllSelected) {
-        boolean noChange = (setSelector.size() == getList_bean().size()) == isAllSelected;
+        boolean noChange = (sparseArraySelector.size() == getList_bean().size()) == isAllSelected;
         if (noChange) return;
         if (isAllSelected) {
             for (int i = 0; i < getList_bean().size(); i++) {
-                setSelector.add(i);
+                sparseArraySelector.put(i);
             }
         } else {
-            setSelector.clear();
+            sparseArraySelector.clear();
         }
         postNotifyDataSetChanged();
     }
 
     public void toggleNoNotify(final int position) {
-        if (setSelector.contains(position)) {
-            setSelector.remove(position);
+        if (sparseArraySelector.contains(position)) {
+            sparseArraySelector.remove(position);
         } else {
-            setSelector.add(position);
+            sparseArraySelector.put(position);
         }
     }
 
@@ -77,11 +72,11 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public void select(final int position, boolean select) {
-        if (select == setSelector.contains(position)) return;
+        if (select == sparseArraySelector.contains(position)) return;
         if (select) {
-            setSelector.add(position);
+            sparseArraySelector.put(position);
         } else {
-            setSelector.remove(position);
+            sparseArraySelector.remove(position);
         }
         //必须用handler，否则GG  Cannot call this method while RecyclerView is computing a layout or scrolling
         new Handler().post(new Runnable() {
@@ -93,15 +88,15 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public boolean isSelected(int position) {
-        return setSelector.contains(position);
+        return sparseArraySelector.contains(position);
     }
 
     public void selectRange(final int start, final int end, boolean isSelected) {
         for (int i = start; i <= end; i++) {
             if (isSelected)
-                setSelector.add(i);
+                sparseArraySelector.put(i);
             else
-                setSelector.remove(i);
+                sparseArraySelector.remove(i);
         }
         //必须用handler，否则GG  Cannot call this method while RecyclerView is computing a layout or scrolling
         new Handler().post(new Runnable() {
@@ -114,7 +109,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     @Override
     public final void bindDataToView(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads) {
-        bindDataToView(holder, position, bean, setSelector.contains(position), payloads);
+        bindDataToView(holder, position, bean, sparseArraySelector.contains(position), payloads);
     }
 
     public abstract void bindDataToView(BaseViewHolder holder, int position, T bean, boolean isSelected, @NonNull List<Object> payloads);
@@ -131,45 +126,44 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
 
-    public class SetSelector {
-        //方便从后往前删除
-        private TreeSet<Integer> treeSet;
+    public class SparseArraySelector {
+        private final SparseArray<T> sparseArray;
 
-        public SetSelector() {
-            treeSet = new TreeSet<>();
+        public SparseArraySelector() {
+            sparseArray = new SparseArray<>();
         }
 
         public int size() {
-            return treeSet.size();
+            return sparseArray.size();
         }
 
-        public void add(int position) {
-            treeSet.add(position);
+        public void put(int position) {
+            sparseArray.put(position, getList_bean().get(position));
             notifyCountSelected();
         }
 
         public void remove(int position) {
-            treeSet.remove(position);
+            sparseArray.remove(position);
             notifyCountSelected();
         }
 
         public boolean contains(int position) {
-            return treeSet.contains(position);
+            return sparseArray.get(position) != null;
         }
 
         public void clear() {
-            int count_selected = treeSet.size();
-            treeSet.clear();
+            int count_selected = sparseArray.size();
+            sparseArray.clear();
             if (count_selected != 0)
                 notifyCountSelected();
         }
 
         private void notifyCountSelected() {
-            onSelectCountChanged(getList_bean().size() == treeSet.size(), treeSet.size());
+            onSelectCountChanged(getList_bean().size() == sparseArray.size(), sparseArray.size());
         }
 
-        public TreeSet<Integer> getTreeSet() {
-            return treeSet;
+        public SparseArray<T> getSparseArray() {
+            return sparseArray;
         }
     }
 }

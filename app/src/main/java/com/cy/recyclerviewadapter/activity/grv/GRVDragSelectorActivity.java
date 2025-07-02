@@ -63,8 +63,9 @@ public class GRVDragSelectorActivity extends BaseActivity {
                 tv_count.setText("已选择" + count_selected + "项");
 
                 // 降序遍历，如果要删除，从后往前删除
-                for (int index : getSetSelector().getTreeSet().descendingSet()) {
-                    LogUtils.log("onSelectCountChanged", index);
+                for (int i = getSparseArraySelector().getSparseArray().size() - 1;
+                     i >= 0; i--) {
+                    LogUtils.log("onSelectCountChanged", getSparseArraySelector().getSparseArray().valueAt(i).getResID());
                 }
             }
 
