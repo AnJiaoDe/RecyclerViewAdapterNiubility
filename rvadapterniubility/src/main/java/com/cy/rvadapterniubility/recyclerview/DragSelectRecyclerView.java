@@ -8,6 +8,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewParent;
 import android.widget.OverScroller;
 
 import androidx.annotation.Nullable;
@@ -167,8 +168,6 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         gestureDetector.onTouchEvent(event);
         if (!dragSelectorAdapter.isUsingSelector()) return super.dispatchTouchEvent(event);
 
-        LogUtils.log("isSelectMoving",isSelectMoving);
-        LogUtils.log("isLongPress",isLongPress);
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
@@ -200,7 +199,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 downX = moveX;
                 downY = moveY;
                 //横向滑动程度大于竖向滑动程度，横向滑动超过一定距离，选中当前ITEM，并且拦截竖直滑动，直到UP之后
-                if (isLongPress||isSelectMoving || (!moveV && dx > touchSlop && dx >= dy)) {
+                if (isLongPress||isSelectMoving || (!moveV && dx > touchSlop && dx > dy)) {
                     View child = findChildViewUnder(moveX, moveY);
                     if (child != null) {
                         int position = getChildAdapterPosition(child);
@@ -271,28 +270,32 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             case MotionEvent.ACTION_POINTER_UP:
                 isLongPress = false;
                 isSelectMoving=false;
-                reset();
+
+                position_start = NO_POSITION;
+                position_end = NO_POSITION;
+                position_start_last = NO_POSITION;
+                position_end_last = NO_POSITION;
+                inTopScrollRange = false;
+                inBottomScrollRange = false;
+                scrollDistance = 0;
+                x_last = -1;
+                y_last = -1;
+                y_end_bottom = -1;
+                stopAutoScroll();
                 break;
         }
         //ACTION_UP ACTION_CANCEL 等也要拦截，否则会导致itemview如果只有down和up就成了itemview单击了，应该把up拦截掉，
-        if (isLongPress || isSelectMoving) return true;
+        if (isLongPress || isSelectMoving){
+            //需要防止被刷新控件拦截
+            requestDisallowInterceptTouchEvent();
+            return true;
+        }
         return super.dispatchTouchEvent(event);
     }
-
-    private void reset() {
-        position_start = NO_POSITION;
-        position_end = NO_POSITION;
-        position_start_last = NO_POSITION;
-        position_end_last = NO_POSITION;
-        inTopScrollRange = false;
-        inBottomScrollRange = false;
-        scrollDistance = 0;
-        x_last = -1;
-        y_last = -1;
-        y_end_bottom = -1;
-        stopAutoScroll();
+    private void requestDisallowInterceptTouchEvent() {
+        final ViewParent parent = getParent();
+        if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
     }
-
     private void startAutoScroll() {
         if (overScroller.isFinished()) {
             removeCallbacks(runnableScroll);

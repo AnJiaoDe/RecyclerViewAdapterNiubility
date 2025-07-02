@@ -102,7 +102,6 @@ public class GRVDragSelectorActivity extends BaseActivity {
             @Override
             public void onItemLongClick__(BaseViewHolder holder, int position, HRVBean bean) {
                 super.onItemLongClick(holder, position, bean);
-                LogUtils.log("dispatchTouchEvent  onItemLongClick");
                 Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
                 if (vibrator != null) vibrator.vibrate(50);
                 layout_menu.setVisibility(View.VISIBLE);

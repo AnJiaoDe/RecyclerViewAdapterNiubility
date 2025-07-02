@@ -174,7 +174,6 @@ public class GRVPicRefreshActivity extends BaseActivity {
             @Override
             public void onItemLongClick__(BaseViewHolder holder, int position, String bean) {
                 super.onItemLongClick(holder, position, bean);
-                LogUtils.log("dispatchTouchEvent  onItemLongClick");
                 Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
                 if (vibrator != null) vibrator.vibrate(50);
                 layout_menu.setVisibility(View.VISIBLE);
@@ -247,7 +246,8 @@ public class GRVPicRefreshActivity extends BaseActivity {
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-//                                dragSelectorAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 8, 8);
+//                                dragSelectorAdapter.notifyItemRangeInserted(dragSelectorAdapter.getItemCount() - 8, 8);
+//                                合股这样会导致上啦一直显示LOADING
                                 dragSelectorAdapter.notifyBehindInserted(8);
                             }
                         });
