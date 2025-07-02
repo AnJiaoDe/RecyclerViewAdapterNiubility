@@ -23,9 +23,31 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         return usingSelector;
     }
 
-    public void startDragSelect(int position) {
+    public void startDragSelectNoNotify(int position) {
         usingSelector = true;
         toggleNoNotify(position);
+    }
+
+    public void startDragSelectSilence(int position) {
+        startDragSelectNoNotify(position);
+        dispatchUpdatesTo(getList_bean());
+    }
+    public void startDragSelect(int position) {
+        startDragSelectNoNotify(position);
+        postNotifyDataSetChanged();
+    }
+
+    public void stopDragSelectNoNotify() {
+        usingSelector = false;
+        sparseArraySelector.clear();
+    }
+
+    public void stopDragSelectSilence() {
+        stopDragSelectNoNotify();
+        dispatchUpdatesTo(getList_bean());
+    }
+    public void stopDragSelect() {
+        stopDragSelectNoNotify();
         postNotifyDataSetChanged();
     }
 
@@ -33,11 +55,6 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         return sparseArraySelector;
     }
 
-    public void stopDragSelect() {
-        usingSelector = false;
-        sparseArraySelector.clear();
-        postNotifyDataSetChanged();
-    }
 
     public void selectAll(boolean isAllSelected) {
         boolean noChange = (sparseArraySelector.size() == getList_bean().size()) == isAllSelected;

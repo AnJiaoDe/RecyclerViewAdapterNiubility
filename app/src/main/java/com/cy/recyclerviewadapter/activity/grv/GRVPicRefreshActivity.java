@@ -110,18 +110,25 @@ public class GRVPicRefreshActivity extends BaseActivity {
         });
 
         dragSelectorAdapter = new DragSelectorAdapter<String>() {
+            /**
+             *这个是专供间隔均分的Grid布局和Staggered布局使用的，只要有一项数据不完全一样，就必须notifydatasetchanged，否则间隔错乱
+             */
             @Override
             public boolean areItemsTheSameToItemDecoration(String beanOld, String beanNew) {
                 return beanOld.equals(beanNew);
             }
 
+            //不刷新，直接回调bindDataToView
             @Override
             public boolean areItemsTheSame(String beanOld, String beanNew) {
+                if (layout_menu.getVisibility() == View.VISIBLE) return true;
                 return super.areItemsTheSame(beanOld, beanNew);
             }
 
+            //不刷新，直接回调bindDataToView
             @Override
             public boolean areContentsTheSame(String beanOld, String beanNew) {
+                if (layout_menu.getVisibility() == View.VISIBLE) return false;
                 return super.areContentsTheSame(beanOld, beanNew);
             }
             //            @Override
@@ -144,6 +151,7 @@ public class GRVPicRefreshActivity extends BaseActivity {
                     LogUtils.log("onSelectCountChanged", getSparseArraySelector().getSparseArray().valueAt(i));
                 }
             }
+
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected, @NonNull List<Object> payloads) {
                 LogUtils.log("bindDataToView", position + ":" + isSelected + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
@@ -178,14 +186,16 @@ public class GRVPicRefreshActivity extends BaseActivity {
                 Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
                 if (vibrator != null) vibrator.vibrate(50);
                 layout_menu.setVisibility(View.VISIBLE);
-                startDragSelect(position);
+                //不刷新，直接回调bindDataToView
+                startDragSelectSilence(position);
             }
         };
         findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //不刷新，直接回调bindDataToView
+//                dragSelectorAdapter.stopDragSelectSilence();
                 layout_menu.setVisibility(View.GONE);
-                dragSelectorAdapter.stopDragSelect();
             }
         });
         gridRefreshLayout.getRecyclerView().setSpanCount(3)
