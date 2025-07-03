@@ -227,18 +227,18 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
                     @Override
                     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                        return SimpleAdapter.this.areItemsTheSame( list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+                        return SimpleAdapter.this.areItemsTheSame(list_bean.get(oldItemPosition), listNew.get(newItemPosition));
                     }
 
                     @Override
                     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                        return SimpleAdapter.this.areContentsTheSame( list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+                        return SimpleAdapter.this.areContentsTheSame(list_bean.get(oldItemPosition), listNew.get(newItemPosition));
                     }
 
                     @Nullable
                     @Override
                     public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-                        return SimpleAdapter.this.getChangePayload( list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+                        return SimpleAdapter.this.getChangePayload(list_bean.get(oldItemPosition), listNew.get(newItemPosition));
                     }
                 });
                 return diffResult;
@@ -255,7 +255,8 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     /**
      * 注意引用问题，listNew引用坚决不能和List_bean一致，否则GG
      * //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
-     *这个是专供间隔均分的Grid布局和Staggered布局使用的，只要有一项数据不完全一样，就必须notifydatasetchanged，否则间隔错乱
+     * 这个是专供间隔均分的Grid布局和Staggered布局使用的，只要有一项数据不完全一样，就必须notifydatasetchanged，否则间隔错乱
+     *
      * @param listNew
      */
     public void dispatchUpdatesToItemDecoration(@NonNull final List<T> listNew) {
@@ -264,7 +265,8 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             public Boolean runThread() {
                 if (list_bean.size() == listNew.size()) {
                     for (int i = 0; i < list_bean.size(); i++) {
-                        if (!areItemsTheSameToItemDecoration(list_bean.get(i), listNew.get(i))) return true;
+                        if (!areItemsTheSameToItemDecoration(list_bean.get(i), listNew.get(i)))
+                            return true;
                     }
                     return false;
                 }
@@ -274,6 +276,53 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             @Override
             public void runUIThread(Boolean refresh) {
                 if (refresh) clearAdd(listNew);
+            }
+        });
+    }
+
+    public void dispatchUpdatesToWithMsg(final Object msg) {
+        ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<DiffUtil.DiffResult>() {
+            @Override
+            public DiffUtil.DiffResult runThread() {
+                DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                    @Override
+                    public int getOldListSize() {
+                        return getList_bean().size();
+                    }
+
+                    @Override
+                    public int getNewListSize() {
+                        return getList_bean().size();
+                    }
+
+                    @Override
+                    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                        return false;
+                    }
+
+                    /**
+                     * 在bindDataToView 中，判断payloads是否有msg 决定是否只更新item的部分内容
+                     * @param oldItemPosition The position of the item in the old list
+                     * @param newItemPosition The position of the item in the new list
+                     * @return
+                     */
+                    @Nullable
+                    @Override
+                    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+                        return msg;
+                    }
+                });
+                return diffResult;
+            }
+
+            @Override
+            public void runUIThread(DiffUtil.DiffResult diffResult) {
+                diffResult.dispatchUpdatesTo(SimpleAdapter.this);
             }
         });
     }
@@ -289,21 +338,23 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     /**
      * 如果要用diffutil,尽量返回true,可以避免当前item被刷新，返回false的话，areContentsTheSame和getChangePayload不再回调
+     *
      * @param beanOld
      * @param beanNew
      * @return
      */
-    public boolean areItemsTheSame( T beanOld, T beanNew) {
+    public boolean areItemsTheSame(T beanOld, T beanNew) {
         return false;
     }
 
     /**
      * 返回false的话，getChangePayload不再回调
+     *
      * @param beanOld
      * @param beanNew
      * @return
      */
-    public boolean areContentsTheSame( T beanOld, T beanNew) {
+    public boolean areContentsTheSame(T beanOld, T beanNew) {
         return false;
     }
 
@@ -312,7 +363,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * @param beanNew
      * @return
      */
-    public Object getChangePayload( T beanOld, T beanNew) {
+    public Object getChangePayload(T beanOld, T beanNew) {
         return null;
     }
     /**

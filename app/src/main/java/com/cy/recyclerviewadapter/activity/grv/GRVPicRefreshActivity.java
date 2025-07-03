@@ -117,20 +117,17 @@ public class GRVPicRefreshActivity extends BaseActivity {
             public boolean areItemsTheSameToItemDecoration(String beanOld, String beanNew) {
                 return beanOld.equals(beanNew);
             }
-
-            //不刷新，直接回调bindDataToView
-            @Override
-            public boolean areItemsTheSame(String beanOld, String beanNew) {
-                if (layout_menu.getVisibility() == View.VISIBLE) return true;
-                return beanOld.equals(beanNew);
-            }
-
-            //不刷新，直接回调bindDataToView
-            @Override
-            public boolean areContentsTheSame(String beanOld, String beanNew) {
-                if (layout_menu.getVisibility() == View.VISIBLE) return false;
-                return beanOld.equals(beanNew);
-            }
+//            //不刷新，直接回调bindDataToView
+//            @Override
+//            public boolean areItemsTheSame(String beanOld, String beanNew) {
+//                return beanOld.equals(beanNew);
+//            }
+//
+//            //不刷新，直接回调bindDataToView
+//            @Override
+//            public boolean areContentsTheSame(String beanOld, String beanNew) {
+//                return beanOld.equals(beanNew);
+//            }
             //            @Override
 //            public Object getChangePayload(int oldItemPosition, int newItemPosition, String beanOld, String beanNew) {
 //                LogUtils.log("getChangePayload",oldItemPosition);
@@ -155,18 +152,24 @@ public class GRVPicRefreshActivity extends BaseActivity {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected, @NonNull List<Object> payloads) {
                 LogUtils.log("bindDataToView", position + ":" + isSelected + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
-                GlideUtils.load(GRVPicRefreshActivity.this, bean, R.drawable.default_pic, holder.getView(R.id.iv));
-                holder.setVisibility(R.id.ivs, isUsingSelector() ? View.VISIBLE : View.GONE);
+                holder.setVisibility(R.id.layout_check, isUsingSelector() ? View.VISIBLE : View.GONE);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
-                        LogUtils.log("onCheckedChanged", position);
-                        select(position, isChecked);
+                        LogUtils.log("bindDataToView onCheckedChanged", position);  长按第一个ITEM后右滑然后左滑到第2个ITEM，第2个ITEM疯狂回调 导致疯狂闪烁
+                        holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
+                        selectNoNotify(position, isChecked);
                     }
                 });
+                holder.setVisibility(R.id.view_mask, isSelected ? View.VISIBLE : View.GONE);
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
                 imageViewSelector.setChecked(isSelected);
+
+                //在bindDataToView 中，判断payloads是否有NOTIFY_START_DRA_SELECT 决定是否只更新item的选择框，不更新item的图片等较为耗时的操作
+                if (!payloads.isEmpty() && NOTIFY_STATE_DRAG_SELECT.equals(payloads.get(0))) return;
+
+                GlideUtils.load(GRVPicRefreshActivity.this, bean, R.drawable.default_pic, holder.getView(R.id.iv));
             }
 
             @Override
@@ -187,20 +190,20 @@ public class GRVPicRefreshActivity extends BaseActivity {
                 if (vibrator != null) vibrator.vibrate(50);
                 layout_menu.setVisibility(View.VISIBLE);
                 //不刷新，直接回调bindDataToView
-                startDragSelectSilence(position);
+                startDragSelect(position);
             }
         };
         findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //不刷新，直接回调bindDataToView
-                dragSelectorAdapter.stopDragSelectSilence();
                 layout_menu.setVisibility(View.GONE);
+                dragSelectorAdapter.stopDragSelect();
             }
         });
         gridRefreshLayout.getRecyclerView().setSpanCount(3)
                 .dragSelector(dragSelectorAdapter)
-                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 12)));整个大间隔就不灵了
+                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 12)));
         multiAdapter = new MultiAdapter().addAdapter(dragSelectorAdapter);
         gridRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
             @Override

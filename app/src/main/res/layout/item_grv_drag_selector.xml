@@ -11,21 +11,24 @@
         android:scaleType="centerCrop"
         android:src="@drawable/default_pic" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/ivs"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="right|bottom"-->
-<!--        android:padding="10dp"-->
-<!--        android:src="@drawable/cb_unselected_rect_white"-->
-<!--        android:visibility="gone" />-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:id="@+id/layout_check"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/view_mask"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#77ffffff" />
         <com.cy.androidview.selectorview.ImageViewSelector
             android:id="@+id/ivs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|bottom"
             android:padding="10dp"
-            android:visibility="gone"
             app:cy_srcChecked="@drawable/cb_selected_rect_blue"
             app:cy_srcUnChecked="@drawable/cb_unselected_rect_white" />
+    </FrameLayout>
+
 </FrameLayout>

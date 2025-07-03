@@ -82,7 +82,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
                         LogUtils.log("onCheckedChanged", position);
-                        select(position, isChecked);
+                        selectNoNotify(position, isChecked);
                     }
                 });
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱

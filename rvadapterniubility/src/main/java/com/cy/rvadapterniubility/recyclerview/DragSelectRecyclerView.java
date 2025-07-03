@@ -206,7 +206,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 //                            LogUtils.log("isSelectMoving",position);
                             isSelectMoving = true;
                             if (position == position_start)
-                                dragSelectorAdapter.select(position, !cancelSelect && !downSelected);
+                                dragSelectorAdapter.select(position, !cancelSelect && !downSelected,this);
                             if (!inTopScrollRange && !inBottomScrollRange)
                                 updateSelectedRange(moveX, moveY);
                             //注意：MOVE事件，手指超出当前VIEW的边界后，如果在VIEW边界上面，Y是负数，如果在VIEW边界下面，Y比VIEW的高度大
@@ -348,30 +348,30 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             if (newEnd - newStart == 1) {
 //                LogUtils.log("selectRange", "newEnd - newStart == 1");
                 dragSelectorAdapter.selectRange(newStart, newStart,
-                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected);
+                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
             } else {
 //                LogUtils.log("selectRange", "newEnd - newStart !!!!= 1");
                 dragSelectorAdapter.selectRange(newStart, newEnd,
-                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected);
+                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
             }
         } else {
             if (newStart > position_start_last) {
 //                LogUtils.log("selectRange", "newStart > position_start_last");
                 cancelSelect = true;
-                dragSelectorAdapter.selectRange(position_start_last, newStart - 1, false);
+                dragSelectorAdapter.selectRange(position_start_last, newStart - 1, false,this);
             } else if (newStart < position_start_last) {
 //                LogUtils.log("selectRange", "newStart < position_start_last");
                 dragSelectorAdapter.selectRange(newStart, position_start_last - 1,
-                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected);
+                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
             }
             if (newEnd > position_end_last) {
 //                LogUtils.log("selectRange", "newEnd > position_end_last");
                 dragSelectorAdapter.selectRange(position_end_last + 1, newEnd,
-                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected);
+                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
             } else if (newEnd < position_end_last) {
 //                LogUtils.log("selectRange", "newEnd < position_end_last");
                 cancelSelect = true;
-                dragSelectorAdapter.selectRange(newEnd + 1, position_end_last, false);
+                dragSelectorAdapter.selectRange(newEnd + 1, position_end_last, false,this);
             }
         }
         position_start_last = newStart;
