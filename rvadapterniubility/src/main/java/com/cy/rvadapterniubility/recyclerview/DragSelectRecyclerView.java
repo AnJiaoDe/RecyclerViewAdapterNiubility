@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 
@@ -329,7 +330,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             //如果正在触发滚动中，下滑，且不能再下滑
         } else if (scrollDistance < 0 && !canScrollVertically(-1)) {
 //            LogUtils.log("canScrollVertically(----1)");
-            position_end = 0;
+            position_end = 0;  问题出在这  长按第一个item很容易进入这里导致BUG
             //防止NO_POSITION导致全选
 //            position_start = Math.max(NO_POSITION, position_end);
         }
@@ -345,31 +346,60 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         newEnd = Math.max(position_start, position_end);
 
         if (position_start_last == NO_POSITION || position_end_last == NO_POSITION) {
+            LogUtils.log("selectRange  scrollDistance", scrollDistance);
+            LogUtils.log("selectRange position_start", position_start);
+            LogUtils.log("selectRange    position_end", position_end);
+            LogUtils.log("selectRange newStart", newStart);
+            LogUtils.log("selectRange     newEnd", newEnd);
             if (newEnd - newStart == 1) {
-//                LogUtils.log("selectRange", "newEnd - newStart == 1");
+                LogUtils.log("selectRange", "newEnd - newStart == 1");
                 dragSelectorAdapter.selectRange(newStart, newStart,
                         isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
             } else {
-//                LogUtils.log("selectRange", "newEnd - newStart !!!!= 1");
+                LogUtils.log("selectRange", "newEnd - newStart !!!!= 1");
                 dragSelectorAdapter.selectRange(newStart, newEnd,
                         isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
             }
         } else {
             if (newStart > position_start_last) {
-//                LogUtils.log("selectRange", "newStart > position_start_last");
+                LogUtils.log("selectRange  scrollDistance", scrollDistance);
+                LogUtils.log("selectRange position_start", position_start);
+                LogUtils.log("selectRange    position_end", position_end);
+                LogUtils.log("selectRange newStart", newStart);
+                LogUtils.log("selectRange     newEnd", newEnd);
+
+                LogUtils.log("selectRange", "newStart > position_start_last");
                 cancelSelect = true;
                 dragSelectorAdapter.selectRange(position_start_last, newStart - 1, false,this);
             } else if (newStart < position_start_last) {
-//                LogUtils.log("selectRange", "newStart < position_start_last");
+                LogUtils.log("selectRange  scrollDistance", scrollDistance);
+                LogUtils.log("selectRange position_start", position_start);
+                LogUtils.log("selectRange    position_end", position_end);
+                LogUtils.log("selectRange newStart", newStart);
+                LogUtils.log("selectRange     newEnd", newEnd);
+
+                LogUtils.log("selectRange", "newStart < position_start_last");
                 dragSelectorAdapter.selectRange(newStart, position_start_last - 1,
                         isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
             }
             if (newEnd > position_end_last) {
-//                LogUtils.log("selectRange", "newEnd > position_end_last");
+                LogUtils.log("selectRange  scrollDistance", scrollDistance);
+                LogUtils.log("selectRange position_start", position_start);
+                LogUtils.log("selectRange    position_end", position_end);
+                LogUtils.log("selectRange newStart", newStart);
+                LogUtils.log("selectRange     newEnd", newEnd);
+
+                LogUtils.log("selectRange", "newEnd > position_end_last");
                 dragSelectorAdapter.selectRange(position_end_last + 1, newEnd,
                         isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
             } else if (newEnd < position_end_last) {
-//                LogUtils.log("selectRange", "newEnd < position_end_last");
+                LogUtils.log("selectRange  scrollDistance", scrollDistance);
+                LogUtils.log("selectRange position_start", position_start);
+                LogUtils.log("selectRange    position_end", position_end);
+                LogUtils.log("selectRange newStart", newStart);
+                LogUtils.log("selectRange     newEnd", newEnd);
+
+                LogUtils.log("selectRange", "newEnd < position_end_last");
                 cancelSelect = true;
                 dragSelectorAdapter.selectRange(newEnd + 1, position_end_last, false,this);
             }

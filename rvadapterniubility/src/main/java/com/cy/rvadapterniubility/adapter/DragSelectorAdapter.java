@@ -107,8 +107,17 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         return sparseArraySelector.contains(position);
     }
 
+    /**
+     * 13:25:54.348 14773-14773 selectRange                         com...pter  E  ----------------------------------->>>>1:1:true
+     * 13:25:54.580 14773-14773 selectRange                         com...pter  E  ----------------------------------->>>>1:1:false
+     * 13:25:54.630 14773-14773 selectRange                         com...pter  E  ----------------------------------->>>>1:2:true
+     * @param start
+     * @param end
+     * @param isSelected
+     * @param recyclerView
+     */
     public void selectRange(final int start, final int end, boolean isSelected, @NonNull RecyclerView recyclerView) {
-        LogUtils.log("selectRange",start);
+        LogUtils.log("selectRange",start+":"+end+":"+isSelected);
         for (int i = start; i <= end; i++) {
             if (selectNoNotify(i, isSelected)) continue;
             bindDataToView((BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(i), i, getList_bean().get(i),

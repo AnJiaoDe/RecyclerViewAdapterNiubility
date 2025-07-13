@@ -157,7 +157,8 @@ public class GRVPicRefreshActivity extends BaseActivity {
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
-                        LogUtils.log("bindDataToView onCheckedChanged", position);  长按第一个ITEM后右滑然后左滑到第2个ITEM，第2个ITEM疯狂回调 导致疯狂闪烁
+                        LogUtils.log("bindDataToView onCheckedChanged", position+":"+isChecked);
+                        //长按第一个ITEM后右滑然后左滑到第2个ITEM，第2个ITEM疯狂回调 导致疯狂闪烁
                         holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
                         selectNoNotify(position, isChecked);
                     }
