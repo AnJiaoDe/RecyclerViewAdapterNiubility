@@ -336,10 +336,23 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 //        LogUtils.log("getSelectedSize",dragSelectorAdapter.getSelectedSize());
 //        LogUtils.log("position_start",position_start);
 //        LogUtils.log("position_end",position_end);
+        int newStart = Math.min(position_start, position_end);
+        int newEnd = Math.max(position_start, position_end);
 
-        int newStart, newEnd;
-        newStart = Math.min(position_start, position_end);
-        newEnd = Math.max(position_start, position_end);
+        //这样偷懒根本不灵，还是得老老实实写一堆if else
+//        int start_range=newStart,end_range=newEnd;
+//        boolean select = isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected;
+//        if(newEnd<position_end_last){
+//            select=false;
+//            start_range=newEnd;
+//            end_range=position_end_last;
+//        }
+//        LogUtils.log("selectRange", start_range+":"+end_range+":"+select);
+//        dragSelectorAdapter.selectRange(start_range, end_range, select, this);
+//        position_start_last = newStart;
+//        position_end_last = newEnd;
+//        if (true) return;
+
 
         if (position_start_last == NO_POSITION || position_end_last == NO_POSITION) {
             LogUtils.log("selectRange  scrollDistance", scrollDistance);
@@ -357,6 +370,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                         isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
             }
         } else {
+            //手上往上拖再往下拖
             if (newStart > position_start_last) {
                 LogUtils.log("selectRange  scrollDistance", scrollDistance);
                 LogUtils.log("selectRange position_start", position_start);

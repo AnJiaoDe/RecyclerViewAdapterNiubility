@@ -119,7 +119,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
      * @param recyclerView
      */
     public void selectRange(final int start, final int end, boolean isSelected, @NonNull RecyclerView recyclerView) {
-        LogUtils.log("selectRange", start + ":" + end + ":" + isSelected);
+//        LogUtils.log("selectRange", start + ":" + end + ":" + isSelected);
         for (int i = start; i <= end; i++) {
             if (selectNoNotify(i, isSelected)) continue;
             BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
