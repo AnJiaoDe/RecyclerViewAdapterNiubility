@@ -49,10 +49,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     private int maxScrollDistance = 32;
     private int autoScrollDistance = (int) (Resources.getSystem().getDisplayMetrics().density * 56);
     private boolean downSelected = false;
-    private boolean cancelSelect = false;
-    private float y_end_bottom;
-//    private boolean overTopScrolling = false;
-//    private boolean overBottomScrolling = false;
+//    private boolean cancelSelect = false;
 
     public DragSelectRecyclerView(Context context) {
         //注意是this,否则GG
@@ -108,6 +105,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                     else
                         s = Math.max(scrollDistance, -maxScrollDistance);
                     scrollBy(0, s);
+                    //不能少
                     updateSelectedRange(x_last, y_last);
                     ViewCompat.postOnAnimation(DragSelectRecyclerView.this, this);
                     //是否能下滑
@@ -176,7 +174,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 downX = event.getX();
                 downY = event.getY();
                 downSelected = false;
-                cancelSelect = false;
+//                cancelSelect = false;
                 scrollDistance = 0;
                 View c = findChildViewUnder(downX, downY);
                 if (c != null) {
@@ -191,15 +189,15 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                float moveX = event.getX();
-                float moveY = event.getY();
+                final float moveX = event.getX();
+                final float moveY = event.getY();
                 float dx = Math.abs(moveX - downX);
                 float dy = Math.abs(moveY - downY);
-                boolean moveV = dy > touchSlop && dy > dx;
+                boolean moveH = dx > touchSlop && dx > dy;
                 downX = moveX;
                 downY = moveY;
                 //横向滑动程度大于竖向滑动程度，横向滑动超过一定距离，选中当前ITEM，并且拦截竖直滑动，直到UP之后
-                if (isLongPress||isSelectMoving || (!moveV && dx > touchSlop && dx > dy)) {
+                if (isLongPress || isSelectMoving || moveH) {
                     View child = findChildViewUnder(moveX, moveY);
                     if (child != null) {
                         int position = getChildAdapterPosition(child);
@@ -207,69 +205,66 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 //                            LogUtils.log("isSelectMoving",position);
                             isSelectMoving = true;
                             if (position == position_start)
-                                dragSelectorAdapter.select(position, !cancelSelect && !downSelected,this);
-                            if (!inTopScrollRange && !inBottomScrollRange)
-                                updateSelectedRange(moveX, moveY);
-                            //注意：MOVE事件，手指超出当前VIEW的边界后，如果在VIEW边界上面，Y是负数，如果在VIEW边界下面，Y比VIEW的高度大
-                            int y = (int) event.getY();
-                            //手指在列表顶部，列表下滑
-                            if (y >= topBoundFrom && y <= topBoundTo) {
-                                x_last = event.getX();
-                                y_last = event.getY();
-                                scrollSpeedFactor = (((float) topBoundTo - (float) topBoundFrom) - ((float) y - (float) topBoundFrom))
-                                        / ((float) topBoundTo - (float) topBoundFrom);
-                                scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor * -1f);
-                                if (!inTopScrollRange) {
-                                    inTopScrollRange = true;
-                                    startAutoScroll();
-                                }
-                                //手指在列表最顶部外面，列表最大速度下滑
-                            } else if (y < topBoundFrom) {
-                                x_last = event.getX();
-                                y_last = event.getY();
-                                scrollDistance = maxScrollDistance * -1;
-                                if (!inTopScrollRange) {
-                                    inTopScrollRange = true;
-                                    startAutoScroll();
-                                }
-                                //手指在列表底部，列表上滑
-                            } else if (y >= bottomBoundFrom && y <= bottomBoundTo) {
-                                x_last = event.getX();
-                                y_last = event.getY();
-                                scrollSpeedFactor = (((float) y - (float) bottomBoundFrom)) / ((float) bottomBoundTo - (float) bottomBoundFrom);
-                                scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor);
-                                if (!inBottomScrollRange) {
-                                    inBottomScrollRange = true;
-                                    startAutoScroll();
-                                }
-                                //手指在列表最底部外面，列表最大速度上滑
-                            } else if (y > bottomBoundTo) {
-                                x_last = event.getX();
-                                y_last = event.getY();
-                                scrollDistance = maxScrollDistance;
-                                if (!inBottomScrollRange) {
-                                    inBottomScrollRange = true;
-                                    startAutoScroll();
-                                }
-                            } else {
-                                inTopScrollRange = false;
-                                inBottomScrollRange = false;
-                                x_last = -1;
-                                y_last = -1;
-                                stopAutoScroll();
-                            }
+//                                dragSelectorAdapter.select(position, !cancelSelect && !downSelected, this);
+                                dragSelectorAdapter.select(position, !downSelected, this);
+                        }
+                    }
+                    //注意：MOVE事件，手指超出当前VIEW的边界后，如果在VIEW边界上面，Y是负数，如果在VIEW边界下面，Y比VIEW的高度大
+                    //手指在列表顶部，列表下滑
+                    if (!moveH && moveY >= topBoundFrom && moveY <= topBoundTo) {
+                        x_last = moveX;
+                        y_last = moveY;
+                        scrollSpeedFactor = (((float) topBoundTo - (float) topBoundFrom) - (moveY - (float) topBoundFrom))
+                                / ((float) topBoundTo - (float) topBoundFrom);
+                        scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor * -1f);
+                        if (!inTopScrollRange) {
+                            inTopScrollRange = true;
+                            startAutoScroll();
+                        }
+                        //手指在列表最顶部外面，列表最大速度下滑
+                    } else if (!moveH && moveY < topBoundFrom) {
+                        x_last = moveX;
+                        y_last = moveY;
+                        scrollDistance = maxScrollDistance * -1;
+                        if (!inTopScrollRange) {
+                            inTopScrollRange = true;
+                            startAutoScroll();
+                        }
+                        //手指在列表底部，列表上滑
+                    } else if (!moveH && moveY >= bottomBoundFrom && moveY <= bottomBoundTo) {
+                        x_last = moveX;
+                        y_last = moveY;
+                        scrollSpeedFactor = ((moveY - (float) bottomBoundFrom)) / ((float) bottomBoundTo - (float) bottomBoundFrom);
+                        scrollDistance = (int) ((float) maxScrollDistance * scrollSpeedFactor);
+                        if (!inBottomScrollRange) {
+                            inBottomScrollRange = true;
+                            startAutoScroll();
+                        }
+                        //手指在列表最底部外面，列表最大速度上滑
+                    } else if (!moveH && moveY > bottomBoundTo) {
+                        x_last = moveX;
+                        y_last = moveY;
+                        scrollDistance = maxScrollDistance;
+                        if (!inBottomScrollRange) {
+                            inBottomScrollRange = true;
+                            startAutoScroll();
                         }
                     } else {
-//                        LogUtils.log("child==null");
-                        updateSelectedRange(moveX, moveY);
+                        inTopScrollRange = false;
+                        inBottomScrollRange = false;
+                        x_last = -1;
+                        y_last = -1;
+                        stopAutoScroll();
                     }
+//                    if (!inTopScrollRange && !inBottomScrollRange)
+                    updateSelectedRange(moveX, moveY);
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 isLongPress = false;
-                isSelectMoving=false;
+                isSelectMoving = false;
 
                 position_start = NO_POSITION;
                 position_end = NO_POSITION;
@@ -280,22 +275,23 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 scrollDistance = 0;
                 x_last = -1;
                 y_last = -1;
-                y_end_bottom = -1;
                 stopAutoScroll();
                 break;
         }
         //ACTION_UP ACTION_CANCEL 等也要拦截，否则会导致itemview如果只有down和up就成了itemview单击了，应该把up拦截掉，
-        if (isLongPress || isSelectMoving){
+        if (isLongPress || isSelectMoving) {
             //需要防止被刷新控件拦截
             requestDisallowInterceptTouchEvent();
             return true;
         }
         return super.dispatchTouchEvent(event);
     }
+
     private void requestDisallowInterceptTouchEvent() {
         final ViewParent parent = getParent();
         if (parent != null) parent.requestDisallowInterceptTouchEvent(true);
     }
+
     private void startAutoScroll() {
         if (overScroller.isFinished()) {
             removeCallbacks(runnableScroll);
@@ -320,17 +316,17 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             if (position != NO_POSITION && position != position_end) {
                 position_end = position;
             }
-            y_end_bottom = child.getBottom();
-            //如果正在触发滚动中，上滑，且不能再上滑
-        } else if ((scrollDistance > 0 || y > y_end_bottom) && !canScrollVertically(1)) {
+            //上滑，且不能再上滑，手指超出边界，选中最后一个，这里暂且不做findLastVisibleItemPositions处理，因为我懒得做了，烦躁 damn
+        } else if (y > getHeight() && !canScrollVertically(1)) {
 //            LogUtils.log("canScrollVertically(1)");
             position_end = dragSelectorAdapter.getList_bean().size() - 1;
             //防止NO_POSITION导致全选，即使手指按下，在空白处滑动，依然能switch最后一个ITEM，其实这样体验更丝滑，华为手机系统相册就是真么干的
 //            position_start = Math.max(NO_POSITION, position_end);
             //如果正在触发滚动中，下滑，且不能再下滑
-        } else if (scrollDistance < 0 && !canScrollVertically(-1)) {
+        } else if (y < 0 && !canScrollVertically(-1)) {
 //            LogUtils.log("canScrollVertically(----1)");
-            position_end = 0;  问题出在这  长按第一个item很容易进入这里导致BUG
+//            问题出在这  长按第一个item很容易scrollDistance < 0进入这里导致BUG
+            position_end = 0;
             //防止NO_POSITION导致全选
 //            position_start = Math.max(NO_POSITION, position_end);
         }
@@ -354,11 +350,11 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             if (newEnd - newStart == 1) {
                 LogUtils.log("selectRange", "newEnd - newStart == 1");
                 dragSelectorAdapter.selectRange(newStart, newStart,
-                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
+                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
             } else {
                 LogUtils.log("selectRange", "newEnd - newStart !!!!= 1");
                 dragSelectorAdapter.selectRange(newStart, newEnd,
-                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
+                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
             }
         } else {
             if (newStart > position_start_last) {
@@ -369,8 +365,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 LogUtils.log("selectRange     newEnd", newEnd);
 
                 LogUtils.log("selectRange", "newStart > position_start_last");
-                cancelSelect = true;
-                dragSelectorAdapter.selectRange(position_start_last, newStart - 1, false,this);
+                dragSelectorAdapter.selectRange(position_start_last, newStart - 1, false, this);
             } else if (newStart < position_start_last) {
                 LogUtils.log("selectRange  scrollDistance", scrollDistance);
                 LogUtils.log("selectRange position_start", position_start);
@@ -379,10 +374,10 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 LogUtils.log("selectRange     newEnd", newEnd);
 
                 LogUtils.log("selectRange", "newStart < position_start_last");
+//                cancelSelect = true;
                 dragSelectorAdapter.selectRange(newStart, position_start_last - 1,
-                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
-            }
-            if (newEnd > position_end_last) {
+                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
+            } else if (newEnd > position_end_last) {
                 LogUtils.log("selectRange  scrollDistance", scrollDistance);
                 LogUtils.log("selectRange position_start", position_start);
                 LogUtils.log("selectRange    position_end", position_end);
@@ -391,7 +386,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 
                 LogUtils.log("selectRange", "newEnd > position_end_last");
                 dragSelectorAdapter.selectRange(position_end_last + 1, newEnd,
-                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected,this);
+                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
             } else if (newEnd < position_end_last) {
                 LogUtils.log("selectRange  scrollDistance", scrollDistance);
                 LogUtils.log("selectRange position_start", position_start);
@@ -400,8 +395,8 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 LogUtils.log("selectRange     newEnd", newEnd);
 
                 LogUtils.log("selectRange", "newEnd < position_end_last");
-                cancelSelect = true;
-                dragSelectorAdapter.selectRange(newEnd + 1, position_end_last, false,this);
+//                cancelSelect = true;
+                dragSelectorAdapter.selectRange(newEnd, position_end_last, false, this);
             }
         }
         position_start_last = newStart;

@@ -34,10 +34,8 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public void startDragSelect(int position) {
-        boolean b = usingSelector;
         usingSelector = true;
         toggleNoNotify(position);
-        if (b) return;
         dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT);
     }
 
@@ -75,7 +73,9 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     public void toggle(final int position, @NonNull RecyclerView recyclerView) {
         toggleNoNotify(position);
-        bindDataToView((BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position), position,
+        BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        if (baseViewHolder == null) return;
+        bindDataToView(baseViewHolder, position,
                 getList_bean().get(position), sparseArraySelector.contains(position),
                 new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
     }
@@ -97,9 +97,10 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     public void select(final int position, boolean select, @NonNull RecyclerView recyclerView) {
         if (selectNoNotify(position, select)) return;
+        BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        if (baseViewHolder == null) return;
         //不刷新，防止闪烁（选择的时候，一般会加蒙版，刷新会导致蒙版闪烁厉害）， 直接回调bindDataToView
-        bindDataToView((BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position),
-                position, getList_bean().get(position), select,
+        bindDataToView(baseViewHolder, position, getList_bean().get(position), select,
                 new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
     }
 
@@ -111,16 +112,19 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
      * 13:25:54.348 14773-14773 selectRange                         com...pter  E  ----------------------------------->>>>1:1:true
      * 13:25:54.580 14773-14773 selectRange                         com...pter  E  ----------------------------------->>>>1:1:false
      * 13:25:54.630 14773-14773 selectRange                         com...pter  E  ----------------------------------->>>>1:2:true
+     *
      * @param start
      * @param end
      * @param isSelected
      * @param recyclerView
      */
     public void selectRange(final int start, final int end, boolean isSelected, @NonNull RecyclerView recyclerView) {
-        LogUtils.log("selectRange",start+":"+end+":"+isSelected);
+        LogUtils.log("selectRange", start + ":" + end + ":" + isSelected);
         for (int i = start; i <= end; i++) {
             if (selectNoNotify(i, isSelected)) continue;
-            bindDataToView((BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(i), i, getList_bean().get(i),
+            BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+            if (baseViewHolder == null) continue;
+            bindDataToView(baseViewHolder, i, getList_bean().get(i),
                     isSelected, new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
         }
     }

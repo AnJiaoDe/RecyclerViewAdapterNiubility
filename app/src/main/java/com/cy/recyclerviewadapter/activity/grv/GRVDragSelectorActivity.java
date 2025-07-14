@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cy.androidview.ScreenUtils;
 import com.cy.androidview.selectorview.ImageViewSelector;
 import com.cy.recyclerviewadapter.BaseActivity;
+import com.cy.recyclerviewadapter.GlideUtils;
 import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
@@ -35,7 +36,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grvdrag_selector);
         List<HRVBean> list = new ArrayList<>();
-        for (int i = 0; i < 102; i++) {
+        for (int i = 0; i < 101; i++) {
             if (i % 5 == 0) {
                 list.add(new HRVBean(R.drawable.pic3));
                 continue;
@@ -71,22 +72,26 @@ public class GRVDragSelectorActivity extends BaseActivity {
 
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected, @NonNull List<Object> payloads) {
-                LogUtils.log("bindDataToView", position + ":" + isSelected);
-                holder.setImageResource(R.id.iv, bean.getResID());
-                holder.setVisibility(R.id.ivs, isUsingSelector() ? View.VISIBLE : View.GONE);
-//                holder.setImageResource(R.id.ivs, isSelected ? R.drawable.cb_selected_rect_blue : R.drawable.cb_unselected_rect_white);
+                LogUtils.log("bindDataToView", position + ":" + isSelected + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
+                holder.setVisibility(R.id.layout_check, isUsingSelector() ? View.VISIBLE : View.GONE);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
-//                LogUtils.log("getTag",position+":::::"+imageViewSelector.getTag());
-//                imageViewSelector.setTag(position);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
-                        LogUtils.log("onCheckedChanged", position);
+                        LogUtils.log("bindDataToView onCheckedChanged", position+":"+isChecked);
+                        //长按第一个ITEM后右滑然后左滑到第2个ITEM，第2个ITEM疯狂回调 导致疯狂闪烁
+                        holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
                         selectNoNotify(position, isChecked);
                     }
                 });
+                holder.setVisibility(R.id.view_mask, isSelected ? View.VISIBLE : View.GONE);
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
                 imageViewSelector.setChecked(isSelected);
+
+                //在bindDataToView 中，判断payloads是否有NOTIFY_START_DRA_SELECT 决定是否只更新item的选择框，不更新item的图片等较为耗时的操作
+                if (!payloads.isEmpty() && NOTIFY_STATE_DRAG_SELECT.equals(payloads.get(0))) return;
+
+                holder.setImageResource(R.id.iv,bean.getResID());
             }
 
             @Override
@@ -110,7 +115,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
             }
         };
         verticalGridRecyclerView.setSpanCount(3)
-                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 6)));
+                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 20)));
         verticalGridRecyclerView.dragSelector(dragSelectorAdapter)
                 .setAdapter(dragSelectorAdapter);
         dragSelectorAdapter.add(list);
