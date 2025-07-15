@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
@@ -110,18 +111,11 @@ public class GRVPicRefreshActivity extends BaseActivity {
         });
 
         dragSelectorAdapter = new DragSelectorAdapter<String>() {
-            /**
-             *这个是专供间隔均分的Grid布局和Staggered布局使用的，只要有一项数据不完全一样，就必须notifydatasetchanged，否则间隔错乱
-             */
+            //不刷新，直接回调bindDataToView
             @Override
-            public boolean areItemsTheSameToItemDecoration(String beanOld, String beanNew) {
+            public boolean areItemsTheSame(String beanOld, String beanNew) {
                 return beanOld.equals(beanNew);
             }
-//            //不刷新，直接回调bindDataToView
-//            @Override
-//            public boolean areItemsTheSame(String beanOld, String beanNew) {
-//                return beanOld.equals(beanNew);
-//            }
 //
 //            //不刷新，直接回调bindDataToView
 //            @Override
@@ -149,8 +143,21 @@ public class GRVPicRefreshActivity extends BaseActivity {
                 }
             }
 
+            @Nullable
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean, boolean isSelected, @NonNull List<Object> payloads) {
+            public Object setHolderTagPreBindData(@NonNull BaseViewHolder holder, int position, String bean) {
+                return bean;
+            }
+
+            @Override
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, boolean isSelected, @NonNull List<Object> payloads) {
+                LogUtils.log("bindDataToView tag", holder.getTag());
+                /**
+                 * 有loadMore时，会导致findViewHolderForAdapterPosition 出来的BaseViewHolder是复用的loadMore的，故而在使用时，如果有LOADMORE，
+                 *      * 必须手动判断BaseViewHolder里的布局是不是正常的（可以直接设置tag，然后判断tag）
+                 */
+                if(!bean.equals(holder.getTag()))return;
+                
                 LogUtils.log("bindDataToView", position + ":" + isSelected + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
                 holder.setVisibility(R.id.layout_check, isUsingSelector() ? View.VISIBLE : View.GONE);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
@@ -177,7 +184,6 @@ public class GRVPicRefreshActivity extends BaseActivity {
             public int getItemLayoutID(int position, String bean) {
                 return R.layout.item_grv_drag_selector;
             }
-
 
             @Override
             public void onItemClick(BaseViewHolder holder, int position, String bean) {

@@ -1,5 +1,6 @@
 package com.cy.rvadapterniubility.adapter;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.util.SparseArray;
 
@@ -7,10 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.cy.rvadapterniubility.LogUtils;
-import com.cy.rvadapterniubility.ThreadUtils;
-import com.cy.rvadapterniubility.recyclerview.DragSelectRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +71,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     public void toggle(final int position, @NonNull RecyclerView recyclerView) {
         toggleNoNotify(position);
         BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
-        if (baseViewHolder == null) return;
+        if (baseViewHolder == null || position < 0 || position >= getList_bean().size()) return;
         bindDataToView(baseViewHolder, position,
                 getList_bean().get(position), sparseArraySelector.contains(position),
                 new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
@@ -96,7 +93,8 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public void select(final int position, boolean select, @NonNull RecyclerView recyclerView) {
-        if (selectNoNotify(position, select)) return;
+        if (position < 0 || position >= getList_bean().size() || selectNoNotify(position, select))
+            return;
         BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         if (baseViewHolder == null) return;
         //不刷新，防止闪烁（选择的时候，一般会加蒙版，刷新会导致蒙版闪烁厉害）， 直接回调bindDataToView
@@ -109,23 +107,20 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     /**
-     * 13:25:54.348 14773-14773 selectRange                         com...pter  E  ----------------------------------->>>>1:1:true
-     * 13:25:54.580 14773-14773 selectRange                         com...pter  E  ----------------------------------->>>>1:1:false
-     * 13:25:54.630 14773-14773 selectRange                         com...pter  E  ----------------------------------->>>>1:2:true
-     *
+     *直接notifyitemchange是肯定不灵的，会导致间隔均分失败，如果有loadMore布局，会出现item占满一行的情况，GG
+     *然而必须注意：有loadMore时，会导致findViewHolderForAdapterPosition 出来的BaseViewHolder是复用的loadMore的，故而在使用时，如果有LOADMORE，
+     * 必须手动判断BaseViewHolder里的布局是不是正常的（可以直接设置tag，然后判断tag）
      * @param start
      * @param end
      * @param isSelected
      * @param recyclerView
      */
     public void selectRange(final int start, final int end, boolean isSelected, @NonNull RecyclerView recyclerView) {
-        LogUtils.log("selectRange", start + ":" + end + ":" + isSelected);
         for (int i = start; i <= end; i++) {
-            if (selectNoNotify(i, isSelected)) continue;
+            if (i < 0 || i >= getList_bean().size() || selectNoNotify(i, isSelected)) continue;
             BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
             if (baseViewHolder == null) continue;
-            bindDataToView(baseViewHolder, i, getList_bean().get(i),
-                    isSelected, new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
+            bindDataToView(baseViewHolder, i, getList_bean().get(i), isSelected, new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
         }
     }
 
@@ -140,7 +135,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
      * ----------------这个不能在使用的时候实现了，否则会导致回调2次长按事件，因为在DragRecyclerView中也做了长按回调------------------------------------------------------------------
      */
     @Override
-    public final void onItemLongClick(BaseViewHolder holder, int position, T bean) {
+    public final void onItemLongClick(@NonNull BaseViewHolder holder, int position, T bean) {
 
     }
 
@@ -160,6 +155,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         }
 
         public void put(int position) {
+            if (position < 0 || position >= getList_bean().size()) return;
             sparseArray.put(position, getList_bean().get(position));
             notifyCountSelected();
         }

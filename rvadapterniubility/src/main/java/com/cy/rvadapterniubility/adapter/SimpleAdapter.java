@@ -125,11 +125,11 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         });
     }
 
-    public abstract void bindDataToView(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads);
+    public abstract void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads);
 
     public abstract int getItemLayoutID(int position, T bean);
 
-    public abstract void onItemClick(BaseViewHolder holder, int position, T bean);
+    public abstract void onItemClick(@NonNull BaseViewHolder holder, int position, T bean);
 
     /**
      * 先于setHolderTagPreBindData被调用，可以在此处回收tag对应的数据，比如bitmap，
@@ -150,23 +150,23 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * @return
      */
     @Nullable
-    public Object setHolderTagPreBindData(BaseViewHolder holder, int position, T bean) {
+    public Object setHolderTagPreBindData(@NonNull BaseViewHolder holder, int position, T bean) {
         return null;
     }
 
-    public void onItemLongClick(BaseViewHolder holder, int position, T bean) {
+    public void onItemLongClick(@NonNull BaseViewHolder holder, int position, T bean) {
 
     }
 
-    public final void onItemMove__(int fromPosition, int toPosition, RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
+    public final void onItemMove__(int fromPosition, int toPosition,@NonNull RecyclerView.ViewHolder srcHolder,@NonNull RecyclerView.ViewHolder targetHolder) {
         onItemMove(fromPosition, toPosition, (BaseViewHolder) srcHolder, (BaseViewHolder) targetHolder);
     }
 
-    public void onItemMove(int fromPosition, int toPosition, BaseViewHolder srcHolder, BaseViewHolder targetHolder) {
+    public void onItemMove(int fromPosition, int toPosition,@NonNull BaseViewHolder srcHolder,@NonNull BaseViewHolder targetHolder) {
 
     }
 
-    public void startDefaultAttachedAnim(BaseViewHolder holder) {
+    public void startDefaultAttachedAnim(@NonNull BaseViewHolder holder) {
 
         final ObjectAnimator objectAnimator_scaleX = ObjectAnimator.ofFloat(holder.itemView, "scaleX", 0.5f, 1);
 
@@ -255,8 +255,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     /**
      * 注意引用问题，listNew引用坚决不能和List_bean一致，否则GG
      * //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
-     * 这个是专供间隔均分的Grid布局和Staggered布局使用的，只要有一项数据不完全一样，就必须notifydatasetchanged，否则间隔错乱
-     *
+     * 这个是专供间隔均分的Grid布局和Staggered布局使用的，只要数据有增删和位移，就必须notifydatasetchanged，否则间隔错乱
      * @param listNew
      */
     public void dispatchUpdatesToItemDecoration(@NonNull final List<T> listNew) {
@@ -265,7 +264,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             public Boolean runThread() {
                 if (list_bean.size() == listNew.size()) {
                     for (int i = 0; i < list_bean.size(); i++) {
-                        if (!areItemsTheSameToItemDecoration(list_bean.get(i), listNew.get(i)))
+                        if (!areItemsTheSame(list_bean.get(i), listNew.get(i)))
                             return true;
                     }
                     return false;
@@ -275,7 +274,11 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
             @Override
             public void runUIThread(Boolean refresh) {
-                if (refresh) clearAdd(listNew);
+                if (refresh) {
+                    clearAdd(listNew);
+                }else {
+                    dispatchUpdatesTo(listNew);
+                }
             }
         });
     }
@@ -332,13 +335,12 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * @param beanNew
      * @return
      */
-    public boolean areItemsTheSameToItemDecoration(T beanOld, T beanNew) {
-        return false;
-    }
+//    public boolean areItemsTheSameWithItemDecoration(T beanOld, T beanNew) {
+//        return false;
+//    }
 
     /**
      * 如果要用diffutil,尽量返回true,可以避免当前item被刷新，返回false的话，areContentsTheSame和getChangePayload不再回调
-     *
      * @param beanOld
      * @param beanNew
      * @return
@@ -349,7 +351,6 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     /**
      * 返回false的话，getChangePayload不再回调
-     *
      * @param beanOld
      * @param beanNew
      * @return
