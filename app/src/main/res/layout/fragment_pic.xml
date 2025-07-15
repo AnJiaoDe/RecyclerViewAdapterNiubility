@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:id="@+id/layout_menu"
+        android:visibility="gone"
+        android:background="#999999">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:id="@+id/iv_close"
+            android:src="@drawable/close_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:id="@+id/tv_count"
+            android:textColor="@color/white"
+            android:text="已选择0项"
+            android:layout_toLeftOf="@+id/ivs"
+            android:layout_height="match_parent"/>
+        <com.cy.androidview.selectorview.ImageViewSelector
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:id="@+id/ivs"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:cy_srcChecked="@drawable/cb_selected_rect_blue"
+            app:cy_srcUnChecked="@drawable/cb_unselected_rect_white" />
+    </RelativeLayout>
+    <com.cy.rvadapterniubility.refreshrv.GridRefreshLayout
+        android:id="@+id/grl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.cy.rvadapterniubility.refreshrv.GridRefreshLayout>
+</LinearLayout>

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 
@@ -75,8 +76,8 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 position_start_last = position;
                 position_end_last = position;
 
-                BaseViewHolder baseViewHolder=(BaseViewHolder) findViewHolderForAdapterPosition(position);
-                if(baseViewHolder==null)return;
+                BaseViewHolder baseViewHolder = (BaseViewHolder) findViewHolderForAdapterPosition(position);
+                if (baseViewHolder == null) return;
                 dragSelectorAdapter.onItemLongClick__(baseViewHolder,
                         position, dragSelectorAdapter.getList_bean().get(position));
             }
@@ -160,6 +161,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
+                LogUtils.log("dispatchTouchEvent","ACTION_DOWN");
                 isLongPress = false;
                 isSelectMoving = false;
                 downX = event.getX();
@@ -275,6 +277,23 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             return true;
         }
         return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        //ACTION_UP ACTION_CANCEL 等也要拦截，否则会导致itemview如果只有down和up就成了itemview单击了，应该把up拦截掉，
+        if (isLongPress || isSelectMoving) {
+            //需要防止被刷新控件拦截
+            requestDisallowInterceptTouchEvent();
+            return true;
+        }
+        return super.onInterceptTouchEvent(event);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+
+        return super.onTouchEvent(ev);
     }
 
     private void requestDisallowInterceptTouchEvent() {
