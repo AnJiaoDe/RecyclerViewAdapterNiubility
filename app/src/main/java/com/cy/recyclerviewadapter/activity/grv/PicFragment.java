@@ -1,6 +1,7 @@
 package com.cy.recyclerviewadapter.activity.grv;
 
 import android.app.Service;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.cy.androidview.selectorview.ImageViewSelector;
 import com.cy.recyclerviewadapter.BaseFragment;
 import com.cy.recyclerviewadapter.GlideUtils;
 import com.cy.recyclerviewadapter.LogUtils;
+import com.cy.recyclerviewadapter.MainActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
@@ -119,8 +121,9 @@ public class PicFragment extends BaseFragment {
             }
 
             @Override
-            public void onItemClick(BaseViewHolder holder, int position, String bean) {
+            public void onItemClick__(BaseViewHolder holder, int position, String bean) {
                 showToast("点击" + position);
+                startActivity(new Intent(activity, MainActivity.class));
             }
 
             @Override
@@ -163,6 +166,7 @@ public class PicFragment extends BaseFragment {
                 dragSelectorAdapter.stopDragSelect();
             }
         });
+
         gridRefreshLayout.getRecyclerView().setSpanCount(3)
                 .dragSelector(dragSelectorAdapter)
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(activity, 12)));

@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|bottom"
-            android:padding="10dp"
+            android:padding="20dp"
             app:cy_srcChecked="@drawable/cb_selected_rect_blue"
             app:cy_srcUnChecked="@drawable/cb_unselected_rect_white" />
     </FrameLayout>

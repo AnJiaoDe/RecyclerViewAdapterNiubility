@@ -3,6 +3,7 @@ package com.cy.recyclerviewadapter.activity.grv;
 import static com.cy.recyclerviewadapter.ToastUtils.showToast;
 
 import android.app.Service;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.cy.androidview.selectorview.ImageViewSelector;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.GlideUtils;
 import com.cy.recyclerviewadapter.LogUtils;
+import com.cy.recyclerviewadapter.MainActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
@@ -99,10 +101,10 @@ public class GRVDragSelectorActivity extends BaseActivity {
                 return R.layout.item_grv_drag_selector;
             }
 
-
             @Override
-            public void onItemClick(BaseViewHolder holder, int position, HRVBean bean) {
+            public void onItemClick__(BaseViewHolder holder, int position, HRVBean bean) {
                 showToast("点击" + position);
+                startActivity(new Intent(GRVDragSelectorActivity.this, MainActivity.class));
             }
 
             @Override

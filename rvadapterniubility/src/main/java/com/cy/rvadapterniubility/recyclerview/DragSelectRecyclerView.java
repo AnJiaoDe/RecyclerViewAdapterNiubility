@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
-import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 
@@ -50,6 +48,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     private int autoScrollDistance = (int) (Resources.getSystem().getDisplayMetrics().density * 56);
     private boolean downSelected = false;
     private boolean cancelSelect = false;
+    private boolean dx_dy = false;
 
     public DragSelectRecyclerView(Context context) {
         //注意是this,否则GG
@@ -138,7 +137,6 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
      * @param event The motion event to be dispatched.
      * @return
      */
-
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (dragSelectorAdapter == null || dragSelectorAdapter.getList_bean().isEmpty())
@@ -161,11 +159,12 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
-                LogUtils.log("dispatchTouchEvent","ACTION_DOWN");
+                dragSelectorAdapter.canItemClick(true);
                 isLongPress = false;
                 isSelectMoving = false;
                 downX = event.getX();
                 downY = event.getY();
+                dx_dy = false;
                 downSelected = false;
                 cancelSelect = false;
                 scrollDistance = 0;
@@ -187,6 +186,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 final float moveY = event.getY();
                 float dx = Math.abs(moveX - downX);
                 float dy = Math.abs(moveY - downY);
+                dx_dy = dx > dy;
                 boolean moveH = dx > touchSlop && dx > dy;
                 downX = moveX;
                 downY = moveY;
@@ -197,6 +197,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                         int position = getChildAdapterPosition(child);
                         if (position != NO_POSITION) {
                             isSelectMoving = true;
+                            dragSelectorAdapter.canItemClick(false);
                             if (position == position_start)
                                 dragSelectorAdapter.select(position, !cancelSelect && !downSelected, this);
                         }
@@ -271,29 +272,13 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 break;
         }
         //ACTION_UP ACTION_CANCEL 等也要拦截，否则会导致itemview如果只有down和up就成了itemview单击了，应该把up拦截掉，
-        if (isLongPress || isSelectMoving) {
+        //如果dx>dy，必须要求父控件（如Viewpager）不拦截，否则会导致无法接受下一次的MOVE，导致无法滑动选择
+        if (isLongPress || isSelectMoving || dx_dy) {
             //需要防止被刷新控件拦截
             requestDisallowInterceptTouchEvent();
             return true;
         }
         return super.dispatchTouchEvent(event);
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        //ACTION_UP ACTION_CANCEL 等也要拦截，否则会导致itemview如果只有down和up就成了itemview单击了，应该把up拦截掉，
-        if (isLongPress || isSelectMoving) {
-            //需要防止被刷新控件拦截
-            requestDisallowInterceptTouchEvent();
-            return true;
-        }
-        return super.onInterceptTouchEvent(event);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-
-        return super.onTouchEvent(ev);
     }
 
     private void requestDisallowInterceptTouchEvent() {
@@ -337,29 +322,42 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         newStart = Math.min(position_start, position_end);
         newEnd = Math.max(position_start, position_end);
 
-//        if (position_start_last == NO_POSITION || position_end_last == NO_POSITION) {
-//            if (newEnd - newStart == 1) {
-//                dragSelectorAdapter.selectRange(newStart, newStart,
-//                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
-//            } else {
-//                dragSelectorAdapter.selectRange(newStart, newEnd,
-//                        isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
-//            }
-//        } else {
         if (newStart > position_start_last) {
             //往上往前拖动的前提下   再往后往下拖动，会触发
+//            LogUtils.log("selectRange position_start", position_start);
+//            LogUtils.log("selectRange    position_end", position_end);
+//            LogUtils.log("selectRange newStart", newStart);
+//            LogUtils.log("selectRange     newEnd", newEnd);
+//            LogUtils.log("selectRange", "newStart > position_start_last");
             cancelSelect = true;
             dragSelectorAdapter.selectRange(position_start_last, newStart, false, this);
         } else if (newStart < position_start_last) {
             //往前往上拖动
+//            LogUtils.log("selectRange position_start", position_start);
+//            LogUtils.log("selectRange    position_end", position_end);
+//            LogUtils.log("selectRange newStart", newStart);
+//            LogUtils.log("selectRange     newEnd", newEnd);
+//            LogUtils.log("selectRange", "newStart < position_start_last");
             dragSelectorAdapter.selectRange(newStart, position_start_last - 1,
                     isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
-        } else if (newEnd > position_end_last) {
+        }
+        //注意：这里不是else if 而是if,否则GG
+        if (newEnd > position_end_last) {
             // 往下往后拖动
+//            LogUtils.log("selectRange position_start", position_start);
+//            LogUtils.log("selectRange    position_end", position_end);
+//            LogUtils.log("selectRange newStart", newStart);
+//            LogUtils.log("selectRange     newEnd", newEnd);
+//            LogUtils.log("selectRange", "newEnd > position_end_last");
             dragSelectorAdapter.selectRange(position_end_last + 1, newEnd,
                     isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
         } else if (newEnd < position_end_last) {
             //往下往后拖动的前提下   再往前往上拖动，会触发
+//            LogUtils.log("selectRange position_start", position_start);
+//            LogUtils.log("selectRange    position_end", position_end);
+//            LogUtils.log("selectRange newStart", newStart);
+//            LogUtils.log("selectRange     newEnd", newEnd);
+//            LogUtils.log("selectRange", "newEnd < position_end_last");
             cancelSelect = true;
             dragSelectorAdapter.selectRange(newEnd, position_end_last, false, this);
         }

@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +18,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     private boolean usingSelector = false;
     private SparseArraySelector sparseArraySelector;
     protected final String NOTIFY_STATE_DRAG_SELECT = "NOTIFY_STATE_DRAG_SELECT";
+    private boolean canItemClick = true;
 
     public DragSelectorAdapter() {
         sparseArraySelector = new SparseArraySelector();
@@ -107,15 +109,17 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     /**
-     *直接notifyitemchange是肯定不灵的，会导致间隔均分失败，如果有loadMore布局，会出现item占满一行的情况，GG
-     *然而必须注意：有loadMore时，会导致findViewHolderForAdapterPosition 出来的BaseViewHolder是复用的loadMore的，故而在使用时，如果有LOADMORE，
+     * 直接notifyitemchange是肯定不灵的，会导致间隔均分失败，如果有loadMore布局，会出现item占满一行的情况，GG
+     * 然而必须注意：有loadMore时，会导致findViewHolderForAdapterPosition 出来的BaseViewHolder是复用的loadMore的，故而在使用时，如果有LOADMORE，
      * 必须手动判断BaseViewHolder里的布局是不是正常的（可以直接设置tag，然后判断tag）
+     *
      * @param start
      * @param end
      * @param isSelected
      * @param recyclerView
      */
     public void selectRange(final int start, final int end, boolean isSelected, @NonNull RecyclerView recyclerView) {
+//        LogUtils.log("selectRange", start + ":" + end + ":" + isSelected);
         for (int i = start; i <= end; i++) {
             if (i < 0 || i >= getList_bean().size() || selectNoNotify(i, isSelected)) continue;
             BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
@@ -141,7 +145,24 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     public abstract void onItemLongClick__(BaseViewHolder holder, int position, T bean);
 
+    /**
+     * @param holder
+     * @param position
+     * @param bean
+     */
+    @Override
+    public final void onItemClick(@NonNull BaseViewHolder holder, int position, T bean) {
+        if (!canItemClick) return;
+        onItemClick__(holder, position, bean);
+    }
+
+    public abstract void onItemClick__(BaseViewHolder holder, int position, T bean);
+
     public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
+
+    public void canItemClick(boolean canItemClick) {
+        this.canItemClick = canItemClick;
+    }
 
     public class SparseArraySelector {
         private final SparseArray<T> sparseArray;
