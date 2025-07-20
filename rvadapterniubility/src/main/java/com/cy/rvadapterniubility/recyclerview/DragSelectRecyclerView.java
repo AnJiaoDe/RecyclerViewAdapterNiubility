@@ -117,6 +117,13 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     }
 
     @Override
+    public void setAdapter(@Nullable Adapter adapter) {
+        if(adapter instanceof DragSelectorAdapter&& this.dragSelectorAdapter==null)
+            throw new IllegalStateException("must call dragSelector(DragSelectorAdapter dragSelectorAdapter) first!");
+        super.setAdapter(adapter);
+    }
+
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         int height = getHeight();
