@@ -110,12 +110,16 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             }
         };
     }
-
     public T dragSelector(DragSelectorAdapter dragSelectorAdapter) {
         this.dragSelectorAdapter = dragSelectorAdapter;
         return (T) this;
     }
 
+    /**
+     * 何故不能直接判断是否是dragSelectorAdapter，然后直接强转呢？因为有些Adapter是ConcatAdapter,
+     * dragSelectorAdapter只是ConcatAdapter的其中一个
+     * @param adapter The new adapter to set, or null to set no adapter.
+     */
     @Override
     public void setAdapter(@Nullable Adapter adapter) {
         if(adapter instanceof DragSelectorAdapter&& this.dragSelectorAdapter==null)

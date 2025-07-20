@@ -80,7 +80,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
-                        LogUtils.log("bindDataToView onCheckedChanged", position+":"+isChecked);
+                        LogUtils.log("bindDataToView onCheckedChanged", position + ":" + isChecked);
                         //长按第一个ITEM后右滑然后左滑到第2个ITEM，第2个ITEM疯狂回调 导致疯狂闪烁
                         holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
                         selectNoNotify(position, isChecked);
@@ -93,7 +93,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
                 //在bindDataToView 中，判断payloads是否有NOTIFY_START_DRA_SELECT 决定是否只更新item的选择框，不更新item的图片等较为耗时的操作
                 if (!payloads.isEmpty() && NOTIFY_STATE_DRAG_SELECT.equals(payloads.get(0))) return;
 
-                holder.setImageResource(R.id.iv,bean.getResID());
+                holder.setImageResource(R.id.iv, bean.getResID());
             }
 
             @Override
@@ -118,8 +118,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
         };
         verticalGridRecyclerView.setSpanCount(3)
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 20)));
-        verticalGridRecyclerView.dragSelector(dragSelectorAdapter)
-                .setAdapter(dragSelectorAdapter);
+        verticalGridRecyclerView.dragSelector(dragSelectorAdapter).setAdapter(dragSelectorAdapter);
         dragSelectorAdapter.add(list);
 
         findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
