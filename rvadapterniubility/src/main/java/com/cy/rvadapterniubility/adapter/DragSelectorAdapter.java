@@ -21,6 +21,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     private boolean canItemClick = true;
 
     public DragSelectorAdapter() {
+        super();
         sparseArraySelector = new SparseArraySelector();
     }
 
@@ -32,6 +33,17 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         return usingSelector;
     }
 
+    /**
+     * 图片选择器用这个
+     */
+    public void startDragSelect() {
+        usingSelector = true;
+    }
+
+    /**
+     * 相册长按打开选择菜单  用这个
+     * @param position
+     */
     public void startDragSelect(int position) {
         usingSelector = true;
         toggleNoNotify(position);
