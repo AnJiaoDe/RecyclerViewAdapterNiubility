@@ -93,7 +93,7 @@ public class PicFragment extends BaseFragment {
             public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, boolean isSelected, @NonNull List<Object> payloads) {
                 LogUtils.log("bindDataToView tag", holder.getTag());
                 /**
-                 * 有loadMore时，会导致findViewHolderForAdapterPosition 出来的BaseViewHolder是复用的loadMore的，故而在使用时，如果有LOADMORE，
+                 * 有多布局时，会导致findViewHolderForAdapterPosition 出来的BaseViewHolder是复用的loadMore的，故而在使用时，如果有LOADMORE，
                  *      * 必须手动判断BaseViewHolder里的布局是不是正常的（可以直接设置tag，然后判断tag）
                  */
                 if (!bean.equals(holder.getTag())) return;
@@ -105,7 +105,7 @@ public class PicFragment extends BaseFragment {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
                         LogUtils.log("bindDataToView onCheckedChanged", position + ":" + isChecked);
-                        if(overMaxCount()){
+                        if(overMaxCount()&&!getSparseArraySelector().contains(position)){
                             showToast("不能超过最大选择数量");
                             imageViewSelector.setChecked(false);
                             return;
