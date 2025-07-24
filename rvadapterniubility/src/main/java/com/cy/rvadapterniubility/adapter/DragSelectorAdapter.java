@@ -192,7 +192,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
 
-    public abstract void onSelectCountOverMax();
+    public  void onSelectCountOverMax(){}
 
     public void canItemClick(boolean canItemClick) {
         this.canItemClick = canItemClick;
