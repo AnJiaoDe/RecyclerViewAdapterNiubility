@@ -71,6 +71,10 @@ public class GRVDragSelectorActivity extends BaseActivity {
                     LogUtils.log("onSelectCountChanged", getSparseArraySelector().getSparseArray().valueAt(i).getResID());
                 }
             }
+            @Override
+            public void onSelectCountOverMax() {
+                showToast("不能超过最大选择数量");
+            }
 
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected, @NonNull List<Object> payloads) {

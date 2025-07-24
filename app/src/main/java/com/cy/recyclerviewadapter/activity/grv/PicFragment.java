@@ -43,7 +43,6 @@ public class PicFragment extends BaseFragment {
     private TextView tv_count;
     private ImageViewSelector imageViewSelector;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +78,11 @@ public class PicFragment extends BaseFragment {
                 }
             }
 
+            @Override
+            public void onSelectCountOverMax() {
+                showToast("不能超过最大选择数量");
+            }
+
             @Nullable
             @Override
             public Object setHolderTagPreBindData(@NonNull BaseViewHolder holder, int position, String bean) {
@@ -101,6 +105,11 @@ public class PicFragment extends BaseFragment {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
                         LogUtils.log("bindDataToView onCheckedChanged", position + ":" + isChecked);
+                        if(overMaxCount()){
+                            showToast("不能超过最大选择数量");
+                            imageViewSelector.setChecked(false);
+                            return;
+                        }
                         holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
                         selectNoNotify(position, isChecked);
                     }
@@ -168,7 +177,7 @@ public class PicFragment extends BaseFragment {
         });
 
         gridRefreshLayout.getRecyclerView().setSpanCount(3)
-                .dragSelector(dragSelectorAdapter)
+                .dragSelector(dragSelectorAdapter.setMax_count(10))
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(activity, 12)));
         multiAdapter = new MultiAdapter().addAdapter(dragSelectorAdapter);
 
