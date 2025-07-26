@@ -17,14 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
  * @Version:
  */
 public class LinearItemDecoration extends RecyclerView.ItemDecoration {
-    private int space_vertical, space_horizontal;
+    private float space_vertical, space_horizontal;
 
-    public LinearItemDecoration setSpace_vertical(int space_vertical) {
+    public LinearItemDecoration setSpace_vertical(float space_vertical) {
         this.space_vertical = space_vertical;
         return this;
     }
 
-    public LinearItemDecoration setSpace_horizontal(int space_horizontal) {
+    public LinearItemDecoration setSpace_horizontal(float space_horizontal) {
         this.space_horizontal = space_horizontal;
         return this;
     }
@@ -38,26 +38,26 @@ public class LinearItemDecoration extends RecyclerView.ItemDecoration {
 
         switch (orientation) {
             case RecyclerView.VERTICAL:
-                outRect.left =space_horizontal;
-                outRect.top = space_vertical;
-                outRect.right =space_horizontal;
-                outRect.bottom = position==parent.getAdapter().getItemCount()-1?space_vertical:0;
+                outRect.left =Math.round(space_horizontal);
+                outRect.top = Math.round(space_vertical);
+                outRect.right =Math.round(space_horizontal);
+                outRect.bottom = Math.round(position==parent.getAdapter().getItemCount()-1?space_vertical:0);
                 break;
             //HORIZONTAL的其实就是VERTICAL翻转一下
             case RecyclerView.HORIZONTAL:
-                outRect.left = space_horizontal;
-                outRect.top =space_vertical;
-                outRect.right =position==parent.getAdapter().getItemCount()-1?space_horizontal:0;
-                outRect.bottom = space_vertical;
+                outRect.left = Math.round(space_horizontal);
+                outRect.top =Math.round(space_vertical);
+                outRect.right =Math.round(position==parent.getAdapter().getItemCount()-1?space_horizontal:0);
+                outRect.bottom = Math.round(space_vertical);
                 break;
         }
     }
 
-    public int getSpace_vertical() {
+    public float getSpace_vertical() {
         return space_vertical;
     }
 
-    public int getSpace_horizontal() {
+    public float getSpace_horizontal() {
         return space_horizontal;
     }
 }

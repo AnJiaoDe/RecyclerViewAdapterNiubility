@@ -20,14 +20,14 @@ import com.cy.rvadapterniubility.adapter.BaseViewHolder;
  * @Version:
  */
 public class GridItemDecoration extends RecyclerView.ItemDecoration {
-    private int space;
+    private float space;
 
-    public GridItemDecoration(int space) {
+    public GridItemDecoration(float space) {
         this.space = space;
     }
 
 
-    public int getSpace() {
+    public float getSpace() {
         return space;
     }
 
@@ -72,26 +72,27 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
 //        LogUtils.log("spanIndex", spanIndex);
 
         int position = viewHolder.getAbsoluteAdapterPosition();
-        int perSpace = (int) (space * 1f / spanCount);
+        float perSpace = space / spanCount;
 
         int a = spanCount - spanIndex;
         int b = gridRecyclerView.getSparseArrayFullSpan().get(position) != null ? spanCount : (1 + spanIndex % spanCount);
         boolean side = spanIndex == 0 || spanIndex == spanCount - 1;
+        //必须四舍五入，否则，如果space很小，会导致间隔不均匀
         switch (orientation) {
             case RecyclerView.VERTICAL:
-                outRect.left = a * perSpace ;
-                outRect.top = position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position - spanIndex - 1) != null ?
-                        0 : (position < spanCount ? space : 0);
-                outRect.right = b * perSpace ;
-                outRect.bottom = space;
+                outRect.left = Math.round(a * perSpace);
+                outRect.top = Math.round(position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position - spanIndex - 1) != null ?
+                        0 : (position < spanCount ? space : 0));
+                outRect.right = Math.round(b * perSpace);
+                outRect.bottom = Math.round(space);
                 break;
             //HORIZONTAL的其实就是VERTICAL翻转一下
             case RecyclerView.HORIZONTAL:
-                outRect.left = position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position - spanIndex - 1) != null ?
-                        0 : (position < spanCount ? space : 0);
-                outRect.top = a * perSpace;
-                outRect.right = space;
-                outRect.bottom = b * perSpace;
+                outRect.left = Math.round(position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position - spanIndex - 1) != null ?
+                        0 : (position < spanCount ? space : 0));
+                outRect.top = Math.round(a * perSpace);
+                outRect.right = Math.round(space);
+                outRect.bottom = Math.round(b * perSpace);
                 break;
         }
     }

@@ -90,8 +90,8 @@ public class GRVActivity extends BaseActivity {
             }
         };
         ((VerticalGridRecyclerView) findViewById(R.id.grv))
-                .setSpanCount(3)
-                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 6)));
+                .setSpanCount(4)
+                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 2)));
         ((VerticalGridRecyclerView) findViewById(R.id.grv)).setAdapter(rvAdapter, new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int i) {

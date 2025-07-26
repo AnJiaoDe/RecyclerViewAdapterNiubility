@@ -19,15 +19,15 @@ import com.cy.rvadapterniubility.adapter.BaseViewHolder;
  * @Version:
  */
 public class StaggeredItemDecoration extends RecyclerView.ItemDecoration {
-    private int space;
+    private float space;
     private SparseArray<Boolean> sparseArrayullSpan;
 
-    public StaggeredItemDecoration(int space) {
+    public StaggeredItemDecoration(float space) {
         this.space = space;
         sparseArrayullSpan = new SparseArray<>();
     }
 
-    public int getSpace() {
+    public float getSpace() {
         return space;
     }
 
@@ -60,32 +60,32 @@ public class StaggeredItemDecoration extends RecyclerView.ItemDecoration {
         StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
         // 获取item在span中的下标,假如2个span,从左到右，index 0--1,（注意：先从上面的开始绘制，如果右边的在上面就是先绘制1再绘制0）
         int spanIndex = params.getSpanIndex();
-        int perSpace = (int) (space * 1f / spanCount);
+        float perSpace = space  / spanCount;
 
 
         int a = spanCount - spanIndex % spanCount;
         int b = viewHolder.isFullSpan() ? spanCount : (1 + spanIndex % spanCount);
         switch (orientation) {
             case RecyclerView.VERTICAL:
-                outRect.left = a * perSpace;
+                outRect.left = Math.round(a * perSpace);
                 if (position == 0) {
-                    outRect.top = space;
+                    outRect.top =  Math.round(space);
                 } else {
-                    outRect.top = position < spanCount ? (sparseArrayullSpan.get(0) ? 0 : space) : 0;
+                    outRect.top =  Math.round(position < spanCount ? (sparseArrayullSpan.get(0) ? 0 : space) : 0);
                 }
-                outRect.right = b * perSpace;
-                outRect.bottom = space;
+                outRect.right =  Math.round(b * perSpace);
+                outRect.bottom =  Math.round(space);
                 break;
             //HORIZONTAL的其实就是VERTICAL翻转一下
             case RecyclerView.HORIZONTAL:
                 if (position == 0) {
-                    outRect.left = space;
+                    outRect.left =  Math.round(space);
                 } else {
-                    outRect.left = position < spanCount ? (sparseArrayullSpan.get(0) ? 0 : space) : 0;
+                    outRect.left =  Math.round(position < spanCount ? (sparseArrayullSpan.get(0) ? 0 : space) : 0);
                 }
-                outRect.top = a * perSpace;
-                outRect.right = space;
-                outRect.bottom = b * perSpace;
+                outRect.top = Math.round( a * perSpace);
+                outRect.right = Math.round( space);
+                outRect.bottom =  Math.round(b * perSpace);
                 break;
         }
     }

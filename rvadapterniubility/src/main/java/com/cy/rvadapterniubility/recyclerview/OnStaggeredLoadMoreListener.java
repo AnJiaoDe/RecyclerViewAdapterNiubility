@@ -42,7 +42,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
     private final String CLEAR = "CLEAR";
     private StaggeredRecyclerView staggeredRecyclerView;
     private int orientation = RecyclerView.VERTICAL;
-    private int space;
+    private float space;
 
     public OnStaggeredLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;

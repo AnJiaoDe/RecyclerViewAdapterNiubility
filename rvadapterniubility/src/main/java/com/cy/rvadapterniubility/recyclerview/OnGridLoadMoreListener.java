@@ -42,7 +42,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     private final String CLEAR = "CLEAR";
     private GridRecyclerView gridRecyclerView;
     private int orientation = RecyclerView.VERTICAL;
-    private int space;
+    private float space;
 
     public OnGridLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;

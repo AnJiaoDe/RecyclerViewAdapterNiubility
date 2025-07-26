@@ -39,8 +39,8 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
     private int count_remain = 0;
     private boolean isLoadMoreing = false;
     private int orientation = RecyclerView.VERTICAL;
-    private int space_vertical;
-    private int space_horizontal;
+    private float space_vertical;
+    private float space_horizontal;
     private RecyclerView recyclerView;
     private Callback callback;
     private final String CLEAR = "_C_L_E_A_R_";
