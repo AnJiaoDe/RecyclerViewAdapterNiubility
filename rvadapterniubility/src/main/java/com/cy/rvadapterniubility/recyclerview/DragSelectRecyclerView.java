@@ -28,6 +28,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     private float downY;
     private float touchSlop;
     private DragSelectorAdapter dragSelectorAdapter;
+    private int position_will_select = NO_POSITION;
     private int position_start = NO_POSITION;
     private int position_end = NO_POSITION;
     private int position_start_last = NO_POSITION;
@@ -209,8 +210,11 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                         if (position != NO_POSITION) {
                             isSelectMoving = true;
                             dragSelectorAdapter.canItemClick(false);
-                            if (position == position_start)
-                                dragSelectorAdapter.select(position, !cancelSelect && !downSelected, this);
+                            if (position == position_start){
+                                position_will_select=position;
+                            }else {
+                                dragSelectorAdapter.select(position_will_select, !cancelSelect && !downSelected, this);
+                            }
                         }
                     }
                     //注意：MOVE事件，手指超出当前VIEW的边界后，如果在VIEW边界上面，Y是负数，如果在VIEW边界下面，Y比VIEW的高度大
