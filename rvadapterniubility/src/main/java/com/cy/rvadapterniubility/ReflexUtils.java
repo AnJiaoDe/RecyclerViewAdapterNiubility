@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
  */
 
 public class ReflexUtils {
-
     public static Class getClass(String className) {
         try {
             Class<?> clazz = Class.forName(className);

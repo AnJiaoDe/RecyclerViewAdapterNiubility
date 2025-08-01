@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.cy.BaseAdapter.R;
 import com.cy.refreshlayoutniubility.IAnimationView;
+import com.cy.rvadapterniubility.R;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.StaggeredAdapter;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;

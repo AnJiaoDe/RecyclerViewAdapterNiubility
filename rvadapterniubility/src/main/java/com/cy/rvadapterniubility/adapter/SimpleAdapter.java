@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.cy.BaseAdapter.R;
+import com.cy.rvadapterniubility.R;
 import com.cy.rvadapterniubility.ThreadUtils;
 
 import java.util.ArrayList;
