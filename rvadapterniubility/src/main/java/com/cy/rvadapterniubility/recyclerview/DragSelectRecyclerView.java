@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 
@@ -111,6 +113,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             }
         };
     }
+
     public T dragSelector(DragSelectorAdapter dragSelectorAdapter) {
         this.dragSelectorAdapter = dragSelectorAdapter;
         return (T) this;
@@ -119,11 +122,12 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     /**
      * 何故不能直接判断是否是dragSelectorAdapter，然后直接强转呢？因为有些Adapter是ConcatAdapter,
      * dragSelectorAdapter只是ConcatAdapter的其中一个
+     *
      * @param adapter The new adapter to set, or null to set no adapter.
      */
     @Override
     public void setAdapter(@Nullable Adapter adapter) {
-        if(adapter instanceof DragSelectorAdapter&& this.dragSelectorAdapter==null)
+        if (adapter instanceof DragSelectorAdapter && this.dragSelectorAdapter == null)
             throw new IllegalStateException("must call dragSelector(DragSelectorAdapter dragSelectorAdapter) first!");
         super.setAdapter(adapter);
     }
@@ -210,11 +214,14 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                         if (position != NO_POSITION) {
                             isSelectMoving = true;
                             dragSelectorAdapter.canItemClick(false);
-                            if (position == position_start){
-                                position_will_select=position;
-                            }else {
-                                dragSelectorAdapter.select(position_will_select, !cancelSelect && !downSelected, this);
-                            }
+//                            if (position == position_start)
+//                                dragSelectorAdapter.select(position, !cancelSelect && !downSelected, this);
+
+//                            if (position == position_start){
+//                                position_will_select=position;
+//                            }else {
+//                                dragSelectorAdapter.select(position_will_select, !cancelSelect && !downSelected, this);
+//                            }
                         }
                     }
                     //注意：MOVE事件，手指超出当前VIEW的边界后，如果在VIEW边界上面，Y是负数，如果在VIEW边界下面，Y比VIEW的高度大
@@ -340,40 +347,40 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 
         if (newStart > position_start_last) {
             //往上往前拖动的前提下   再往后往下拖动，会触发
-//            LogUtils.log("selectRange position_start", position_start);
-//            LogUtils.log("selectRange    position_end", position_end);
-//            LogUtils.log("selectRange newStart", newStart);
-//            LogUtils.log("selectRange     newEnd", newEnd);
-//            LogUtils.log("selectRange", "newStart > position_start_last");
+            LogUtils.log("selectRange position_start", position_start);
+            LogUtils.log("selectRange    position_end", position_end);
+            LogUtils.log("selectRange newStart", newStart);
+            LogUtils.log("selectRange     newEnd", newEnd);
+            LogUtils.log("selectRange", "newStart > position_start_last");
             cancelSelect = true;
             dragSelectorAdapter.selectRange(position_start_last, newStart, false, this);
         } else if (newStart < position_start_last) {
             //往前往上拖动
-//            LogUtils.log("selectRange position_start", position_start);
-//            LogUtils.log("selectRange    position_end", position_end);
-//            LogUtils.log("selectRange newStart", newStart);
-//            LogUtils.log("selectRange     newEnd", newEnd);
-//            LogUtils.log("selectRange", "newStart < position_start_last");
+            LogUtils.log("selectRange position_start", position_start);
+            LogUtils.log("selectRange    position_end", position_end);
+            LogUtils.log("selectRange newStart", newStart);
+            LogUtils.log("selectRange     newEnd", newEnd);
+            LogUtils.log("selectRange", "newStart < position_start_last");
             dragSelectorAdapter.selectRange(newStart, position_start_last - 1,
                     isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
         }
         //注意：这里不是else if 而是if,否则GG
         if (newEnd > position_end_last) {
             // 往下往后拖动
-//            LogUtils.log("selectRange position_start", position_start);
-//            LogUtils.log("selectRange    position_end", position_end);
-//            LogUtils.log("selectRange newStart", newStart);
-//            LogUtils.log("selectRange     newEnd", newEnd);
-//            LogUtils.log("selectRange", "newEnd > position_end_last");
-            dragSelectorAdapter.selectRange(position_end_last + 1, newEnd,
+            LogUtils.log("selectRange position_start", position_start);
+            LogUtils.log("selectRange    position_end", position_end);
+            LogUtils.log("selectRange newStart", newStart);
+            LogUtils.log("selectRange     newEnd", newEnd);
+            LogUtils.log("selectRange", "newEnd > position_end_last");
+            dragSelectorAdapter.selectRange(position_end_last, newEnd,
                     isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
         } else if (newEnd < position_end_last) {
             //往下往后拖动的前提下   再往前往上拖动，会触发
-//            LogUtils.log("selectRange position_start", position_start);
-//            LogUtils.log("selectRange    position_end", position_end);
-//            LogUtils.log("selectRange newStart", newStart);
-//            LogUtils.log("selectRange     newEnd", newEnd);
-//            LogUtils.log("selectRange", "newEnd < position_end_last");
+            LogUtils.log("selectRange position_start", position_start);
+            LogUtils.log("selectRange    position_end", position_end);
+            LogUtils.log("selectRange newStart", newStart);
+            LogUtils.log("selectRange     newEnd", newEnd);
+            LogUtils.log("selectRange", "newEnd < position_end_last");
             cancelSelect = true;
             dragSelectorAdapter.selectRange(newEnd, position_end_last, false, this);
         }

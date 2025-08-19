@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.cy.rvadapterniubility.LogUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -150,9 +152,10 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
      * @param recyclerView
      */
     public DragSelectorAdapter<T> selectRange(final int start, final int end, boolean isSelected, @NonNull RecyclerView recyclerView) {
-//        LogUtils.log("selectRange", start + ":" + end + ":" + isSelected);
+        LogUtils.log("selectRange", start + ":" + end + ":" + isSelected);
         for (int i = start; i <= end; i++) {
             if (i < 0 || i >= getList_bean().size() || selectNoNotify(i, isSelected)) continue;
+        LogUtils.log("selectRange", i + ":" + isSelected);
             BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
             if (baseViewHolder == null) continue;
             bindDataToView(baseViewHolder, i, getList_bean().get(i), isSelected, new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));

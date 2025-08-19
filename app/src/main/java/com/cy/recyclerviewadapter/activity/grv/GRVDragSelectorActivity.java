@@ -76,15 +76,45 @@ public class GRVDragSelectorActivity extends BaseActivity {
                 showToast("不能超过最大选择数量");
             }
 
+            /**
+             * 23:30:03.459  4531-4531  selectRange position_start          com...pter  E  ------>>>>0
+             * 23:30:03.460  4531-4531  selectRange    position_end         com...pter  E  ------>>>>7
+             * 23:30:03.460  4531-4531  selectRange newStart                com...pter  E  ------>>>>0
+             * 23:30:03.460  4531-4531  selectRange     newEnd              com...pter  E  ------>>>>7
+             * 23:30:03.460  4531-4531  selectRange                         com...pter  E  ------>>>>newEnd > position_end_last
+             * 23:30:03.460  4531-4531  selectRange                         com...pter  E  ------>>>>3:7:true
+             * 23:30:03.460  4531-4531  selectRange                         com...pter  E  ------>>>>4:true
+             * 23:30:03.460  4531-4531  selectRange bindDataToView          com...pter  E  ------>>>>4:true:NOTIFY_STATE_DRAG_SELECT
+             * 23:30:03.463  4531-4531  selectRange onCheckedChanged:4      com...pter  E  ------>>>>4:true
+             * 23:30:03.463  4531-4531  selectRange                         com...pter  E  ------>>>>5:true
+             * 23:30:03.463  4531-4531  selectRange bindDataToView          com...pter  E  ------>>>>5:true:NOTIFY_STATE_DRAG_SELECT
+             * 23:30:03.463  4531-4531  selectRange onCheckedChanged:5      com...pter  E  ------>>>>5:true
+             * 23:30:03.464  4531-4531  selectRange                         com...pter  E  ------>>>>6:true
+             * 23:30:03.464  4531-4531  selectRange bindDataToView          com...pter  E  ------>>>>6:true:NOTIFY_STATE_DRAG_SELECT
+             * 23:30:03.464  4531-4531  selectRange onCheckedChanged:6      com...pter  E  ------>>>>6:true
+             * 23:30:03.464  4531-4531  selectRange                         com...pter  E  ------>>>>7:true
+             * 23:30:03.464  4531-4531  selectRange bindDataToView          com...pter  E  ------>>>>7:true:NOTIFY_STATE_DRAG_SELECT
+             * 23:30:03.464  4531-4531  selectRange onCheckedChanged:7      com...pter  E  ------>>>>7:true
+             * 23:30:03.723  4531-4531  selectRange onCheckedChanged:0      com...pter  E  ------>>>>0:false
+             * onCheckedChanged 莫名其妙回掉了0
+             * @param holder
+             * @param position
+             * @param bean
+             * @param isSelected
+             * @param payloads
+             */
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected, @NonNull List<Object> payloads) {
-                LogUtils.log("bindDataToView", position + ":" + isSelected + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
+                LogUtils.log("selectRange bindDataToView", position + ":" + isSelected + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
                 holder.setVisibility(R.id.layout_check, isUsingSelector() ? View.VISIBLE : View.GONE);
+                LogUtils.log("selectRange getTag",holder.getTag());
+
+                holder.setTag(position);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
-                        LogUtils.log("bindDataToView onCheckedChanged", position + ":" + isChecked);
+                        LogUtils.log("selectRange onCheckedChanged:"+holder.getTag(), position + ":" + isChecked);
                         //长按第一个ITEM后右滑然后左滑到第2个ITEM，第2个ITEM疯狂回调 导致疯狂闪烁
                         holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
                         selectNoNotify(position, isChecked);
@@ -107,22 +137,24 @@ public class GRVDragSelectorActivity extends BaseActivity {
 
             @Override
             public void onItemClick__(BaseViewHolder holder, int position, HRVBean bean) {
-                showToast("点击" + position);
+                showToast("selectRange 点击" + position);
                 startActivity(new Intent(GRVDragSelectorActivity.this, MainActivity.class));
             }
 
             @Override
             public void onItemLongClick__(BaseViewHolder holder, int position, HRVBean bean) {
                 super.onItemLongClick(holder, position, bean);
+                showToast("selectRange onItemLongClick__" + position);
                 Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
                 if (vibrator != null) vibrator.vibrate(50);
                 layout_menu.setVisibility(View.VISIBLE);
                 startDragSelect(position);
             }
         };
-        verticalGridRecyclerView.setSpanCount(3)
-                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 20)));
+        verticalGridRecyclerView.setSpanCount(4)
+                .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 1)));
         verticalGridRecyclerView.dragSelector(dragSelectorAdapter).setAdapter(dragSelectorAdapter);
+        dragSelectorAdapter.startDragSelect();
         dragSelectorAdapter.add(list);
 
         findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
