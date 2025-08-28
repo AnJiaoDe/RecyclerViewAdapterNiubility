@@ -278,10 +278,6 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
-                dragSelectorAdapter.canItemClick(true);
-                isLongPress = false;
-                isSelectMoving = false;
-
                 position_start = NO_POSITION;
                 position_end = NO_POSITION;
                 position_start_last = NO_POSITION;
