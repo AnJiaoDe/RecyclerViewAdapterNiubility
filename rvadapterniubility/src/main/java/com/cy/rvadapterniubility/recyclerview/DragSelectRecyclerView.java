@@ -205,7 +205,8 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 boolean moveH = dx > touchSlop && dx > dy;
                 downX = moveX;
                 downY = moveY;
-                //横向滑动程度大于竖向滑动程度，横向滑动超过一定距离，选中当前ITEM，并且拦截竖直滑动，直到UP之后
+                //滑动过程中，不能触发选择，否则很容易错选不想选的，
+                // 横向滑动程度大于竖向滑动程度，横向滑动超过一定距离，选中当前ITEM，并且拦截竖直滑动，直到UP之后
                 if (getScrollState() == RecyclerView.SCROLL_STATE_IDLE && (isLongPress || isSelectMoving || moveH)) {
                     View child = findChildViewUnder(moveX, moveY);
                     if (child != null) {
