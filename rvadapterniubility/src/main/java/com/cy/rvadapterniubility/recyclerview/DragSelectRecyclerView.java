@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 
@@ -205,7 +206,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 downX = moveX;
                 downY = moveY;
                 //横向滑动程度大于竖向滑动程度，横向滑动超过一定距离，选中当前ITEM，并且拦截竖直滑动，直到UP之后
-                if (isLongPress || isSelectMoving || moveH) {
+                if (getScrollState() == RecyclerView.SCROLL_STATE_IDLE && (isLongPress || isSelectMoving || moveH)) {
                     View child = findChildViewUnder(moveX, moveY);
                     if (child != null) {
                         int position = getChildAdapterPosition(child);
@@ -358,7 +359,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 //            LogUtils.log("selectRange newStart", newStart);
 //            LogUtils.log("selectRange     newEnd", newEnd);
 //            LogUtils.log("selectRange", "newStart < position_start_last");
-            dragSelectorAdapter.selectRange(newStart, position_start_last ,
+            dragSelectorAdapter.selectRange(newStart, position_start_last,
                     isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
         }
         //注意：这里不是else if 而是if,否则GG
