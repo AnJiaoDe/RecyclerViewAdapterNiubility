@@ -1,12 +1,8 @@
 package com.cy.rvadapterniubility.adapter;
 
-import android.annotation.SuppressLint;
-import android.os.Handler;
 import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -18,7 +14,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     private SparseArraySelector sparseArraySelector;
     protected final String NOTIFY_STATE_DRAG_SELECT = "NOTIFY_STATE_DRAG_SELECT";
     private boolean canItemClick = true;
-    private int max_count = -1;
+    private int maxCountSelect = -1;
 
     public DragSelectorAdapter() {
         super();
@@ -57,14 +53,20 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT);
         return this;
     }
-
-    public DragSelectorAdapter<T> setMax_count(int max_count) {
-        this.max_count = max_count;
+    public DragSelectorAdapter<T> clearSelected() {
+        if (!usingSelector) return this;
+        sparseArraySelector.clear();
+        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT);
         return this;
     }
 
-    public int getMax_count() {
-        return max_count;
+    public DragSelectorAdapter<T> setMaxCountSelect(int maxCountSelect) {
+        this.maxCountSelect = maxCountSelect;
+        return this;
+    }
+
+    public int getMaxCountSelect() {
+        return maxCountSelect;
     }
 
     public SparseArraySelector getSparseArraySelector() {
@@ -192,14 +194,16 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
 
-    public  void onSelectCountOverMax(){}
+    public  void onSelectCountOverMax(int max_count){
+
+    }
 
     public void canItemClick(boolean canItemClick) {
         this.canItemClick = canItemClick;
     }
 
-    public boolean overMaxCount(){
-        return sparseArraySelector.size()==max_count;
+    public boolean isOverMaxCountSelect(){
+        return sparseArraySelector.size()== maxCountSelect;
     }
     public class SparseArraySelector {
         private final SparseArray<T> sparseArray;
@@ -218,8 +222,8 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
          */
         public boolean put(int position) {
             if (position < 0 || position >= getList_bean().size()) return false;
-            if (sparseArray.size() == max_count) {
-                onSelectCountOverMax();
+            if (sparseArray.size() == maxCountSelect) {
+                onSelectCountOverMax(maxCountSelect);
                 return false;
             }
             sparseArray.put(position, getList_bean().get(position));

@@ -71,8 +71,9 @@ public class GRVDragSelectorActivity extends BaseActivity {
                     LogUtils.log("onSelectCountChanged", getSparseArraySelector().getSparseArray().valueAt(i).getResID());
                 }
             }
+
             @Override
-            public void onSelectCountOverMax() {
+            public void onSelectCountOverMax(int max_count) {
                 showToast("不能超过最大选择数量");
             }
 
@@ -107,14 +108,19 @@ public class GRVDragSelectorActivity extends BaseActivity {
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected, @NonNull List<Object> payloads) {
                 LogUtils.log("selectRange bindDataToView", position + ":" + isSelected + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
                 holder.setVisibility(R.id.layout_check, isUsingSelector() ? View.VISIBLE : View.GONE);
-                LogUtils.log("selectRange getTag",holder.getTag());
+                LogUtils.log("selectRange getTag", holder.getTag());
 
                 holder.setTag(position);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
-                        LogUtils.log("selectRange onCheckedChanged:"+holder.getTag(), position + ":" + isChecked);
+                        if(isChecked&&isOverMaxCountSelect()&&!getSparseArraySelector().contains(position)){
+                            showToast("不能超过最大选择数量");
+                            imageViewSelector.setChecked(false);
+                            return;
+                        }
+                        LogUtils.log("selectRange onCheckedChanged:" + holder.getTag(), position + ":" + isChecked);
                         //长按第一个ITEM后右滑然后左滑到第2个ITEM，第2个ITEM疯狂回调 导致疯狂闪烁
                         holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
                         selectNoNotify(position, isChecked);
@@ -154,9 +160,10 @@ public class GRVDragSelectorActivity extends BaseActivity {
         verticalGridRecyclerView.setSpanCount(4)
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 1)));
         verticalGridRecyclerView.dragSelector(dragSelectorAdapter).setAdapter(dragSelectorAdapter);
-//        dragSelectorAdapter.setMax_count(23);
         dragSelectorAdapter.add(list);
-
+        dragSelectorAdapter.setMaxCountSelect(23);
+        dragSelectorAdapter.startDragSelect();
+        layout_menu.setVisibility(View.VISIBLE);
         findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

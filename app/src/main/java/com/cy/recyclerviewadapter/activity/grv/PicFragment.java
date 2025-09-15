@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.os.Vibrator;
@@ -79,7 +78,7 @@ public class PicFragment extends BaseFragment {
             }
 
             @Override
-            public void onSelectCountOverMax() {
+            public void onSelectCountOverMax(int max_count) {
                 showToast("不能超过最大选择数量");
             }
 
@@ -105,7 +104,7 @@ public class PicFragment extends BaseFragment {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
                         LogUtils.log("bindDataToView onCheckedChanged", position + ":" + isChecked);
-                        if(overMaxCount()&&!getSparseArraySelector().contains(position)){
+                        if(isChecked&&isOverMaxCountSelect()&&!getSparseArraySelector().contains(position)){
                             showToast("不能超过最大选择数量");
                             imageViewSelector.setChecked(false);
                             return;
@@ -177,7 +176,7 @@ public class PicFragment extends BaseFragment {
         });
 
         gridRefreshLayout.getRecyclerView().setSpanCount(3)
-                .dragSelector(dragSelectorAdapter.setMax_count(60))
+                .dragSelector(dragSelectorAdapter.setMaxCountSelect(13))
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(activity, 12)));
         multiAdapter = new MultiAdapter().addAdapter(dragSelectorAdapter);
 
