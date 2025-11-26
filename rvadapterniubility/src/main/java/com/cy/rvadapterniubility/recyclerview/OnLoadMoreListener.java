@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.rvadapterniubility.R;
+
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -38,11 +39,14 @@ public abstract class OnLoadMoreListener<T> extends OnSimpleScrollListener {
 
     /**
      * 必须要有回调，必须 loadmore完全关闭后才能notify data，否则会导致上一次的loadMore动画没有停止，也没有被remove
+     *
      * @param callback
      */
     public abstract void closeLoadMore(@NonNull Callback callback);
 
     public abstract void closeLoadMoreDelay(T msg, int ms, @NonNull Callback callback);
+
+    public abstract SimpleAdapter<T> getLoadMoreAdapter();
 
     public static interface Callback {
         public void onClosed();

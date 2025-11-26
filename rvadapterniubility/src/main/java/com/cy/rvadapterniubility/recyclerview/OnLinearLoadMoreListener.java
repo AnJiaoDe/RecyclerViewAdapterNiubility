@@ -15,8 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cy.refreshlayoutniubility.IAnimationView;
 import com.cy.rvadapterniubility.R;
+
+import com.cy.refreshlayoutniubility.IAnimationView;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
@@ -239,10 +240,10 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         }, ms);
     }
 
+    @Override
     public SimpleAdapter<String> getLoadMoreAdapter() {
         return loadMoreAdapter;
     }
-
 
     public boolean isLoadMoreing() {
         return isLoadMoreing;
