@@ -21,7 +21,7 @@ import com.cy.rvadapterniubility.recyclerview.PositionHolder;
  * Created by lenovo on 2017/12/31.
  */
 
-public abstract class BaseRVRefreshLayout<V extends BaseRecyclerView<?>, O extends OnLoadMoreListener<?>> extends RefreshLayoutNiubility {
+public abstract class BaseRVRefreshLayout<V extends BaseRecyclerView, O extends OnLoadMoreListener> extends RefreshLayoutNiubility {
 
     public BaseRVRefreshLayout(Context context) {
         this(context, null);
@@ -49,38 +49,38 @@ public abstract class BaseRVRefreshLayout<V extends BaseRecyclerView<?>, O exten
     }
 
 
-    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(SimpleAdapter<?> simpleAdapter) {
-        BaseRecyclerView<?> baseRecyclerView = getRecyclerView();
+    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(SimpleAdapter simpleAdapter) {
+        BaseRecyclerView baseRecyclerView = getRecyclerView();
         baseRecyclerView.setAdapter(simpleAdapter);
         return (T) this;
     }
 
-    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(SimpleAdapter<?> simpleAdapter, OnRefreshListener<?> onRefreshListener) {
+    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(SimpleAdapter simpleAdapter, OnRefreshListener onRefreshListener) {
         setOnRefreshListener(onRefreshListener);
         setAdapter(simpleAdapter);
         return (T) this;
     }
 
-    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(MultiAdapter<?> multiAdapter) {
-        BaseRecyclerView<?> baseRecyclerView = getRecyclerView();
+    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(MultiAdapter multiAdapter) {
+        BaseRecyclerView baseRecyclerView = getRecyclerView();
         baseRecyclerView.setAdapter(multiAdapter.getMergeAdapter());
         return (T) this;
     }
 
-    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(MultiAdapter<?> multiAdapter, O onLoadMoreListener) {
+    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(MultiAdapter multiAdapter, O onLoadMoreListener) {
         addOnScrollListener(onLoadMoreListener);
         setAdapter(multiAdapter);
         return (T) this;
     }
 
-    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(MultiAdapter<?> multiAdapter, OnRefreshListener<?> onRefreshListener) {
+    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(MultiAdapter multiAdapter, OnRefreshListener onRefreshListener) {
         setOnRefreshListener(onRefreshListener);
         setAdapter(multiAdapter);
         return (T) this;
     }
 
-    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(MultiAdapter<?> multiAdapter,
-                                                              OnRefreshListener<?> onRefreshListener, O onLoadMoreListener) {
+    public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(MultiAdapter multiAdapter,
+                                                              OnRefreshListener onRefreshListener, O onLoadMoreListener) {
         onLoadMoreListener.setCallbackState(new OnLoadMoreListener.CallbackState() {
             @Override
             public void onStateChanged(boolean isLoadMoreing) {
