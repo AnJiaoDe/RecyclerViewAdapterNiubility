@@ -45,6 +45,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
     private RecyclerView recyclerView;
     private Callback callback;
     private final String CLEAR = "_C_L_E_A_R_";
+    private CallbackState callbackState;
 
     public OnLinearLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
@@ -72,6 +73,11 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
     public OnLinearLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter, int count_remain) {
         this(multiAdapter);
         this.count_remain = count_remain;
+    }
+
+    @Override
+    public void setCallbackState(CallbackState callbackState) {
+        this.callbackState = callbackState;
     }
 
     private void checkRecyclerView(RecyclerView recyclerView) {
@@ -146,6 +152,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
                 //防止频繁loadMore
                 if (!isLoadMoreing) {
                     isLoadMoreing = true;
+                    if (callbackState != null) callbackState.onStateChanged(isLoadMoreing);
                     onLoadMoreStart();
                 }
                 return;
@@ -192,6 +199,8 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
                             loadMoreAdapter.notifyItemRemoved(0);
 
                             if (callback != null) callback.onClosed();
+
+                            if(callbackState!=null)callbackState.onStateChanged(isLoadMoreing);
                         }
                     });
                     animatorSet.start();
@@ -221,6 +230,7 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
 
     /**
      * 必须要有回调，必须 loadmore完全关闭后才能notify data，否则会导致上一次的loadMore动画没有停止，也没有被remove
+     *
      * @param callback
      */
     @Override
@@ -245,12 +255,9 @@ public abstract class OnLinearLoadMoreListener extends OnLoadMoreListener<String
         return loadMoreAdapter;
     }
 
+    @Override
     public boolean isLoadMoreing() {
         return isLoadMoreing;
     }
-
-//    public void setLoadMoreing(boolean loadMoreing) {
-//        isLoadMoreing = loadMoreing;
-//    }
 
 }

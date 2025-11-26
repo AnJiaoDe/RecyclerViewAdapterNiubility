@@ -43,6 +43,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     private GridRecyclerView gridRecyclerView;
     private int orientation = RecyclerView.VERTICAL;
     private float space;
+    private CallbackState callbackState;
 
     public OnGridLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
@@ -70,6 +71,11 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
     public OnGridLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter, int count_remain) {
         this(multiAdapter);
         this.count_remain = count_remain;
+    }
+
+    @Override
+    public void setCallbackState(CallbackState callbackState) {
+        this.callbackState = callbackState;
     }
 
     @Override
@@ -188,6 +194,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                 //防止频繁loadMore,而且布应该在onDragging触发onLoadMoreStart
                 if (!isLoadMoreing) {
                     isLoadMoreing = true;
+                    if (callbackState != null) callbackState.onStateChanged(isLoadMoreing);
                     onLoadMoreStart();
                 }
                 return;
@@ -233,6 +240,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                             loadMoreAdapter.notifyItemRemoved(0);
 
                             if (callback != null) callback.onClosed();
+                            if (callbackState != null) callbackState.onStateChanged(isLoadMoreing);
 
                         }
                     });
@@ -282,7 +290,10 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             }
         }, ms);
     }
-
+    @Override
+    public boolean isLoadMoreing() {
+        return isLoadMoreing;
+    }
     @Override
     public SimpleAdapter<String> getLoadMoreAdapter() {
         return loadMoreAdapter;

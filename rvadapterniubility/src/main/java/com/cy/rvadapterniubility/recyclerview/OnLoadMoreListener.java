@@ -48,7 +48,15 @@ public abstract class OnLoadMoreListener<T> extends OnSimpleScrollListener {
 
     public abstract SimpleAdapter<T> getLoadMoreAdapter();
 
+    public abstract boolean isLoadMoreing();
+
+    public abstract void setCallbackState(CallbackState callbackState);
+
     public static interface Callback {
         public void onClosed();
+    }
+
+    public static interface CallbackState {
+        public void onStateChanged(boolean isLoadMoreing);
     }
 }

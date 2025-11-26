@@ -12,7 +12,7 @@ import com.cy.rvadapterniubility.recyclerview.VerticalStaggeredRecyclerView;
 /**
  * Created by cy on 2018/4/9.
  */
-public class StaggeredRefreshLayout extends BaseRVRefreshLayout<VerticalStaggeredRecyclerView> {
+public class StaggeredRefreshLayout extends BaseRVRefreshLayout<VerticalStaggeredRecyclerView,OnStaggeredLoadMoreListener> {
     private VerticalStaggeredRecyclerView verticalStaggeredRecyclerView;
 
     public StaggeredRefreshLayout(Context context) {
@@ -26,8 +26,8 @@ public class StaggeredRefreshLayout extends BaseRVRefreshLayout<VerticalStaggere
     }
 
     @Override
-    public <T extends BaseRVRefreshLayout> T setRecyclerView(VerticalStaggeredRecyclerView verticalStaggeredRecyclerView) {
-        this.verticalStaggeredRecyclerView=verticalStaggeredRecyclerView;
+    public <T extends BaseRVRefreshLayout<VerticalStaggeredRecyclerView, OnStaggeredLoadMoreListener>> T setRecyclerView(VerticalStaggeredRecyclerView recyclerView) {
+        this.verticalStaggeredRecyclerView=recyclerView;
         return setContentView(verticalStaggeredRecyclerView);
     }
 
@@ -36,16 +36,4 @@ public class StaggeredRefreshLayout extends BaseRVRefreshLayout<VerticalStaggere
         return verticalStaggeredRecyclerView;
     }
 
-    public StaggeredRefreshLayout setAdapter(SimpleAdapter simpleAdapter, OnRefreshListener onRefreshListener, OnStaggeredLoadMoreListener onStaggeredLoadMoreListener) {
-        verticalStaggeredRecyclerView.addOnScrollListener(onStaggeredLoadMoreListener);
-        setOnRefreshListener(onRefreshListener);
-        verticalStaggeredRecyclerView.setAdapter(simpleAdapter);
-        return  this;
-    }
-    public StaggeredRefreshLayout setAdapter(MultiAdapter multiAdapter, OnRefreshListener onRefreshListener, OnStaggeredLoadMoreListener onStaggeredLoadMoreListener) {
-        verticalStaggeredRecyclerView.addOnScrollListener(onStaggeredLoadMoreListener);
-        setOnRefreshListener(onRefreshListener);
-        verticalStaggeredRecyclerView.setAdapter(multiAdapter.getMergeAdapter());
-        return  this;
-    }
 }

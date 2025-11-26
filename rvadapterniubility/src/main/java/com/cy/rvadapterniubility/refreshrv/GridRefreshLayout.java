@@ -16,7 +16,7 @@ import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
  * Created by lenovo on 2017/12/31.
  */
 
-public class GridRefreshLayout extends BaseRVRefreshLayout<VerticalGridRecyclerView> {
+public class GridRefreshLayout extends BaseRVRefreshLayout<VerticalGridRecyclerView,OnGridLoadMoreListener> {
     private VerticalGridRecyclerView verticalGridRecyclerView;
 
     public GridRefreshLayout(Context context) {
@@ -30,7 +30,7 @@ public class GridRefreshLayout extends BaseRVRefreshLayout<VerticalGridRecyclerV
     }
 
     @Override
-    public <T extends BaseRVRefreshLayout> T setRecyclerView(VerticalGridRecyclerView recyclerView) {
+    public <T extends BaseRVRefreshLayout<VerticalGridRecyclerView, OnGridLoadMoreListener>> T setRecyclerView(VerticalGridRecyclerView recyclerView) {
         this.verticalGridRecyclerView=recyclerView;
         return setContentView(verticalGridRecyclerView);
     }
@@ -38,18 +38,5 @@ public class GridRefreshLayout extends BaseRVRefreshLayout<VerticalGridRecyclerV
     @Override
     public VerticalGridRecyclerView getRecyclerView() {
         return verticalGridRecyclerView;
-    }
-
-    public GridRefreshLayout setAdapter(SimpleAdapter simpleAdapter, OnRefreshListener onRefreshListener, OnGridLoadMoreListener onGridLoadMoreListener) {
-        verticalGridRecyclerView.addOnScrollListener(onGridLoadMoreListener);
-        setOnRefreshListener(onRefreshListener);
-        verticalGridRecyclerView.setAdapter(simpleAdapter);
-        return  this;
-    }
-    public GridRefreshLayout setAdapter(MultiAdapter multiAdapter, OnRefreshListener onRefreshListener, OnGridLoadMoreListener onGridLoadMoreListener) {
-        verticalGridRecyclerView.addOnScrollListener(onGridLoadMoreListener);
-        setOnRefreshListener(onRefreshListener);
-        verticalGridRecyclerView.setAdapter(multiAdapter.getMergeAdapter());
-        return  this;
     }
 }
