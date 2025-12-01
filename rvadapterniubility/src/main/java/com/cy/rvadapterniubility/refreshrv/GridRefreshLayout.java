@@ -4,19 +4,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.cy.refreshlayoutniubility.OnRefreshListener;
-import com.cy.refreshlayoutniubility.RefreshLayoutNiubility;
-import com.cy.rvadapterniubility.adapter.MultiAdapter;
-import com.cy.rvadapterniubility.adapter.SimpleAdapter;
-import com.cy.rvadapterniubility.recyclerview.BaseRecyclerView;
-import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
+import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 
 /**
  * Created by lenovo on 2017/12/31.
  */
 
-public class GridRefreshLayout extends BaseRVRefreshLayout<VerticalGridRecyclerView,OnGridLoadMoreListener> {
+public class GridRefreshLayout extends BaseRVRefreshLayout<VerticalGridRecyclerView, OnGridLoadMoreListener> {
     private VerticalGridRecyclerView verticalGridRecyclerView;
 
     public GridRefreshLayout(Context context) {

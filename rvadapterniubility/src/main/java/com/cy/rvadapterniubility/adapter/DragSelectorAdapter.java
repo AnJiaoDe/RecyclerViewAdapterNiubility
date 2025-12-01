@@ -46,6 +46,16 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         return this;
     }
 
+    /**
+     * 其他地方触发，用这个
+     * @return
+     */
+    public DragSelectorAdapter<T> startDragSelectNotify() {
+        usingSelector = true;
+        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT);
+        return this;
+    }
+
     public DragSelectorAdapter<T> stopDragSelect() {
         if (!usingSelector) return this;
         usingSelector = false;
@@ -53,6 +63,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT);
         return this;
     }
+
     public DragSelectorAdapter<T> clearSelected() {
         if (!usingSelector) return this;
         sparseArraySelector.clear();
@@ -194,7 +205,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
 
-    public  void onSelectCountOverMax(int max_count){
+    public void onSelectCountOverMax(int max_count) {
 
     }
 
@@ -202,9 +213,10 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         this.canItemClick = canItemClick;
     }
 
-    public boolean isOverMaxCountSelect(){
-        return sparseArraySelector.size()== maxCountSelect;
+    public boolean isOverMaxCountSelect() {
+        return sparseArraySelector.size() == maxCountSelect;
     }
+
     public class SparseArraySelector {
         private final SparseArray<T> sparseArray;
 

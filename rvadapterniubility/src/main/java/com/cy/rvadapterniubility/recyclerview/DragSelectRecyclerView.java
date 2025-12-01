@@ -1,5 +1,7 @@
 package com.cy.rvadapterniubility.recyclerview;
 
+import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
@@ -337,7 +339,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             //下滑，且不能再下滑
             position_end = 0;
         }
-        if (position_start == RecyclerView.NO_POSITION || position_end == RecyclerView.NO_POSITION)
+        if (position_start == NO_POSITION || position_end == NO_POSITION)
             return;
 
         int newStart, newEnd;
