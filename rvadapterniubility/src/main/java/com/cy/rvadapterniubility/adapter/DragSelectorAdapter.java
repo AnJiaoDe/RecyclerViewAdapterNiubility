@@ -42,7 +42,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     public DragSelectorAdapter<T> startDragSelect(int position) {
         usingSelector = true;
         toggleNoNotify(position);
-        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT);
+        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT,null);
         return this;
     }
 
@@ -52,7 +52,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
      */
     public DragSelectorAdapter<T> startDragSelectNotify() {
         usingSelector = true;
-        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT);
+        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT,null);
         return this;
     }
 
@@ -60,14 +60,14 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         if (!usingSelector) return this;
         usingSelector = false;
         sparseArraySelector.clear();
-        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT);
+        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT,null);
         return this;
     }
 
     public DragSelectorAdapter<T> clearSelected() {
         if (!usingSelector) return this;
         sparseArraySelector.clear();
-        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT);
+        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT,null);
         return this;
     }
 
@@ -94,7 +94,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         } else {
             sparseArraySelector.clear();
         }
-        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT);
+        dispatchUpdatesToWithMsg(NOTIFY_STATE_DRAG_SELECT,null);
         return this;
     }
 

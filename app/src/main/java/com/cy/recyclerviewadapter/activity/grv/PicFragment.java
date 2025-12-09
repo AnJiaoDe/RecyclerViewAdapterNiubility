@@ -244,7 +244,7 @@ public class PicFragment extends BaseFragment {
                         list.set(3, "https://img2.baidu.com/it/u=2886261971,4176733325&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667");
                         list.set(2, "https://img2.baidu.com/it/u=2017833233,3595322493&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=750");
                         if (list.size() == dragSelectorAdapter.getList_bean().size()) {
-                            dragSelectorAdapter.dispatchUpdatesToItemDecoration(new ArrayList<>(list));
+                            dragSelectorAdapter.dispatchUpdatesToItemDecoration(new ArrayList<>(list),null);
                             //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
 //                            dragSelectorAdapter.submitList(dragSelectorAdapter.getList_bean());
                         } else {

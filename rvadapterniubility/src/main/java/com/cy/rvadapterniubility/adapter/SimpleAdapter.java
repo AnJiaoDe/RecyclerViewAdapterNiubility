@@ -158,11 +158,11 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     }
 
-    public final void onItemMove__(int fromPosition, int toPosition,@NonNull RecyclerView.ViewHolder srcHolder,@NonNull RecyclerView.ViewHolder targetHolder) {
+    public final void onItemMove__(int fromPosition, int toPosition, @NonNull RecyclerView.ViewHolder srcHolder, @NonNull RecyclerView.ViewHolder targetHolder) {
         onItemMove(fromPosition, toPosition, (BaseViewHolder) srcHolder, (BaseViewHolder) targetHolder);
     }
 
-    public void onItemMove(int fromPosition, int toPosition,@NonNull BaseViewHolder srcHolder,@NonNull BaseViewHolder targetHolder) {
+    public void onItemMove(int fromPosition, int toPosition, @NonNull BaseViewHolder srcHolder, @NonNull BaseViewHolder targetHolder) {
 
     }
 
@@ -207,10 +207,10 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * 注意引用问题，listNew引用坚决不能和List_bean一致，否则GG
      * 比较的时候，比较的是新旧LIST的所有数据，所有数据都会回调
      * //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
-     *
+     * 添加callback 防止getlistbean.getsize 同步问题
      * @param listNew
      */
-    public void dispatchUpdatesTo(@NonNull final List<T> listNew) {
+    public void dispatchUpdatesTo(@NonNull final List<T> listNew, @Nullable final CallbackDiff callbackDiff) {
         ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<DiffUtil.DiffResult>() {
             @Override
             public DiffUtil.DiffResult runThread() {
@@ -248,6 +248,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             public void runUIThread(DiffUtil.DiffResult diffResult) {
                 list_bean = listNew;
                 diffResult.dispatchUpdatesTo(SimpleAdapter.this);
+                if (callbackDiff != null) callbackDiff.onDispatchUpdated();
             }
         });
     }
@@ -256,9 +257,10 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * 注意引用问题，listNew引用坚决不能和List_bean一致，否则GG
      * //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
      * 这个是专供间隔均分的Grid布局和Staggered布局使用的，只要数据有增删和位移，就必须notifydatasetchanged，否则间隔错乱
+     * 添加callback 防止getlistbean.getsize 同步问题
      * @param listNew
      */
-    public void dispatchUpdatesToItemDecoration(@NonNull final List<T> listNew) {
+    public void dispatchUpdatesToItemDecoration(@NonNull final List<T> listNew,@Nullable final CallbackDiff callbackDiff) {
         ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<Boolean>() {
             @Override
             public Boolean runThread() {
@@ -276,14 +278,14 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             public void runUIThread(Boolean refresh) {
                 if (refresh) {
                     clearAdd(listNew);
-                }else {
-                    dispatchUpdatesTo(listNew);
+                } else {
+                    dispatchUpdatesTo(listNew,callbackDiff);
                 }
             }
         });
     }
-
-    public void dispatchUpdatesToWithMsg(final Object msg) {
+//     * 添加callback 防止getlistbean.getsize 同步问题
+    public void dispatchUpdatesToWithMsg(final Object msg,@Nullable final CallbackDiff callbackDiff) {
         ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<DiffUtil.DiffResult>() {
             @Override
             public DiffUtil.DiffResult runThread() {
@@ -326,6 +328,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             @Override
             public void runUIThread(DiffUtil.DiffResult diffResult) {
                 diffResult.dispatchUpdatesTo(SimpleAdapter.this);
+                if (callbackDiff != null) callbackDiff.onDispatchUpdated();
             }
         });
     }
@@ -341,6 +344,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     /**
      * 如果要用diffutil,尽量返回true,可以避免当前item被刷新，返回false的话，areContentsTheSame和getChangePayload不再回调
+     *
      * @param beanOld
      * @param beanNew
      * @return
@@ -351,6 +355,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     /**
      * 返回false的话，getChangePayload不再回调
+     *
      * @param beanOld
      * @param beanNew
      * @return
@@ -601,4 +606,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         return this;
     }
 
+    public static interface CallbackDiff {
+        public void onDispatchUpdated();
+    }
 }
