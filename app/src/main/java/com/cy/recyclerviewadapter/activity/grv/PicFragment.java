@@ -51,13 +51,10 @@ public class PicFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dragSelectorAdapter = new DragSelectorAdapter<String>() {
-            //不刷新，直接回调bindDataToView
             @Override
             public boolean areItemsTheSame(String beanOld, String beanNew, int oldItemPosition, int newItemPosition) {
-                return false;
+                return super.areItemsTheSame(beanOld, beanNew, oldItemPosition, newItemPosition);
             }
-
-            //不刷新，直接回调bindDataToView
             @Override
             public boolean areContentsTheSame(String beanOld, String beanNew, int oldItemPosition, int newItemPosition) {
                 return super.areContentsTheSame(beanOld, beanNew, oldItemPosition, newItemPosition);
