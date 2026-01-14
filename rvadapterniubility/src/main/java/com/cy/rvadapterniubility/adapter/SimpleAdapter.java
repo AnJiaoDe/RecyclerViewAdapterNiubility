@@ -3,6 +3,7 @@ package com.cy.rvadapterniubility.adapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.os.Handler;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.cy.rvadapterniubility.ThreadUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
@@ -208,6 +210,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * 比较的时候，比较的是新旧LIST的所有数据，所有数据都会回调
      * //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
      * 添加callback 防止getlistbean.getsize 同步问题
+     *
      * @param listNew
      */
     public void dispatchUpdatesTo(@NonNull final List<T> listNew, @Nullable final CallbackDiff callbackDiff) {
@@ -227,18 +230,18 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
                     @Override
                     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                        return SimpleAdapter.this.areItemsTheSame(list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+                        return SimpleAdapter.this.areItemsTheSame(list_bean.get(oldItemPosition), listNew.get(newItemPosition), oldItemPosition, newItemPosition);
                     }
 
                     @Override
                     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                        return SimpleAdapter.this.areContentsTheSame(list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+                        return SimpleAdapter.this.areContentsTheSame(list_bean.get(oldItemPosition), listNew.get(newItemPosition), oldItemPosition, newItemPosition);
                     }
 
                     @Nullable
                     @Override
                     public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-                        return SimpleAdapter.this.getChangePayload(list_bean.get(oldItemPosition), listNew.get(newItemPosition));
+                        return SimpleAdapter.this.getChangePayload(list_bean.get(oldItemPosition), listNew.get(newItemPosition), oldItemPosition, newItemPosition);
                     }
                 });
                 return diffResult;
@@ -258,15 +261,16 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
      * 这个是专供间隔均分的Grid布局和Staggered布局使用的，只要数据有增删和位移，就必须notifydatasetchanged，否则间隔错乱
      * 添加callback 防止getlistbean.getsize 同步问题
+     *
      * @param listNew
      */
-    public void dispatchUpdatesToItemDecoration(@NonNull final List<T> listNew,@Nullable final CallbackDiff callbackDiff) {
+    public void dispatchUpdatesToItemDecoration(@NonNull final List<T> listNew, @Nullable final CallbackDiff callbackDiff) {
         ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<Boolean>() {
             @Override
             public Boolean runThread() {
                 if (list_bean.size() == listNew.size()) {
                     for (int i = 0; i < list_bean.size(); i++) {
-                        if (!areItemsTheSame(list_bean.get(i), listNew.get(i)))
+                        if (!areItemsTheSame(list_bean.get(i), listNew.get(i), i, i))
                             return true;
                     }
                     return false;
@@ -279,13 +283,18 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
                 if (refresh) {
                     clearAdd(listNew);
                 } else {
-                    dispatchUpdatesTo(listNew,callbackDiff);
+                    dispatchUpdatesTo(listNew, callbackDiff);
                 }
             }
         });
     }
-//     * 添加callback 防止getlistbean.getsize 同步问题
-    public void dispatchUpdatesToWithMsg(final Object msg,@Nullable final CallbackDiff callbackDiff) {
+
+    /**
+     * 用notify会导致item刷新
+     * 在bindDataToView 中，判断payloads是否有msg 决定是否只更新item的部分内容
+     * 这个函数，涉及所有的postition
+     */
+    public void dispatchUpdatesToMsg(final Object msg) {
         ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<DiffUtil.DiffResult>() {
             @Override
             public DiffUtil.DiffResult runThread() {
@@ -328,48 +337,98 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
             @Override
             public void runUIThread(DiffUtil.DiffResult diffResult) {
                 diffResult.dispatchUpdatesTo(SimpleAdapter.this);
-                if (callbackDiff != null) callbackDiff.onDispatchUpdated();
             }
         });
     }
 
     /**
-     * @param beanOld
-     * @param beanNew
-     * @return
+     * 用notifyItemChanged会导致item刷新，即使notify一个item,也会 导致多个被刷新
+     * 在bindDataToView 中，判断payloads是否有msg 决定是否只更新item的部分内容
+     * @param <Msg>  position ->  msg  需要改变内容的postition   需要改变内容的postition对应的参数
      */
-//    public boolean areItemsTheSameWithItemDecoration(T beanOld, T beanNew) {
-//        return false;
-//    }
+    public <Msg> void dispatchUpdatesToMsg( final Map<Integer,Msg> mapMsg) {
+        ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<DiffUtil.DiffResult>() {
+            @Override
+            public DiffUtil.DiffResult runThread() {
+                DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                    @Override
+                    public int getOldListSize() {
+                        return getList_bean().size();
+                    }
+
+                    @Override
+                    public int getNewListSize() {
+                        return getList_bean().size();
+                    }
+
+                    @Override
+                    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                        if (mapMsg.containsKey(newItemPosition)) return false;
+                        return true;
+                    }
+
+                    /**
+                     * 在bindDataToView 中，判断payloads是否有msg 决定是否只更新item的部分内容
+                     * @param oldItemPosition The position of the item in the old list
+                     * @param newItemPosition The position of the item in the new list
+                     * @return
+                     */
+                    @Nullable
+                    @Override
+                    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+                        return mapMsg.get(newItemPosition);
+                    }
+                });
+                return diffResult;
+            }
+
+            @Override
+            public void runUIThread(DiffUtil.DiffResult diffResult) {
+                diffResult.dispatchUpdatesTo(SimpleAdapter.this);
+            }
+        });
+    }
 
     /**
-     * 如果要用diffutil,尽量返回true,可以避免当前item被刷新，返回false的话，areContentsTheSame和getChangePayload不再回调
+     * areItemsTheSame决定item是否被刷新
+     * 如果要用diffutil,尽量返回true,可以避免当前item被刷新，
+     * 返回true   item不刷新   areContentsTheSame回调     areContentsTheSame返回true  bindDataToView不回调  areContentsTheSame返回false bindDataToView回调
+     * 返回false  item刷新     areContentsTheSame不回调   bindDataToView必回调
      *
      * @param beanOld
      * @param beanNew
      * @return
      */
-    public boolean areItemsTheSame(T beanOld, T beanNew) {
-        return false;
+    public boolean areItemsTheSame(T beanOld, T beanNew, int oldItemPosition, int newItemPosition) {
+        return beanOld.equals(beanNew);
     }
 
     /**
-     * 返回false的话，getChangePayload不再回调
+     * areContentsTheSame决定是否回调binddataview，通过getChangePayload传递参数
+     * 返回false    getChangePayload回调   binddataview回调
+     * 返回true     getChangePayload不再回调      binddataview不回调
      *
      * @param beanOld
      * @param beanNew
      * @return
      */
-    public boolean areContentsTheSame(T beanOld, T beanNew) {
-        return false;
+    public boolean areContentsTheSame(T beanOld, T beanNew, int oldItemPosition, int newItemPosition) {
+        return beanOld.equals(beanNew);
     }
 
     /**
+     * 在bindDataToView 中，判断payloads是否有msg 决定是否只更新item的部分内容
+     *
      * @param beanOld
      * @param beanNew
      * @return
      */
-    public Object getChangePayload(T beanOld, T beanNew) {
+    public Object getChangePayload(T beanOld, T beanNew, int oldItemPosition, int newItemPosition) {
         return null;
     }
     /**

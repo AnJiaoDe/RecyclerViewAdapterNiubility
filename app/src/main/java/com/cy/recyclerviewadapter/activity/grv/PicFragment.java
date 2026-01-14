@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
 
 import android.os.Handler;
 import android.os.Vibrator;
@@ -23,16 +24,20 @@ import com.cy.recyclerviewadapter.MainActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
+import com.cy.rvadapterniubility.ThreadUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
 import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 import com.cy.rvadapterniubility.refreshrv.GridRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PicFragment extends BaseFragment {
     private GridRefreshLayout gridRefreshLayout;
@@ -48,20 +53,21 @@ public class PicFragment extends BaseFragment {
         dragSelectorAdapter = new DragSelectorAdapter<String>() {
             //不刷新，直接回调bindDataToView
             @Override
-            public boolean areItemsTheSame(String beanOld, String beanNew) {
-                return beanOld.equals(beanNew);
+            public boolean areItemsTheSame(String beanOld, String beanNew, int oldItemPosition, int newItemPosition) {
+                return false;
             }
 
             //不刷新，直接回调bindDataToView
             @Override
-            public boolean areContentsTheSame(String beanOld, String beanNew) {
-                return beanOld.equals(beanNew);
+            public boolean areContentsTheSame(String beanOld, String beanNew, int oldItemPosition, int newItemPosition) {
+                return super.areContentsTheSame(beanOld, beanNew, oldItemPosition, newItemPosition);
             }
 
-//            @Override
-//            public Object getChangePayload(String beanOld, String beanNew) {
+            @Override
+            public Object getChangePayload(String beanOld, String beanNew, int oldItemPosition, int newItemPosition) {
+                return null;
 //                return new String("数据变化");
-//            }
+            }
 
             @Override
             public void onSelectCountChanged(boolean isAllSelected, int count_selected) {
@@ -104,7 +110,7 @@ public class PicFragment extends BaseFragment {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
                         LogUtils.log("bindDataToView onCheckedChanged", position + ":" + isChecked);
-                        if(isChecked&&isOverMaxCountSelect()&&!getSparseArraySelector().contains(position)){
+                        if (isChecked && isOverMaxCountSelect() && !getSparseArraySelector().contains(position)) {
                             showToast("不能超过最大选择数量");
                             imageViewSelector.setChecked(false);
                             return;
@@ -120,7 +126,9 @@ public class PicFragment extends BaseFragment {
                 //在bindDataToView 中，判断payloads是否有NOTIFY_START_DRA_SELECT 决定是否只更新item的选择框，不更新item的图片等较为耗时的操作
                 if (!payloads.isEmpty() && NOTIFY_STATE_DRAG_SELECT.equals(payloads.get(0))) return;
 
-                GlideUtils.load(activity, bean, R.drawable.default_pic, holder.getView(R.id.iv));
+                LogUtils.log("GlideUtilsGlideUtils", holder.getTag());
+
+                GlideUtils.load(activity, !payloads.isEmpty() ? (String) payloads.get(0) : bean, R.drawable.default_pic, holder.getView(R.id.iv));
             }
 
             @Override
@@ -172,6 +180,18 @@ public class PicFragment extends BaseFragment {
                 //不刷新，直接回调bindDataToView
                 layout_menu.setVisibility(View.GONE);
                 dragSelectorAdapter.stopDragSelect();
+            }
+        });
+        view.findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //notifyItemChanged容易导致多个item被刷新，不要用
+//                dragSelectorAdapter.notifyItemChanged(3);
+                //替代
+                Map<Integer, String> mapMsg = new HashMap<>();
+                mapMsg.put(2, "https://img2.baidu.com/it/u=2017833233,3595322493&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=750");
+                mapMsg.put(3, "https://img2.baidu.com/it/u=2886261971,4176733325&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667");
+                dragSelectorAdapter.dispatchUpdatesToMsg(mapMsg);
             }
         });
 
@@ -243,14 +263,16 @@ public class PicFragment extends BaseFragment {
                     public void run() {
                         list.set(3, "https://img2.baidu.com/it/u=2886261971,4176733325&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667");
                         list.set(2, "https://img2.baidu.com/it/u=2017833233,3595322493&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=750");
-                        if (list.size() == dragSelectorAdapter.getList_bean().size()) {
-                            dragSelectorAdapter.dispatchUpdatesToItemDecoration(new ArrayList<>(list),null);
-                            //ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
+                        dragSelectorAdapter.dispatchUpdatesToItemDecoration(new ArrayList<>(list), null);
+
+//                        if (list.size() == dragSelectorAdapter.getList_bean().size()) {
+//                            dragSelectorAdapter.dispatchUpdatesToItemDecoration(new ArrayList<>(list),null);
+//                            ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
 //                            dragSelectorAdapter.submitList(dragSelectorAdapter.getList_bean());
-                        } else {
-                            //如果数量变了，必须notifyDataSetChanged，否则错乱，尤其是间隔错乱
-                            dragSelectorAdapter.clearAdd(list);
-                        }
+//                        } else {
+//                            如果数量变了，必须notifyDataSetChanged，否则错乱，尤其是间隔错乱
+//                            dragSelectorAdapter.clearAdd(list);
+//                        }
                         gridRefreshLayout.closeRefreshDelay("有8条更新", 2000);
                     }
                 }, 1000);
