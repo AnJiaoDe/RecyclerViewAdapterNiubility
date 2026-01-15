@@ -39,9 +39,9 @@ public class LinearItemDecoration extends RecyclerView.ItemDecoration {
         switch (orientation) {
             case RecyclerView.VERTICAL:
                 outRect.left =Math.round(space_horizontal);
-                outRect.top = Math.round(space_vertical);
+                outRect.top = Math.round(position==0?space_vertical:0);
                 outRect.right =Math.round(space_horizontal);
-                outRect.bottom = Math.round(position==parent.getAdapter().getItemCount()-1?space_vertical:0);
+                outRect.bottom =Math.round(space_vertical);
                 break;
             //HORIZONTAL的其实就是VERTICAL翻转一下
             case RecyclerView.HORIZONTAL:
