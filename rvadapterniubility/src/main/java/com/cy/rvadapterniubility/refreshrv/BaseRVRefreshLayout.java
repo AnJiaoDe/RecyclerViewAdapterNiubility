@@ -81,13 +81,6 @@ public abstract class BaseRVRefreshLayout<V extends BaseRecyclerView, O extends 
 
     public <T extends BaseRVRefreshLayout<V, O>> T setAdapter(MultiAdapter multiAdapter,
                                                               OnRefreshListener onRefreshListener, O onLoadMoreListener) {
-        onLoadMoreListener.setCallbackState(new OnLoadMoreListener.CallbackState() {
-            @Override
-            public void onStateChanged(boolean isLoadMoreing) {
-                //防止上拉加载和刷新同时进行，导致RV崩溃
-                setEnableRefresh(!isLoadMoreing);
-            }
-        });
         setOnRefreshListener(onRefreshListener);
         addOnScrollListener(onLoadMoreListener);
         setAdapter(multiAdapter);
