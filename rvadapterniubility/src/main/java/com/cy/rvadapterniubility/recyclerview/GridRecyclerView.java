@@ -38,6 +38,7 @@ public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecy
     public int getSpanCount() {
         return spanCount;
     }
+
     public T putFullSpanPosition(int position) {
         sparseArrayFullSpan.put(position, true);
         return (T) this;
@@ -47,6 +48,12 @@ public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecy
         sparseArrayFullSpan.remove(position);
         return (T) this;
     }
+
+    public T clearFullSpanPositions() {
+        sparseArrayFullSpan.clear();
+        return (T) this;
+    }
+
 
     public SparseArray<Boolean> getSparseArrayFullSpan() {
         return sparseArrayFullSpan;
