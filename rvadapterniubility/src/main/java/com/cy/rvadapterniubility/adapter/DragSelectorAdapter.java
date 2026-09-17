@@ -2,6 +2,7 @@ package com.cy.rvadapterniubility.adapter;
 
 import android.util.SparseArray;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,12 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     public DragSelectorAdapter() {
         super();
         sparseArraySelector = new SparseArraySelector();
+    }
+    public boolean isFullSpan(@LayoutRes int itemLayoutID) {
+        return false;
+    }
+    public boolean useSelector(@LayoutRes int itemLayoutID) {
+        return !isFullSpan(itemLayoutID);
     }
 
     public int getSelectedSize() {

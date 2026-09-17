@@ -3,6 +3,7 @@ package com.cy.rvadapterniubility.adapter;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.AsyncDifferConfig;
@@ -21,7 +22,7 @@ public abstract class StaggeredAdapter<T> extends SimpleAdapter<T>{
         return baseViewHolder;
     }
 
-    public boolean isFullSpan(int itemLayoutID) {
+    public boolean isFullSpan(@LayoutRes int itemLayoutID) {
         return false;
     }
 }

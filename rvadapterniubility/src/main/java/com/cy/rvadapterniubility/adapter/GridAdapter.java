@@ -3,9 +3,14 @@ package com.cy.rvadapterniubility.adapter;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+/**
+ * 日期带grid布局的   用concatadapter贼卡
+ * @param <T>
+ */
 public abstract class GridAdapter<T> extends SimpleAdapter<T>{
 
     /**
@@ -13,7 +18,7 @@ public abstract class GridAdapter<T> extends SimpleAdapter<T>{
      * @param itemLayoutID
      * @return
      */
-    public boolean isFullSpan(int itemLayoutID) {
+    public boolean isFullSpan(@LayoutRes int itemLayoutID) {
         return false;
     }
 }

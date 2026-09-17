@@ -7,13 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description:
- * @Author: cy
- * @CreateDate: 2020/6/16 21:19
- * @UpdateUser:
- * @UpdateDate: 2020/6/16 21:19
- * @UpdateRemark:
- * @Version: 1.0
+ * 日期带grid布局的   用concatadapter贼卡
  */
 public class MultiAdapter<T extends Adapter>  {
     private ConcatAdapter concatAdapter;

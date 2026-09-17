@@ -102,7 +102,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         return list_bean;
     }
 
-    protected void handleClick(final BaseViewHolder holder) {
+    protected void handleClick(@NonNull final BaseViewHolder holder) {
         //添加Item的点击事件
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
