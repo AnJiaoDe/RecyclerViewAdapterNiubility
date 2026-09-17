@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cy.rvadapterniubility.R;
 import com.cy.refreshlayoutniubility.IAnimationView;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.GridAdapter;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
@@ -34,7 +35,7 @@ import java.util.List;
  * @Version:
  */
 public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> {
-    private SimpleAdapter<String> loadMoreAdapter;
+    private GridAdapter<String> loadMoreAdapter;
     private MultiAdapter<SimpleAdapter> multiAdapter;
     private int count_remain = 0;
     private boolean isLoadMoreing = false;
@@ -47,7 +48,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
 
     public OnGridLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
-        loadMoreAdapter = new SimpleAdapter<String>() {
+        loadMoreAdapter = new GridAdapter<String>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 OnGridLoadMoreListener.this.bindDataToLoadMore(holder, bean);
@@ -63,6 +64,11 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             @Override
             public void onItemClick(BaseViewHolder holder, int position, String bean) {
                 onItemLoadMoreClick(holder);
+            }
+
+            @Override
+            public boolean isFullSpan(int itemLayoutID) {
+                return true;
             }
         };
         multiAdapter.addAdapter(multiAdapter.getAdapters().size(), loadMoreAdapter);
@@ -107,7 +113,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
         super.onScrollArrivedTop(baseRecyclerView, positionHolder, offsetX, offsetY);
         if (loadMoreAdapter.getItemCount() > 0) {
             //loadMoreAdapter.set()不一定会回调bindDataToView，因为loadmore布局还不可见，故而必须手动removeFullSpanPosition
-            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+//            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
             isLoadMoreing = false;
             loadMoreAdapter.clear();
         }
@@ -126,7 +132,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
         super.onScrollArrivedLeft(baseRecyclerView, positionHolder, offsetX, offsetY);
         if (loadMoreAdapter.getItemCount() > 0) {
             //loadMoreAdapter.set()不一定会回调bindDataToView，因为loadmore布局还不可见，故而必须手动removeFullSpanPosition
-            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+//            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
             isLoadMoreing = false;
             loadMoreAdapter.clear();
         }
@@ -149,7 +155,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             if (orientation == RecyclerView.VERTICAL) {
                 if (holder != null && holder.itemView.getBottom() + space >= baseRecyclerView.getHeight()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
-                        gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
+//                        gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                         loadMoreAdapter.add("");
                     }
                     return;
@@ -157,7 +163,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             } else {
                 if (holder != null && holder.itemView.getRight() + space >= baseRecyclerView.getWidth()) {
                     if (loadMoreAdapter.getItemCount() == 0) {
-                        gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
+//                        gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                         loadMoreAdapter.add("");
                     }
                     return;
@@ -188,7 +194,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             //说明最后一个item-count_remain可见了，可以开始loadMore了
             if (position >= multiAdapter.getMergeAdapter().getItemCount() - 1 - count_remain) {
                 if (loadMoreAdapter.getItemCount() == 0) {
-                    gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
+//                    gridRecyclerView.putFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount());
                     loadMoreAdapter.add("");
                 }
                 //防止频繁loadMore,而且布应该在onDragging触发onLoadMoreStart
@@ -229,7 +235,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
                             super.onAnimationEnd(animation);
                             //瀑布流会出现防止莫名奇妙地再显示一次没有更多字样才消失，原因不明，grid不知道会不会出现
                             if (tv != null) tv.setVisibility(View.GONE);
-                            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
+//                            gridRecyclerView.removeFullSpanPosition(multiAdapter.getMergeAdapter().getItemCount() - 1);
                             //holder会被复用，所以动画还原到初始位置
                             holder.itemView.setAlpha(1);
                             holder.itemView.setTranslationX(0);

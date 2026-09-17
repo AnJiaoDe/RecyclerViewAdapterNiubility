@@ -3,10 +3,12 @@ package com.cy.rvadapterniubility.recyclerview;
 import android.graphics.Rect;
 import android.util.SparseArray;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 
 /**
@@ -54,38 +56,41 @@ public class StaggeredItemDecoration extends RecyclerView.ItemDecoration {
         final StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) parent.getLayoutManager();
         BaseViewHolder viewHolder = (BaseViewHolder) parent.getChildViewHolder(view);
         int position = viewHolder.getAbsoluteAdapterPosition();
-        sparseArrayullSpan.put(position, viewHolder.isFullSpan());
+        StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+        sparseArrayullSpan.put(position, layoutParams.isFullSpan());
         int spanCount = staggeredGridLayoutManager.getSpanCount();
         int orientation = staggeredGridLayoutManager.getOrientation();
-        StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
         // 获取item在span中的下标,假如2个span,从左到右，index 0--1,（注意：先从上面的开始绘制，如果右边的在上面就是先绘制1再绘制0）
-        int spanIndex = params.getSpanIndex();
-        float perSpace = space  / spanCount;
+        int spanIndex = layoutParams.getSpanIndex();
+        float perSpace = space / spanCount;
 
+        //不灵，返回NULL
+//        RecyclerView.ViewHolder firstHolder =
+//                parent.findViewHolderForAdapterPosition(0);
 
         int a = spanCount - spanIndex % spanCount;
-        int b = viewHolder.isFullSpan() ? spanCount : (1 + spanIndex % spanCount);
+        int b = layoutParams.isFullSpan() ? spanCount : (1 + spanIndex % spanCount);
         switch (orientation) {
             case RecyclerView.VERTICAL:
                 outRect.left = Math.round(a * perSpace);
                 if (position == 0) {
-                    outRect.top =  Math.round(space);
+                    outRect.top = Math.round(space);
                 } else {
-                    outRect.top =  Math.round(position < spanCount ? (sparseArrayullSpan.get(0) ? 0 : space) : 0);
+                    outRect.top = Math.round(position < spanCount ? (sparseArrayullSpan.get(0) ? 0 : space) : 0);
                 }
-                outRect.right =  Math.round(b * perSpace);
-                outRect.bottom =  Math.round(space);
+                outRect.right = Math.round(b * perSpace);
+                outRect.bottom = Math.round(space);
                 break;
             //HORIZONTAL的其实就是VERTICAL翻转一下
             case RecyclerView.HORIZONTAL:
                 if (position == 0) {
-                    outRect.left =  Math.round(space);
+                    outRect.left = Math.round(space);
                 } else {
-                    outRect.left =  Math.round(position < spanCount ? (sparseArrayullSpan.get(0) ? 0 : space) : 0);
+                    outRect.left = Math.round(position < spanCount ? (sparseArrayullSpan.get(0) ? 0 : space) : 0);
                 }
-                outRect.top = Math.round( a * perSpace);
-                outRect.right = Math.round( space);
-                outRect.bottom =  Math.round(b * perSpace);
+                outRect.top = Math.round(a * perSpace);
+                outRect.right = Math.round(space);
+                outRect.bottom = Math.round(b * perSpace);
                 break;
         }
     }

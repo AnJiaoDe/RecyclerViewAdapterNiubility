@@ -21,7 +21,6 @@ import java.util.Objects;
 
 public class BaseViewHolder extends RecyclerView.ViewHolder {
     private SparseArray<View> array_view;
-    private boolean isFullSpan = false;
 //    private Map<Object, Bitmap> mapBitmap;
 //    private Object obj;
     private Object tag;
@@ -46,14 +45,6 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     public BaseViewHolder putView(@IdRes int viewId, View view) {
         array_view.put(viewId, view);
         return this;
-    }
-
-    public boolean isFullSpan() {
-        return isFullSpan;
-    }
-
-    public void setFullSpan(boolean fullSpan) {
-        isFullSpan = fullSpan;
     }
 
 //???????????????????????????????????????????????????????????????

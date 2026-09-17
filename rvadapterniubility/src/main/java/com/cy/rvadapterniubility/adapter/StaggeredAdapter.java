@@ -16,7 +16,6 @@ public abstract class StaggeredAdapter<T> extends SimpleAdapter<T>{
     public final BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         BaseViewHolder baseViewHolder = new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
         if (isFullSpan(viewType)) {
-            baseViewHolder.setFullSpan(true);
             ((StaggeredGridLayoutManager.LayoutParams) baseViewHolder.itemView.getLayoutParams()).setFullSpan(true);
         }
         return baseViewHolder;

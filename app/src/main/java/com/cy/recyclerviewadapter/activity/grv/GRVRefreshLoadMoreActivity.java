@@ -14,6 +14,7 @@ import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.GridAdapter;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GRVRefreshLoadMoreActivity extends BaseActivity {
-    private SimpleAdapter<HRVBean> rvAdapter;
+    private GridAdapter<HRVBean> gridAdapter;
     private GridRefreshLayout gridRefreshLayout;
     private MultiAdapter multiAdapter;
     @Override
@@ -46,7 +47,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
             }
             list.add(new HRVBean(R.drawable.pic1));
         }
-        rvAdapter=new SimpleAdapter<HRVBean>() {
+        gridAdapter=new GridAdapter<HRVBean>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
                 holder.setImageResource(R.id.iv,bean.getResID());
@@ -63,7 +64,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                 showToast("点击" + position);
             }
         };
-        multiAdapter=new MultiAdapter().addAdapter(rvAdapter);
+        multiAdapter=new MultiAdapter().addAdapter(gridAdapter);
         gridRefreshLayout.getRecyclerView().addItemDecoration(new GridItemDecoration(dpAdapt(10)));
         gridRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
             @Override
@@ -72,9 +73,9 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                     @Override
                     public void run() {
                         for (int i = 0; i < 8; i++) {
-                            rvAdapter.addToTopNoNotify(new HRVBean(R.drawable.pic3));
+                            gridAdapter.addToTopNoNotify(new HRVBean(R.drawable.pic3));
                         }
-                        rvAdapter.notifyDataSetChanged();
+                        gridAdapter.notifyDataSetChanged();
                         gridRefreshLayout.closeRefreshDelay("有8条更新",2000);
                     }
                 }, 2000);
@@ -97,9 +98,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                             });
                             return;
                         }
-                        for (int i = 0; i < 8; i++) {
-                           rvAdapter.addNoNotify(new HRVBean(R.drawable.pic1));
-                        }
+
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override
                             public void onClosed() {
@@ -107,15 +106,18 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
                                 /**
                                  * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
                                  */
-//                                rvAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 8, 8);
-                                rvAdapter.notifyBehindInserted(8);
+//                                gridAdapter.notifyBehindInserted(8);
+                                for (int i = 0; i < 1; i++) {
+                                    gridAdapter.addNoNotify(new HRVBean(R.drawable.pic1));
+                                }
+                                gridAdapter.notifyItemRangeInserted(multiAdapter.getAdapter(0).getItemCount() - 1, 1);
                             }
                         });
                     }
                 }, 2000);
             }
         });
-        rvAdapter.add(list);
+        gridAdapter.add(list);
     }
 
     @Override

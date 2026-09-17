@@ -17,7 +17,7 @@ import com.cy.refreshlayoutniubility.ScreenUtils;
 
 public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecyclerView<T> {
     private int spanCount = 2;
-    private SparseArray<Boolean> sparseArrayFullSpan;
+//    private SparseArray<Boolean> sparseArrayFullSpan;
     private GridItemDecoration gridItemDecoration;
 
     public GridRecyclerView(Context context) {
@@ -26,7 +26,7 @@ public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecy
 
     public GridRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        sparseArrayFullSpan = new SparseArray<>();
+//        sparseArrayFullSpan = new SparseArray<>();
         addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(context, 10)));
     }
 
@@ -39,25 +39,25 @@ public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecy
         return spanCount;
     }
 
-    public T putFullSpanPosition(int position) {
-        sparseArrayFullSpan.put(position, true);
-        return (T) this;
-    }
-
-    public T removeFullSpanPosition(int position) {
-        sparseArrayFullSpan.remove(position);
-        return (T) this;
-    }
-
-    public T clearFullSpanPositions() {
-        sparseArrayFullSpan.clear();
-        return (T) this;
-    }
-
-
-    public SparseArray<Boolean> getSparseArrayFullSpan() {
-        return sparseArrayFullSpan;
-    }
+//    public T putFullSpanPosition(int position) {
+//        sparseArrayFullSpan.put(position, true);
+//        return (T) this;
+//    }
+//
+//    public T removeFullSpanPosition(int position) {
+//        sparseArrayFullSpan.remove(position);
+//        return (T) this;
+//    }
+//
+//    public T clearFullSpanPositions() {
+//        sparseArrayFullSpan.clear();
+//        return (T) this;
+//    }
+//
+//
+//    public SparseArray<Boolean> getSparseArrayFullSpan() {
+//        return sparseArrayFullSpan;
+//    }
 
     public T addItemDecoration(GridItemDecoration gridItemDecoration) {
         if (this.gridItemDecoration != null)
