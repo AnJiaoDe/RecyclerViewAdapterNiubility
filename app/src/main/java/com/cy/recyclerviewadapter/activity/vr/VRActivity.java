@@ -41,7 +41,7 @@ public class VRActivity extends BaseActivity {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, bean.getStr());
-                LogUtils.log("bindDataToView",position);
+                LogUtils.log("bindDataToView",position+":"+holder.itemView.hashCode());
             }
 
             @Override

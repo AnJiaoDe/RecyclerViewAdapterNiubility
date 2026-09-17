@@ -28,98 +28,105 @@ public class GRVHeadFootActivity extends BaseActivity {
         setContentView(R.layout.activity_grvhead_foot);
 
 
-        multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
-            @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
-                holder.setText(R.id.tv, "head" + position);
-            }
+        multiAdapter = new MultiAdapter<SimpleAdapter>();
 
-            @Override
-            public int getItemLayoutID(int position, String bean) {
-                return R.layout.foot;
-            }
-
-            @Override
-            public void onItemClick(BaseViewHolder holder, int position, String bean) {
-            }
-        }).addAdapter(new SimpleAdapter<HRVBean>() {
-            @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
-                holder.setImageResource(R.id.iv, bean.getResID());
-            }
-
-            @Override
-            public int getItemLayoutID(int position, HRVBean bean) {
-                return R.layout.item_grv;
-            }
-
-
-            @Override
-            public void onItemClick(BaseViewHolder holder, int position, HRVBean bean) {
-                showToast("点击" + position);
-            }
-
-            @Override
-            public void onViewAttachedToWindow(BaseViewHolder holder) {
-                super.onViewAttachedToWindow(holder);
-                startDefaultAttachedAnim(holder);
-            }
-        }).addAdapter(new SimpleAdapter<String>() {
-            @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
-                holder.setText(R.id.tv, "foot" + position);
-            }
-
-            @Override
-            public int getItemLayoutID(int position, String bean) {
-                return R.layout.foot;
-
-            }
-
-
-            @Override
-            public void onItemClick(BaseViewHolder holder, int position, String bean) {
-            }
-        });
-
-        ((VerticalGridRecyclerView) findViewById(R.id.grv))
-                .setSpanCount(4)
-                .putFullSpanPosition(0)
-                .putFullSpanPosition(101)
+        VerticalGridRecyclerView verticalGridRecyclerView = findViewById(R.id.grv);
+        verticalGridRecyclerView.setSpanCount(4)
                 .addItemDecoration(new GridItemDecoration(dpAdapt(10)))
                 .setAdapter(multiAdapter.getMergeAdapter());
-        final List<String> list_head = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
-            list_head.add("head" + i);
-        }
+//        final List<String> list_head = new ArrayList<>();
+//        for (int i = 0; i < 1; i++) {
+//            list_head.add("head" + i);
+//        }
 
-        List<HRVBean> list_content = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            if (i % 5 == 0) {
+        int position_head = 0;
+        for (int i = 0; i < 1000; i++) {
+            SimpleAdapter<String> simpleAdapterFull = new SimpleAdapter<String>() {
+                @Override
+                public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
+                    holder.setText(R.id.tv, "full" + position);
+                }
+
+                @Override
+                public int getItemLayoutID(int position, String bean) {
+                    return R.layout.foot;
+                }
+
+                @Override
+                public void onItemClick(BaseViewHolder holder, int position, String bean) {
+                }
+            };
+            simpleAdapterFull.add("full");
+            multiAdapter.addAdapter(simpleAdapterFull);
+
+            SimpleAdapter<HRVBean> simpleAdapter = new SimpleAdapter<HRVBean>() {
+                @Override
+                public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
+                    holder.setImageResource(R.id.iv, bean.getResID());
+                }
+
+                @Override
+                public int getItemLayoutID(int position, HRVBean bean) {
+                    return R.layout.item_grv;
+                }
+
+
+                @Override
+                public void onItemClick(BaseViewHolder holder, int position, HRVBean bean) {
+                    showToast("点击" + position);
+                }
+
+                @Override
+                public void onViewAttachedToWindow(BaseViewHolder holder) {
+                    super.onViewAttachedToWindow(holder);
+//                startDefaultAttachedAnim(holder);
+                }
+            };
+            List<HRVBean> list_content = new ArrayList<>();
+            final int max=i%5==0?16:13;
+            for (int kkk = 0; kkk < max; kkk++) {
                 list_content.add(new HRVBean(R.drawable.pic3));
-                continue;
-
             }
-            list_content.add(new HRVBean(R.drawable.pic1));
+            simpleAdapter.add(list_content);
+            verticalGridRecyclerView.putFullSpanPosition(position_head);
+            position_head += list_content.size() + 1;
+            multiAdapter.addAdapter(simpleAdapter);
         }
 
-        final List<String> list_foot = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
-            list_foot.add("foot" + i);
-        }
-        multiAdapter.getAdapter(0).add(list_head);
-        LogUtils.log("multiAdapter.getAdapter(0).add(list_head);");
-        multiAdapter.getAdapter(1).add(list_content);
-        LogUtils.log("multiAdapter.getAdapter(1).add(list_content);");
-        multiAdapter.getAdapter(2).add(list_foot);
-        LogUtils.log("multiAdapter.getAdapter(2).add(list_foot);");
-
+//        multiAdapter.addAdapter(new SimpleAdapter<String>() {
+//            @Override
+//            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
+//                holder.setText(R.id.tv, "foot" + position);
+//            }
+//
+//            @Override
+//            public int getItemLayoutID(int position, String bean) {
+//                return R.layout.foot;
+//
+//            }
+//
+//
+//            @Override
+//            public void onItemClick(BaseViewHolder holder, int position, String bean) {
+//            }
+//        });
+//        final List<String> list_foot = new ArrayList<>();
+//        for (int i = 0; i < 1; i++) {
+//            list_foot.add("foot" + i);
+//        }
+//        multiAdapter.getAdapter(0).add(list_head);
+//        LogUtils.log("multiAdapter.getAdapter(0).add(list_head);");
+//        multiAdapter.getAdapter(1).add(list_content);
+//        LogUtils.log("multiAdapter.getAdapter(1).add(list_content);");
+//        multiAdapter.getAdapter(2).add(list_foot);
+//        LogUtils.log("multiAdapter.getAdapter(2).add(list_foot);");
     }
 
     @Override
     public void onClick(View v) {
 
     }
+
     /**
      * --------------------------------------------------------------------------------
      */

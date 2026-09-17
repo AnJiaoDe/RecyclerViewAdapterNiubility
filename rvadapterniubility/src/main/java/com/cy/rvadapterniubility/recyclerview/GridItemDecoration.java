@@ -2,98 +2,144 @@ package com.cy.rvadapterniubility.recyclerview;
 
 import android.graphics.Rect;
 import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
-import com.cy.rvadapterniubility.adapter.BaseViewHolder;
-
 
 /**
- * @Description:注意：使用ItemDecoration时，一定要小心，设置的item的宽度不能超过每列的最大限制，超过了就看不见space了
- * @Author: cy
- * @CreateDate: 2020/7/14 12:27
- * @UpdateUser:
- * @UpdateDate: 2020/7/14 12:27
- * @UpdateRemark:
- * @Version:
+ * Grid 间隔均分
  */
 public class GridItemDecoration extends RecyclerView.ItemDecoration {
-    private float space;
+
+    private final int space;
+
+    private int[] leftOffsets;
+    private int[] rightOffsets;
+
+    private int cacheSpanCount = -1;
+    private int cacheSpace = -1;
 
     public GridItemDecoration(float space) {
-        this.space = space;
+        this.space = Math.round(space);
     }
-
 
     public float getSpace() {
         return space;
     }
 
-    /**
-     * 5个span,6个space,要想分的均匀，必须找到5,6的公约数(肯定是找最小公约数5*6=30)，将每个space分成30/6=5份
-     * 每个span左右占据份数如下：
-     * 5,1  4,2  3,3  2,4  1,5
-     * 每个item左边分到的份数从5到1递减，
-     * 每个item右边分到的份数从做到右递增。
-     * 论数学思想与算法的威力,不要拿着需求就想着写if else 写个简单算法不香吗
-     *
-     * @param outRect
-     * @param view
-     * @param parent
-     * @param state
-     */
+    private void ensureOffsets(int spanCount) {
+        if (spanCount <= 0) {
+            return;
+        }
+
+        if (cacheSpanCount == spanCount
+                && cacheSpace == space
+                && leftOffsets != null
+                && rightOffsets != null) {
+            return;
+        }
+
+        cacheSpanCount = spanCount;
+        cacheSpace = space;
+
+        leftOffsets = new int[spanCount];
+        rightOffsets = new int[spanCount];
+
+        float perSpace = space / (float) spanCount;
+
+        for (int i = 0; i < spanCount; i++) {
+            leftOffsets[i] = Math.round((spanCount - i) * perSpace);
+            rightOffsets[i] = Math.round((i + 1) * perSpace);
+        }
+    }
+
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-//        GridRecyclerView gridRecyclerView = null;
-//        try {
-        GridRecyclerView gridRecyclerView = (GridRecyclerView) parent;
-//        } catch (Exception e) {
-//            throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in GridLayoutManager  for "
-//                    + GridRecyclerView.class.getName() + "or "
-//                    +VerticalGridRecyclerView.class.getName() + "or " + HorizontalGridRecyclerView.class.getName());
-//        }
-        final GridLayoutManager gridLayoutManager = (GridLayoutManager) gridRecyclerView.getLayoutManager();
-        BaseViewHolder viewHolder = (BaseViewHolder) parent.getChildViewHolder(view);
-//        int spanCount = 1;
-//        int orientation = RecyclerView.VERTICAL;
-//        if (layoutManager instanceof GridLayoutManager) {
+    public void getItemOffsets(
+            @NonNull Rect outRect,
+            @NonNull View view,
+            @NonNull RecyclerView parent,
+            @NonNull RecyclerView.State state) {
+
+        if (!(parent instanceof GridRecyclerView)) {
+            outRect.set(0, 0, 0, 0);
+            return;
+        }
+
+        RecyclerView.LayoutManager layoutManager =
+                parent.getLayoutManager();
+
+        if (!(layoutManager instanceof GridLayoutManager)) {
+            outRect.set(0, 0, 0, 0);
+            return;
+        }
+
+        GridLayoutManager gridLayoutManager =
+                (GridLayoutManager) layoutManager;
+
         int spanCount = gridLayoutManager.getSpanCount();
         int orientation = gridLayoutManager.getOrientation();
-//        } else {
-//            throw new IllegalAccessError("You can only use " + this.getClass().getName() + " in GridLayoutManager  for " + VerticalGridRecyclerView.class.getName());
-//        }
-        GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
-        // 获取item在span中的下标,假如2个span,index 永远是从0--1,//不能用getAbsoluteAdapterPosition，因为是grid
-        //如果3个span,假如第一个span占了两列，那么是0,2,否则就是0,1,2
-        //故而，左边第一个span 永远是0，最右边的span永远是spanCount-1
+
+        ensureOffsets(spanCount);
+
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+
+        if (!(layoutParams instanceof GridLayoutManager.LayoutParams)) {
+            outRect.set(0, 0, 0, 0);
+            return;
+        }
+
+        GridLayoutManager.LayoutParams params =
+                (GridLayoutManager.LayoutParams) layoutParams;
+
         int spanIndex = params.getSpanIndex();
-//        LogUtils.log("spanIndex", spanIndex);
+        int spanSize = params.getSpanSize();
 
-        int position = viewHolder.getAbsoluteAdapterPosition();
-        float perSpace = space / spanCount;
+        if (spanIndex < 0 || spanIndex >= spanCount) {
+            outRect.set(0, 0, 0, 0);
+            return;
+        }
 
-        int a = spanCount - spanIndex;
-        int b = gridRecyclerView.getSparseArrayFullSpan().get(position) != null ? spanCount : (1 + spanIndex % spanCount);
-        boolean side = spanIndex == 0 || spanIndex == spanCount - 1;
-        //必须四舍五入，否则，如果space很小，会导致间隔不均匀
-        switch (orientation) {
-            case RecyclerView.VERTICAL:
-                outRect.left = Math.round(a * perSpace);
-                outRect.top = Math.round(position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position - spanIndex - 1) != null ?
-                        0 : (position < spanCount ? space : 0));
-                outRect.right = Math.round(b * perSpace);
-                outRect.bottom = Math.round(space);
-                break;
-            //HORIZONTAL的其实就是VERTICAL翻转一下
-            case RecyclerView.HORIZONTAL:
-                outRect.left = Math.round(position >= 1 && gridRecyclerView.getSparseArrayFullSpan().get(position - spanIndex - 1) != null ?
-                        0 : (position < spanCount ? space : 0));
-                outRect.top = Math.round(a * perSpace);
-                outRect.right = Math.round(space);
-                outRect.bottom = Math.round(b * perSpace);
-                break;
+        int position = parent.getChildAdapterPosition(view);
+
+        if (position == RecyclerView.NO_POSITION) {
+            outRect.set(0, 0, 0, 0);
+            return;
+        }
+
+        // FullSpan 不添加左右间距
+        if (spanSize == spanCount) {
+            if (orientation == RecyclerView.VERTICAL) {
+                outRect.set(0, position > 0 ? space : 0, 0, space);
+            } else {
+                outRect.set(position > 0 ? space : 0, 0, space, 0);
+            }
+            return;
+        }
+
+        int left = leftOffsets[spanIndex];
+        int right = rightOffsets[spanIndex];
+
+        boolean previousIsFullSpan = false;
+
+        int previousPosition = position - spanIndex - 1;
+
+        if (previousPosition >= 0) {
+            previousIsFullSpan =
+                    ((GridRecyclerView<?>) parent)
+                            .getSparseArrayFullSpan()
+                            .get(previousPosition) != null;
+        }
+
+        int top = previousIsFullSpan
+                ? 0
+                : (position < spanCount ? space : 0);
+
+        if (orientation == RecyclerView.VERTICAL) {
+            outRect.set(left, top, right, space);
+        } else {
+            outRect.set(top, left, space, right);
         }
     }
 }
