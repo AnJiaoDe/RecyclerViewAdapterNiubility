@@ -119,7 +119,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
-                        if (isChecked && isOverMaxCountSelect() && !getMapSelector().contains(position)) {
+                        if (isChecked && isOverMaxCountSelect() && !getSelector().contains(position)) {
                             showToast("不能超过最大选择数量");
                             imageViewSelector.setChecked(false);
                             return;

@@ -15,18 +15,18 @@ import java.util.TreeMap;
 
 public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     private boolean usingSelector = false;
-    private MapSelector mapSelector;
+    private Selector selector;
     protected final String NOTIFY_STATE_DRAG_SELECT = "NOTIFY_STATE_DRAG_SELECT";
     private boolean canItemClick = true;
     private int maxCountSelect = -1;
 
     public DragSelectorAdapter() {
         super();
-        mapSelector = new MapSelector();
+        selector = new Selector();
     }
 
     public int getSelectedSize() {
-        return mapSelector.size();
+        return selector.size();
     }
 
     public boolean isUsingSelector() {
@@ -68,14 +68,14 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     public DragSelectorAdapter<T> stopDragSelect() {
         if (!usingSelector) return this;
         usingSelector = false;
-        mapSelector.clear();
+        selector.clear();
         dispatchUpdatesToMsg(NOTIFY_STATE_DRAG_SELECT);
         return this;
     }
 
     public DragSelectorAdapter<T> clearSelected() {
         if (!usingSelector) return this;
-        mapSelector.clear();
+        selector.clear();
         dispatchUpdatesToMsg(NOTIFY_STATE_DRAG_SELECT);
         return this;
     }
@@ -89,19 +89,19 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         return maxCountSelect;
     }
 
-    public MapSelector getMapSelector() {
-        return mapSelector;
+    public Selector getSelector() {
+        return selector;
     }
 
     public DragSelectorAdapter<T> selectAll(boolean isAllSelected) {
-        boolean noChange = (mapSelector.size() == getList_bean().size()) == isAllSelected;
+        boolean noChange = (selector.size() == getList_bean().size()) == isAllSelected;
         if (noChange) return this;
         if (isAllSelected) {
             for (int i = 0; i < getList_bean().size(); i++) {
-                if (!mapSelector.put(i)) break;
+                if (!selector.put(i)) break;
             }
         } else {
-            mapSelector.clear();
+            selector.clear();
         }
         dispatchUpdatesToMsg(NOTIFY_STATE_DRAG_SELECT);
         return this;
@@ -112,10 +112,10 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
      * @return 旧的选中状态是否和新的选中状态一直，用于判断是否回调bindDataToView
      */
     public boolean toggleNoNotify(final int position) {
-        if (mapSelector.contains(position)) {
-            return !mapSelector.remove(position);
+        if (selector.contains(position)) {
+            return !selector.remove(position);
         } else {
-            return !mapSelector.put(position);
+            return !selector.put(position);
         }
     }
 
@@ -125,7 +125,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         if (baseViewHolder == null || position < 0 || position >= getList_bean().size())
             return this;
         bindDataToView(baseViewHolder, position,
-                getList_bean().get(position), mapSelector.contains(position),
+                getList_bean().get(position), selector.contains(position),
                 new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
         return this;
     }
@@ -136,11 +136,11 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
      * @return 旧的选中状态是否和新的选中状态一直，用于判断是否回调bindDataToView
      */
     public boolean selectNoNotify(final int position, boolean select) {
-        if (select == mapSelector.contains(position)) return true;
+        if (select == selector.contains(position)) return true;
         if (select) {
-            return !mapSelector.put(position);
+            return !selector.put(position);
         } else {
-            mapSelector.remove(position);
+            selector.remove(position);
         }
         return false;
     }
@@ -157,7 +157,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public boolean isSelected(int position) {
-        return mapSelector.contains(position);
+        return selector.contains(position);
     }
 
     /**
@@ -184,7 +184,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     @Override
     public final void bindDataToView(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads) {
-        bindDataToView(holder, position, bean, mapSelector.contains(position), payloads);
+        bindDataToView(holder, position, bean, selector.contains(position), payloads);
     }
 
     public abstract void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, boolean isSelected, @NonNull List<Object> payloads);
@@ -223,13 +223,13 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public boolean isOverMaxCountSelect() {
-        return mapSelector.size() == maxCountSelect;
+        return selector.size() == maxCountSelect;
     }
 
-    public class MapSelector {
+    public class Selector {
         private final TreeMap<Integer, T> treeMap;
 
-        public MapSelector() {
+        public Selector() {
             treeMap = new TreeMap<>();
         }
 
@@ -275,7 +275,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
             onSelectCountChanged(getList_bean().size() == treeMap.size(), treeMap.size());
         }
 
-        public TreeMap<Integer, T> getTreeMap() {
+        public TreeMap<Integer, T> getMap() {
             return treeMap;
         }
     }
