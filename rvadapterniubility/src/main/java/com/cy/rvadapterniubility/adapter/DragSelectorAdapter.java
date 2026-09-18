@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
@@ -19,10 +21,12 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     protected final String NOTIFY_STATE_DRAG_SELECT = "NOTIFY_STATE_DRAG_SELECT";
     private boolean canItemClick = true;
     private int maxCountSelect = -1;
+    private Set<Integer> setNoUseSelector;
 
     public DragSelectorAdapter() {
         super();
         selector = new Selector();
+        setNoUseSelector = new HashSet<>();
     }
 
     public int getSelectedSize() {
@@ -35,6 +39,20 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     public boolean useSelector(int itemLayoutID) {
         return !isFullSpan(itemLayoutID);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        int itemType = super.getItemViewType(position);
+        if (!useSelector(itemType)) setNoUseSelector.add(position);
+        return itemType;
+    }
+
+    /**
+     * @return 有多少个item 不用selector
+     */
+    public final int getNoUseSelectorCount() {
+        return setNoUseSelector.size();
     }
 
     /**
@@ -93,12 +111,16 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         return selector;
     }
 
+    public boolean isAllSelected() {
+        return selector.size() == getList_bean().size() - getNoUseSelectorCount();
+    }
+
     public DragSelectorAdapter<T> selectAll(boolean isAllSelected) {
-        boolean noChange = (selector.size() == getList_bean().size()) == isAllSelected;
+        boolean noChange = isAllSelected() == isAllSelected;
         if (noChange) return this;
         if (isAllSelected) {
             for (int i = 0; i < getList_bean().size(); i++) {
-                if (!selector.put(i)) break;
+                if (!selector.put(i) && isOverMaxCountSelect()) break;
             }
         } else {
             selector.clear();
@@ -272,7 +294,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         }
 
         private void notifyCountSelected() {
-            onSelectCountChanged(getList_bean().size() == treeMap.size(), treeMap.size());
+            onSelectCountChanged(isAllSelected(), treeMap.size());
         }
 
         public TreeMap<Integer, T> getMap() {

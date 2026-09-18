@@ -22,8 +22,10 @@ import com.cy.rvadapterniubility.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
@@ -32,14 +34,16 @@ import java.util.Map;
  */
 public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> {
     private List<T> list_bean;//数据源
+    private Set<Integer> setFullSpan;
 
     public SimpleAdapter() {
         list_bean = new ArrayList<>();//数据源
+        setFullSpan = new HashSet<>();
     }
 
     @NonNull
     @Override
-    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public final BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new BaseViewHolder(LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false));
     }
 
@@ -74,9 +78,28 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     public int getItemViewType(int position) {
         //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
         if (position < 0 || position >= list_bean.size()) return R.layout.cy_staggerd_item_0;
-        return getItemLayoutID(position, list_bean.get(position));
+        int itemType = getItemLayoutID(position, list_bean.get(position));
+        if (isFullSpan(itemType)) setFullSpan.add(position);
+        return itemType;
     }
 
+    /**
+     * 妙极了，再也不用手动调用putFullSpanPosition了，还及其容易出BUG
+     *
+     * @param itemLayoutID
+     * @return
+     */
+    public boolean isFullSpan(@LayoutRes int itemLayoutID) {
+        return false;
+    }
+
+    /**
+     *
+     * @return  有多少个item是fullspan的
+     */
+    public final int getFullSpanCount() {
+        return setFullSpan.size();
+    }
     //get出来的position一般都是-1，故而不用
 //    @Override
 //    public void onViewRecycled(@NonNull BaseViewHolder holder) {
@@ -128,14 +151,6 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     public abstract void onItemClick(@NonNull BaseViewHolder holder, int position, T bean);
 
-    /**
-     * 妙极了，再也不用手动调用putFullSpanPosition了，还及其容易出BUG
-     * @param itemLayoutID
-     * @return
-     */
-    public boolean isFullSpan(@LayoutRes int itemLayoutID) {
-        return false;
-    }
     /**
      * 先于setHolderTagPreBindData被调用，可以在此处回收tag对应的数据，比如bitmap，
      * 当然主动持有bitmap显然是不明智的，当view detachwindow之后，bitmap自然就没有可达对象引用它了，会自动被垃圾回收
@@ -347,9 +362,10 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     /**
      * 用notifyItemChanged会导致item刷新，即使notify一个item,也会 导致多个被刷新
      * 在bindDataToView 中，判断payloads是否有msg 决定是否只更新item的部分内容
-     * @param <Msg>  position ->  msg  需要改变内容的postition   需要改变内容的postition对应的参数
+     *
+     * @param <Msg> position ->  msg  需要改变内容的postition   需要改变内容的postition对应的参数
      */
-    public <Msg> void dispatchUpdatesToMsg( final Map<Integer,Msg> mapMsg) {
+    public <Msg> void dispatchUpdatesToMsg(final Map<Integer, Msg> mapMsg) {
         ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<DiffUtil.DiffResult>() {
             @Override
             public DiffUtil.DiffResult runThread() {
