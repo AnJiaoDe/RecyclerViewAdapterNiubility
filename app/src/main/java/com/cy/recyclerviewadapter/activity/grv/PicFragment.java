@@ -74,9 +74,8 @@ public class PicFragment extends BaseFragment {
                 tv_count.setText("已选择" + count_selected + "项");
 
                 // 降序遍历，如果要删除，从后往前删除
-                for (int i = getSparseArraySelector().getSparseArray().size() - 1;
+                for (int i = getMapSelector().size() - 1;
                      i >= 0; i--) {
-                    LogUtils.log("onSelectCountChanged", getSparseArraySelector().getSparseArray().valueAt(i));
                 }
             }
 
@@ -107,7 +106,7 @@ public class PicFragment extends BaseFragment {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
                         LogUtils.log("bindDataToView onCheckedChanged", position + ":" + isChecked);
-                        if (isChecked && isOverMaxCountSelect() && !getSparseArraySelector().contains(position)) {
+                        if (isChecked && isOverMaxCountSelect() && !getMapSelector().contains(position)) {
                             showToast("不能超过最大选择数量");
                             imageViewSelector.setChecked(false);
                             return;

@@ -8,22 +8,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     private boolean usingSelector = false;
-    private SparseArraySelector sparseArraySelector;
+    private MapSelector mapSelector;
     protected final String NOTIFY_STATE_DRAG_SELECT = "NOTIFY_STATE_DRAG_SELECT";
     private boolean canItemClick = true;
     private int maxCountSelect = -1;
 
     public DragSelectorAdapter() {
         super();
-        sparseArraySelector = new SparseArraySelector();
+        mapSelector = new MapSelector();
     }
 
     public int getSelectedSize() {
-        return sparseArraySelector.size();
+        return mapSelector.size();
     }
 
     public boolean isUsingSelector() {
@@ -33,6 +36,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     public boolean useSelector(int itemLayoutID) {
         return !isFullSpan(itemLayoutID);
     }
+
     /**
      * 图片选择器用这个
      */
@@ -64,14 +68,14 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     public DragSelectorAdapter<T> stopDragSelect() {
         if (!usingSelector) return this;
         usingSelector = false;
-        sparseArraySelector.clear();
+        mapSelector.clear();
         dispatchUpdatesToMsg(NOTIFY_STATE_DRAG_SELECT);
         return this;
     }
 
     public DragSelectorAdapter<T> clearSelected() {
         if (!usingSelector) return this;
-        sparseArraySelector.clear();
+        mapSelector.clear();
         dispatchUpdatesToMsg(NOTIFY_STATE_DRAG_SELECT);
         return this;
     }
@@ -85,19 +89,19 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         return maxCountSelect;
     }
 
-    public SparseArraySelector getSparseArraySelector() {
-        return sparseArraySelector;
+    public MapSelector getMapSelector() {
+        return mapSelector;
     }
 
     public DragSelectorAdapter<T> selectAll(boolean isAllSelected) {
-        boolean noChange = (sparseArraySelector.size() == getList_bean().size()) == isAllSelected;
+        boolean noChange = (mapSelector.size() == getList_bean().size()) == isAllSelected;
         if (noChange) return this;
         if (isAllSelected) {
             for (int i = 0; i < getList_bean().size(); i++) {
-                if (!sparseArraySelector.put(i)) break;
+                if (!mapSelector.put(i)) break;
             }
         } else {
-            sparseArraySelector.clear();
+            mapSelector.clear();
         }
         dispatchUpdatesToMsg(NOTIFY_STATE_DRAG_SELECT);
         return this;
@@ -108,10 +112,10 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
      * @return 旧的选中状态是否和新的选中状态一直，用于判断是否回调bindDataToView
      */
     public boolean toggleNoNotify(final int position) {
-        if (sparseArraySelector.contains(position)) {
-            return !sparseArraySelector.remove(position);
+        if (mapSelector.contains(position)) {
+            return !mapSelector.remove(position);
         } else {
-            return !sparseArraySelector.put(position);
+            return !mapSelector.put(position);
         }
     }
 
@@ -121,7 +125,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         if (baseViewHolder == null || position < 0 || position >= getList_bean().size())
             return this;
         bindDataToView(baseViewHolder, position,
-                getList_bean().get(position), sparseArraySelector.contains(position),
+                getList_bean().get(position), mapSelector.contains(position),
                 new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
         return this;
     }
@@ -132,11 +136,11 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
      * @return 旧的选中状态是否和新的选中状态一直，用于判断是否回调bindDataToView
      */
     public boolean selectNoNotify(final int position, boolean select) {
-        if (select == sparseArraySelector.contains(position)) return true;
+        if (select == mapSelector.contains(position)) return true;
         if (select) {
-            return !sparseArraySelector.put(position);
+            return !mapSelector.put(position);
         } else {
-            sparseArraySelector.remove(position);
+            mapSelector.remove(position);
         }
         return false;
     }
@@ -153,7 +157,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public boolean isSelected(int position) {
-        return sparseArraySelector.contains(position);
+        return mapSelector.contains(position);
     }
 
     /**
@@ -180,7 +184,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     @Override
     public final void bindDataToView(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads) {
-        bindDataToView(holder, position, bean, sparseArraySelector.contains(position), payloads);
+        bindDataToView(holder, position, bean, mapSelector.contains(position), payloads);
     }
 
     public abstract void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, boolean isSelected, @NonNull List<Object> payloads);
@@ -219,18 +223,18 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public boolean isOverMaxCountSelect() {
-        return sparseArraySelector.size() == maxCountSelect;
+        return mapSelector.size() == maxCountSelect;
     }
 
-    public class SparseArraySelector {
-        private final SparseArray<T> sparseArray;
+    public class MapSelector {
+        private final Map<Integer, T> map;
 
-        public SparseArraySelector() {
-            sparseArray = new SparseArray<>();
+        public MapSelector() {
+            map = new TreeMap<>();
         }
 
         public int size() {
-            return sparseArray.size();
+            return map.size();
         }
 
         /**
@@ -238,40 +242,41 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
          * @return true表示添加成功
          */
         public boolean put(int position) {
-            if (position < 0 || position >= getList_bean().size()||!useSelector(getItemLayoutID(position,getList_bean().get(position)))) return false;
-            if (sparseArray.size() == maxCountSelect) {
+            if (position < 0 || position >= getList_bean().size() || !useSelector(getItemLayoutID(position, getList_bean().get(position))))
+                return false;
+            if (map.size() == maxCountSelect) {
                 onSelectCountOverMax(maxCountSelect);
                 return false;
             }
-            sparseArray.put(position, getList_bean().get(position));
+            map.put(position, getList_bean().get(position));
             notifyCountSelected();
             return true;
         }
 
         public boolean remove(int position) {
-            sparseArray.remove(position);
+            map.remove(position);
             notifyCountSelected();
             return true;
         }
 
         public boolean contains(int position) {
-            return sparseArray.get(position) != null;
+            return map.get(position) != null;
         }
 
         public boolean clear() {
-            int count_selected = sparseArray.size();
-            sparseArray.clear();
+            int count_selected = map.size();
+            map.clear();
             if (count_selected != 0)
                 notifyCountSelected();
             return true;
         }
 
         private void notifyCountSelected() {
-            onSelectCountChanged(getList_bean().size() == sparseArray.size(), sparseArray.size());
+            onSelectCountChanged(getList_bean().size() == map.size(), map.size());
         }
 
-        public SparseArray<T> getSparseArray() {
-            return sparseArray;
+        public Map<Integer, T> getMap() {
+            return map;
         }
     }
 }
