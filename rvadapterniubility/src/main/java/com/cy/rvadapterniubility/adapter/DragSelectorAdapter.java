@@ -227,14 +227,14 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public class MapSelector {
-        private final Map<Integer, T> map;
+        private final TreeMap<Integer, T> treeMap;
 
         public MapSelector() {
-            map = new TreeMap<>();
+            treeMap = new TreeMap<>();
         }
 
         public int size() {
-            return map.size();
+            return treeMap.size();
         }
 
         /**
@@ -244,39 +244,39 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         public boolean put(int position) {
             if (position < 0 || position >= getList_bean().size() || !useSelector(getItemLayoutID(position, getList_bean().get(position))))
                 return false;
-            if (map.size() == maxCountSelect) {
+            if (treeMap.size() == maxCountSelect) {
                 onSelectCountOverMax(maxCountSelect);
                 return false;
             }
-            map.put(position, getList_bean().get(position));
+            treeMap.put(position, getList_bean().get(position));
             notifyCountSelected();
             return true;
         }
 
         public boolean remove(int position) {
-            map.remove(position);
+            treeMap.remove(position);
             notifyCountSelected();
             return true;
         }
 
         public boolean contains(int position) {
-            return map.get(position) != null;
+            return treeMap.get(position) != null;
         }
 
         public boolean clear() {
-            int count_selected = map.size();
-            map.clear();
+            int count_selected = treeMap.size();
+            treeMap.clear();
             if (count_selected != 0)
                 notifyCountSelected();
             return true;
         }
 
         private void notifyCountSelected() {
-            onSelectCountChanged(getList_bean().size() == map.size(), map.size());
+            onSelectCountChanged(getList_bean().size() == treeMap.size(), treeMap.size());
         }
 
-        public Map<Integer, T> getMap() {
-            return map;
+        public TreeMap<Integer, T> getTreeMap() {
+            return treeMap;
         }
     }
 }
