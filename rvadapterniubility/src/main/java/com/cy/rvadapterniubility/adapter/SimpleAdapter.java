@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
@@ -44,12 +45,6 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     @Override
     public final void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-//        recycleData(holder.getTag());
-//        handleClick(holder);
-//        //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
-//        if (position < 0 || position >= list_bean.size()) return;
-//        holder.setTag(setHolderTagPreBindData(holder, position, list_bean.get(position)));
-//        bindDataToView(holder, position, list_bean.get(position));
     }
 
     @Override
@@ -133,6 +128,14 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
 
     public abstract void onItemClick(@NonNull BaseViewHolder holder, int position, T bean);
 
+    /**
+     * 妙极了，再也不用手动调用putFullSpanPosition了，还及其容易出BUG
+     * @param itemLayoutID
+     * @return
+     */
+    public boolean isFullSpan(@LayoutRes int itemLayoutID) {
+        return false;
+    }
     /**
      * 先于setHolderTagPreBindData被调用，可以在此处回收tag对应的数据，比如bitmap，
      * 当然主动持有bitmap显然是不明智的，当view detachwindow之后，bitmap自然就没有可达对象引用它了，会自动被垃圾回收

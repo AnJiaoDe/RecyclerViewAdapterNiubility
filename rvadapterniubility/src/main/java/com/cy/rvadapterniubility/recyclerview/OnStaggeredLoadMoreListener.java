@@ -19,7 +19,6 @@ import com.cy.rvadapterniubility.R;
 
 import com.cy.refreshlayoutniubility.IAnimationView;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
-import com.cy.rvadapterniubility.adapter.StaggeredAdapter;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
@@ -35,7 +34,7 @@ import java.util.List;
  * @Version:
  */
 public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<String> {
-    private StaggeredAdapter<String> loadMoreAdapter;
+    private SimpleAdapter<String> loadMoreAdapter;
     private MultiAdapter<SimpleAdapter> multiAdapter;
     private int count_remain = 0;
     private boolean isLoadMoreing = false;
@@ -48,7 +47,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
 
     public OnStaggeredLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
-        loadMoreAdapter = new StaggeredAdapter<String>() {
+        loadMoreAdapter = new SimpleAdapter<String>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 OnStaggeredLoadMoreListener.this.bindDataToLoadMore(holder, bean);
@@ -259,7 +258,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
     }
 
     @Override
-    public StaggeredAdapter<String> getLoadMoreAdapter() {
+    public SimpleAdapter<String> getLoadMoreAdapter() {
         return loadMoreAdapter;
     }
 

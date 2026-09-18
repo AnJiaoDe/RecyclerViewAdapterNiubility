@@ -30,6 +30,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     private float downX;
     private float downY;
     private float touchSlop;
+    @Nullable
     private DragSelectorAdapter dragSelectorAdapter;
     private int position_will_select = NO_POSITION;
     private int position_start = NO_POSITION;
@@ -62,7 +63,6 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     public DragSelectRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-
             @Override
             public void onLongPress(MotionEvent e) {
                 super.onLongPress(e);
@@ -115,10 +115,10 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         };
     }
 
-    public T dragSelector(DragSelectorAdapter dragSelectorAdapter) {
-        this.dragSelectorAdapter = dragSelectorAdapter;
-        return (T) this;
-    }
+//    public T dragSelector(DragSelectorAdapter dragSelectorAdapter) {
+//        this.dragSelectorAdapter = dragSelectorAdapter;
+//        return (T) this;
+//    }
 
     /**
      * 何故不能直接判断是否是dragSelectorAdapter，然后直接强转呢？因为有些Adapter是ConcatAdapter,
@@ -128,8 +128,10 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
      */
     @Override
     public void setAdapter(@Nullable Adapter adapter) {
-        if (adapter instanceof DragSelectorAdapter && this.dragSelectorAdapter == null)
-            throw new IllegalStateException("must call dragSelector(DragSelectorAdapter dragSelectorAdapter) first!");
+        if (adapter instanceof DragSelectorAdapter)
+            this.dragSelectorAdapter = (DragSelectorAdapter) adapter;
+//        if (adapter instanceof DragSelectorAdapter && this.dragSelectorAdapter == null)
+//            throw new IllegalStateException("must call dragSelector(DragSelectorAdapter dragSelectorAdapter) first!");
         super.setAdapter(adapter);
     }
 
@@ -188,7 +190,8 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 View c = findChildViewUnder(downX, downY);
                 if (c != null) {
                     int position = getChildAdapterPosition(c);
-                    if (position != NO_POSITION) {
+                    if (position != NO_POSITION && dragSelectorAdapter.useSelector(
+                            dragSelectorAdapter.getItemLayoutID(position, dragSelectorAdapter.getList_bean().get(position)))) {
                         position_start = position;
                         position_end = position;
                         position_start_last = position;

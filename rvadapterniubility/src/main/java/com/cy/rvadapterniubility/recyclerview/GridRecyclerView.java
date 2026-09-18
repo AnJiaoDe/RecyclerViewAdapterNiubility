@@ -5,10 +5,13 @@ import android.util.AttributeSet;
 import android.util.SparseArray;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.refreshlayoutniubility.ScreenUtils;
+import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
 
 /**
@@ -17,7 +20,7 @@ import com.cy.refreshlayoutniubility.ScreenUtils;
 
 public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecyclerView<T> {
     private int spanCount = 2;
-//    private SparseArray<Boolean> sparseArrayFullSpan;
+    //    private SparseArray<Boolean> sparseArrayFullSpan;
     private GridItemDecoration gridItemDecoration;
 
     public GridRecyclerView(Context context) {
@@ -39,6 +42,40 @@ public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecy
         return spanCount;
     }
 
+    protected void setSpanSizeLookup(final GridLayoutManager gridLayoutManager) {
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                // 普通 GridAdapter
+                if (getAdapter() instanceof SimpleAdapter) {
+                    SimpleAdapter<?> simpleAdapter = (SimpleAdapter<?>) getAdapter();
+                    return simpleAdapter.isFullSpan(simpleAdapter.getItemViewType(position))
+                            ? gridLayoutManager.getSpanCount()
+                            : 1;
+                }
+                if (getAdapter() instanceof DragSelectorAdapter) {
+                    DragSelectorAdapter<?> dragSelectorAdapter = (DragSelectorAdapter<?>) getAdapter();
+                    return dragSelectorAdapter.isFullSpan(dragSelectorAdapter.getItemViewType(position))
+                            ? gridLayoutManager.getSpanCount()
+                            : 1;
+                }
+                // MultiAdapter
+                if (getAdapter() instanceof ConcatAdapter) {
+                    ConcatAdapter concatAdapter = (ConcatAdapter) getAdapter();
+                    int remainPosition = position;
+                    for (int i = 0; i < concatAdapter.getAdapters().size(); i++) {
+                        SimpleAdapter<?> simpleAdapter = (SimpleAdapter<?>) concatAdapter.getAdapters().get(i);
+                        if (remainPosition < simpleAdapter.getItemCount()) {
+                            // 找到了当前 position 所属的 GridAdapter
+                            return simpleAdapter.isFullSpan(simpleAdapter.getItemViewType(remainPosition)) ? gridLayoutManager.getSpanCount() : 1;
+                        }
+                        remainPosition -= simpleAdapter.getItemCount();
+                    }
+                }
+                return 1;
+            }
+        });
+    }
 //    public T putFullSpanPosition(int position) {
 //        sparseArrayFullSpan.put(position, true);
 //        return (T) this;

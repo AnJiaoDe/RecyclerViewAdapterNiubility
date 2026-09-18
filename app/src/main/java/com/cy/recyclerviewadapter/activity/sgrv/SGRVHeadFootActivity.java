@@ -14,7 +14,6 @@ import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
-import com.cy.rvadapterniubility.adapter.StaggeredAdapter;
 import com.cy.rvadapterniubility.recyclerview.StaggeredItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.VerticalStaggeredRecyclerView;
 
@@ -31,7 +30,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
         setContentView(R.layout.activity_sgrvhead_foot);
 
 
-        multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new StaggeredAdapter<String>() {
+        multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, "head" + position);
@@ -73,7 +72,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
                 showToast("点击" + position);
             }
 
-        }).addAdapter(new StaggeredAdapter<String>() {
+        }).addAdapter(new SimpleAdapter<String>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, "foot" + position);

@@ -18,7 +18,7 @@ import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
 import com.cy.refreshlayoutniubility.ScreenUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
-import com.cy.rvadapterniubility.adapter.StaggeredAdapter;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.OnStaggeredLoadMoreListener;
 import com.cy.rvadapterniubility.refreshrv.StaggeredRefreshLayout;
 
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SGRVRefreshLoadMoreActivity extends BaseActivity {
-    private StaggeredAdapter<HRVBean> staggeredAdapter;
+    private SimpleAdapter<HRVBean> staggeredAdapter;
     private StaggeredRefreshLayout staggeredRefreshLayout;
     private MultiAdapter multiAdapter;
 
@@ -44,7 +44,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
             }
             list.add(new HRVBean(R.drawable.pic1));
         }
-        staggeredAdapter = new StaggeredAdapter<HRVBean>() {
+        staggeredAdapter = new SimpleAdapter<HRVBean>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
 //                GlideUtils.getRequestManager(SGRVRefreshLoadMoreActivity.this, new GlideUtils.CallbackRequestManager() {

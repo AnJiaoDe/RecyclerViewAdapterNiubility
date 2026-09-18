@@ -21,12 +21,6 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         super();
         sparseArraySelector = new SparseArraySelector();
     }
-    public boolean isFullSpan(@LayoutRes int itemLayoutID) {
-        return false;
-    }
-    public boolean useSelector(@LayoutRes int itemLayoutID) {
-        return !isFullSpan(itemLayoutID);
-    }
 
     public int getSelectedSize() {
         return sparseArraySelector.size();
@@ -36,6 +30,9 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         return usingSelector;
     }
 
+    public boolean useSelector(int itemLayoutID) {
+        return !isFullSpan(itemLayoutID);
+    }
     /**
      * 图片选择器用这个
      */
@@ -55,6 +52,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     /**
      * 其他地方触发，用这个
+     *
      * @return
      */
     public DragSelectorAdapter<T> startDragSelectNotify() {
@@ -240,7 +238,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
          * @return true表示添加成功
          */
         public boolean put(int position) {
-            if (position < 0 || position >= getList_bean().size()) return false;
+            if (position < 0 || position >= getList_bean().size()||!useSelector(getItemLayoutID(position,getList_bean().get(position)))) return false;
             if (sparseArray.size() == maxCountSelect) {
                 onSelectCountOverMax(maxCountSelect);
                 return false;

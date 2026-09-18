@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cy.rvadapterniubility.R;
 import com.cy.refreshlayoutniubility.IAnimationView;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
-import com.cy.rvadapterniubility.adapter.GridAdapter;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
@@ -35,7 +34,7 @@ import java.util.List;
  * @Version:
  */
 public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> {
-    private GridAdapter<String> loadMoreAdapter;
+    private SimpleAdapter<String> loadMoreAdapter;
     private MultiAdapter<SimpleAdapter> multiAdapter;
     private int count_remain = 0;
     private boolean isLoadMoreing = false;
@@ -48,7 +47,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
 
     public OnGridLoadMoreListener(MultiAdapter<SimpleAdapter> multiAdapter) {
         this.multiAdapter = multiAdapter;
-        loadMoreAdapter = new GridAdapter<String>() {
+        loadMoreAdapter = new SimpleAdapter<String>() {
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 OnGridLoadMoreListener.this.bindDataToLoadMore(holder, bean);

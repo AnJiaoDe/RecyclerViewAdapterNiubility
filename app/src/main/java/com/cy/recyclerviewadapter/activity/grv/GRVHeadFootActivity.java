@@ -9,8 +9,6 @@ import androidx.annotation.NonNull;
 import com.cy.recyclerviewadapter.BaseActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
-import com.cy.rvadapterniubility.adapter.GridAdapter;
-import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
@@ -18,14 +16,14 @@ import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 import java.util.List;
 
 public class GRVHeadFootActivity extends BaseActivity {
-    private GridAdapter<Boolean> gridAdapter;
+    private SimpleAdapter<Boolean> simpleAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grvhead_foot);
 
-        gridAdapter = new GridAdapter<Boolean>() {
+        simpleAdapter = new SimpleAdapter<Boolean>() {
 
             @Override
             public void bindDataToView(BaseViewHolder holder, int position, Boolean bean, @NonNull List<Object> payloads) {
@@ -64,12 +62,12 @@ public class GRVHeadFootActivity extends BaseActivity {
         VerticalGridRecyclerView verticalGridRecyclerView = findViewById(R.id.grv);
         verticalGridRecyclerView.setSpanCount(4)
                 .addItemDecoration(new GridItemDecoration(dpAdapt(10)))
-                .setAdapter(gridAdapter);
+                .setAdapter(simpleAdapter);
 
         for (int i = 0; i < 1000; i++) {
-            gridAdapter.addNoNotify(i % 15 == 0 );
+            simpleAdapter.addNoNotify(i % 15 == 0 );
         }
-        gridAdapter.notifyDataSetChanged();
+        simpleAdapter.notifyDataSetChanged();
     }
 
     @Override
