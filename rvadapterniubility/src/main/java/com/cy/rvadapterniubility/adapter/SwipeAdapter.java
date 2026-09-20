@@ -17,22 +17,21 @@ public abstract class SwipeAdapter<T> extends SimpleAdapter<T> {
     private SwipeLayout swipeLayout_opened;
     private SwipeLayout swipeLayout_scrolled;
 
-
     @Override
-    public final void bindDataToView(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads) {
-        dealSwipe(holder, bean);
-        bindDataToView__(holder, position, bean,payloads);
+    public final void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads, int indexFullSpan) {
+        dealSwipe(holder, bean, indexFullSpan);
+        bindDataToView__(holder, position, bean, payloads, indexFullSpan);
     }
 
-    public abstract void bindDataToView__(BaseViewHolder holder, int position, T bean,@NonNull List<Object> payloads) ;
+    public abstract void bindDataToView__(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads, int indexFullSpan);
 
-    private void dealSwipe(final BaseViewHolder holder, final T bean) {
+    private void dealSwipe(final BaseViewHolder holder, final T bean, final int indexFullSpan) {
         ((SwipeLayout) holder.itemView).getContentView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=getList_bean().size())return;
-                onItemClick(holder, position, bean);
+                if (position < 0 || position >= getList_bean().size()) return;
+                onItemClick(holder, position, bean, indexFullSpan);
             }
         });
         ((SwipeLayout) holder.itemView).setOnSwipeListener(new OnSwipeListener() {
@@ -40,15 +39,15 @@ public abstract class SwipeAdapter<T> extends SimpleAdapter<T> {
             public void onScrolled(int dx) {
                 swipeLayout_scrolled = (SwipeLayout) holder.itemView;
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=getList_bean().size())return;
-                SwipeAdapter.this.onScrolled(holder,position, bean, dx);
+                if (position < 0 || position >= getList_bean().size()) return;
+                SwipeAdapter.this.onScrolled(holder, position, bean, dx);
             }
 
             @Override
             public void onOpened() {
                 swipeLayout_opened = (SwipeLayout) holder.itemView;
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=getList_bean().size())return;
+                if (position < 0 || position >= getList_bean().size()) return;
                 SwipeAdapter.this.onOpened(holder, position, bean);
             }
 
@@ -56,7 +55,7 @@ public abstract class SwipeAdapter<T> extends SimpleAdapter<T> {
             public void onClosed() {
                 swipeLayout_opened = null;
                 int position = holder.getBindingAdapterPosition();
-                if(position<0||position>=getList_bean().size())return;
+                if (position < 0 || position >= getList_bean().size()) return;
                 SwipeAdapter.this.onClosed(holder, position, bean);
             }
         });

@@ -17,12 +17,12 @@ public abstract class SelectorAdapter<T> extends SimpleAdapter<T> {
     private int positionSelected = 0;
 
     @Override
-    public final void bindDataToView(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads) {
-        bindDataToView(holder, position, bean, position == getPositionSelected(),payloads);
+    public final void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads, int indexFullSpan) {
+        bindDataToView(holder, position, bean, position == getPositionSelected(), payloads, indexFullSpan);
     }
 
     @Override
-    public final void onItemClick(BaseViewHolder holder, int position, T bean) {
+    public final void onItemClick(@NonNull BaseViewHolder holder, int position, T bean, int indexFullSpan) {
         //设置选中的item
         if (positionSelectedLast != position) {
             positionSelectedLast = positionSelected;
@@ -32,12 +32,12 @@ public abstract class SelectorAdapter<T> extends SimpleAdapter<T> {
 
             positionSelectedLast = positionSelected;
         }
-        onItemClick__(holder, position, getList_bean().get(position));
+        onItemClick__(holder, position, getList_bean().get(position), indexFullSpan);
     }
 
-    public abstract void onItemClick__(BaseViewHolder holder, int position, T bean);
+    public abstract void onItemClick__(BaseViewHolder holder, int position, T bean, int indexFullSpan);
 
-    public abstract void bindDataToView(BaseViewHolder holder, int position, T bean, boolean isSelected,@NonNull List<Object> payloads);
+    public abstract void bindDataToView(BaseViewHolder holder, int position, T bean, boolean isSelected, @NonNull List<Object> payloads, int indexFullSpan);
 
 
     public int getPositionSelectedLast() {

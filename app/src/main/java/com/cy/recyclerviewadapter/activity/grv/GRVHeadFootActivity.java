@@ -24,9 +24,8 @@ public class GRVHeadFootActivity extends BaseActivity {
         setContentView(R.layout.activity_grvhead_foot);
 
         simpleAdapter = new SimpleAdapter<Boolean>() {
-
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, Boolean bean, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, Boolean bean, @NonNull List<Object> payloads, int indexFullSpan) {
                 if (bean) {
                     holder.setText(R.id.tv, "tab" + position);
                     return;
@@ -40,9 +39,8 @@ public class GRVHeadFootActivity extends BaseActivity {
                 return R.layout.item_grv;
             }
 
-
             @Override
-            public void onItemClick(BaseViewHolder holder, int position, Boolean bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, Boolean bean, int indexFullSpan) {
                 showToast("点击" + position);
             }
 

@@ -46,7 +46,7 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
         }
         staggeredAdapter = new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
 //                GlideUtils.getRequestManager(SGRVRefreshLoadMoreActivity.this, new GlideUtils.CallbackRequestManager() {
 //                    @Override
 //                    public void onRequestManagerGeted(RequestManager requestManager) {
@@ -100,9 +100,8 @@ public class SGRVRefreshLoadMoreActivity extends BaseActivity {
                 return R.layout.item_sgrv;
             }
 
-
             @Override
-            public void onItemClick(BaseViewHolder holder, int position, HRVBean bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, HRVBean bean, int indexFullSpan) {
                 showToast("点击" + position);
             }
         };

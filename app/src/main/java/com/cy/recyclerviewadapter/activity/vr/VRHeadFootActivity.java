@@ -28,7 +28,7 @@ public class VRHeadFootActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads, int indexFullSpan) {
                 holder.setText(R.id.tv, "head" + position);
             }
 
@@ -38,13 +38,13 @@ public class VRHeadFootActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(BaseViewHolder holder, int position, String bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean, int indexFullSpan) {
                 showToast("点击head,删除head");
                 remove(position);
             }
         }).addAdapter(new SimpleAdapter<VRHeadFootBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRHeadFootBean bean, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, VRHeadFootBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -53,9 +53,8 @@ public class VRHeadFootActivity extends BaseActivity {
                 return R.layout.item_rv;
             }
 
-
             @Override
-            public void onItemClick(BaseViewHolder holder, int position, VRHeadFootBean bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, VRHeadFootBean bean, int indexFullSpan) {
                 showToast("点击" + position);
             }
 
@@ -67,7 +66,7 @@ public class VRHeadFootActivity extends BaseActivity {
 
         }).addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads, int indexFullSpan) {
                 holder.setText(R.id.tv, "foot" + position);
             }
 
@@ -78,7 +77,7 @@ public class VRHeadFootActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(BaseViewHolder holder, int position, String bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean, int indexFullSpan) {
                 showToast("点击foot,删除foot");
                 remove(position);
             }

@@ -34,7 +34,7 @@ public class VRSwipeActivity extends BaseActivity {
 
         swipeAdapter = new SwipeAdapter<VRBean>() {
             @Override
-            public void bindDataToView__(BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads) {
+            public void bindDataToView__(BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
                 holder.setText(R.id.tv, bean.getStr());
 
                 holder.setOnClickListener(R.id.tv_zhiding, new View.OnClickListener() {
@@ -87,7 +87,7 @@ public class VRSwipeActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(BaseViewHolder holder, int position, VRBean bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, VRBean bean, int indexFullSpan) {
                 showToast("点击内容"+position);
             }
         };

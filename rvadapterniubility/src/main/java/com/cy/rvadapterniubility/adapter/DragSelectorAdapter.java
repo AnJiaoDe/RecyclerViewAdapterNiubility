@@ -148,7 +148,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
             return this;
         bindDataToView(baseViewHolder, position,
                 getList_bean().get(position), selector.contains(position),
-                new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
+                new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)),getIndexFullSpan(position));
         return this;
     }
 
@@ -174,7 +174,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         if (baseViewHolder == null) return this;
         //不刷新，防止闪烁（选择的时候，一般会加蒙版，刷新会导致蒙版闪烁厉害）， 直接回调bindDataToView
         bindDataToView(baseViewHolder, position, getList_bean().get(position), select,
-                new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
+                new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)), getIndexFullSpan(position));
         return this;
     }
 
@@ -199,27 +199,29 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 //        LogUtils.log("selectRange", i + ":" + isSelected);
             BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
             if (baseViewHolder == null) continue;
-            bindDataToView(baseViewHolder, i, getList_bean().get(i), isSelected, new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
+            bindDataToView(baseViewHolder, i, getList_bean().get(i), isSelected, new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)),
+                    getIndexFullSpan(i));
         }
         return this;
     }
 
     @Override
-    public final void bindDataToView(BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads) {
-        bindDataToView(holder, position, bean, selector.contains(position), payloads);
+    public final void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads, int indexFullSpan) {
+        bindDataToView(holder, position, bean, selector.contains(position), payloads, indexFullSpan);
     }
 
-    public abstract void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, boolean isSelected, @NonNull List<Object> payloads);
+    public abstract void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, boolean isSelected, @NonNull List<Object> payloads, int indexFullSpan);
 
     /**
      * ----------------这个不能在使用的时候实现了，否则会导致回调2次长按事件，因为在DragRecyclerView中也做了长按回调------------------------------------------------------------------
      */
+
     @Override
-    public final void onItemLongClick(@NonNull BaseViewHolder holder, int position, T bean) {
+    public final void onItemLongClick(@NonNull BaseViewHolder holder, int position, T bean, int indexFullSpan) {
 
     }
 
-    public abstract void onItemLongClick__(BaseViewHolder holder, int position, T bean);
+    public abstract void onItemLongClick__(BaseViewHolder holder, int position, T bean, int indexFullSpan);
 
     /**
      * @param holder
@@ -227,12 +229,12 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
      * @param bean
      */
     @Override
-    public final void onItemClick(@NonNull BaseViewHolder holder, int position, T bean) {
+    public final void onItemClick(@NonNull BaseViewHolder holder, int position, T bean, int indexFullSpan) {
         if (!canItemClick) return;
-        onItemClick__(holder, position, bean);
+        onItemClick__(holder, position, bean,indexFullSpan);
     }
 
-    public abstract void onItemClick__(BaseViewHolder holder, int position, T bean);
+    public abstract void onItemClick__(BaseViewHolder holder, int position, T bean,int indexFullSpan);
 
     public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
 

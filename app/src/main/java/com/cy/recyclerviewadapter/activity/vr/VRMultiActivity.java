@@ -75,7 +75,7 @@ public class VRMultiActivity extends BaseActivity {
                 .setSpace_vertical(ScreenUtils.dpAdapt(VRMultiActivity.this, 10));
         rvAdapter = new SimpleAdapter<VRMultiBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRMultiBean bean, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, VRMultiBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
                 switch (bean.getView_type()) {
                     case 1:
                         holder.setText(R.id.tv, bean.getTitle());
@@ -123,7 +123,7 @@ public class VRMultiActivity extends BaseActivity {
                         }
                         SimpleAdapter simpleAdapter = new SimpleAdapter<HRVBean>() {
                             @Override
-                            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
+                            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
                                 holder.setImageResource(R.id.iv, bean.getResID());
                             }
 
@@ -133,7 +133,7 @@ public class VRMultiActivity extends BaseActivity {
                             }
 
                             @Override
-                            public void onItemClick(BaseViewHolder holder, int position, HRVBean bean) {
+                            public void onItemClick(@NonNull BaseViewHolder holder, int position, HRVBean bean, int indexFullSpan) {
                                 showToast("点击" + position);
                             }
                         };
@@ -161,9 +161,8 @@ public class VRMultiActivity extends BaseActivity {
                 return 1;
             }
 
-
             @Override
-            public void onItemClick(BaseViewHolder holder, int position, VRMultiBean bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, VRMultiBean bean, int indexFullSpan) {
                 if (position == 4) return;
                 showToast("点击" + position);
             }

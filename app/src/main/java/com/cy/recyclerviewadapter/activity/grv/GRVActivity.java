@@ -65,7 +65,7 @@ public class GRVActivity extends BaseActivity {
 //            }
 
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
 //                final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), bean.getResID());
 //                //假如这里加载bitmap是耗时操作，而且在回调中，就必须判断TAG，否则图片错乱
 //                holder.isEqualsHolderTag(bean.getResID(), new CallbackTag() {
@@ -83,9 +83,8 @@ public class GRVActivity extends BaseActivity {
                 return R.layout.item_grv;
             }
 
-
             @Override
-            public void onItemClick(BaseViewHolder holder, int position, HRVBean bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, HRVBean bean, int indexFullSpan) {
                 showToast("点击" + position);
             }
         };

@@ -104,8 +104,9 @@ public class GRVDragSelectorActivity extends BaseActivity {
              * @param isSelected
              * @param payloads
              */
+
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, boolean isSelected, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, boolean isSelected, @NonNull List<Object> payloads, int indexFullSpan) {
                 if(bean==null){
                     holder.setText(R.id.tv, "head" + position);
                     return;
@@ -153,14 +154,13 @@ public class GRVDragSelectorActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick__(BaseViewHolder holder, int position, HRVBean bean) {
+            public void onItemClick__(BaseViewHolder holder, int position, HRVBean bean, int indexFullSpan) {
                 showToast("selectRange 点击" + position);
                 startActivity(new Intent(GRVDragSelectorActivity.this, MainActivity.class));
             }
 
             @Override
-            public void onItemLongClick__(BaseViewHolder holder, int position, HRVBean bean) {
-                super.onItemLongClick(holder, position, bean);
+            public void onItemLongClick__(BaseViewHolder holder, int position, HRVBean bean, int indexFullSpan) {
                 showToast("selectRange onItemLongClick__" + position);
                 Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
                 if (vibrator != null) vibrator.vibrate(50);

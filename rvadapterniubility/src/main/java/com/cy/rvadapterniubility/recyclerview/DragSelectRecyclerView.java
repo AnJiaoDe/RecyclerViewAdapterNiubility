@@ -82,7 +82,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 BaseViewHolder baseViewHolder = (BaseViewHolder) findViewHolderForAdapterPosition(position);
                 if (baseViewHolder == null) return;
                 dragSelectorAdapter.onItemLongClick__(baseViewHolder,
-                        position, dragSelectorAdapter.getList_bean().get(position));
+                        position, dragSelectorAdapter.getList_bean().get(position),dragSelectorAdapter.getIndexFullSpan(position));
             }
 
         });

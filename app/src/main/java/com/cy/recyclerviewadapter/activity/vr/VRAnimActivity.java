@@ -35,7 +35,7 @@ public class VRAnimActivity extends BaseActivity {
         final VerticalRecyclerView verticalRecyclerView= (VerticalRecyclerView) findViewById(R.id.vr);
         simpleAdapter = new SimpleAdapter<VRBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
                 holder.setText(R.id.tv, bean.getStr());
 //                verticalRecyclerView.setDragTouchView(holder,holder.getView(R.id.btn_drag));
                 LogUtils.log("position",position);
@@ -47,7 +47,7 @@ public class VRAnimActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(BaseViewHolder holder, int position, VRBean bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, VRBean bean, int indexFullSpan) {
                 showToast("点击" + position);
             }
 

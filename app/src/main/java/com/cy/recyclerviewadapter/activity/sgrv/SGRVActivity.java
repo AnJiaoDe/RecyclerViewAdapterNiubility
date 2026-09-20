@@ -31,7 +31,7 @@ public class SGRVActivity extends BaseActivity {
 
         rvAdapter = new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
                 holder.setImageResource(R.id.iv,bean.getResID());
 //                Glide.with(SGRVActivity.this)
 //                        .load(bean.getResID())
@@ -42,8 +42,9 @@ public class SGRVActivity extends BaseActivity {
             public int getItemLayoutID(int position, HRVBean bean) {
                 return R.layout.item_sgrv;
             }
+
             @Override
-            public void onItemClick(BaseViewHolder holder,int position, HRVBean bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, HRVBean bean, int indexFullSpan) {
                 showToast("点击" + position);
             }
         };

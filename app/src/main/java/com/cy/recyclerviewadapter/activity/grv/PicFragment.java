@@ -91,7 +91,7 @@ public class PicFragment extends BaseFragment {
             }
 
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, boolean isSelected, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, boolean isSelected, @NonNull List<Object> payloads, int indexFullSpan) {
                 LogUtils.log("bindDataToView tag", holder.getTag());
                 /**
                  * 有多布局时，会导致findViewHolderForAdapterPosition 出来的BaseViewHolder是复用的loadMore的，故而在使用时，如果有LOADMORE，
@@ -133,14 +133,13 @@ public class PicFragment extends BaseFragment {
             }
 
             @Override
-            public void onItemClick__(BaseViewHolder holder, int position, String bean) {
+            public void onItemClick__(BaseViewHolder holder, int position, String bean, int indexFullSpan) {
                 showToast("点击" + position);
                 startActivity(new Intent(activity, MainActivity.class));
             }
 
             @Override
-            public void onItemLongClick__(BaseViewHolder holder, int position, String bean) {
-                super.onItemLongClick(holder, position, bean);
+            public void onItemLongClick__(BaseViewHolder holder, int position, String bean, int indexFullSpan) {
                 Vibrator vibrator = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
                 if (vibrator != null) vibrator.vibrate(50);
                 layout_menu.setVisibility(View.VISIBLE);
