@@ -221,7 +221,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     }
 
-    public abstract void onItemLongClick__(BaseViewHolder holder, int position, T bean, int indexFullSpan);
+    public abstract void onItemLongClick__(@NonNull BaseViewHolder holder, int position, T bean, int indexFullSpan);
 
     /**
      * @param holder
@@ -234,7 +234,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         onItemClick__(holder, position, bean,indexFullSpan);
     }
 
-    public abstract void onItemClick__(BaseViewHolder holder, int position, T bean,int indexFullSpan);
+    public abstract void onItemClick__(@NonNull BaseViewHolder holder, int position, T bean,int indexFullSpan);
 
     public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
 

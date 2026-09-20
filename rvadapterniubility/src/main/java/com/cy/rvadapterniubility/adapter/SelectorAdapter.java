@@ -35,9 +35,9 @@ public abstract class SelectorAdapter<T> extends SimpleAdapter<T> {
         onItemClick__(holder, position, getList_bean().get(position), indexFullSpan);
     }
 
-    public abstract void onItemClick__(BaseViewHolder holder, int position, T bean, int indexFullSpan);
+    public abstract void onItemClick__(@NonNull BaseViewHolder holder, int position, T bean, int indexFullSpan);
 
-    public abstract void bindDataToView(BaseViewHolder holder, int position, T bean, boolean isSelected, @NonNull List<Object> payloads, int indexFullSpan);
+    public abstract void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, boolean isSelected, @NonNull List<Object> payloads, int indexFullSpan);
 
 
     public int getPositionSelectedLast() {
