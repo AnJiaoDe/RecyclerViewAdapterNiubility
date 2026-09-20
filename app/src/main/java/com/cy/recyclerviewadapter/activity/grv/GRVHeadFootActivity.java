@@ -27,7 +27,7 @@ public class GRVHeadFootActivity extends BaseActivity {
             @Override
             public void bindDataToView(@NonNull BaseViewHolder holder, int position, Boolean bean, @NonNull List<Object> payloads, int indexFullSpan) {
                 if (bean) {
-                    holder.setText(R.id.tv, "tab" + position);
+                    holder.setText(R.id.tv, "indexFullSpan:" + indexFullSpan);
                     return;
                 }
                 holder.setImageResource(R.id.iv, R.drawable.pic3);

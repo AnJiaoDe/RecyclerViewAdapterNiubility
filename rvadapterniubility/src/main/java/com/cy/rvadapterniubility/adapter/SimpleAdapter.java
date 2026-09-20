@@ -106,7 +106,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         return treeSetFullSpan;
     }
     public int getIndexFullSpan(int position){
-        return treeSetFullSpan.headSet(position, true).size();
+        return treeSetFullSpan.headSet(position, true).size()-1;
     }
     //get出来的position一般都是-1，故而不用
 //    @Override
