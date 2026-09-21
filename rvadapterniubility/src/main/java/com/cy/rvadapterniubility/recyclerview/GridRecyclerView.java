@@ -52,15 +52,7 @@ public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecy
                     return simpleAdapter.isFullSpan(simpleAdapter.getItemViewType(position))
                             ? gridLayoutManager.getSpanCount()
                             : 1;
-                }
-                if (getAdapter() instanceof DragSelectorAdapter) {
-                    DragSelectorAdapter<?> dragSelectorAdapter = (DragSelectorAdapter<?>) getAdapter();
-                    return dragSelectorAdapter.isFullSpan(dragSelectorAdapter.getItemViewType(position))
-                            ? gridLayoutManager.getSpanCount()
-                            : 1;
-                }
-                // MultiAdapter
-                if (getAdapter() instanceof ConcatAdapter) {
+                } else if (getAdapter() instanceof ConcatAdapter) {
                     ConcatAdapter concatAdapter = (ConcatAdapter) getAdapter();
                     int remainPosition = position;
                     for (int i = 0; i < concatAdapter.getAdapters().size(); i++) {

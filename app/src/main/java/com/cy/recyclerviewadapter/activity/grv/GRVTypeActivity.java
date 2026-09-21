@@ -40,7 +40,7 @@ public class GRVTypeActivity extends BaseActivity {
 
                 break;
             case R.id.btn_drag_selector:
-                startAppcompatActivity(GRVPicRefreshActivity.class);
+                startAppcompatActivity(GRVDragSelectorActivity.class);
                 break;
         }
 

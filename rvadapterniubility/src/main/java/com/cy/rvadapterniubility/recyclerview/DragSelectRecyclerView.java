@@ -72,7 +72,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 if (dragSelectorAdapter == null) return;
                 View child = findChildViewUnder(e.getX(), e.getY());
                 int position = getChildAdapterPosition(child);
-                if (position < 0 || position >= dragSelectorAdapter.getList_bean().size())
+                if (position < 0 || position >= dragSelectorAdapter.getItemCount())
                     return;
 
                 position_start = position;
@@ -82,8 +82,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 
                 BaseViewHolder baseViewHolder = (BaseViewHolder) findViewHolderForAdapterPosition(position);
                 if (baseViewHolder == null) return;
-                dragSelectorAdapter.onItemLongClick__(baseViewHolder,
-                        position, dragSelectorAdapter.getList_bean().get(position), dragSelectorAdapter.getIndexFullSpan(position));
+                dragSelectorAdapter.onItemLongClick__(baseViewHolder, position);
             }
 
         });
@@ -158,7 +157,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         LogUtils.logE("dispatchTouchEvent");
-        if (dragSelectorAdapter == null || dragSelectorAdapter.getList_bean().isEmpty())
+        if (dragSelectorAdapter == null || dragSelectorAdapter.getItemCount()==0)
             return super.dispatchTouchEvent(event);
         LayoutManager layoutManager = getLayoutManager();
         if (layoutManager == null) return super.dispatchTouchEvent(event);
@@ -337,7 +336,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             }
         } else if (y > getHeight() && !canScrollVertically(1)) {
             //上滑，且不能再上滑，手指超出边界，选中最后一个，这里暂且不做findLastVisibleItemPositions处理，因为我懒得做了，烦躁 damn
-            position_end = dragSelectorAdapter.getList_bean().size() - 1;
+            position_end = dragSelectorAdapter.getItemCount() - 1;
         } else if (y < 0 && !canScrollVertically(-1)) {
             //下滑，且不能再下滑
             position_end = 0;

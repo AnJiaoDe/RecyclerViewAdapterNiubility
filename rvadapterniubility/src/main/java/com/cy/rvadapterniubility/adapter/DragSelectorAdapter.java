@@ -6,6 +6,8 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cy.rvadapterniubility.LogUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     private boolean usingSelector = false;
@@ -21,12 +24,10 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     protected final String NOTIFY_STATE_DRAG_SELECT = "NOTIFY_STATE_DRAG_SELECT";
     private boolean canItemClick = true;
     private int maxCountSelect = -1;
-    private Set<Integer> setNoUseSelector;
 
     public DragSelectorAdapter() {
         super();
         selector = new Selector();
-        setNoUseSelector = new HashSet<>();
     }
 
     public int getSelectedSize() {
@@ -41,19 +42,10 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         return !isFullSpan(itemLayoutID);
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        int itemType = super.getItemViewType(position);
-        if (!useSelector(itemType)) setNoUseSelector.add(position);
-        return itemType;
-    }
-
     /**
      * @return 有多少个item 不用selector
      */
-    public final int getNoUseSelectorCount() {
-        return setNoUseSelector.size();
-    }
+    public abstract int getNoUseSelectorCount();
 
     /**
      * 图片选择器用这个
@@ -112,6 +104,8 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public boolean isAllSelected() {
+        LogUtils.log("onSelectCountChanged 1111", getList_bean().size());
+        LogUtils.log("onSelectCountChanged 00", getNoUseSelectorCount());
         return selector.size() == getList_bean().size() - getNoUseSelectorCount();
     }
 
@@ -148,7 +142,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
             return this;
         bindDataToView(baseViewHolder, position,
                 getList_bean().get(position), selector.contains(position),
-                new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)),getIndexFullSpan(position));
+                new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)), getIndexFullSpan(position));
         return this;
     }
 
@@ -221,6 +215,10 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     }
 
+    public final void onItemLongClick__(@NonNull BaseViewHolder holder, int position) {
+        onItemLongClick__(holder, position, getList_bean().get(position), getIndexFullSpan(position));
+    }
+
     public abstract void onItemLongClick__(@NonNull BaseViewHolder holder, int position, T bean, int indexFullSpan);
 
     /**
@@ -231,10 +229,10 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     @Override
     public final void onItemClick(@NonNull BaseViewHolder holder, int position, T bean, int indexFullSpan) {
         if (!canItemClick) return;
-        onItemClick__(holder, position, bean,indexFullSpan);
+        onItemClick__(holder, position, bean, indexFullSpan);
     }
 
-    public abstract void onItemClick__(@NonNull BaseViewHolder holder, int position, T bean,int indexFullSpan);
+    public abstract void onItemClick__(@NonNull BaseViewHolder holder, int position, T bean, int indexFullSpan);
 
     public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
 

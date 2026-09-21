@@ -67,6 +67,11 @@ public class PicFragment extends BaseFragment {
             }
 
             @Override
+            public int getNoUseSelectorCount() {
+                return 0;
+            }
+
+            @Override
             public void onSelectCountChanged(boolean isAllSelected, int count_selected) {
                 imageViewSelector.setChecked(isAllSelected);
 //                tv_count.setText("已选择"+getSelectedSize()+"项");

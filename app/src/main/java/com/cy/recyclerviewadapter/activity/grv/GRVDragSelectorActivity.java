@@ -38,14 +38,17 @@ public class GRVDragSelectorActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grvdrag_selector);
         List<HRVBean> list = new ArrayList<>();
+        int cout_head=0;
         for (int i = 0; i < 101; i++) {
             if (i % 5 == 0) {
                 list.add(null);
+                cout_head++;
                 continue;
 
             }
             list.add(new HRVBean(R.drawable.pic1));
         }
+        final int cout_head_final = cout_head;
         layout_menu = findViewById(R.id.layout_menu);
         VerticalGridRecyclerView verticalGridRecyclerView = (VerticalGridRecyclerView) findViewById(R.id.VerticalGridRecyclerView);
         ImageViewSelector imageViewSelector = (ImageViewSelector) findViewById(R.id.ivs);
@@ -60,6 +63,8 @@ public class GRVDragSelectorActivity extends BaseActivity {
         dragSelectorAdapter = new DragSelectorAdapter<HRVBean>() {
             @Override
             public void onSelectCountChanged(boolean isAllSelected, int count_selected) {
+                LogUtils.log("onSelectCountChanged", isAllSelected);
+
                 imageViewSelector.setChecked(isAllSelected);
 //                tv_count.setText("已选择"+getSelectedSize()+"项");
                 //或者
@@ -70,6 +75,11 @@ public class GRVDragSelectorActivity extends BaseActivity {
 //                     i >= 0; i--) {
 //                    LogUtils.log("onSelectCountChanged", getSparseArraySelector().getSparseArray().valueAt(i).getResID());
 //                }
+            }
+
+            @Override
+            public int getNoUseSelectorCount() {
+                return cout_head_final;
             }
 
             @Override
@@ -172,7 +182,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 1)))
                 .setAdapter(dragSelectorAdapter);
         dragSelectorAdapter.add(list);
-        dragSelectorAdapter.setMaxCountSelect(7);
+//        dragSelectorAdapter.setMaxCountSelect(7);
         dragSelectorAdapter.startDragSelect();
         layout_menu.setVisibility(View.VISIBLE);
         findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
