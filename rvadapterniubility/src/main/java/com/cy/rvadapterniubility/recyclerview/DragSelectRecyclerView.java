@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 
@@ -82,7 +83,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 BaseViewHolder baseViewHolder = (BaseViewHolder) findViewHolderForAdapterPosition(position);
                 if (baseViewHolder == null) return;
                 dragSelectorAdapter.onItemLongClick__(baseViewHolder,
-                        position, dragSelectorAdapter.getList_bean().get(position),dragSelectorAdapter.getIndexFullSpan(position));
+                        position, dragSelectorAdapter.getList_bean().get(position), dragSelectorAdapter.getIndexFullSpan(position));
             }
 
         });
@@ -115,10 +116,10 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         };
     }
 
-//    public T dragSelector(DragSelectorAdapter dragSelectorAdapter) {
-//        this.dragSelectorAdapter = dragSelectorAdapter;
-//        return (T) this;
-//    }
+    public T dragSelector(DragSelectorAdapter dragSelectorAdapter) {
+        this.dragSelectorAdapter = dragSelectorAdapter;
+        return (T) this;
+    }
 
     /**
      * 何故不能直接判断是否是dragSelectorAdapter，然后直接强转呢？因为有些Adapter是ConcatAdapter,
@@ -130,8 +131,6 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     public void setAdapter(@Nullable Adapter adapter) {
         if (adapter instanceof DragSelectorAdapter)
             this.dragSelectorAdapter = (DragSelectorAdapter) adapter;
-//        if (adapter instanceof DragSelectorAdapter && this.dragSelectorAdapter == null)
-//            throw new IllegalStateException("must call dragSelector(DragSelectorAdapter dragSelectorAdapter) first!");
         super.setAdapter(adapter);
     }
 
@@ -158,6 +157,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
+        LogUtils.logE("dispatchTouchEvent");
         if (dragSelectorAdapter == null || dragSelectorAdapter.getList_bean().isEmpty())
             return super.dispatchTouchEvent(event);
         LayoutManager layoutManager = getLayoutManager();
