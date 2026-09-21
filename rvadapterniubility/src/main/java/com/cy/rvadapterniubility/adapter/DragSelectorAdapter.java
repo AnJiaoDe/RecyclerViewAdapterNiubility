@@ -104,8 +104,6 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public boolean isAllSelected() {
-        LogUtils.log("onSelectCountChanged 1111", getList_bean().size());
-        LogUtils.log("onSelectCountChanged 00", getNoUseSelectorCount());
         return selector.size() == getList_bean().size() - getNoUseSelectorCount();
     }
 
