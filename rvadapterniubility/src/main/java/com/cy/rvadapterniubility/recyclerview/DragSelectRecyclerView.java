@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.cy.rvadapterniubility.LogUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 
@@ -156,7 +155,6 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        LogUtils.logE("dispatchTouchEvent");
         if (dragSelectorAdapter == null || dragSelectorAdapter.getItemCount()==0)
             return super.dispatchTouchEvent(event);
         LayoutManager layoutManager = getLayoutManager();

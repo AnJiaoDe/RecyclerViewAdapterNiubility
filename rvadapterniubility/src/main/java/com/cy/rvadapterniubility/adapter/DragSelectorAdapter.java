@@ -6,7 +6,6 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cy.rvadapterniubility.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
