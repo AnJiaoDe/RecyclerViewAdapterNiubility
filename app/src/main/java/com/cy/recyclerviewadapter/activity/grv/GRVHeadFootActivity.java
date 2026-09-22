@@ -48,7 +48,7 @@ public class GRVHeadFootActivity extends BaseActivity {
                     holder.setText(R.id.tv, "indexFullSpan:" +position);
                     return;
                 }
-//                holder.setImageResource(R.id.iv, R.drawable.pic3);
+                holder.setImageResource(R.id.iv, R.drawable.pic3);
 //                if (position % 2 == 0) {
 //                    holder.setVisible(R.id.ivs);
 //                    holder.setGone(R.id.ivs2);
@@ -56,7 +56,7 @@ public class GRVHeadFootActivity extends BaseActivity {
 //                    holder.setVisible(R.id.ivs2);
 //                    holder.setGone(R.id.ivs);
 //                }
-                holder.setImageBitmap(R.id.iv_shadow, bitmap);
+//                holder.setImageBitmap(R.id.iv_shadow, bitmap);
             }
 
             @Override
