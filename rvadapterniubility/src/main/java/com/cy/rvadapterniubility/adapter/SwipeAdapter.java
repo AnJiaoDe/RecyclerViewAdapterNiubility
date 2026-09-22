@@ -18,20 +18,20 @@ public abstract class SwipeAdapter<T> extends SimpleAdapter<T> {
     private SwipeLayout swipeLayout_scrolled;
 
     @Override
-    public final void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads, int indexFullSpan) {
-        dealSwipe(holder, bean, indexFullSpan);
-        bindDataToView__(holder, position, bean, payloads, indexFullSpan);
+    public final void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads) {
+        dealSwipe(holder, bean);
+        bindDataToView__(holder, position, bean, payloads);
     }
 
-    public abstract void bindDataToView__(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads, int indexFullSpan);
+    public abstract void bindDataToView__(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads);
 
-    private void dealSwipe(@NonNull final BaseViewHolder holder, final T bean, final int indexFullSpan) {
+    private void dealSwipe(@NonNull final BaseViewHolder holder, final T bean) {
         ((SwipeLayout) holder.itemView).getContentView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = holder.getBindingAdapterPosition();
                 if (position < 0 || position >= getList_bean().size()) return;
-                onItemClick(holder, position, bean, indexFullSpan);
+                onItemClick(holder, position, bean);
             }
         });
         ((SwipeLayout) holder.itemView).setOnSwipeListener(new OnSwipeListener() {

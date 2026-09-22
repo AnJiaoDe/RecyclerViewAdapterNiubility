@@ -39,7 +39,7 @@ public class VRSelectorActivity extends BaseActivity {
         final VerticalRecyclerView verticalRecyclerView=  findViewById(R.id.VerticalRecyclerView);
         selectorAdapter = new SelectorAdapter<VRBean>() {
             @Override
-            public void bindDataToView(BaseViewHolder holder, int position, VRBean bean, boolean isSelected, @NonNull List<Object> payloads, int indexFullSpan) {
+            public void bindDataToView(BaseViewHolder holder, int position, VRBean bean, boolean isSelected, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, bean.getStr());
                 holder.setTextColor(R.id.tv,isSelected? Color.RED:Color.BLACK);
                 LogUtils.log("bindDataToView",position);
@@ -51,7 +51,7 @@ public class VRSelectorActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick__(BaseViewHolder holder, int position, VRBean bean, int indexFullSpan) {
+            public void onItemClick__(BaseViewHolder holder, int position, VRBean bean) {
                 showToast("点击" + position);
             }
         };

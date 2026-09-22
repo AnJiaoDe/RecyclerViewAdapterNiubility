@@ -49,7 +49,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
         this.multiAdapter = multiAdapter;
         loadMoreAdapter = new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads, int indexFullSpan) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 OnStaggeredLoadMoreListener.this.bindDataToLoadMore(holder, bean);
             }
 
@@ -66,7 +66,7 @@ public abstract class OnStaggeredLoadMoreListener extends OnLoadMoreListener<Str
             }
 
             @Override
-            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean, int indexFullSpan) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean) {
                 onItemLoadMoreClick(holder);
             }
         };

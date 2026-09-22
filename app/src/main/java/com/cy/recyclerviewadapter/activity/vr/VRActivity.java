@@ -39,7 +39,7 @@ public class VRActivity extends BaseActivity {
         final VerticalRecyclerView verticalRecyclerView= (VerticalRecyclerView) findViewById(R.id.vr);
         rvAdapter = new SimpleAdapter<VRBean>() {
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, bean.getStr());
                 LogUtils.log("bindDataToView",position+":"+holder.itemView.hashCode());
             }
@@ -50,7 +50,7 @@ public class VRActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(@NonNull BaseViewHolder holder, int position, VRBean bean, int indexFullSpan) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, VRBean bean) {
                 showToast("点击" + position);
             }
         };

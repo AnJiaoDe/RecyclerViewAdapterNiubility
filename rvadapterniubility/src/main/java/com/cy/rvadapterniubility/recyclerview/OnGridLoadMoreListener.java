@@ -49,7 +49,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
         this.multiAdapter = multiAdapter;
         loadMoreAdapter = new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads, int indexFullSpan) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 OnGridLoadMoreListener.this.bindDataToLoadMore(holder, bean);
             }
 
@@ -61,7 +61,7 @@ public abstract class OnGridLoadMoreListener extends OnLoadMoreListener<String> 
             }
 
             @Override
-            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean, int indexFullSpan) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean) {
                 onItemLoadMoreClick(holder);
             }
 

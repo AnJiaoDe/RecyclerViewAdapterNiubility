@@ -48,7 +48,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
         }
         simpleAdapter =new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
                 holder.setImageResource(R.id.iv,bean.getResID());
             }
 
@@ -58,7 +58,7 @@ public class GRVRefreshLoadMoreActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(@NonNull BaseViewHolder holder, int position, HRVBean bean, int indexFullSpan) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, HRVBean bean) {
                 showToast("点击" + position);
             }
         };

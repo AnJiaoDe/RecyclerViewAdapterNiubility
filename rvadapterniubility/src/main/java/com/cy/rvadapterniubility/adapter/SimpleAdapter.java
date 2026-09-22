@@ -35,11 +35,9 @@ import java.util.TreeSet;
  */
 public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> {
     private List<T> list_bean;//数据源
-    private TreeSet<Integer> treeSetFullSpan;
 
     public SimpleAdapter() {
         list_bean = new ArrayList<>();//数据源
-        treeSetFullSpan = new TreeSet<>();
     }
 
     @NonNull
@@ -59,7 +57,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
         if (position < 0 || position >= list_bean.size()) return;
         holder.setTag(setHolderTagPreBindData(holder, position, list_bean.get(position)));
-        bindDataToView(holder, position, list_bean.get(position), payloads, getIndexFullSpan(position));
+        bindDataToView(holder, position, list_bean.get(position), payloads);
     }
 
     /**
@@ -79,9 +77,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     public int getItemViewType(int position) {
         //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
         if (position < 0 || position >= list_bean.size()) return R.layout.cy_staggerd_item_0;
-        int itemType = getItemLayoutID(position, list_bean.get(position));
-        if (isFullSpan(itemType)) treeSetFullSpan.add(position);
-        return itemType;
+        return getItemLayoutID(position, list_bean.get(position));
     }
 
     /**
@@ -94,14 +90,6 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         return false;
     }
 
-    /**
-     * 不能开放
-     * @param position
-     * @return
-     */
-    protected int getIndexFullSpan(int position) {
-        return treeSetFullSpan.headSet(position, true).size() - 1;
-    }
     //get出来的position一般都是-1，故而不用
 //    @Override
 //    public void onViewRecycled(@NonNull BaseViewHolder holder) {
@@ -130,7 +118,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
                 int position = holder.getBindingAdapterPosition();
                 //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
                 if (position < 0 || position >= list_bean.size()) return;
-                onItemClick(holder, position, list_bean.get(position), getIndexFullSpan(position));
+                onItemClick(holder, position, list_bean.get(position));
             }
         });
         //添加Item的长按事件
@@ -140,7 +128,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
                 int position = holder.getBindingAdapterPosition();
                 //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
                 if (position < 0 || position >= list_bean.size()) return false;
-                onItemLongClick(holder, position, list_bean.get(position), getIndexFullSpan(position));
+                onItemLongClick(holder, position, list_bean.get(position));
                 return true;
                 //返回true，那么长按监听只执行长按监听中执行的代码，返回false，还会继续响应其他监听中的事件。
             }
@@ -152,9 +140,8 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * @param position
      * @param bean
      * @param payloads
-     * @param indexFullSpan 这个是需要当前item被bind才能计算准确的，故而不能开放get函数
      */
-    public abstract void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads, int indexFullSpan);
+    public abstract void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads);
 
     public abstract int getItemLayoutID(int position, T bean);
 
@@ -162,9 +149,8 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
      * @param holder
      * @param position
      * @param bean
-     * @param indexFullSpan 第几个fullspan区域， fullspan+普通span，
      */
-    public abstract void onItemClick(@NonNull BaseViewHolder holder, int position, T bean, int indexFullSpan);
+    public abstract void onItemClick(@NonNull BaseViewHolder holder, int position, T bean);
 
     /**
      * 先于setHolderTagPreBindData被调用，可以在此处回收tag对应的数据，比如bitmap，
@@ -189,7 +175,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         return null;
     }
 
-    public void onItemLongClick(@NonNull BaseViewHolder holder, int position, T bean, int indexFullSpan) {
+    public void onItemLongClick(@NonNull BaseViewHolder holder, int position, T bean) {
 
     }
 

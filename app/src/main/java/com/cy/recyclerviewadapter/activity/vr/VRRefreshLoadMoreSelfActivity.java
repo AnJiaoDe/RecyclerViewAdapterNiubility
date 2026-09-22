@@ -37,7 +37,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads, int indexFullSpan) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, "head" + position);
             }
 
@@ -47,13 +47,13 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean, int indexFullSpan) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean) {
                 showToast("点击head,删除head");
                 remove(position);
             }
         }).addAdapter(new SimpleAdapter<VRBean>() {
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, VRBean bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, bean.getStr());
             }
 
@@ -63,7 +63,7 @@ public class VRRefreshLoadMoreSelfActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(@NonNull BaseViewHolder holder, int position, VRBean bean, int indexFullSpan) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, VRBean bean) {
                 showToast("点击" + position);
             }
         });

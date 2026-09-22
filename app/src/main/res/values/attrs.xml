@@ -1,0 +1,887 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="cy_scaleType">
+        <enum name="cy_centerInside" value="0" />
+        <enum name="cy_centerCrop" value="1" />
+    </attr>
+
+    <attr name="cy_round_as_circle" format="boolean" />
+    <!--全部圆角半径-->
+
+    <!--描边颜色／半径-->
+    <attr name="cy_stroke_color" format="color|reference" />
+    <attr name="cy_stroke_width" format="integer|dimension" />
+
+    <attr name="cy_stroke_top" format="boolean" />
+    <attr name="cy_stroke_right" format="boolean" />
+    <attr name="cy_stroke_bottom" format="boolean" />
+    <attr name="cy_stroke_left" format="boolean" />
+    <!-- 是否剪裁 RCLayout 的背景 -->
+    <attr name="cy_clip_background" format="boolean" />
+
+
+    <!-- RectangleView???????????????????????????????????????????????????-->
+    <attr name="cy_heightWidthRatio" format="float|reference" />
+    <attr name="cy_baseOnWidthOrHeight" format="boolean" />
+    <!--????????????????????????????????????????????????????????????????????-->
+    <attr name="cy_colorRipple" format="color|reference" />
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <attr name="cy_haveRipple" format="boolean" />
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <attr name="cy_colorFill" format="color|reference" />
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <attr name="cy_radiusCorner" format="dimension|reference" />
+    <attr name="cy_color_bg" format="color|reference" />
+
+    <!--RippleView????????????????????????????????????????????????????????????????????-->
+    <attr name="cy_radiusTopLeft" format="dimension|reference" />
+    <attr name="cy_radiusTopRight" format="dimension|reference" />
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <attr name="cy_radiusBottomRight" format="dimension|reference" />
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <attr name="cy_radiusBottomLeft" format="dimension|reference" />
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <attr name="cy_radiusGradient" format="dimension|reference" />
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <attr name="cy_colorStart" format="color|reference" />
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <!--    <attr name="cy_colorCenter" format="color|reference" />-->
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <attr name="cy_colorEnd" format="color|reference" />
+
+    <!--ShapeView???????????????????????????????????????????????????????????-->
+    <attr name="cy_centerX" format="float|reference" />
+    <attr name="cy_centerY" format="float|reference" />
+    <attr name="cy_angle" format="integer|reference" />
+    <attr name="cy_strokeWidth" format="dimension|reference" />
+    <attr name="cy_strokePaddingLeft" format="dimension|reference" />
+    <attr name="cy_strokePaddingTop" format="dimension|reference" />
+    <attr name="cy_strokePaddingRight" format="dimension|reference" />
+    <!--??????????????????????????????????????????????????????????????-->
+    <attr name="cy_strokePaddingBottom" format="dimension|reference" />
+    <attr name="cy_strokeColor" format="color|reference" />
+    <attr name="cy_strokeDashWidth" format="dimension|reference" />
+    <attr name="cy_strokeDashGap" format="dimension|reference" />
+    <attr name="cy_orientationGradient">
+        <enum name="top_bottom" value="0" />
+        <enum name="tr_bl" value="1" />
+        <enum name="right_left" value="2" />
+        <enum name="br_tl" value="3" />
+        <enum name="bottom_top" value="4" />
+        <enum name="bl_tr" value="5" />
+        <enum name="left_right" value="6" />
+        <enum name="tl_br" value="7" />
+    </attr>
+    <attr name="cy_gradientType">
+        <enum name="linear_gradient" value="0" />
+        <enum name="radial_gradient" value="1" />
+        <enum name="sweep_gradient" value="2" />
+    </attr>
+    <!--??????????????????????????????????????????????????????????-->
+    <attr name="cy_shapeType">
+        <enum name="rectangle" value="0" />
+        <enum name="oval" value="1" />
+        <enum name="line" value="2" />
+        <enum name="ring" value="3" />
+    </attr>
+    <attr name="cy_backgroundUnChecked" format="reference|color" />
+    <attr name="cy_backgroundChecked" format="reference|color" />
+    <attr name="cy_textColorUnChecked" format="reference|color" />
+    <attr name="cy_textColorChecked" format="reference|color" />
+    <attr name="cy_textUnChecked" format="reference|string" />
+    <attr name="cy_textChecked" format="reference|string" />
+    <attr name="cy_buttonUnChecked" format="reference" />
+    <attr name="cy_buttonChecked" format="reference" />
+    <attr name="cy_mask_type">
+        <enum name="NORMAL" value="0" />
+        <enum name="SOLID" value="1" />
+        <enum name="OUTER" value="2" />
+        <enum name="INNER" value="3" />
+    </attr>
+
+    <declare-styleable name="ImageViewShadow">
+        <attr name="cy_mask_type" />
+        <attr name="cy_blur_radius" format="reference|dimension" />
+        <attr name="cy_shadow_limit" format="reference|dimension" />
+        <attr name="cy_src" format="reference" />
+        <!--        <attr name="cy_src_checked" format="reference" />-->
+        <attr name="cy_color_filter" format="reference|color" />
+        <!--        <attr name="cy_checked" />-->
+        <attr name="cy_color_shadow" format="reference|color" />
+    </declare-styleable>
+    <declare-styleable name="ImageViewShadowSelector">
+
+        <attr name="cy_mask_type" />
+        <attr name="cy_blur_radius"  />
+        <attr name="cy_shadow_limit"  />
+        <attr name="cy_src" />
+        <!--        <attr name="cy_src_checked" format="reference" />-->
+        <attr name="cy_color_filter"  />
+        <!--        <attr name="cy_checked" />-->
+        <attr name="cy_color_shadow" />
+
+        <attr name="cy_srcChecked" />
+        <attr name="cy_srcUnChecked"/>
+        <attr name="cy_checked" />
+    </declare-styleable>
+
+
+    <declare-styleable name="FrameLayoutRectangle">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+    </declare-styleable>
+    <declare-styleable name="ButtonRectangle">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+    </declare-styleable>
+    <!--????????????????????????????????????????????????????????????????????-->
+
+
+    <declare-styleable name="ImageViewRectangle">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+    </declare-styleable>
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <declare-styleable name="LinearLayoutRectangle">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+    </declare-styleable>
+    <!--????????????????????????????????????????????????????????????????????-->
+    <declare-styleable name="RelativeLayoutRectangle">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+    </declare-styleable>
+    <declare-styleable name="AttrsRectangle">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+    </declare-styleable>
+    <!--????????????????????????????????????????????????????????????????????-->
+    <declare-styleable name="TextViewRectangle">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+    </declare-styleable>
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <declare-styleable name="ButtonRipple">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+    </declare-styleable>
+    <declare-styleable name="AttrsRipple">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+    </declare-styleable>
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <declare-styleable name="AttrsPercent">
+        <attr name="cy_width_percent" format="float" />
+        <attr name="cy_height_percent" format="float" />
+    </declare-styleable>
+    <declare-styleable name="FrameLayoutRipple">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+    </declare-styleable>
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <declare-styleable name="LinearLayoutRipple">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+
+    </declare-styleable>
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <declare-styleable name="RelativeLayoutRipple">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+    </declare-styleable>
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <declare-styleable name="TextViewRipple">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+    </declare-styleable>
+    <!--????????????????????????????????????????????????????????????????????-->
+
+    <declare-styleable name="ImageViewRipple">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+
+    </declare-styleable>
+    <declare-styleable name="ImageViewColorFilter">
+        <attr name="cy_haveFilter" format="boolean" />
+        <attr name="cy_lightNumber" format="float|reference" />
+        <attr name="cy_lightOrDark" format="boolean" />
+
+    </declare-styleable>
+    <!--SelectorView???????????????????????????????????????????????????????????-->
+
+
+    <declare-styleable name="AttrsRound">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_round_as_circle" />
+        <attr name="cy_stroke_color" />
+        <attr name="cy_stroke_width" />
+        <attr name="cy_clip_background" />
+
+        <attr name="cy_stroke_top"  />
+        <attr name="cy_stroke_right"  />
+        <attr name="cy_stroke_bottom"  />
+        <attr name="cy_stroke_left" />
+
+    </declare-styleable>
+    <declare-styleable name="FrameLayoutRound">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_round_as_circle" />
+        <attr name="cy_stroke_color" />
+        <attr name="cy_stroke_width" />
+        <attr name="cy_clip_background" />
+    </declare-styleable>
+
+    <declare-styleable name="ImageViewRound">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_round_as_circle" />
+        <attr name="cy_stroke_color" />
+        <attr name="cy_stroke_width" />
+        <attr name="cy_clip_background" />
+    </declare-styleable>
+    <declare-styleable name="LinearLayoutRound">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_round_as_circle" />
+        <attr name="cy_stroke_color" />
+        <attr name="cy_stroke_width" />
+        <attr name="cy_clip_background" />
+    </declare-styleable>
+    <declare-styleable name="RelativeLayoutRound">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_round_as_circle" />
+        <attr name="cy_stroke_color" />
+        <attr name="cy_stroke_width" />
+        <attr name="cy_clip_background" />
+    </declare-styleable>
+    <declare-styleable name="TextViewRound">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_round_as_circle" />
+        <attr name="cy_stroke_color" />
+        <attr name="cy_stroke_width" />
+        <attr name="cy_clip_background" />
+    </declare-styleable>
+    <declare-styleable name="ButtonRound">
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_round_as_circle" />
+        <attr name="cy_stroke_color" />
+        <attr name="cy_stroke_width" />
+        <attr name="cy_clip_background" />
+    </declare-styleable>
+    <declare-styleable name="ButtonShape">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+
+        <!--???????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorFill" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_radiusGradient" />
+        <!--??????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorStart" />
+        <!--        <attr name="cy_colorCenter" />-->
+        <attr name="cy_colorEnd" />
+        <attr name="cy_centerX" />
+        <attr name="cy_centerY" />
+        <attr name="cy_angle" />
+        <!--??????????????????????????????????????????????????????????-->
+        <attr name="cy_strokeWidth" />
+        <attr name="cy_strokePaddingLeft" />
+        <attr name="cy_strokePaddingTop" />
+        <attr name="cy_strokePaddingRight" />
+        <attr name="cy_strokePaddingBottom" />
+        <attr name="cy_strokeColor" />
+        <attr name="cy_strokeDashWidth" />
+        <attr name="cy_strokeDashGap" />
+        <!--????????????????????????????????????????????????????????????????????-->
+
+        <attr name="cy_orientationGradient" />
+        <attr name="cy_gradientType" />
+        <attr name="cy_shapeType" />
+
+    </declare-styleable>
+    <declare-styleable name="AttrsShape">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+
+        <!--???????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorFill" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_radiusGradient" />
+        <!--??????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorStart" />
+        <!--        <attr name="cy_colorCenter" />-->
+        <attr name="cy_colorEnd" />
+        <attr name="cy_centerX" />
+        <attr name="cy_centerY" />
+        <attr name="cy_angle" />
+        <!--??????????????????????????????????????????????????????????-->
+        <attr name="cy_strokeWidth" />
+        <attr name="cy_strokePaddingLeft" />
+        <attr name="cy_strokePaddingTop" />
+        <attr name="cy_strokePaddingRight" />
+        <attr name="cy_strokePaddingBottom" />
+        <attr name="cy_strokeColor" />
+        <attr name="cy_strokeDashWidth" />
+        <attr name="cy_strokeDashGap" />
+        <!--????????????????????????????????????????????????????????????????????-->
+
+        <attr name="cy_orientationGradient" />
+        <attr name="cy_gradientType" />
+        <attr name="cy_shapeType" />
+
+    </declare-styleable>
+    <declare-styleable name="FrameLayoutShape">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+
+        <!--???????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorFill" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_radiusGradient" />
+        <!--??????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorStart" />
+        <!--        <attr name="cy_colorCenter" />-->
+        <attr name="cy_colorEnd" />
+        <attr name="cy_centerX" />
+        <attr name="cy_centerY" />
+        <attr name="cy_angle" />
+        <!--??????????????????????????????????????????????????????????-->
+        <attr name="cy_strokeWidth" />
+        <attr name="cy_strokePaddingLeft" />
+        <attr name="cy_strokePaddingTop" />
+        <attr name="cy_strokePaddingRight" />
+        <attr name="cy_strokePaddingBottom" />
+        <attr name="cy_strokeColor" />
+        <attr name="cy_strokeDashWidth" />
+        <attr name="cy_strokeDashGap" />
+        <!--????????????????????????????????????????????????????????????????????-->
+
+        <attr name="cy_orientationGradient" />
+        <attr name="cy_gradientType" />
+        <attr name="cy_shapeType" />
+
+    </declare-styleable>
+    <declare-styleable name="LinearLayoutShape">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+
+        <!--???????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorFill" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_radiusGradient" />
+        <!--??????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorStart" />
+        <!--        <attr name="cy_colorCenter" />-->
+        <attr name="cy_colorEnd" />
+        <attr name="cy_centerX" />
+        <attr name="cy_centerY" />
+        <attr name="cy_angle" />
+        <!--??????????????????????????????????????????????????????????-->
+        <attr name="cy_strokeWidth" />
+        <attr name="cy_strokePaddingLeft" />
+        <attr name="cy_strokePaddingTop" />
+        <attr name="cy_strokePaddingRight" />
+        <attr name="cy_strokePaddingBottom" />
+        <attr name="cy_strokeColor" />
+        <attr name="cy_strokeDashWidth" />
+        <attr name="cy_strokeDashGap" />
+        <!--????????????????????????????????????????????????????????????????????-->
+
+        <attr name="cy_orientationGradient" />
+        <attr name="cy_gradientType" />
+        <attr name="cy_shapeType" />
+
+    </declare-styleable>
+    <declare-styleable name="RelativeLayoutShape">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+
+        <!--???????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorFill" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_radiusGradient" />
+        <!--??????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorStart" />
+        <!--        <attr name="cy_colorCenter" />-->
+        <attr name="cy_colorEnd" />
+        <attr name="cy_centerX" />
+        <attr name="cy_centerY" />
+        <attr name="cy_angle" />
+        <!--??????????????????????????????????????????????????????????-->
+        <attr name="cy_strokeWidth" />
+        <attr name="cy_strokePaddingLeft" />
+        <attr name="cy_strokePaddingTop" />
+        <attr name="cy_strokePaddingRight" />
+        <attr name="cy_strokePaddingBottom" />
+        <attr name="cy_strokeColor" />
+        <attr name="cy_strokeDashWidth" />
+        <attr name="cy_strokeDashGap" />
+        <!--????????????????????????????????????????????????????????????????????-->
+
+        <attr name="cy_orientationGradient" />
+        <attr name="cy_gradientType" />
+        <attr name="cy_shapeType" />
+
+    </declare-styleable>
+    <declare-styleable name="TextViewShape">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <attr name="cy_colorRipple" />
+        <attr name="cy_haveRipple" />
+
+        <!--???????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorFill" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_radiusTopLeft" />
+        <attr name="cy_radiusTopRight" />
+        <attr name="cy_radiusBottomRight" />
+        <attr name="cy_radiusBottomLeft" />
+        <attr name="cy_radiusGradient" />
+        <!--??????????????????????????????????????????????????????????????-->
+        <attr name="cy_colorStart" />
+        <!--        <attr name="cy_colorCenter" />-->
+        <attr name="cy_colorEnd" />
+        <attr name="cy_centerX" />
+        <attr name="cy_centerY" />
+        <attr name="cy_angle" />
+        <!--??????????????????????????????????????????????????????????-->
+        <attr name="cy_strokeWidth" />
+        <attr name="cy_strokePaddingLeft" />
+        <attr name="cy_strokePaddingTop" />
+        <attr name="cy_strokePaddingRight" />
+        <attr name="cy_strokePaddingBottom" />
+        <attr name="cy_strokeColor" />
+        <attr name="cy_strokeDashWidth" />
+        <attr name="cy_strokeDashGap" />
+        <!--????????????????????????????????????????????????????????????????????-->
+
+        <attr name="cy_orientationGradient" />
+        <attr name="cy_gradientType" />
+        <attr name="cy_shapeType" />
+
+    </declare-styleable>
+    <declare-styleable name="CheckBoxSelector">
+        <attr name="cy_backgroundUnChecked" />
+        <attr name="cy_backgroundChecked" />
+        <attr name="cy_textColorUnChecked" />
+        <attr name="cy_textColorChecked" />
+        <attr name="cy_buttonUnChecked" />
+        <attr name="cy_buttonChecked" />
+    </declare-styleable>
+    <declare-styleable name="AttrsSelector">
+        <attr name="cy_backgroundUnChecked" />
+        <attr name="cy_backgroundChecked" />
+        <attr name="cy_textColorUnChecked" />
+        <attr name="cy_textColorChecked" />
+        <attr name="cy_buttonUnChecked" />
+        <attr name="cy_buttonChecked" />
+    </declare-styleable>
+    <declare-styleable name="RadioButtonSelector">
+        <attr name="cy_backgroundUnChecked" />
+        <attr name="cy_backgroundChecked" />
+        <attr name="cy_textColorUnChecked" />
+        <attr name="cy_textColorChecked" />
+        <attr name="cy_buttonUnChecked" />
+        <attr name="cy_buttonChecked" />
+    </declare-styleable>
+    <declare-styleable name="ImageViewSelector">
+        <attr name="cy_bgUnChecked" format="reference|color" />
+        <attr name="cy_bgChecked" format="reference|color" />
+        <attr name="cy_srcUnChecked" format="reference" />
+        <attr name="cy_srcChecked" format="reference" />
+        <attr name="cy_checked" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="FrameLayoutSelector">
+        <attr name="cy_bgUnChecked" />
+        <attr name="cy_bgChecked" />
+        <attr name="cy_checked" />
+    </declare-styleable>
+    <declare-styleable name="TextViewSelector">
+        <attr name="cy_bgUnChecked" />
+        <attr name="cy_bgChecked" />
+        <attr name="cy_textColorUnChecked" />
+        <attr name="cy_textColorChecked" />
+        <attr name="cy_textUnChecked" />
+        <attr name="cy_textChecked" />
+        <attr name="cy_checked" />
+
+    </declare-styleable>
+
+
+    <!-- Background color for CardView. -->
+    <attr name="cy_cardBackgroundColor" format="color" />
+    <!-- Corner radius for CardView. -->
+    <attr name="cy_cardCornerRadius" format="dimension" />
+    <!-- Elevation for CardView. -->
+    <attr name="cy_cardElevation" format="dimension" />
+    <!-- Maximum Elevation for CardView. -->
+    <attr name="cy_cardMaxElevation" format="dimension" />
+    <!-- Add padding in API v21+ as well to have the same measurements with previous versions. -->
+    <attr name="cy_cardUseCompatPadding" format="boolean" />
+    <!-- Add padding to CardView on v20 and before to prevent intersections between the Card content and rounded corners. -->
+    <attr name="cy_cardPreventCornerOverlap" format="boolean" />
+    <!-- Inner padding between the edges of the Card and children of the CardView. -->
+    <attr name="cy_contentPadding" format="dimension" />
+    <!-- Inner padding between the left edge of the Card and children of the CardView. -->
+    <attr name="cy_contentPaddingLeft" format="dimension" />
+    <!-- Inner padding between the right edge of the Card and children of the CardView. -->
+    <attr name="cy_contentPaddingRight" format="dimension" />
+    <!-- Inner padding between the top edge of the Card and children of the CardView. -->
+    <attr name="cy_contentPaddingTop" format="dimension" />
+    <!-- Inner padding between the bottom edge of the Card and children of the CardView. -->
+    <attr name="cy_contentPaddingBottom" format="dimension" />
+
+    <declare-styleable name="AttrsCard">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <!-- Background color for CardView. -->
+        <attr name="cy_cardBackgroundColor" />
+        <!-- Corner radius for CardView. -->
+        <attr name="cy_cardCornerRadius" />
+        <!-- Elevation for CardView. -->
+        <attr name="cy_cardElevation" />
+        <!-- Maximum Elevation for CardView. -->
+        <attr name="cy_cardMaxElevation" />
+        <!-- Add padding in API v21+ as well to have the same measurements with previous versions. -->
+        <attr name="cy_cardUseCompatPadding" />
+        <!-- Add padding to CardView on v20 and before to prevent intersections between the Card content and rounded corners. -->
+        <attr name="cy_cardPreventCornerOverlap" />
+        <!-- Inner padding between the edges of the Card and children of the CardView. -->
+        <attr name="cy_contentPadding" />
+        <!-- Inner padding between the left edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingLeft" />
+        <!-- Inner padding between the right edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingRight" />
+        <!-- Inner padding between the top edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingTop" />
+        <!-- Inner padding between the bottom edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingBottom" />
+        <!-- Workaround to read user defined minimum width -->
+        <attr name="android:minWidth" />
+        <!-- Workaround to read user defined minimum height -->
+        <attr name="android:minHeight" />
+
+    </declare-styleable>
+    <declare-styleable name="FrameLayoutCard">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <!-- Background color for CardView. -->
+        <attr name="cy_cardBackgroundColor" />
+        <!-- Corner radius for CardView. -->
+        <attr name="cy_cardCornerRadius" />
+        <!-- Elevation for CardView. -->
+        <attr name="cy_cardElevation" />
+        <!-- Maximum Elevation for CardView. -->
+        <attr name="cy_cardMaxElevation" />
+        <!-- Add padding in API v21+ as well to have the same measurements with previous versions. -->
+        <attr name="cy_cardUseCompatPadding" />
+        <!-- Add padding to CardView on v20 and before to prevent intersections between the Card content and rounded corners. -->
+        <attr name="cy_cardPreventCornerOverlap" />
+        <!-- Inner padding between the edges of the Card and children of the CardView. -->
+        <attr name="cy_contentPadding" />
+        <!-- Inner padding between the left edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingLeft" />
+        <!-- Inner padding between the right edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingRight" />
+        <!-- Inner padding between the top edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingTop" />
+        <!-- Inner padding between the bottom edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingBottom" />
+        <!-- Workaround to read user defined minimum width -->
+        <attr name="android:minWidth" />
+        <!-- Workaround to read user defined minimum height -->
+        <attr name="android:minHeight" />
+
+    </declare-styleable>
+    <declare-styleable name="LinearLayoutCard">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <!-- Background color for CardView. -->
+        <attr name="cy_cardBackgroundColor" />
+        <!-- Corner radius for CardView. -->
+        <attr name="cy_cardCornerRadius" />
+        <!-- Elevation for CardView. -->
+        <attr name="cy_cardElevation" />
+        <!-- Maximum Elevation for CardView. -->
+        <attr name="cy_cardMaxElevation" />
+        <!-- Add padding in API v21+ as well to have the same measurements with previous versions. -->
+        <attr name="cy_cardUseCompatPadding" />
+        <!-- Add padding to CardView on v20 and before to prevent intersections between the Card content and rounded corners. -->
+        <attr name="cy_cardPreventCornerOverlap" />
+        <!-- Inner padding between the edges of the Card and children of the CardView. -->
+        <attr name="cy_contentPadding" />
+        <!-- Inner padding between the left edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingLeft" />
+        <!-- Inner padding between the right edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingRight" />
+        <!-- Inner padding between the top edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingTop" />
+        <!-- Inner padding between the bottom edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingBottom" />
+        <!-- Workaround to read user defined minimum width -->
+        <attr name="android:minWidth" />
+        <!-- Workaround to read user defined minimum height -->
+        <attr name="android:minHeight" />
+
+    </declare-styleable>
+    <declare-styleable name="RelativeLayoutCard">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <!-- Background color for CardView. -->
+        <attr name="cy_cardBackgroundColor" />
+        <!-- Corner radius for CardView. -->
+        <attr name="cy_cardCornerRadius" />
+        <!-- Elevation for CardView. -->
+        <attr name="cy_cardElevation" />
+        <!-- Maximum Elevation for CardView. -->
+        <attr name="cy_cardMaxElevation" />
+        <!-- Add padding in API v21+ as well to have the same measurements with previous versions. -->
+        <attr name="cy_cardUseCompatPadding" />
+        <!-- Add padding to CardView on v20 and before to prevent intersections between the Card content and rounded corners. -->
+        <attr name="cy_cardPreventCornerOverlap" />
+        <!-- Inner padding between the edges of the Card and children of the CardView. -->
+        <attr name="cy_contentPadding" />
+        <!-- Inner padding between the left edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingLeft" />
+        <!-- Inner padding between the right edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingRight" />
+        <!-- Inner padding between the top edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingTop" />
+        <!-- Inner padding between the bottom edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingBottom" />
+        <!-- Workaround to read user defined minimum width -->
+        <attr name="android:minWidth" />
+        <!-- Workaround to read user defined minimum height -->
+        <attr name="android:minHeight" />
+
+    </declare-styleable>
+    <declare-styleable name="ButtonCard">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <!-- Background color for CardView. -->
+        <attr name="cy_cardBackgroundColor" />
+        <!-- Corner radius for CardView. -->
+        <attr name="cy_cardCornerRadius" />
+        <!-- Elevation for CardView. -->
+        <attr name="cy_cardElevation" />
+        <!-- Maximum Elevation for CardView. -->
+        <attr name="cy_cardMaxElevation" />
+        <!-- Add padding in API v21+ as well to have the same measurements with previous versions. -->
+        <attr name="cy_cardUseCompatPadding" />
+        <!-- Add padding to CardView on v20 and before to prevent intersections between the Card content and rounded corners. -->
+        <attr name="cy_cardPreventCornerOverlap" />
+        <!-- Inner padding between the edges of the Card and children of the CardView. -->
+        <attr name="cy_contentPadding" />
+        <!-- Inner padding between the left edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingLeft" />
+        <!-- Inner padding between the right edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingRight" />
+        <!-- Inner padding between the top edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingTop" />
+        <!-- Inner padding between the bottom edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingBottom" />
+        <!-- Workaround to read user defined minimum width -->
+        <attr name="android:minWidth" />
+        <!-- Workaround to read user defined minimum height -->
+        <attr name="android:minHeight" />
+
+    </declare-styleable>
+    <declare-styleable name="TextViewCard">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <!-- Background color for CardView. -->
+        <attr name="cy_cardBackgroundColor" />
+        <!-- Corner radius for CardView. -->
+        <attr name="cy_cardCornerRadius" />
+        <!-- Elevation for CardView. -->
+        <attr name="cy_cardElevation" />
+        <!-- Maximum Elevation for CardView. -->
+        <attr name="cy_cardMaxElevation" />
+        <!-- Add padding in API v21+ as well to have the same measurements with previous versions. -->
+        <attr name="cy_cardUseCompatPadding" />
+        <!-- Add padding to CardView on v20 and before to prevent intersections between the Card content and rounded corners. -->
+        <attr name="cy_cardPreventCornerOverlap" />
+        <!-- Inner padding between the edges of the Card and children of the CardView. -->
+        <attr name="cy_contentPadding" />
+        <!-- Inner padding between the left edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingLeft" />
+        <!-- Inner padding between the right edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingRight" />
+        <!-- Inner padding between the top edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingTop" />
+        <!-- Inner padding between the bottom edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingBottom" />
+        <!-- Workaround to read user defined minimum width -->
+        <attr name="android:minWidth" />
+        <!-- Workaround to read user defined minimum height -->
+        <attr name="android:minHeight" />
+
+    </declare-styleable>
+    <declare-styleable name="ImageViewCard">
+        <attr name="cy_heightWidthRatio" />
+        <attr name="cy_baseOnWidthOrHeight" />
+        <!-- Background color for CardView. -->
+        <attr name="cy_cardBackgroundColor" />
+        <!-- Corner radius for CardView. -->
+        <attr name="cy_cardCornerRadius" />
+        <!-- Elevation for CardView. -->
+        <attr name="cy_cardElevation" />
+        <!-- Maximum Elevation for CardView. -->
+        <attr name="cy_cardMaxElevation" />
+        <!-- Add padding in API v21+ as well to have the same measurements with previous versions. -->
+        <attr name="cy_cardUseCompatPadding" />
+        <!-- Add padding to CardView on v20 and before to prevent intersections between the Card content and rounded corners. -->
+        <attr name="cy_cardPreventCornerOverlap" />
+        <!-- Inner padding between the edges of the Card and children of the CardView. -->
+        <attr name="cy_contentPadding" />
+        <!-- Inner padding between the left edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingLeft" />
+        <!-- Inner padding between the right edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingRight" />
+        <!-- Inner padding between the top edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingTop" />
+        <!-- Inner padding between the bottom edge of the Card and children of the CardView. -->
+        <attr name="cy_contentPaddingBottom" />
+        <!-- Workaround to read user defined minimum width -->
+        <attr name="android:minWidth" />
+        <!-- Workaround to read user defined minimum height -->
+        <attr name="android:minHeight" />
+
+    </declare-styleable>
+
+    <declare-styleable name="VCutProgressView">
+        <attr name="cy_color_bg" />
+        <attr name="cy_color_progress" format="color|reference" />
+        <attr name="cy_radiusCorner" />
+        <attr name="cy_strokeWidth" />
+        <attr name="cy_progress" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="ProgressWeightView">
+        <attr name="cy_color_bg" />
+        <attr name="cy_color_fg" format="color|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ProgressTextView">
+        <attr name="cy_progress" />
+        <attr name="cy_maxProgress" format="integer"/>
+        <attr name="cy_progressColor" format="color|reference"/>
+        <attr name="cy_bgColor" format="color|reference"/>
+        <attr name="cy_leftTextColor" format="color|reference"/>
+        <attr name="cy_rightTextColor" format="color|reference"/>
+        <attr name="cy_cornerRadius" format="dimension|reference"/>
+    </declare-styleable>
+</resources>

@@ -32,7 +32,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
 
         multiAdapter = new MultiAdapter<SimpleAdapter>().addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads, int indexFullSpan) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, "head" + position);
             }
 
@@ -53,11 +53,11 @@ public class SGRVHeadFootActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean, int indexFullSpan) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean) {
             }
         }).addAdapter(new SimpleAdapter<HRVBean>() {
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads, int indexFullSpan) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
                 holder.setImageResource(R.id.iv, bean.getResID());
             }
 
@@ -67,13 +67,13 @@ public class SGRVHeadFootActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(@NonNull BaseViewHolder holder, int position, HRVBean bean, int indexFullSpan) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, HRVBean bean) {
                 showToast("点击" + position);
             }
 
         }).addAdapter(new SimpleAdapter<String>() {
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads, int indexFullSpan) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, "foot" + position);
             }
 
@@ -94,7 +94,7 @@ public class SGRVHeadFootActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean, int indexFullSpan) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean) {
             }
         });
         verticalStaggeredRecyclerView = (VerticalStaggeredRecyclerView) findViewById(R.id.VerticalStaggeredRecyclerView);
