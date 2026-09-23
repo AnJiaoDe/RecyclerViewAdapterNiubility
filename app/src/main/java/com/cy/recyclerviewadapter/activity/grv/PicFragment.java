@@ -72,7 +72,7 @@ public class PicFragment extends BaseFragment {
             }
 
             @Override
-            public void onSelectCountChanged(boolean isAllSelected, int count_selected) {
+            public void onSelectCountChanged(boolean isAllSelected, int count_selected, int count_all_can_select) {
                 imageViewSelector.setChecked(isAllSelected);
 //                tv_count.setText("已选择"+getSelectedSize()+"项");
                 //或者

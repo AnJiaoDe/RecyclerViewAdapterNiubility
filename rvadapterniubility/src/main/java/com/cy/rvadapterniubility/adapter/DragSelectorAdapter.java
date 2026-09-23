@@ -103,7 +103,11 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     }
 
     public boolean isAllSelected() {
-        return selector.size() == getList_bean().size() - getNoUseSelectorCount();
+        return selector.size() == getCoutAllCanSelect();
+    }
+
+    public int getCoutAllCanSelect() {
+        return getList_bean().size() - getNoUseSelectorCount();
     }
 
     public DragSelectorAdapter<T> selectAll(boolean isAllSelected) {
@@ -230,7 +234,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
 
     public abstract void onItemClick__(@NonNull BaseViewHolder holder, int position, T bean);
 
-    public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected);
+    public abstract void onSelectCountChanged(boolean isAllSelected, int count_selected, int count_all_can_select);
 
     public void onSelectCountOverMax(int max_count) {
 
@@ -290,7 +294,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         }
 
         private void notifyCountSelected() {
-            onSelectCountChanged(isAllSelected(), treeMap.size());
+            onSelectCountChanged(isAllSelected(), treeMap.size(),getCoutAllCanSelect());
         }
 
         public TreeMap<Integer, T> getMap() {

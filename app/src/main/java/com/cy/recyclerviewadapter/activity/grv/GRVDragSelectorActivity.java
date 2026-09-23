@@ -62,7 +62,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
         });
         dragSelectorAdapter = new DragSelectorAdapter<HRVBean>() {
             @Override
-            public void onSelectCountChanged(boolean isAllSelected, int count_selected) {
+            public void onSelectCountChanged(boolean isAllSelected, int count_selected, int count_all_can_select) {
                 LogUtils.log("onSelectCountChanged", isAllSelected);
 
                 imageViewSelector.setChecked(isAllSelected);
