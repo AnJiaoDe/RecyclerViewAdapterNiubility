@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.refreshlayoutniubility.ScreenUtils;
 import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
+import com.cy.rvadapterniubility.adapter.HeadAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
 
@@ -50,6 +51,11 @@ public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecy
                 if (getAdapter() instanceof SimpleAdapter) {
                     SimpleAdapter<?> simpleAdapter = (SimpleAdapter<?>) getAdapter();
                     return simpleAdapter.isFullSpan(simpleAdapter.getItemViewType(position))
+                            ? gridLayoutManager.getSpanCount()
+                            : 1;
+                } else if (getAdapter() instanceof HeadAdapter) {
+                    HeadAdapter<?, ?> headAdapter = (HeadAdapter<?, ?>) getAdapter();
+                    return headAdapter.isFullSpan(position)
                             ? gridLayoutManager.getSpanCount()
                             : 1;
                 } else if (getAdapter() instanceof ConcatAdapter) {

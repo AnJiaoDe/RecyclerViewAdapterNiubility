@@ -23,7 +23,6 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
     protected final String NOTIFY_STATE_DRAG_SELECT = "NOTIFY_STATE_DRAG_SELECT";
     private boolean canItemClick = true;
     private int maxCountSelect = -1;
-
     public DragSelectorAdapter() {
         super();
         selector = new Selector();

@@ -14,7 +14,10 @@ import com.cy.rvadapterniubility.swipelayout.SwipeLayout;
 import java.util.List;
 
 public abstract class SwipeAdapter<T> extends SimpleAdapter<T> {
+
+    @Nullable
     private SwipeLayout swipeLayout_opened;
+    @Nullable
     private SwipeLayout swipeLayout_scrolled;
 
     @Override
@@ -71,25 +74,30 @@ public abstract class SwipeAdapter<T> extends SimpleAdapter<T> {
     public void onClosed(@NonNull BaseViewHolder holder, int position, T bean) {
     }
 
+    @Nullable
     public SwipeLayout getOpened() {
         return swipeLayout_opened;
     }
 
     public void closeOpened() {
+        if(swipeLayout_opened==null)return;
         swipeLayout_opened.close();
         swipeLayout_opened = null;
     }
 
     public void closeOpened(OnSwipeListener onSwipeListener) {
+        if(swipeLayout_opened==null)return;
         swipeLayout_opened.close(onSwipeListener);
         swipeLayout_opened = null;
     }
 
+    @Nullable
     public SwipeLayout getScrolled() {
         return swipeLayout_scrolled;
     }
 
     public void closeScrolled() {
+        if(swipeLayout_scrolled==null)return;
         swipeLayout_scrolled.close();
         swipeLayout_scrolled = null;
     }
