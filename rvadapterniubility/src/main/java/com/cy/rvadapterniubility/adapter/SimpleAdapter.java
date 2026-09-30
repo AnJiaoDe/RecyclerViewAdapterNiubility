@@ -3,7 +3,6 @@ package com.cy.rvadapterniubility.adapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.os.Handler;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +21,8 @@ import com.cy.rvadapterniubility.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * ListAdapter好用但不如直接使用diffResult靠谱，ListAdapter下拉刷新后会导致列表顶上去
@@ -35,9 +31,63 @@ import java.util.TreeSet;
  */
 public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> {
     private List<T> list_bean;//数据源
+    private Selector<T> selector;
 
     public SimpleAdapter() {
         list_bean = new ArrayList<>();//数据源
+        selector = new Selector<>(new Selector.Callback<T>() {
+            @Override
+            public void dispatchUpdatesToMsg(String notify_state_drag_select) {
+
+            }
+
+            @Override
+            public int getItemCount() {
+                return 0;
+            }
+
+            @Override
+            public void canItemClick(boolean canItemClick) {
+
+            }
+
+            @Override
+            public boolean useSelector(int position) {
+                return false;
+            }
+
+            @Nullable
+            @Override
+            public T getItem(int position) {
+                return null;
+            }
+
+            @Override
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
+
+            }
+
+            @Override
+            public void onItemLongClick(@NonNull BaseViewHolder holder, int position) {
+
+            }
+
+            @NonNull
+            @Override
+            public List<T> getAllCanSelectItems() {
+                return Collections.emptyList();
+            }
+
+            @Override
+            public void onSelectCountChanged(boolean isAllSelected, int countSelected, int countAllCanSelect) {
+
+            }
+
+            @Override
+            public void onSelectCountOverMax(int maxCount) {
+
+            }
+        });
     }
 
     @NonNull

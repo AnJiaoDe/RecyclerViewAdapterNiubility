@@ -10,7 +10,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.cy.androidview.selectorview.ImageViewSelector;
 import com.cy.recyclerviewadapter.BaseActivity;
+import com.cy.recyclerviewadapter.LogUtils;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
@@ -32,48 +34,88 @@ public class GRVHeadAdapterActivity extends BaseActivity {
 
         headAdapter = new HeadAdapter<String, HRVBean>() {
             @Override
-            public void bindDataToHeadView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
+            public void bindHeadToView(@NonNull BaseViewHolder holder, int position, String head, @NonNull List<Object> payloads) {
                 holder.setText(R.id.tv, "indexFullSpan:" +position);
             }
 
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
+            public void bindItemToView(@NonNull BaseViewHolder holder, int position, HRVBean item, @NonNull List<Object> payloads) {
+                LogUtils.log("bindItemToView",position);
+                ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
+                imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
+                        if (isChecked && getSelector().isOverMaxCountSelect() && !getSelector().isSelected(position)) {
+                            showToast("不能超过最大选择数量");
+                            imageViewSelector.setChecked(false);
+                            return;
+                        }
+                        LogUtils.log("selectRange onCheckedChanged:" + holder.getTag(), position + ":" + isChecked);
+                        //长按第一个ITEM后右滑然后左滑到第2个ITEM，第2个ITEM疯狂回调 导致疯狂闪烁
+                        holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
+                        getSelector().selectNoNotify(position, isChecked);
+                    }
+                });
+                holder.setVisibility(R.id.view_mask, getSelector().isSelected(position) ? View.VISIBLE : View.GONE);
+                //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
+                imageViewSelector.setChecked(getSelector().isSelected(position));
+
                 holder.setImageResource(R.id.iv, R.drawable.pic3);
             }
 
             @Override
             public int getHeadLayoutID(int position, String bean) {
-                return R.layout.item_head_00;
+                return R.layout.item_head_selector;
             }
 
             @Override
             public int getItemLayoutID(int position, HRVBean bean) {
-                return R.layout.item_grv;
+                return R.layout.item_grv_drag_selector;
             }
 
             @Override
             public void onHeadClick(@NonNull BaseViewHolder holder, int position, String bean) {
-                showToast("点击" + bean);
+                showToast("onHeadClick 点击" + bean);
+                LogUtils.log("onHeadClick",position);
             }
 
             @Override
             public void onItemClick(@NonNull BaseViewHolder holder, int position, HRVBean bean) {
-                showToast("点击" + position);
+                showToast("onItemClick 点击" + position);
+                LogUtils.log("onItemClick",position);
             }
 
             @Override
-            public void onViewAttachedToWindow(BaseViewHolder holder) {
-                super.onViewAttachedToWindow(holder);
-//                startDefaultAttachedAnim(holder);
+            public void onHeadLongClick(@NonNull BaseViewHolder holder, int position, String head) {
+                super.onHeadLongClick(holder, position, head);
+                LogUtils.log("onHeadLongClick",position);
+            }
+
+            @Override
+            public void onItemLongClick(@NonNull BaseViewHolder holder, int position, HRVBean item) {
+                super.onItemLongClick(holder, position, item);
+                LogUtils.log("onItemLongClick",position);
+            }
+
+            @Override
+            public void onSelectCountOverMax(int maxCount) {
+                super.onSelectCountOverMax(maxCount);
+            }
+
+            @Override
+            public void onSelectCountChanged(boolean isAllSelected, int countSelected, int countAllCanSelect) {
+                super.onSelectCountChanged(isAllSelected, countSelected, countAllCanSelect);
             }
         };
 
         VerticalGridRecyclerView verticalGridRecyclerView = findViewById(R.id.grv);
         verticalGridRecyclerView.setSpanCount(4)
                 .addItemDecoration(new GridItemDecoration(dpAdapt(10)))
+                .dragSelector(headAdapter.getSelector())
                 .setAdapter(headAdapter);
+        headAdapter.getSelector().startDragSelect();
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             if(i%15==0){
                 headAdapter.addHeadNoNotify(String.valueOf(i));
             }else {

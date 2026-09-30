@@ -88,7 +88,7 @@ public class GRVHeadFootActivity extends BaseActivity {
                 .addItemDecoration(new GridItemDecoration(dpAdapt(10)))
                 .setAdapter(simpleAdapter);
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10000; i++) {
             simpleAdapter.addNoNotify(i % 15 == 0);
         }
         simpleAdapter.notifyDataSetChanged();

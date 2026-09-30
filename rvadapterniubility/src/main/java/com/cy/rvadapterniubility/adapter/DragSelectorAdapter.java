@@ -140,8 +140,7 @@ public abstract class DragSelectorAdapter<T> extends SimpleAdapter<T> {
         BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         if (baseViewHolder == null || position < 0 || position >= getList_bean().size())
             return this;
-        bindDataToView(baseViewHolder, position,
-                getList_bean().get(position), selector.contains(position),
+        bindDataToView(baseViewHolder, position, getList_bean().get(position), selector.contains(position),
                 new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
         return this;
     }

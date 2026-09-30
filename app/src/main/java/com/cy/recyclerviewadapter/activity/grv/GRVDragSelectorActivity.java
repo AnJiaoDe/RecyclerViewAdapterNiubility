@@ -40,7 +40,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
         List<HRVBean> list = new ArrayList<>();
         int cout_head=0;
         for (int i = 0; i < 101; i++) {
-            if (i % 5 == 0) {
+            if (i % 7 == 0) {
                 list.add(null);
                 cout_head++;
                 continue;

@@ -1,11 +1,8 @@
 package com.cy.rvadapterniubility.recyclerview;
 
-import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,13 +12,12 @@ import android.widget.OverScroller;
 
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
-import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
+import com.cy.rvadapterniubility.adapter.Selector;
 
 public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends BaseRecyclerView<T> {
     private GestureDetector gestureDetector;
@@ -30,8 +26,10 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     private float downX;
     private float downY;
     private float touchSlop;
+//    @Nullable
+//    private DragSelectorAdapter dragSelectorAdapter;
     @Nullable
-    private DragSelectorAdapter dragSelectorAdapter;
+    private Selector<?> selector;
     private int position_will_select = NO_POSITION;
     private int position_start = NO_POSITION;
     private int position_end = NO_POSITION;
@@ -68,10 +66,10 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 super.onLongPress(e);
                 isLongPress = true;
 
-                if (dragSelectorAdapter == null) return;
+                if (selector == null) return;
                 View child = findChildViewUnder(e.getX(), e.getY());
                 int position = getChildAdapterPosition(child);
-                if (position < 0 || position >= dragSelectorAdapter.getItemCount())
+                if (position < 0 || position >= selector.getItemCount())
                     return;
 
                 position_start = position;
@@ -81,7 +79,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 
                 BaseViewHolder baseViewHolder = (BaseViewHolder) findViewHolderForAdapterPosition(position);
                 if (baseViewHolder == null) return;
-                dragSelectorAdapter.onItemLongClick__(baseViewHolder, position);
+                selector.onItemLongClick(baseViewHolder, position);
             }
 
         });
@@ -114,24 +112,10 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         };
     }
 
-    public T dragSelector(DragSelectorAdapter dragSelectorAdapter) {
-        this.dragSelectorAdapter = dragSelectorAdapter;
+    public T dragSelector(Selector<?> selector) {
+        this.selector = selector;
         return (T) this;
     }
-
-    /**
-     * 何故不能直接判断是否是dragSelectorAdapter，然后直接强转呢？因为有些Adapter是ConcatAdapter,
-     * dragSelectorAdapter只是ConcatAdapter的其中一个
-     *
-     * @param adapter The new adapter to set, or null to set no adapter.
-     */
-    @Override
-    public void setAdapter(@Nullable Adapter adapter) {
-        if (adapter instanceof DragSelectorAdapter)
-            this.dragSelectorAdapter = (DragSelectorAdapter) adapter;
-        super.setAdapter(adapter);
-    }
-
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -155,7 +139,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (dragSelectorAdapter == null || dragSelectorAdapter.getItemCount()==0)
+        if (selector == null || selector.getItemCount()==0)
             return super.dispatchTouchEvent(event);
         LayoutManager layoutManager = getLayoutManager();
         if (layoutManager == null) return super.dispatchTouchEvent(event);
@@ -170,12 +154,12 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         if (orientation != RecyclerView.VERTICAL) return super.dispatchTouchEvent(event);
 
         gestureDetector.onTouchEvent(event);
-        if (!dragSelectorAdapter.isUsingSelector()) return super.dispatchTouchEvent(event);
+        if (!selector.isUsingSelector()) return super.dispatchTouchEvent(event);
 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
-                dragSelectorAdapter.canItemClick(true);
+                selector.canItemClick(true);
                 isLongPress = false;
                 isSelectMoving = false;
                 downX = event.getX();
@@ -187,14 +171,13 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                 View c = findChildViewUnder(downX, downY);
                 if (c != null) {
                     int position = getChildAdapterPosition(c);
-                    if (position != NO_POSITION && dragSelectorAdapter.useSelector(
-                            dragSelectorAdapter.getItemLayoutID(position, dragSelectorAdapter.getList_bean().get(position)))) {
+                    if (position != NO_POSITION && selector.useSelector(position)) {
                         position_start = position;
                         position_end = position;
                         position_start_last = position;
                         position_end_last = position;
                         //这个必须写在这里
-                        downSelected = dragSelectorAdapter.isSelected(position_start);
+                        downSelected = selector.isSelected(position_start);
                     }
                 }
                 break;
@@ -215,7 +198,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
                         int position = getChildAdapterPosition(child);
                         if (position != NO_POSITION) {
                             isSelectMoving = true;
-                            dragSelectorAdapter.canItemClick(false);
+                            selector.canItemClick(false);
 //                            if (position == position_start)
 //                                dragSelectorAdapter.select(position, !cancelSelect && !downSelected, this);
 
@@ -281,7 +264,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
                 //不能少，否则G
-                dragSelectorAdapter.canItemClick(true);
+                selector.canItemClick(true);
 
                 position_start = NO_POSITION;
                 position_end = NO_POSITION;
@@ -334,7 +317,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
             }
         } else if (y > getHeight() && !canScrollVertically(1)) {
             //上滑，且不能再上滑，手指超出边界，选中最后一个，这里暂且不做findLastVisibleItemPositions处理，因为我懒得做了，烦躁 damn
-            position_end = dragSelectorAdapter.getItemCount() - 1;
+            position_end = selector.getItemCount() - 1;
         } else if (y < 0 && !canScrollVertically(-1)) {
             //下滑，且不能再下滑
             position_end = 0;
@@ -354,7 +337,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 //            LogUtils.log("selectRange     newEnd", newEnd);
 //            LogUtils.log("selectRange", "newStart > position_start_last");
             cancelSelect = true;
-            dragSelectorAdapter.selectRange(position_start_last, newStart, false, this);
+            selector.selectRange(position_start_last, newStart, false, this);
         } else if (newStart < position_start_last) {
             //往前往上拖动
 //            LogUtils.log("selectRange position_start", position_start);
@@ -362,8 +345,8 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 //            LogUtils.log("selectRange newStart", newStart);
 //            LogUtils.log("selectRange     newEnd", newEnd);
 //            LogUtils.log("selectRange", "newStart < position_start_last");
-            dragSelectorAdapter.selectRange(newStart, position_start_last,
-                    isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
+            selector.selectRange(newStart, position_start_last,
+                    isLongPress ? selector.isSelected(position_start) : !downSelected, this);
         }
         //注意：这里不是else if 而是if,否则GG
         if (newEnd > position_end_last) {
@@ -373,8 +356,8 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 //            LogUtils.log("selectRange newStart", newStart);
 //            LogUtils.log("selectRange     newEnd", newEnd);
 //            LogUtils.log("selectRange", "newEnd > position_end_last");
-            dragSelectorAdapter.selectRange(position_end_last, newEnd,
-                    isLongPress ? dragSelectorAdapter.isSelected(position_start) : !downSelected, this);
+            selector.selectRange(position_end_last, newEnd,
+                    isLongPress ? selector.isSelected(position_start) : !downSelected, this);
         } else if (newEnd < position_end_last) {
             //往下往后拖动的前提下   再往前往上拖动，会触发
 //            LogUtils.log("selectRange position_start", position_start);
@@ -383,7 +366,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
 //            LogUtils.log("selectRange     newEnd", newEnd);
 //            LogUtils.log("selectRange", "newEnd < position_end_last");
             cancelSelect = true;
-            dragSelectorAdapter.selectRange(newEnd, position_end_last, false, this);
+            selector.selectRange(newEnd, position_end_last, false, this);
         }
         position_start_last = newStart;
         position_end_last = newEnd;
