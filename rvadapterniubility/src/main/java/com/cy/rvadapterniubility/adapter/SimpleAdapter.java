@@ -151,7 +151,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         if (position < 0 || position >= list_bean.size()) return R.layout.cy_staggerd_item_0;
         return getItemLayoutID(position, list_bean.get(position));
     }
-
+click longclick 尚未处理
     /**
      * 妙极了，再也不用手动调用putFullSpanPosition了，还及其容易出BUG
      *
