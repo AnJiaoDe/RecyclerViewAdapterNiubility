@@ -20,8 +20,11 @@ import com.cy.rvadapterniubility.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 带Header分组的Adapter。
@@ -59,6 +62,19 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
             }
 
             @Override
+            @NonNull
+            public List<T> getItemsByHeadPosition(int position) {
+                PositionInfo<H, T> info = HeadAdapter.this.getPositionInfo(position);
+                if (info == null || !info.isHead()) {
+                    return Collections.emptyList();
+                }
+                Section<H, T> section = HeadAdapter.this.getSection(info.getSectionIndex());
+                if (section == null) {
+                    return Collections.emptyList();
+                }
+                return section.getItems();
+            }
+            @Override
             public int getItemCount() {
                 return HeadAdapter.this.getItemCount();
             }
@@ -73,6 +89,14 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
                 return !HeadAdapter.this.isFullSpan(position);
             }
 
+            @Override
+            public int getHeadPosition(int itemPosition) {
+                if (itemPosition < 0 || itemPosition >= nodes.size()) return -1;
+                Node<H, T> node = nodes.get(itemPosition);
+                if (node.type != Node.TYPE_ITEM) return -1;
+                return itemPosition - node.itemIndex - 1;
+            }
+
             @Nullable
             @Override
             public T getItem(int position) {
@@ -80,7 +104,12 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
             }
 
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
+            public void bindHeadToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
+                HeadAdapter.this.bindHeadToView(holder, position, HeadAdapter.this.getHeadByPosition(position), payloads);
+            }
+
+            @Override
+            public void bindItemToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
                 HeadAdapter.this.bindItemToView(holder, position, HeadAdapter.this.getItemByPosition(position), payloads);
             }
 
@@ -614,7 +643,11 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
             }
         });
     }
-
+    public <Msg> void dispatchUpdatesToMsg(final int position,final Msg msg) {
+        Map<Integer, Msg> mapMsg=new HashMap<>();
+        mapMsg.put(position,msg);
+        dispatchUpdatesToMsg(mapMsg);
+    }
     public <Msg> void dispatchUpdatesToMsg(final Map<Integer, Msg> mapMsg) {
 
         ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<DiffUtil.DiffResult>() {
@@ -941,6 +974,32 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
 
     public HeadAdapter<H, T> removeItems(@NonNull H head) {
         removeItemsNoNotify(head);
+        notifyDataSetChanged();
+        return this;
+    }
+
+    public HeadAdapter<H, T> removeItemsNoNotify(@NonNull List<T> items) {
+        if (items.isEmpty()) {
+            return this;
+        }
+        Set<T> removeSet = new HashSet<>(items);
+        for (int i = sections.size() - 1; i >= 0; i--) {
+            Section<H, T> section = sections.get(i);
+            for (int j = section.items.size() - 1; j >= 0; j--) {
+                if (removeSet.contains(section.items.get(j))) {
+                    section.items.remove(j);
+                }
+            }
+            // 分组已经没有 Item，连 Header 一起删除
+            if (section.items.isEmpty()) {
+                sections.remove(i);
+            }
+        }
+        rebuildNodes();
+        return this;
+    }
+    public HeadAdapter<H, T> removeItems(@NonNull List<T> items) {
+        removeItemsNoNotify(items);
         notifyDataSetChanged();
         return this;
     }

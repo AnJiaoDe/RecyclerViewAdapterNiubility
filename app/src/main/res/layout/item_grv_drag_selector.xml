@@ -16,11 +16,6 @@
         android:id="@+id/layout_check"
         android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/view_mask"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#77ffffff" />
         <com.cy.androidview.selectorview.ImageViewSelector
             android:id="@+id/ivs"
             android:layout_width="wrap_content"

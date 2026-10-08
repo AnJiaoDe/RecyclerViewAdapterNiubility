@@ -21,6 +21,7 @@ import com.cy.rvadapterniubility.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,60 +33,77 @@ import java.util.Map;
 public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHolder> {
     private List<T> list_bean;//数据源
     private Selector<T> selector;
+    private boolean canItemClick = true;
 
     public SimpleAdapter() {
         list_bean = new ArrayList<>();//数据源
         selector = new Selector<>(new Selector.Callback<T>() {
             @Override
             public void dispatchUpdatesToMsg(String notify_state_drag_select) {
+                SimpleAdapter.this.dispatchUpdatesToMsg(notify_state_drag_select);
+            }
 
+            @NonNull
+            @Override
+            public List<T> getItemsByHeadPosition(int position) {
+                return Collections.emptyList();
             }
 
             @Override
             public int getItemCount() {
-                return 0;
+                return SimpleAdapter.this.getItemCount();
             }
 
             @Override
             public void canItemClick(boolean canItemClick) {
-
+                SimpleAdapter.this.canItemClick = canItemClick;
             }
 
             @Override
             public boolean useSelector(int position) {
-                return false;
+                return !SimpleAdapter.this.isFullSpan(position);
             }
 
             @Nullable
             @Override
             public T getItem(int position) {
-                return null;
+                return list_bean.get(position);
             }
 
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
+            public int getHeadPosition(int position) {
+                return 0;
+            }
 
+            @Override
+            public void bindHeadToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
+
+            }
+
+            @Override
+            public void bindItemToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
+                SimpleAdapter.this.bindDataToView(holder, position, list_bean.get(position), payloads);
             }
 
             @Override
             public void onItemLongClick(@NonNull BaseViewHolder holder, int position) {
-
+                SimpleAdapter.this.onItemLongClick(holder, position, list_bean.get(position));
             }
 
             @NonNull
             @Override
             public List<T> getAllCanSelectItems() {
-                return Collections.emptyList();
+                return list_bean;
             }
 
             @Override
             public void onSelectCountChanged(boolean isAllSelected, int countSelected, int countAllCanSelect) {
-
+                SimpleAdapter.this.onSelectCountChanged(isAllSelected, countSelected, countAllCanSelect);
             }
 
             @Override
             public void onSelectCountOverMax(int maxCount) {
-
+                SimpleAdapter.this.onSelectCountOverMax(maxCount);
             }
         });
     }
@@ -228,7 +246,13 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     public void onItemLongClick(@NonNull BaseViewHolder holder, int position, T bean) {
 
     }
+    public void onSelectCountChanged(boolean isAllSelected, int countSelected, int countAllCanSelect) {
 
+    }
+
+    public void onSelectCountOverMax(int maxCount) {
+
+    }
     public final void onItemMove__(int fromPosition, int toPosition, @NonNull RecyclerView.ViewHolder srcHolder, @NonNull RecyclerView.ViewHolder targetHolder) {
         onItemMove(fromPosition, toPosition, (BaseViewHolder) srcHolder, (BaseViewHolder) targetHolder);
     }
@@ -408,6 +432,16 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
                 diffResult.dispatchUpdatesTo(SimpleAdapter.this);
             }
         });
+    }
+
+    /**
+     * 用notify会导致item刷新
+     * 在bindDataToView 中，判断payloads是否有msg 决定是否只更新item的部分内容
+     */
+    public <Msg> void dispatchUpdatesToMsg(final int position, final Msg msg) {
+        Map<Integer, Msg> mapMsg = new HashMap<>();
+        mapMsg.put(position, msg);
+        dispatchUpdatesToMsg(mapMsg);
     }
 
     /**

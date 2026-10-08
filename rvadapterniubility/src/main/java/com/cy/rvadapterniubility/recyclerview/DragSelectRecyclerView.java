@@ -113,6 +113,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     }
 
     public T dragSelector(Selector<?> selector) {
+        selector.setRecyclerView(this);
         this.selector = selector;
         return (T) this;
     }

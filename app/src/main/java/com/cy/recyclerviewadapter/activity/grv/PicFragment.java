@@ -109,18 +109,19 @@ public class PicFragment extends BaseFragment {
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
+                    public void onCheckedChanged(ImageViewSelector iv, boolean isChecked, boolean byTouch) {
                         LogUtils.log("bindDataToView onCheckedChanged", position + ":" + isChecked);
+                        if(!byTouch)return;
                         if (isChecked && isOverMaxCountSelect() && !getSelector().contains(position)) {
                             showToast("不能超过最大选择数量");
                             imageViewSelector.setChecked(false);
                             return;
                         }
-                        holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
+//                        holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
                         selectNoNotify(position, isChecked);
                     }
                 });
-                holder.setVisibility(R.id.view_mask, isSelected ? View.VISIBLE : View.GONE);
+//                holder.setVisibility(R.id.view_mask, isSelected ? View.VISIBLE : View.GONE);
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
                 imageViewSelector.setChecked(isSelected);
 
@@ -170,7 +171,8 @@ public class PicFragment extends BaseFragment {
         tv_count = view.findViewById(R.id.tv_count);
         imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(ImageViewSelector iv, boolean isChecked) {
+            public void onCheckedChanged(ImageViewSelector iv, boolean isChecked, boolean byTouch) {
+                if(!byTouch)return;
                 dragSelectorAdapter.selectAll(isChecked);
             }
         });

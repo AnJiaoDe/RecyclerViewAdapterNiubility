@@ -21,8 +21,17 @@ public class Selector<T> {
     private boolean usingSelector = false;
     private int maxCountSelect = -1;
 
+    private int positionC = -1;
+    @NonNull
+    private RecyclerView recyclerView;
+
     public Selector(@NonNull Callback<T> callback) {
         this.callback = callback;
+    }
+
+    public Selector<T> setRecyclerView(@NonNull RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+        return this;
     }
 
     public boolean isUsingSelector() {
@@ -61,6 +70,11 @@ public class Selector<T> {
         return this;
     }
 
+    public Selector<T> stopDragSelectNoNotify() {
+        usingSelector = false;
+        clear();
+        return this;
+    }
     public Selector<T> stopDragSelect() {
         if (!usingSelector) return this;
         usingSelector = false;
@@ -84,16 +98,23 @@ public class Selector<T> {
         return selected.isEmpty();
     }
 
-    public boolean isSelected(@Nullable T item) {
-        return item != null && selected.contains(item);
-    }
-
-    /**
-     * 兼容RecyclerView使用。
-     */
     public boolean isSelected(int position) {
         T item = callback.getItem(position);
-        return item != null && selected.contains(item);
+        // Item
+        if (item != null) {
+            return selected.contains(item);
+        }
+        // Header
+        List<T> items = callback.getItemsByHeadPosition(position);
+        if (items == null || items.isEmpty()) {
+            return false;
+        }
+        for (T t : items) {
+            if (!selected.contains(t)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Selector<T> setMaxCountSelect(int maxCountSelect) {
@@ -119,6 +140,7 @@ public class Selector<T> {
      * @return true表示原状态和目标状态相同，没有变化
      */
     public boolean selectNoNotify(int position, boolean select) {
+        positionC = position;
         T item = callback.getItem(position);
         if (item == null || !callback.useSelector(position)) {
             return false;
@@ -134,6 +156,7 @@ public class Selector<T> {
         }
         return false;
     }
+
     /**
      * position只是入口。
      * Selector真正保存的是item。
@@ -141,6 +164,7 @@ public class Selector<T> {
      * @return true表示状态发生变化
      */
     public boolean toggleNoNotify(int position) {
+        positionC = position;
         T item = callback.getItem(position);
         if (item == null || !callback.useSelector(position)) {
             return false;
@@ -152,14 +176,16 @@ public class Selector<T> {
         }
         return select(item);
     }
+
     /**
      * RecyclerView点击选择。
      */
     public Selector<T> toggle(int position, @NonNull RecyclerView recyclerView) {
-        if(!toggleNoNotify(position))return this;
-        bindDataToView(position,  recyclerView);
+        if (!toggleNoNotify(position)) return this;
+        bindDataToView(position, recyclerView);
         return this;
     }
+
     /**
      * RecyclerView设置选择状态。
      */
@@ -199,20 +225,43 @@ public class Selector<T> {
      * 因为HeadAdapter存在Header。
      */
     public Selector<T> selectAll(boolean all) {
-        if (isAllSelected() == all) return this;
+        return selectAll(callback.getAllCanSelectItems(), all);
+    }
+
+    public Selector<T> selectHead(int headPosition, boolean all) {
+        List<T> items = callback.getItemsByHeadPosition(headPosition);
+        if (items == null || items.isEmpty()) return this;
+        return selectAll(items, all);
+    }
+
+    private Selector<T> selectAll(@NonNull List<T> items, boolean all) {
+        boolean changed = false;
         if (all) {
-            List<T> items = callback.getAllCanSelectItems();
             for (T item : items) {
-                if (!select(item)) {
+                if (item == null || selected.contains(item)) {
+                    continue;
+                }
+                if (maxCountSelect >= 0 && selected.size() >= maxCountSelect) {
+                    callback.onSelectCountOverMax(maxCountSelect);
                     break;
                 }
+                selected.add(item);
+                changed = true;
             }
         } else {
-            clear();
+            for (T item : items) {
+                if (selected.remove(item)) {
+                    changed = true;
+                }
+            }
         }
-        callback.dispatchUpdatesToMsg(NOTIFY_STATE_DRAG_SELECT);
+        if (changed) {
+            notifyCountChanged();
+            callback.dispatchUpdatesToMsg(NOTIFY_STATE_DRAG_SELECT);
+        }
         return this;
     }
+
     /**
      * 直接选择Item。
      */
@@ -286,17 +335,22 @@ public class Selector<T> {
         return new ArrayList<>(selected);
     }
 
+    //直接bindDataToView比dispatchto 性能好
     private void bindDataToView(int position, @NonNull RecyclerView recyclerView) {
         BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
-        if (baseViewHolder == null) {
-            return;
-        }
-        callback.bindDataToView(baseViewHolder, position,new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
+        if (baseViewHolder == null) return;
+        callback.bindItemToView(baseViewHolder, position, new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
     }
 
     private void notifyCountChanged() {
         int countAllCanSelect = callback.getAllCanSelectItems().size();
         callback.onSelectCountChanged(selected.size() == countAllCanSelect, selected.size(), countAllCanSelect);
+
+        int p=callback.getHeadPosition(positionC);
+        if (p < 0) return;
+        BaseViewHolder holder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(p);
+        if (holder == null) return;
+        callback.bindHeadToView(holder, p, Collections.<Object>singletonList(NOTIFY_STATE_DRAG_SELECT));
     }
 
     public void onItemLongClick(@NonNull BaseViewHolder holder, int position) {
@@ -314,13 +368,30 @@ public class Selector<T> {
     public interface Callback<T> {
         public void dispatchUpdatesToMsg(String notify_state_drag_select);
 
+        /**
+         * 获取指定Header对应的所有可选择Item。
+         *
+         * @param position Header的RecyclerView position
+         */
+        @Nullable
+        List<T> getItemsByHeadPosition(int position);
+
         public int getItemCount();
 
         public void canItemClick(boolean canItemClick);
+
         /**
          * position是否允许选择。
          */
         public boolean useSelector(int position);
+
+        /**
+         * 获取Item所属的Header position。
+         *
+         * @param position Item的RecyclerView position
+         * @return Header position，非HeaderAdapter场景返回-1
+         */
+        public int getHeadPosition(int position);
 
         /**
          * 根据RecyclerView position获取Item。
@@ -332,7 +403,12 @@ public class Selector<T> {
         /**
          * 直接绑定选中状态。
          */
-        public void bindDataToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads);
+        public void bindHeadToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads);
+
+        /**
+         * 直接绑定选中状态。
+         */
+        public void bindItemToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads);
 
         public void onItemLongClick(@NonNull BaseViewHolder holder, int position);
 
