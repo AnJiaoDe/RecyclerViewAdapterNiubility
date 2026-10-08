@@ -21,7 +21,8 @@ import com.cy.recyclerviewadapter.MainActivity;
 import com.cy.recyclerviewadapter.R;
 import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
-import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
+import com.cy.rvadapterniubility.adapter.Selector;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 
@@ -30,7 +31,7 @@ import java.util.List;
 
 public class GRVDragSelectorActivity extends BaseActivity {
 
-    private DragSelectorAdapter<HRVBean> dragSelectorAdapter;
+    private SimpleAdapter<HRVBean> simpleAdapter;
     private View layout_menu;
 
     @Override
@@ -58,29 +59,22 @@ public class GRVDragSelectorActivity extends BaseActivity {
             public void onCheckedChanged(ImageViewSelector iv, boolean isChecked, boolean byTouch) {
                 LogUtils.log("onCheckedChangedALL", isChecked);
                 if(!byTouch)return;
-                dragSelectorAdapter.selectAll(isChecked);
+                simpleAdapter.getSelector().selectAll(isChecked);
             }
         });
-        dragSelectorAdapter = new DragSelectorAdapter<HRVBean>() {
+        simpleAdapter = new SimpleAdapter<HRVBean>() {
             @Override
             public void onSelectCountChanged(boolean isAllSelected, int count_selected, int count_all_can_select) {
                 LogUtils.log("onSelectCountChanged", isAllSelected);
-
                 imageViewSelector.setChecked(isAllSelected);
 //                tv_count.setText("已选择"+getSelectedSize()+"项");
                 //或者
                 tv_count.setText("已选择" + count_selected + "项");
-
                 // 降序遍历，如果要删除，从后往前删除
 //                for (int i = getSparseArraySelector().getSparseArray().size() - 1;
 //                     i >= 0; i--) {
 //                    LogUtils.log("onSelectCountChanged", getSparseArraySelector().getSparseArray().valueAt(i).getResID());
 //                }
-            }
-
-            @Override
-            public int getNoUseSelectorCount() {
-                return cout_head_final;
             }
 
             @Override
@@ -112,18 +106,17 @@ public class GRVDragSelectorActivity extends BaseActivity {
              * @param holder
              * @param position
              * @param bean
-             * @param isSelected
              * @param payloads
              */
 
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, boolean isSelected, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, HRVBean bean, @NonNull List<Object> payloads) {
                 if(bean==null){
                     holder.setText(R.id.tv, "head" + position);
                     return;
                 }
-                LogUtils.log("selectRange bindDataToView", position + ":" + isSelected + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
-                holder.setVisibility(R.id.layout_check, isUsingSelector() ? View.VISIBLE : View.GONE);
+                LogUtils.log("selectRange bindDataToView", position + ":"  + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
+                holder.setVisibility(R.id.layout_check, getSelector().isUsingSelector() ? View.VISIBLE : View.GONE);
                 LogUtils.log("selectRange getTag", holder.getTag());
 
                 holder.setTag(position);
@@ -132,7 +125,7 @@ public class GRVDragSelectorActivity extends BaseActivity {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked, boolean byTouch) {
                         if(!byTouch)return;
-                        if (isChecked && isOverMaxCountSelect() && !getSelector().contains(position)) {
+                        if (isChecked && getSelector().isOverMaxCountSelect() && !getSelector().isSelected(position)) {
                             showToast("不能超过最大选择数量");
                             imageViewSelector.setChecked(false);
                             return;
@@ -140,15 +133,15 @@ public class GRVDragSelectorActivity extends BaseActivity {
                         LogUtils.log("selectRange onCheckedChanged:" + holder.getTag(), position + ":" + isChecked);
                         //长按第一个ITEM后右滑然后左滑到第2个ITEM，第2个ITEM疯狂回调 导致疯狂闪烁
 //                        holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
-                        selectNoNotify(position, isChecked);
+                        getSelector(). selectNoNotify(position, isChecked);
                     }
                 });
 //                holder.setVisibility(R.id.view_mask, isSelected ? View.VISIBLE : View.GONE);
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
-                imageViewSelector.setChecked(isSelected);
+                imageViewSelector.setChecked(getSelector().isSelected(position));
 
                 //在bindDataToView 中，判断payloads是否有NOTIFY_START_DRA_SELECT 决定是否只更新item的选择框，不更新item的图片等较为耗时的操作
-                if (!payloads.isEmpty() && NOTIFY_STATE_DRAG_SELECT.equals(payloads.get(0))) return;
+                if (!payloads.isEmpty() && Selector.NOTIFY_STATE_DRAG_SELECT.equals(payloads.get(0))) return;
 
                 holder.setImageResource(R.id.iv, bean.getResID());
             }
@@ -166,32 +159,32 @@ public class GRVDragSelectorActivity extends BaseActivity {
             }
 
             @Override
-            public void onItemClick__(BaseViewHolder holder, int position, HRVBean bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, HRVBean bean) {
                 showToast("selectRange 点击" + position);
                 startActivity(new Intent(GRVDragSelectorActivity.this, MainActivity.class));
             }
 
             @Override
-            public void onItemLongClick__(BaseViewHolder holder, int position, HRVBean bean) {
+            public void onItemLongClick(@NonNull BaseViewHolder holder, int position, HRVBean bean) {
                 LogUtils.log("selectRange onItemLongClick__" + position);
                 Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
                 if (vibrator != null) vibrator.vibrate(50);
                 layout_menu.setVisibility(View.VISIBLE);
-                startDragSelect(position);
+                simpleAdapter.getSelector().startDragSelect(position);
             }
         };
         verticalGridRecyclerView.setSpanCount(4)
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(this, 1)))
-                .setAdapter(dragSelectorAdapter);
-        dragSelectorAdapter.add(list);
+                .setAdapter(simpleAdapter);
+        simpleAdapter.add(list);
 //        dragSelectorAdapter.setMaxCountSelect(7);
-        dragSelectorAdapter.startDragSelect();
+        simpleAdapter.getSelector().startDragSelect();
         layout_menu.setVisibility(View.VISIBLE);
         findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 layout_menu.setVisibility(View.GONE);
-                dragSelectorAdapter.stopDragSelect();
+                simpleAdapter.getSelector().stopDragSelect();
             }
         });
     }

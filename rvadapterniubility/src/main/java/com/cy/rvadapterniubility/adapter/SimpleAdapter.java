@@ -108,6 +108,10 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         });
     }
 
+    public Selector<T> getSelector() {
+        return selector;
+    }
+
     @NonNull
     @Override
     public final BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
