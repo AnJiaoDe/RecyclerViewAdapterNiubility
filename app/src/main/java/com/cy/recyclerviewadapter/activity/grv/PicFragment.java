@@ -26,8 +26,8 @@ import com.cy.refreshlayoutniubility.IHeadView;
 import com.cy.refreshlayoutniubility.OnSimpleRefreshListener;
 import com.cy.rvadapterniubility.ThreadUtils;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
-import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 import com.cy.rvadapterniubility.adapter.MultiAdapter;
+import com.cy.rvadapterniubility.adapter.Selector;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
 import com.cy.rvadapterniubility.recyclerview.OnGridLoadMoreListener;
@@ -42,7 +42,7 @@ import java.util.Map;
 public class PicFragment extends BaseFragment {
     private GridRefreshLayout gridRefreshLayout;
     private MultiAdapter multiAdapter;
-    private DragSelectorAdapter<String> dragSelectorAdapter;
+    private SimpleAdapter<String> simpleAdapter;
     private View layout_menu;
     private TextView tv_count;
     private ImageViewSelector imageViewSelector;
@@ -50,11 +50,12 @@ public class PicFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dragSelectorAdapter = new DragSelectorAdapter<String>() {
+        simpleAdapter = new SimpleAdapter<String>() {
             @Override
             public boolean areItemsTheSame(String beanOld, String beanNew, int oldItemPosition, int newItemPosition) {
                 return super.areItemsTheSame(beanOld, beanNew, oldItemPosition, newItemPosition);
             }
+
             @Override
             public boolean areContentsTheSame(String beanOld, String beanNew, int oldItemPosition, int newItemPosition) {
                 return super.areContentsTheSame(beanOld, beanNew, oldItemPosition, newItemPosition);
@@ -64,11 +65,6 @@ public class PicFragment extends BaseFragment {
             public Object getChangePayload(String beanOld, String beanNew, int oldItemPosition, int newItemPosition) {
                 return null;
 //                return new String("数据变化");
-            }
-
-            @Override
-            public int getNoUseSelectorCount() {
-                return 0;
             }
 
             @Override
@@ -96,7 +92,7 @@ public class PicFragment extends BaseFragment {
             }
 
             @Override
-            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, boolean isSelected, @NonNull List<Object> payloads) {
+            public void bindDataToView(@NonNull BaseViewHolder holder, int position, String bean, @NonNull List<Object> payloads) {
                 LogUtils.log("bindDataToView tag", holder.getTag());
                 /**
                  * 有多布局时，会导致findViewHolderForAdapterPosition 出来的BaseViewHolder是复用的loadMore的，故而在使用时，如果有LOADMORE，
@@ -104,29 +100,30 @@ public class PicFragment extends BaseFragment {
                  */
                 if (!bean.equals(holder.getTag())) return;
 
-                LogUtils.log("bindDataToView", position + ":" + isSelected + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
-                holder.setVisibility(R.id.layout_check, isUsingSelector() ? View.VISIBLE : View.GONE);
+                LogUtils.log("bindDataToView", position + ":"  + ":" + (!payloads.isEmpty() ? payloads.get(0) : ""));
+                holder.setVisibility(R.id.layout_check, getSelector().isUsingSelector() ? View.VISIBLE : View.GONE);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked, boolean byTouch) {
                         LogUtils.log("bindDataToView onCheckedChanged", position + ":" + isChecked);
-                        if(!byTouch)return;
-                        if (isChecked && isOverMaxCountSelect() && !getSelector().contains(position)) {
+                        if (!byTouch) return;
+                        if (isChecked && getSelector().isOverMaxCountSelect() && !getSelector().isSelected(position)) {
                             showToast("不能超过最大选择数量");
                             imageViewSelector.setChecked(false);
                             return;
                         }
 //                        holder.setVisibility(R.id.view_mask, isChecked ? View.VISIBLE : View.GONE);
-                        selectNoNotify(position, isChecked);
+                        getSelector().selectNoNotify(position, isChecked);
                     }
                 });
 //                holder.setVisibility(R.id.view_mask, isSelected ? View.VISIBLE : View.GONE);
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
-                imageViewSelector.setChecked(isSelected);
+                imageViewSelector.setChecked(getSelector().isSelected(position));
 
                 //在bindDataToView 中，判断payloads是否有NOTIFY_START_DRA_SELECT 决定是否只更新item的选择框，不更新item的图片等较为耗时的操作
-                if (!payloads.isEmpty() && NOTIFY_STATE_DRAG_SELECT.equals(payloads.get(0))) return;
+                if (!payloads.isEmpty() && Selector.NOTIFY_STATE_DRAG_SELECT.equals(payloads.get(0)))
+                    return;
 
                 LogUtils.log("GlideUtilsGlideUtils", holder.getTag());
 
@@ -139,18 +136,18 @@ public class PicFragment extends BaseFragment {
             }
 
             @Override
-            public void onItemClick__(BaseViewHolder holder, int position, String bean) {
+            public void onItemClick(@NonNull BaseViewHolder holder, int position, String bean) {
                 showToast("点击" + position);
                 startActivity(new Intent(activity, MainActivity.class));
             }
 
             @Override
-            public void onItemLongClick__(BaseViewHolder holder, int position, String bean) {
+            public void onItemLongClick(@NonNull BaseViewHolder holder, int position, String bean) {
                 Vibrator vibrator = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
                 if (vibrator != null) vibrator.vibrate(50);
                 layout_menu.setVisibility(View.VISIBLE);
                 //不刷新，直接回调bindDataToView
-                startDragSelect(position);
+                simpleAdapter.getSelector().startDragSelect(position);
             }
         };
     }
@@ -172,8 +169,8 @@ public class PicFragment extends BaseFragment {
         imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ImageViewSelector iv, boolean isChecked, boolean byTouch) {
-                if(!byTouch)return;
-                dragSelectorAdapter.selectAll(isChecked);
+                if (!byTouch) return;
+                simpleAdapter.getSelector().selectAll(isChecked);
             }
         });
         view.findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
@@ -181,7 +178,17 @@ public class PicFragment extends BaseFragment {
             public void onClick(View v) {
                 //不刷新，直接回调bindDataToView
                 layout_menu.setVisibility(View.GONE);
-                dragSelectorAdapter.stopDragSelect();
+                simpleAdapter.getSelector().stopDragSelect();
+            }
+        });
+        view.findViewById(R.id.btn_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //不刷新，直接回调bindDataToView
+                simpleAdapter.removeNoNotify(simpleAdapter.getSelector().getSelectedList());
+                simpleAdapter.getSelector().stopDragSelectNoNotify();
+                simpleAdapter.notifyDataSetChanged();
+                imageViewSelector.setVisibility(View.GONE);
             }
         });
         view.findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
@@ -193,15 +200,15 @@ public class PicFragment extends BaseFragment {
                 Map<Integer, String> mapMsg = new HashMap<>();
                 mapMsg.put(2, "https://img2.baidu.com/it/u=2017833233,3595322493&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=750");
                 mapMsg.put(3, "https://img2.baidu.com/it/u=2886261971,4176733325&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667");
-                dragSelectorAdapter.dispatchUpdatesToMsg(mapMsg);
+                simpleAdapter.dispatchUpdatesToMsg(mapMsg);
             }
         });
 
         gridRefreshLayout.getRecyclerView().setSpanCount(3)
-//                .dragSelector(dragSelectorAdapter)
+                .dragSelector(simpleAdapter.getSelector())
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(activity, 12)));
-        dragSelectorAdapter.setMaxCountSelect(13);
-        multiAdapter = new MultiAdapter().addAdapter(dragSelectorAdapter);
+        simpleAdapter.getSelector().setMaxCountSelect(13);
+        multiAdapter = new MultiAdapter().addAdapter(simpleAdapter);
 
         List<String> list = new ArrayList<>();
         list.add("https://img0.baidu.com/it/u=1064515679,2989524044&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=725");
@@ -266,7 +273,7 @@ public class PicFragment extends BaseFragment {
                     public void run() {
                         list.set(3, "https://img2.baidu.com/it/u=2886261971,4176733325&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667");
                         list.set(2, "https://img2.baidu.com/it/u=2017833233,3595322493&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=750");
-                        dragSelectorAdapter.dispatchUpdatesToItemDecoration(new ArrayList<>(list), null);
+                        simpleAdapter.dispatchUpdatesToItemDecoration(new ArrayList<>(list), null);
 
 //                        if (list.size() == dragSelectorAdapter.getList_bean().size()) {
 //                            dragSelectorAdapter.dispatchUpdatesToItemDecoration(new ArrayList<>(list),null);
@@ -299,14 +306,14 @@ public class PicFragment extends BaseFragment {
                             return;
                         }
 
-                        dragSelectorAdapter.addNoNotify("https://img1.baidu.com/it/u=2683593527,2630972789&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667");
-                        dragSelectorAdapter.addNoNotify("https://img2.baidu.com/it/u=2236665998,2672651341&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-                        dragSelectorAdapter.addNoNotify("https://img1.baidu.com/it/u=3543009939,2144310597&fm=253&fmt=auto&app=138&f=JPEG?w=704&h=500");
-                        dragSelectorAdapter.addNoNotify("https://img0.baidu.com/it/u=971759419,1542527601&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
-                        dragSelectorAdapter.addNoNotify("https://img0.baidu.com/it/u=1100854359,3557979750&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-                        dragSelectorAdapter.addNoNotify("https://img2.baidu.com/it/u=734998948,2733036542&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-                        dragSelectorAdapter.addNoNotify("https://img1.baidu.com/it/u=2121836459,4185680900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
-                        dragSelectorAdapter.addNoNotify("https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+                        simpleAdapter.addNoNotify("https://img1.baidu.com/it/u=2683593527,2630972789&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667");
+                        simpleAdapter.addNoNotify("https://img2.baidu.com/it/u=2236665998,2672651341&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+                        simpleAdapter.addNoNotify("https://img1.baidu.com/it/u=3543009939,2144310597&fm=253&fmt=auto&app=138&f=JPEG?w=704&h=500");
+                        simpleAdapter.addNoNotify("https://img0.baidu.com/it/u=971759419,1542527601&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
+                        simpleAdapter.addNoNotify("https://img0.baidu.com/it/u=1100854359,3557979750&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+                        simpleAdapter.addNoNotify("https://img2.baidu.com/it/u=734998948,2733036542&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+                        simpleAdapter.addNoNotify("https://img1.baidu.com/it/u=2121836459,4185680900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
+                        simpleAdapter.addNoNotify("https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
 
                         closeLoadMoreDelay("有8条更多", 1000, new Callback() {
                             @Override
@@ -317,13 +324,13 @@ public class PicFragment extends BaseFragment {
                                  */
 //                                dragSelectorAdapter.notifyItemRangeInserted(dragSelectorAdapter.getItemCount() - 8, 8);
 //                                合股这样会导致上啦一直显示LOADING
-                                dragSelectorAdapter.notifyBehindInserted(8);
+                                simpleAdapter.notifyBehindInserted(8);
                             }
                         });
                     }
                 }, 2000);
             }
         });
-        dragSelectorAdapter.add(list);
+        simpleAdapter.add(list);
     }
 }

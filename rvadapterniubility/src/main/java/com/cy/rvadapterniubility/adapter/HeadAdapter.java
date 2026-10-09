@@ -334,6 +334,7 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!canItemClick) return;
                 int position = holder.getBindingAdapterPosition();
                 if (position < 0 || position >= nodes.size()) {
                     return;
@@ -342,7 +343,6 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
                 if (node.type == Node.TYPE_HEAD) {
                     onHeadClick(holder, position, node.head);
                 } else {
-                    if (!canItemClick) return;
                     onItemClick(holder, position, node.item);
                 }
             }

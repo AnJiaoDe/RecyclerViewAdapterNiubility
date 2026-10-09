@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.refreshlayoutniubility.ScreenUtils;
-import com.cy.rvadapterniubility.adapter.DragSelectorAdapter;
 import com.cy.rvadapterniubility.adapter.HeadAdapter;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 

@@ -151,7 +151,6 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         if (position < 0 || position >= list_bean.size()) return R.layout.cy_staggerd_item_0;
         return getItemLayoutID(position, list_bean.get(position));
     }
-click longclick 尚未处理
     /**
      * 妙极了，再也不用手动调用putFullSpanPosition了，还及其容易出BUG
      *
@@ -187,6 +186,7 @@ click longclick 尚未处理
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!canItemClick) return;
                 int position = holder.getBindingAdapterPosition();
                 //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
                 if (position < 0 || position >= list_bean.size()) return;
@@ -197,6 +197,8 @@ click longclick 尚未处理
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                if (selector.isUsingSelector()) return false;
+
                 int position = holder.getBindingAdapterPosition();
                 //场景一旦复杂，各种remove 各种add 各种notify，各种multiadapter，很容易数组越界，故而必须判断
                 if (position < 0 || position >= list_bean.size()) return false;
@@ -594,6 +596,17 @@ click longclick 尚未处理
          onBindViewHolder回调的position永远是4
          */
 //        notifyItemRemoved(position);
+        return this;
+    }
+    public SimpleAdapter<T> removeNoNotify(List<T> list) {
+        for(T t:list){
+            list_bean.remove(t);
+        }
+        return this;
+    }
+    public SimpleAdapter<T> remove(List<T> list) {
+        removeNoNotify(list);
+        notifyDataSetChanged();
         return this;
     }
 
