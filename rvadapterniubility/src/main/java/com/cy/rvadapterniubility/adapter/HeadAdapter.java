@@ -305,10 +305,10 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
     // =========================================================================
 
     @LayoutRes
-    public abstract int getHeadLayoutID(int position, H head);
+    public abstract int getHeadLayoutID(int position, H bean);
 
     @LayoutRes
-    public abstract int getItemLayoutID(int position, T item);
+    public abstract int getItemLayoutID(int position, T bean);
 
     /**
      * Header是否FullSpan。
@@ -322,9 +322,9 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
     // Bind
     // =========================================================================
 
-    public abstract void bindHeadToView(@NonNull BaseViewHolder holder, int position, H head, @NonNull List<Object> payloads);
+    public abstract void bindHeadToView(@NonNull BaseViewHolder holder, int position, H bean, @NonNull List<Object> payloads);
 
-    public abstract void bindItemToView(@NonNull BaseViewHolder holder, int position, T item, @NonNull List<Object> payloads);
+    public abstract void bindItemToView(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads);
 
     // =========================================================================
     // Click
@@ -369,15 +369,15 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
         });
     }
 
-    public void onHeadClick(@NonNull BaseViewHolder holder, int position, H head) {
+    public void onHeadClick(@NonNull BaseViewHolder holder, int position, H bean) {
     }
 
-    public abstract void onItemClick(@NonNull BaseViewHolder holder, int position, T item);
+    public abstract void onItemClick(@NonNull BaseViewHolder holder, int position, T bean);
 
-    public void onHeadLongClick(@NonNull BaseViewHolder holder, int position, H head) {
+    public void onHeadLongClick(@NonNull BaseViewHolder holder, int position, H bean) {
     }
 
-    public void onItemLongClick(@NonNull BaseViewHolder holder, int position, T item) {
+    public void onItemLongClick(@NonNull BaseViewHolder holder, int position, T bean) {
     }
 
     public void onSelectCountChanged(boolean isAllSelected, int countSelected, int countAllCanSelect) {

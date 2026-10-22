@@ -67,7 +67,7 @@ public class GRVHeadAdapterActivity extends BaseActivity {
                         getSelector().selectHead(position, isChecked);
                     }
                 });
-                holder.setVisibility(R.id.ivs, getSelector().isSelected(position) ? View.VISIBLE : View.GONE);
+                holder.setVisibility(R.id.ivs, getSelector().isUsingSelector()? View.VISIBLE : View.GONE);
 
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
                 imageViewSelector.setChecked(getSelector().isSelected(position));
