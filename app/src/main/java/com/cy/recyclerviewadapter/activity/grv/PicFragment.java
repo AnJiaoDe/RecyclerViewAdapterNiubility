@@ -207,7 +207,7 @@ public class PicFragment extends BaseFragment {
         gridRefreshLayout.getRecyclerView().setSpanCount(3)
                 .dragSelector(simpleAdapter.getSelector())
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(activity, 12)));
-        simpleAdapter.getSelector().setMaxCountSelect(13);
+//        simpleAdapter.getSelector().setMaxCountSelect(13);
         multiAdapter = new MultiAdapter().addAdapter(simpleAdapter);
 
         List<String> list = new ArrayList<>();
@@ -228,41 +228,41 @@ public class PicFragment extends BaseFragment {
         list.add("https://img0.baidu.com/it/u=2596934837,1532569852&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
         list.add("https://img2.baidu.com/it/u=3161270167,1354297607&fm=253&fmt=auto&app=138&f=JPEG?w=801&h=500");
         list.add("https://img1.baidu.com/it/u=2603934083,3021636721&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-        list.add("https://img1.baidu.com/it/u=858214038,371193906&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
-        list.add("https://img2.baidu.com/it/u=2553853611,1255290940&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
-        list.add("https://img0.baidu.com/it/u=1100854359,3557979750&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img2.baidu.com/it/u=734998948,2733036542&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img1.baidu.com/it/u=2121836459,4185680900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
-        list.add("https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img1.baidu.com/it/u=666159255,3156215465&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-        list.add("https://img0.baidu.com/it/u=1035818712,4106770352&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img0.baidu.com/it/u=2596934837,1532569852&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-        list.add("https://img2.baidu.com/it/u=3161270167,1354297607&fm=253&fmt=auto&app=138&f=JPEG?w=801&h=500");
-        list.add("https://img1.baidu.com/it/u=2603934083,3021636721&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-        list.add("https://img1.baidu.com/it/u=858214038,371193906&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
-        list.add("https://img2.baidu.com/it/u=2553853611,1255290940&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
-        list.add("https://img0.baidu.com/it/u=1100854359,3557979750&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img2.baidu.com/it/u=734998948,2733036542&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img1.baidu.com/it/u=2121836459,4185680900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
-        list.add("https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img1.baidu.com/it/u=666159255,3156215465&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-        list.add("https://img0.baidu.com/it/u=1035818712,4106770352&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img0.baidu.com/it/u=2596934837,1532569852&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-        list.add("https://img2.baidu.com/it/u=3161270167,1354297607&fm=253&fmt=auto&app=138&f=JPEG?w=801&h=500");
-        list.add("https://img1.baidu.com/it/u=2603934083,3021636721&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-        list.add("https://img1.baidu.com/it/u=858214038,371193906&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
-        list.add("https://img2.baidu.com/it/u=2553853611,1255290940&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
-        list.add("https://img0.baidu.com/it/u=1100854359,3557979750&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img2.baidu.com/it/u=734998948,2733036542&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img1.baidu.com/it/u=2121836459,4185680900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
-        list.add("https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img1.baidu.com/it/u=666159255,3156215465&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-        list.add("https://img0.baidu.com/it/u=1035818712,4106770352&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-        list.add("https://img0.baidu.com/it/u=2596934837,1532569852&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-        list.add("https://img2.baidu.com/it/u=3161270167,1354297607&fm=253&fmt=auto&app=138&f=JPEG?w=801&h=500");
-        list.add("https://img1.baidu.com/it/u=2603934083,3021636721&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-        list.add("https://img1.baidu.com/it/u=858214038,371193906&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
-        list.add("https://img2.baidu.com/it/u=2553853611,1255290940&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
+//        list.add("https://img1.baidu.com/it/u=858214038,371193906&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
+//        list.add("https://img2.baidu.com/it/u=2553853611,1255290940&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
+//        list.add("https://img0.baidu.com/it/u=1100854359,3557979750&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img2.baidu.com/it/u=734998948,2733036542&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img1.baidu.com/it/u=2121836459,4185680900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
+//        list.add("https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img1.baidu.com/it/u=666159255,3156215465&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+//        list.add("https://img0.baidu.com/it/u=1035818712,4106770352&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img0.baidu.com/it/u=2596934837,1532569852&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+//        list.add("https://img2.baidu.com/it/u=3161270167,1354297607&fm=253&fmt=auto&app=138&f=JPEG?w=801&h=500");
+//        list.add("https://img1.baidu.com/it/u=2603934083,3021636721&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+//        list.add("https://img1.baidu.com/it/u=858214038,371193906&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
+//        list.add("https://img2.baidu.com/it/u=2553853611,1255290940&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
+//        list.add("https://img0.baidu.com/it/u=1100854359,3557979750&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img2.baidu.com/it/u=734998948,2733036542&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img1.baidu.com/it/u=2121836459,4185680900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
+//        list.add("https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img1.baidu.com/it/u=666159255,3156215465&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+//        list.add("https://img0.baidu.com/it/u=1035818712,4106770352&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img0.baidu.com/it/u=2596934837,1532569852&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+//        list.add("https://img2.baidu.com/it/u=3161270167,1354297607&fm=253&fmt=auto&app=138&f=JPEG?w=801&h=500");
+//        list.add("https://img1.baidu.com/it/u=2603934083,3021636721&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+//        list.add("https://img1.baidu.com/it/u=858214038,371193906&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
+//        list.add("https://img2.baidu.com/it/u=2553853611,1255290940&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
+//        list.add("https://img0.baidu.com/it/u=1100854359,3557979750&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img2.baidu.com/it/u=734998948,2733036542&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img1.baidu.com/it/u=2121836459,4185680900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
+//        list.add("https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img1.baidu.com/it/u=666159255,3156215465&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+//        list.add("https://img0.baidu.com/it/u=1035818712,4106770352&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//        list.add("https://img0.baidu.com/it/u=2596934837,1532569852&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+//        list.add("https://img2.baidu.com/it/u=3161270167,1354297607&fm=253&fmt=auto&app=138&f=JPEG?w=801&h=500");
+//        list.add("https://img1.baidu.com/it/u=2603934083,3021636721&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+//        list.add("https://img1.baidu.com/it/u=858214038,371193906&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
+//        list.add("https://img2.baidu.com/it/u=2553853611,1255290940&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
 
 
         gridRefreshLayout.setAdapter(multiAdapter, new OnSimpleRefreshListener() {
@@ -287,50 +287,52 @@ public class PicFragment extends BaseFragment {
                     }
                 }, 1000);
             }
-        }, new OnGridLoadMoreListener(multiAdapter, 10) {
-            @Override
-            public void onLoadMoreStart() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        /**
-                         * 模拟没有更多的场景
-                         */
-                        if (multiAdapter.getMergeAdapter().getItemCount() > 120) {
-                            closeLoadMoreDelay("没有更多了哦~", 1000, new Callback() {
-                                @Override
-                                public void onClosed() {
-
-                                }
-                            });
-                            return;
-                        }
-
-                        simpleAdapter.addNoNotify("https://img1.baidu.com/it/u=2683593527,2630972789&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667");
-                        simpleAdapter.addNoNotify("https://img2.baidu.com/it/u=2236665998,2672651341&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
-                        simpleAdapter.addNoNotify("https://img1.baidu.com/it/u=3543009939,2144310597&fm=253&fmt=auto&app=138&f=JPEG?w=704&h=500");
-                        simpleAdapter.addNoNotify("https://img0.baidu.com/it/u=971759419,1542527601&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
-                        simpleAdapter.addNoNotify("https://img0.baidu.com/it/u=1100854359,3557979750&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-                        simpleAdapter.addNoNotify("https://img2.baidu.com/it/u=734998948,2733036542&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-                        simpleAdapter.addNoNotify("https://img1.baidu.com/it/u=2121836459,4185680900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
-                        simpleAdapter.addNoNotify("https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
-
-                        closeLoadMoreDelay("有8条更多", 1000, new Callback() {
-                            @Override
-                            public void onClosed() {
-                                LogUtils.log("onClosed");
-                                /**
-                                 * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
-                                 */
-//                                dragSelectorAdapter.notifyItemRangeInserted(dragSelectorAdapter.getItemCount() - 8, 8);
-//                                合股这样会导致上啦一直显示LOADING
-                                simpleAdapter.notifyBehindInserted(8);
-                            }
-                        });
-                    }
-                }, 2000);
-            }
-        });
+        }
+//        , new OnGridLoadMoreListener(multiAdapter, 10) {
+//            @Override
+//            public void onLoadMoreStart() {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        /**
+//                         * 模拟没有更多的场景
+//                         */
+//                        if (multiAdapter.getMergeAdapter().getItemCount() > 120) {
+//                            closeLoadMoreDelay("没有更多了哦~", 1000, new Callback() {
+//                                @Override
+//                                public void onClosed() {
+//
+//                                }
+//                            });
+//                            return;
+//                        }
+//
+//                        simpleAdapter.addNoNotify("https://img1.baidu.com/it/u=2683593527,2630972789&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667");
+//                        simpleAdapter.addNoNotify("https://img2.baidu.com/it/u=2236665998,2672651341&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500");
+//                        simpleAdapter.addNoNotify("https://img1.baidu.com/it/u=3543009939,2144310597&fm=253&fmt=auto&app=138&f=JPEG?w=704&h=500");
+//                        simpleAdapter.addNoNotify("https://img0.baidu.com/it/u=971759419,1542527601&fm=253&fmt=auto&app=120&f=JPEG?w=1422&h=800");
+//                        simpleAdapter.addNoNotify("https://img0.baidu.com/it/u=1100854359,3557979750&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//                        simpleAdapter.addNoNotify("https://img2.baidu.com/it/u=734998948,2733036542&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//                        simpleAdapter.addNoNotify("https://img1.baidu.com/it/u=2121836459,4185680900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500");
+//                        simpleAdapter.addNoNotify("https://img2.baidu.com/it/u=587955173,665005673&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800");
+//
+//                        closeLoadMoreDelay("有8条更多", 1000, new Callback() {
+//                            @Override
+//                            public void onClosed() {
+//                                LogUtils.log("onClosed");
+//                                /**
+//                                 * 体现了MergeAdapter的强大所在，代码解耦合，position操作和单个Adapter一样，
+//                                 */
+////                                dragSelectorAdapter.notifyItemRangeInserted(dragSelectorAdapter.getItemCount() - 8, 8);
+////                                合股这样会导致上啦一直显示LOADING
+//                                simpleAdapter.notifyBehindInserted(8);
+//                            }
+//                        });
+//                    }
+//                }, 2000);
+//            }
+//        }
+        );
         simpleAdapter.add(list);
     }
 }

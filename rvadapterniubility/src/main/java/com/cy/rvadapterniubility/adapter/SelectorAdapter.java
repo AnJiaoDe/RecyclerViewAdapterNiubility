@@ -19,7 +19,7 @@ public abstract class SelectorAdapter<T> extends SimpleAdapter<T> {
     @Override
     public final void bindDataToView(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads) {
         bindDataToView(holder, position, bean, position == getPositionSelected(), payloads);
-    }
+    } 
 
     @Override
     public final void onItemClick(@NonNull BaseViewHolder holder, int position, T bean) {
