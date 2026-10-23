@@ -148,7 +148,6 @@ public class GRVHeadAdapterActivity extends BaseActivity {
         VerticalGridRecyclerView verticalGridRecyclerView = findViewById(R.id.grv);
         verticalGridRecyclerView.setSpanCount(4)
                 .addItemDecoration(new GridItemDecoration(dpAdapt(10)))
-                .dragSelector(headAdapter.getSelector())
                 .setAdapter(headAdapter);
 
         for (int i = 0; i < 100; i++) {

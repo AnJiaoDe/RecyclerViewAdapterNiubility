@@ -17,7 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
+import com.cy.rvadapterniubility.adapter.HeadAdapter;
 import com.cy.rvadapterniubility.adapter.Selector;
+import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
 public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends BaseRecyclerView<T> {
     private GestureDetector gestureDetector;
@@ -112,11 +114,22 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
         };
     }
 
-    public T dragSelector(Selector<?> selector) {
-        selector.setRecyclerView(this);
-        this.selector = selector;
-        return (T) this;
+    @Override
+    public void setAdapter(@Nullable Adapter adapter) {
+        super.setAdapter(adapter);
+        if(adapter instanceof SimpleAdapter){
+            SimpleAdapter simpleAdapter= (SimpleAdapter) adapter;
+            simpleAdapter.getSelector().setRecyclerView(this);
+            this.selector = simpleAdapter.getSelector();
+            return;
+        }
+        if(adapter instanceof HeadAdapter){
+            HeadAdapter headAdapter= (HeadAdapter) adapter;
+            headAdapter.getSelector().setRecyclerView(this);
+            this.selector = headAdapter.getSelector();
+        }
     }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);

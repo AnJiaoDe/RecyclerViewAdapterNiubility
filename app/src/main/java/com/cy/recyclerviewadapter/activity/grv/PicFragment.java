@@ -205,7 +205,6 @@ public class PicFragment extends BaseFragment {
         });
 
         gridRefreshLayout.getRecyclerView().setSpanCount(3)
-                .dragSelector(simpleAdapter.getSelector())
                 .addItemDecoration(new GridItemDecoration(ScreenUtils.dpAdapt(activity, 12)));
 //        simpleAdapter.getSelector().setMaxCountSelect(13);
         multiAdapter = new MultiAdapter().addAdapter(simpleAdapter);
