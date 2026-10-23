@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ public class Selector<T> {
      * 注意：
      * 这里保存的是T，不是position。
      */
-    private final Set<T> selected = new HashSet<>();
+    private final Set<T> selected = new LinkedHashSet<>();
     private boolean usingSelector = false;
     private int maxCountSelect = -1;
 
