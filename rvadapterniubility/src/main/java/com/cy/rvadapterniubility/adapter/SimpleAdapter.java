@@ -447,6 +447,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     public <Msg> void dispatchUpdatesToMsg(final int position, final Msg msg) {
         Map<Integer, Msg> mapMsg = new HashMap<>();
         mapMsg.put(position, msg);
+
         dispatchUpdatesToMsg(mapMsg);
     }
 

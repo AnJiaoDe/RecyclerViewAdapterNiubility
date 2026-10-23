@@ -76,6 +76,7 @@ public class Selector<T> {
         clear();
         return this;
     }
+
     public Selector<T> stopDragSelect() {
         if (!usingSelector) return this;
         usingSelector = false;
@@ -336,12 +337,13 @@ public class Selector<T> {
         return new ArrayList<>(selected);
     }
 
-    public int getSelectedSize(){
+    public int getSelectedSize() {
         return selected.size();
     }
 
     //直接bindDataToView比dispatchto 性能好
     private void bindDataToView(int position, @NonNull RecyclerView recyclerView) {
+        if (recyclerView == null) throw new IllegalStateException("must call dragSelector first!");
         BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         if (baseViewHolder == null) return;
         callback.bindItemToView(baseViewHolder, position, new ArrayList<Object>(Collections.singletonList(NOTIFY_STATE_DRAG_SELECT)));
@@ -351,7 +353,7 @@ public class Selector<T> {
         int countAllCanSelect = callback.getAllCanSelectItems().size();
         callback.onSelectCountChanged(selected.size() == countAllCanSelect, selected.size(), countAllCanSelect);
 
-        int p=callback.getHeadPosition(positionC);
+        int p = callback.getHeadPosition(positionC);
         if (p < 0) return;
         BaseViewHolder holder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(p);
         if (holder == null) return;
