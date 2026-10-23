@@ -574,7 +574,14 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
         notifyItemRangeInserted(0, list_bean.size());
         return this;
     }
-
+    public SimpleAdapter<T> removeNoNotify(T bean) {
+        list_bean.remove(bean);
+        return this;
+    }
+    public SimpleAdapter<T> remove(T bean) {
+        removeNoNotify(bean);
+        return this;
+    }
     /**
      * 删除相应position的数据Item
      */
