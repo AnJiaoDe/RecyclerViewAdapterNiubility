@@ -74,6 +74,7 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
                 }
                 return section.getItems();
             }
+
             @Override
             public int getItemCount() {
                 return HeadAdapter.this.getItemCount();
@@ -643,11 +644,13 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
             }
         });
     }
-    public <Msg> void dispatchUpdatesToMsg(final int position,final Msg msg) {
-        Map<Integer, Msg> mapMsg=new HashMap<>();
-        mapMsg.put(position,msg);
+
+    public <Msg> void dispatchUpdatesToMsg(final int position, final Msg msg) {
+        Map<Integer, Msg> mapMsg = new HashMap<>();
+        mapMsg.put(position, msg);
         dispatchUpdatesToMsg(mapMsg);
     }
+
     public <Msg> void dispatchUpdatesToMsg(final Map<Integer, Msg> mapMsg) {
 
         ThreadUtils.getInstance().runThread(new ThreadUtils.RunnableCallback<DiffUtil.DiffResult>() {
@@ -998,6 +1001,7 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
         rebuildNodes();
         return this;
     }
+
     public HeadAdapter<H, T> removeItems(@NonNull List<T> items) {
         removeItemsNoNotify(items);
         notifyDataSetChanged();

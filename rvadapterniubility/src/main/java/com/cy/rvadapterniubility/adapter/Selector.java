@@ -335,6 +335,10 @@ public class Selector<T> {
         return new ArrayList<>(selected);
     }
 
+    public int getSelectedSize(){
+        return selected.size();
+    }
+
     //直接bindDataToView比dispatchto 性能好
     private void bindDataToView(int position, @NonNull RecyclerView recyclerView) {
         BaseViewHolder baseViewHolder = (BaseViewHolder) recyclerView.findViewHolderForAdapterPosition(position);

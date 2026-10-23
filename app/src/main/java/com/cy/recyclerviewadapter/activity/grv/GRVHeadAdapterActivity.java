@@ -173,6 +173,7 @@ public class GRVHeadAdapterActivity extends BaseActivity {
             headAdapter.addItemNoNotify(String.valueOf(i), list);
 //            }
         }
+
         headAdapter.notifyDataSetChanged();
     }
 
