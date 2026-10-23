@@ -340,7 +340,9 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
      * Header固定FullSpan，Item固定非FullSpan。
      */
     public boolean isFullSpan(int position) {
-        return nodes.get(position).type == Node.TYPE_HEAD;
+        Node<H, T> node=nodes.get(position);
+        if(node==null)return false;
+        return node.type == Node.TYPE_HEAD;
     }
 
     // =========================================================================

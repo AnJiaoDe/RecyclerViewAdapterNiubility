@@ -46,19 +46,25 @@ public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecy
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
+                RecyclerView.Adapter<?> adapter = getAdapter();
+                //必须防止崩溃
+                if (adapter == null || position < 0 || position >= adapter.getItemCount()) {
+                    return 1;
+                }
+
                 // 普通 GridAdapter
-                if (getAdapter() instanceof SimpleAdapter) {
-                    SimpleAdapter<?> simpleAdapter = (SimpleAdapter<?>) getAdapter();
+                if (adapter instanceof SimpleAdapter) {
+                    SimpleAdapter<?> simpleAdapter = (SimpleAdapter<?>) adapter;
                     return simpleAdapter.isFullSpan(simpleAdapter.getItemViewType(position))
                             ? gridLayoutManager.getSpanCount()
                             : 1;
-                } else if (getAdapter() instanceof HeadAdapter) {
-                    HeadAdapter<?, ?> headAdapter = (HeadAdapter<?, ?>) getAdapter();
+                } else if (adapter instanceof HeadAdapter) {
+                    HeadAdapter<?, ?> headAdapter = (HeadAdapter<?, ?>) adapter;
                     return headAdapter.isFullSpan(position)
                             ? gridLayoutManager.getSpanCount()
                             : 1;
-                } else if (getAdapter() instanceof ConcatAdapter) {
-                    ConcatAdapter concatAdapter = (ConcatAdapter) getAdapter();
+                } else if (adapter instanceof ConcatAdapter) {
+                    ConcatAdapter concatAdapter = (ConcatAdapter)adapter;
                     int remainPosition = position;
                     for (int i = 0; i < concatAdapter.getAdapters().size(); i++) {
                         SimpleAdapter<?> simpleAdapter = (SimpleAdapter<?>) concatAdapter.getAdapters().get(i);
