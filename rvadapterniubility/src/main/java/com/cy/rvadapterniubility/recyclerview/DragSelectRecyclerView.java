@@ -10,14 +10,17 @@ import android.view.ViewConfiguration;
 import android.view.ViewParent;
 import android.widget.OverScroller;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.HeadAdapter;
+import com.cy.rvadapterniubility.adapter.MultiAdapter;
 import com.cy.rvadapterniubility.adapter.Selector;
 import com.cy.rvadapterniubility.adapter.SimpleAdapter;
 
@@ -28,7 +31,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     private float downX;
     private float downY;
     private float touchSlop;
-//    @Nullable
+    //    @Nullable
 //    private DragSelectorAdapter dragSelectorAdapter;
     @Nullable
     private Selector<?> selector;
@@ -117,14 +120,25 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
     @Override
     public void setAdapter(@Nullable Adapter adapter) {
         super.setAdapter(adapter);
-        if(adapter instanceof SimpleAdapter){
-            SimpleAdapter simpleAdapter= (SimpleAdapter) adapter;
+        if (adapter instanceof ConcatAdapter) {
+            ConcatAdapter concatAdapter = (ConcatAdapter) adapter;
+            for (int i = 0; i < concatAdapter.getAdapters().size(); i++) {
+                selector(concatAdapter.getAdapters().get(i));
+            }
+            return;
+        }
+        selector(adapter);
+    }
+
+    private void selector(@NonNull Adapter<?> adapter) {
+        if (adapter instanceof SimpleAdapter) {
+            SimpleAdapter simpleAdapter = (SimpleAdapter) adapter;
             simpleAdapter.getSelector().setRecyclerView(this);
             this.selector = simpleAdapter.getSelector();
             return;
         }
-        if(adapter instanceof HeadAdapter){
-            HeadAdapter headAdapter= (HeadAdapter) adapter;
+        if (adapter instanceof HeadAdapter) {
+            HeadAdapter headAdapter = (HeadAdapter) adapter;
             headAdapter.getSelector().setRecyclerView(this);
             this.selector = headAdapter.getSelector();
         }
@@ -153,7 +167,7 @@ public class DragSelectRecyclerView<T extends DragSelectRecyclerView> extends Ba
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (selector == null || selector.getItemCount()==0)
+        if (selector == null || selector.getItemCount() == 0)
             return super.dispatchTouchEvent(event);
         LayoutManager layoutManager = getLayoutManager();
         if (layoutManager == null) return super.dispatchTouchEvent(event);

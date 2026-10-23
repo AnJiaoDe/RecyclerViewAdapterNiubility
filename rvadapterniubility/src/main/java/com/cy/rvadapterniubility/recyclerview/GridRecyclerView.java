@@ -47,34 +47,49 @@ public class GridRecyclerView<T extends GridRecyclerView> extends DragSelectRecy
             @Override
             public int getSpanSize(int position) {
                 RecyclerView.Adapter<?> adapter = getAdapter();
-                //必须防止崩溃
+
                 if (adapter == null || position < 0 || position >= adapter.getItemCount()) {
                     return 1;
                 }
 
-                // 普通 GridAdapter
+                int spanCount = gridLayoutManager.getSpanCount();
+
                 if (adapter instanceof SimpleAdapter) {
                     SimpleAdapter<?> simpleAdapter = (SimpleAdapter<?>) adapter;
                     return simpleAdapter.isFullSpan(simpleAdapter.getItemViewType(position))
-                            ? gridLayoutManager.getSpanCount()
-                            : 1;
+                            ? spanCount : 1;
+
                 } else if (adapter instanceof HeadAdapter) {
                     HeadAdapter<?, ?> headAdapter = (HeadAdapter<?, ?>) adapter;
-                    return headAdapter.isFullSpan(position)
-                            ? gridLayoutManager.getSpanCount()
-                            : 1;
+                    return headAdapter.isFullSpan(position) ? spanCount : 1;
+
                 } else if (adapter instanceof ConcatAdapter) {
-                    ConcatAdapter concatAdapter = (ConcatAdapter)adapter;
+                    ConcatAdapter concatAdapter = (ConcatAdapter) adapter;
                     int remainPosition = position;
-                    for (int i = 0; i < concatAdapter.getAdapters().size(); i++) {
-                        SimpleAdapter<?> simpleAdapter = (SimpleAdapter<?>) concatAdapter.getAdapters().get(i);
-                        if (remainPosition < simpleAdapter.getItemCount()) {
-                            // 找到了当前 position 所属的 GridAdapter
-                            return simpleAdapter.isFullSpan(simpleAdapter.getItemViewType(remainPosition)) ? gridLayoutManager.getSpanCount() : 1;
+
+                    for (RecyclerView.Adapter<?> child : concatAdapter.getAdapters()) {
+                        int itemCount = child.getItemCount();
+
+                        if (remainPosition < itemCount) {
+                            if (child instanceof SimpleAdapter) {
+                                SimpleAdapter<?> simpleAdapter = (SimpleAdapter<?>) child;
+                                return simpleAdapter.isFullSpan(
+                                        simpleAdapter.getItemViewType(remainPosition))
+                                        ? spanCount : 1;
+
+                            } else if (child instanceof HeadAdapter) {
+                                HeadAdapter<?, ?> headAdapter = (HeadAdapter<?, ?>) child;
+                                return headAdapter.isFullSpan(remainPosition)
+                                        ? spanCount : 1;
+                            }
+
+                            return 1;
                         }
-                        remainPosition -= simpleAdapter.getItemCount();
+
+                        remainPosition -= itemCount;
                     }
                 }
+
                 return 1;
             }
         });
