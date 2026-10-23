@@ -1,3 +1,4 @@
+
 package com.cy.rvadapterniubility.adapter;
 
 import android.animation.AnimatorSet;
@@ -61,8 +62,8 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
                 HeadAdapter.this.dispatchUpdatesToMsg(notify_state_drag_select);
             }
 
+            @Nullable
             @Override
-            @NonNull
             public List<T> getItemsByHeadPosition(int position) {
                 PositionInfo<H, T> info = HeadAdapter.this.getPositionInfo(position);
                 if (info == null || !info.isHead()) {
@@ -91,11 +92,11 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
             }
 
             @Override
-            public int getHeadPosition(int itemPosition) {
-                if (itemPosition < 0 || itemPosition >= nodes.size()) return -1;
-                Node<H, T> node = nodes.get(itemPosition);
+            public int getHeadPosition(int position_item) {
+                if (position_item < 0 || position_item >= nodes.size()) return -1;
+                Node<H, T> node = nodes.get(position_item);
                 if (node.type != Node.TYPE_ITEM) return -1;
-                return itemPosition - node.itemIndex - 1;
+                return position_item - node.itemIndex - 1;
             }
 
             @Nullable
@@ -106,21 +107,25 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
 
             @Override
             public void bindHeadToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
-                HeadAdapter.this.bindHeadToView(holder, position, HeadAdapter.this.getHeadByPosition(position), payloads);
+                Node<H, T> node = nodes.get(position);
+                HeadAdapter.this.bindHeadToView(holder, position, node.dataPosition,
+                        node.head, payloads);
             }
 
             @Override
             public void bindItemToView(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
-                HeadAdapter.this.bindItemToView(holder, position, HeadAdapter.this.getItemByPosition(position), payloads);
+                Node<H, T> node = nodes.get(position);
+                HeadAdapter.this.bindItemToView(holder, position, node.dataPosition,
+                        node.item, payloads);
             }
 
             @Override
             public void onItemLongClick(@NonNull BaseViewHolder holder, int position) {
                 Node<H, T> node = nodes.get(position);
                 if (node.type == Node.TYPE_HEAD) {
-                    HeadAdapter.this.onHeadLongClick(holder, position, node.head);
+                    HeadAdapter.this.onHeadLongClick(holder, position, node.dataPosition, node.head);
                 } else {
-                    HeadAdapter.this.onItemLongClick(holder, position, node.item);
+                    HeadAdapter.this.onItemLongClick(holder, position, node.dataPosition, node.item);
                 }
             }
 
@@ -185,21 +190,24 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
         final T item;
         final int sectionIndex;
         final int itemIndex;
+        final int dataPosition;
 
-        private Node(int type, @Nullable H head, @Nullable T item, int sectionIndex, int itemIndex) {
+        private Node(int type, @Nullable H head, @Nullable T item, int sectionIndex,
+                     int itemIndex, int dataPosition) {
             this.type = type;
             this.head = head;
             this.item = item;
             this.sectionIndex = sectionIndex;
             this.itemIndex = itemIndex;
+            this.dataPosition = dataPosition;
         }
 
         static <H, T> Node<H, T> head(H head, int sectionIndex) {
-            return new Node<>(TYPE_HEAD, head, null, sectionIndex, -1);
+            return new Node<>(TYPE_HEAD, head, null, sectionIndex, -1, sectionIndex);
         }
 
-        static <H, T> Node<H, T> item(T item, int sectionIndex, int itemIndex) {
-            return new Node<>(TYPE_ITEM, null, item, sectionIndex, itemIndex);
+        static <H, T> Node<H, T> item(T item, int sectionIndex, int itemIndex, int dataPosition) {
+            return new Node<>(TYPE_ITEM, null, item, sectionIndex, itemIndex, dataPosition);
         }
     }
 
@@ -212,15 +220,18 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
         private final T item;
         private final int sectionIndex;
         private final int itemIndex;
-        private final int adapterPosition;
+        private final int position_adapter;
+        private final int dataPosition;
 
-        private PositionInfo(boolean head, @Nullable H headData, @Nullable T item, int sectionIndex, int itemIndex, int adapterPosition) {
+        private PositionInfo(boolean head, @Nullable H headData, @Nullable T item,
+                             int sectionIndex, int itemIndex, int position_adapter, int dataPosition) {
             this.head = head;
             this.headData = headData;
             this.item = item;
             this.sectionIndex = sectionIndex;
             this.itemIndex = itemIndex;
-            this.adapterPosition = adapterPosition;
+            this.position_adapter = position_adapter;
+            this.dataPosition = dataPosition;
         }
 
         public boolean isHead() {
@@ -249,8 +260,21 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
             return itemIndex;
         }
 
-        public int getAdapterPosition() {
-            return adapterPosition;
+        public int getposition_adapter() {
+            return position_adapter;
+        }
+
+        /** Header的全局位置或Item的全局位置，不包含另一种类型的数据。 */
+        public int getDataPosition() {
+            return dataPosition;
+        }
+
+        public int getposition_head() {
+            return head ? dataPosition : sectionIndex;
+        }
+
+        public int getposition_item() {
+            return head ? -1 : dataPosition;
         }
     }
 
@@ -276,11 +300,11 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
             return;
         }
         Node<H, T> node = nodes.get(position);
-        holder.setTag(setHolderTagPreBindData(holder, position, node));
+        holder.setTag(setHolderTagPreBindData(holder, position, node.dataPosition, node));
         if (node.type == Node.TYPE_HEAD) {
-            bindHeadToView(holder, position, node.head, payloads);
+            bindHeadToView(holder, position, node.dataPosition, node.head, payloads);
         } else {
-            bindItemToView(holder, position, node.item, payloads);
+            bindItemToView(holder, position, node.dataPosition, node.item, payloads);
         }
     }
 
@@ -291,9 +315,9 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
         }
         Node<H, T> node = nodes.get(position);
         if (node.type == Node.TYPE_HEAD) {
-            return getHeadLayoutID(position, node.head);
+            return getHeadLayoutID(position, node.dataPosition, node.head);
         }
-        return getItemLayoutID(position, node.item);
+        return getItemLayoutID(position, node.dataPosition, node.item);
     }
 
     @Override
@@ -306,10 +330,10 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
     // =========================================================================
 
     @LayoutRes
-    public abstract int getHeadLayoutID(int position, H bean);
+    public abstract int getHeadLayoutID(int position_adapter, int position_head, H bean);
 
     @LayoutRes
-    public abstract int getItemLayoutID(int position, T bean);
+    public abstract int getItemLayoutID(int position_adapter, int position_item, T bean);
 
     /**
      * Header是否FullSpan。
@@ -323,9 +347,9 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
     // Bind
     // =========================================================================
 
-    public abstract void bindHeadToView(@NonNull BaseViewHolder holder, int position, H bean, @NonNull List<Object> payloads);
+    public abstract void bindHeadToView(@NonNull BaseViewHolder holder, int position_adapter, int position_head, H bean, @NonNull List<Object> payloads);
 
-    public abstract void bindItemToView(@NonNull BaseViewHolder holder, int position, T bean, @NonNull List<Object> payloads);
+    public abstract void bindItemToView(@NonNull BaseViewHolder holder, int position_adapter, int position_item, T bean, @NonNull List<Object> payloads);
 
     // =========================================================================
     // Click
@@ -342,9 +366,9 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
                 }
                 Node<H, T> node = nodes.get(position);
                 if (node.type == Node.TYPE_HEAD) {
-                    onHeadClick(holder, position, node.head);
+                    onHeadClick(holder, position, node.dataPosition, node.head);
                 } else {
-                    onItemClick(holder, position, node.item);
+                    onItemClick(holder, position, node.dataPosition, node.item);
                 }
             }
         });
@@ -361,24 +385,24 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
                 }
                 Node<H, T> node = nodes.get(position);
                 if (node.type == Node.TYPE_HEAD) {
-                    onHeadLongClick(holder, position, node.head);
+                    onHeadLongClick(holder, position, node.dataPosition, node.head);
                 } else {
-                    onItemLongClick(holder, position, node.item);
+                    onItemLongClick(holder, position, node.dataPosition, node.item);
                 }
                 return true;
             }
         });
     }
 
-    public void onHeadClick(@NonNull BaseViewHolder holder, int position, H bean) {
+    public void onHeadClick(@NonNull BaseViewHolder holder, int position_adapter, int position_head, H bean) {
     }
 
-    public abstract void onItemClick(@NonNull BaseViewHolder holder, int position, T bean);
+    public abstract void onItemClick(@NonNull BaseViewHolder holder, int position_adapter, int position_item, T bean);
 
-    public void onHeadLongClick(@NonNull BaseViewHolder holder, int position, H bean) {
+    public void onHeadLongClick(@NonNull BaseViewHolder holder, int position_adapter, int position_head, H bean) {
     }
 
-    public void onItemLongClick(@NonNull BaseViewHolder holder, int position, T bean) {
+    public void onItemLongClick(@NonNull BaseViewHolder holder, int position_adapter, int position_item, T bean) {
     }
 
     public void onSelectCountChanged(boolean isAllSelected, int countSelected, int countAllCanSelect) {
@@ -409,7 +433,7 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
      * 给holder设置TAG。
      */
     @Nullable
-    public Object setHolderTagPreBindData(@NonNull BaseViewHolder holder, int position, @NonNull Node<H, T> node) {
+    public Object setHolderTagPreBindData(@NonNull BaseViewHolder holder, int position_adapter, int dataPosition, @NonNull Node<H, T> node) {
         return null;
     }
 
@@ -483,37 +507,37 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
                     }
 
                     @Override
-                    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                        Node<H, T> oldNode = oldNodes.get(oldItemPosition);
-                        Node<H, T> newNode = newNodes.get(newItemPosition);
+                    public boolean areItemsTheSame(int oldposition_item, int newposition_item) {
+                        Node<H, T> oldNode = oldNodes.get(oldposition_item);
+                        Node<H, T> newNode = newNodes.get(newposition_item);
                         if (oldNode.type != newNode.type) {
                             return false;
                         }
                         if (oldNode.type == Node.TYPE_HEAD) {
-                            return HeadAdapter.this.areHeadsTheSame(oldNode.head, newNode.head, oldItemPosition, newItemPosition);
+                            return HeadAdapter.this.areHeadsTheSame(oldNode.head, newNode.head, oldposition_item, newposition_item);
                         }
-                        return HeadAdapter.this.areItemsTheSame(oldNode.item, newNode.item, oldItemPosition, newItemPosition);
+                        return HeadAdapter.this.areItemsTheSame(oldNode.item, newNode.item, oldposition_item, newposition_item);
                     }
 
                     @Override
-                    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                        Node<H, T> oldNode = oldNodes.get(oldItemPosition);
-                        Node<H, T> newNode = newNodes.get(newItemPosition);
+                    public boolean areContentsTheSame(int oldposition_item, int newposition_item) {
+                        Node<H, T> oldNode = oldNodes.get(oldposition_item);
+                        Node<H, T> newNode = newNodes.get(newposition_item);
                         if (oldNode.type == Node.TYPE_HEAD) {
-                            return areHeadsContentsTheSame(oldNode.head, newNode.head, oldItemPosition, newItemPosition);
+                            return areHeadsContentsTheSame(oldNode.head, newNode.head, oldposition_item, newposition_item);
                         }
-                        return HeadAdapter.this.areContentsTheSame(oldNode.item, newNode.item, oldItemPosition, newItemPosition);
+                        return HeadAdapter.this.areContentsTheSame(oldNode.item, newNode.item, oldposition_item, newposition_item);
                     }
 
                     @Nullable
                     @Override
-                    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-                        Node<H, T> oldNode = oldNodes.get(oldItemPosition);
-                        Node<H, T> newNode = newNodes.get(newItemPosition);
+                    public Object getChangePayload(int oldposition_item, int newposition_item) {
+                        Node<H, T> oldNode = oldNodes.get(oldposition_item);
+                        Node<H, T> newNode = newNodes.get(newposition_item);
                         if (oldNode.type == Node.TYPE_HEAD) {
-                            return getHeadChangePayload(oldNode.head, newNode.head, oldItemPosition, newItemPosition);
+                            return getHeadChangePayload(oldNode.head, newNode.head, oldposition_item, newposition_item);
                         }
-                        return HeadAdapter.this.getChangePayload(oldNode.item, newNode.item, oldItemPosition, newItemPosition);
+                        return HeadAdapter.this.getChangePayload(oldNode.item, newNode.item, oldposition_item, newposition_item);
                     }
                 });
             }
@@ -621,18 +645,18 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
                     }
 
                     @Override
-                    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                    public boolean areItemsTheSame(int oldposition_item, int newposition_item) {
                         return true;
                     }
 
                     @Override
-                    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                    public boolean areContentsTheSame(int oldposition_item, int newposition_item) {
                         return false;
                     }
 
                     @Nullable
                     @Override
-                    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+                    public Object getChangePayload(int oldposition_item, int newposition_item) {
                         return msg;
                     }
                 });
@@ -671,19 +695,19 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
                     }
 
                     @Override
-                    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                    public boolean areItemsTheSame(int oldposition_item, int newposition_item) {
                         return true;
                     }
 
                     @Override
-                    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                        return mapMsg.containsKey(newItemPosition) ? false : true;
+                    public boolean areContentsTheSame(int oldposition_item, int newposition_item) {
+                        return mapMsg.containsKey(newposition_item) ? false : true;
                     }
 
                     @Nullable
                     @Override
-                    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-                        return mapMsg.get(newItemPosition);
+                    public Object getChangePayload(int oldposition_item, int newposition_item) {
+                        return mapMsg.get(newposition_item);
                     }
                 });
             }
@@ -931,7 +955,7 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
 
     public HeadAdapter<H, T> set(@NonNull H head, int index, @NonNull T item) {
         setNoNotify(head, index, item);
-        notifyItemChanged(getItemPosition(head, item));
+        notifyItemChanged(getposition_item(head, item));
         return this;
     }
 
@@ -1123,7 +1147,7 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
         return -1;
     }
 
-    public int getItemPosition(@NonNull H head, @NonNull T item) {
+    public int getposition_item(@NonNull H head, @NonNull T item) {
         int position = 0;
         for (Section<H, T> section : sections) {
             if (same(section.head, head)) {
@@ -1147,18 +1171,20 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
         }
         Node<H, T> node = nodes.get(position);
         if (node.type == Node.TYPE_HEAD) {
-            return new PositionInfo<>(true, node.head, null, node.sectionIndex, -1, position);
+            return new PositionInfo<>(true, node.head, null, node.sectionIndex, -1,
+                    position, node.dataPosition);
         }
         Section<H, T> section = sections.get(node.sectionIndex);
-        return new PositionInfo<>(false, section.head, node.item, node.sectionIndex, node.itemIndex, position);
+        return new PositionInfo<>(false, section.head, node.item, node.sectionIndex,
+                node.itemIndex, position, node.dataPosition);
     }
 
-    public boolean isHeadPosition(int position) {
+    public boolean isposition_head(int position) {
         PositionInfo<H, T> info = getPositionInfo(position);
         return info != null && info.isHead();
     }
 
-    public boolean isItemPosition(int position) {
+    public boolean isposition_item(int position) {
         PositionInfo<H, T> info = getPositionInfo(position);
         return info != null && info.isItem();
     }
@@ -1200,11 +1226,13 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
 
     private void rebuildNodes() {
         nodes.clear();
+        int position_item = 0;
         for (int sectionIndex = 0; sectionIndex < sections.size(); sectionIndex++) {
             Section<H, T> section = sections.get(sectionIndex);
             nodes.add(Node.<H, T>head(section.head, sectionIndex));
             for (int itemIndex = 0; itemIndex < section.items.size(); itemIndex++) {
-                nodes.add(Node.<H, T>item(section.items.get(itemIndex), sectionIndex, itemIndex));
+                nodes.add(Node.<H, T>item(section.items.get(itemIndex), sectionIndex,
+                        itemIndex, position_item++));
             }
         }
     }
@@ -1212,11 +1240,13 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
     @NonNull
     private List<Node<H, T>> buildNodes(@NonNull List<Section<H, T>> source) {
         List<Node<H, T>> result = new ArrayList<>();
+        int position_item = 0;
         for (int sectionIndex = 0; sectionIndex < source.size(); sectionIndex++) {
             Section<H, T> section = source.get(sectionIndex);
             result.add(Node.<H, T>head(section.head, sectionIndex));
             for (int itemIndex = 0; itemIndex < section.items.size(); itemIndex++) {
-                result.add(Node.<H, T>item(section.items.get(itemIndex), sectionIndex, itemIndex));
+                result.add(Node.<H, T>item(section.items.get(itemIndex), sectionIndex,
+                        itemIndex, position_item++));
             }
         }
         return result;

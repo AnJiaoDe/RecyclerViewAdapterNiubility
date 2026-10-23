@@ -50,87 +50,85 @@ public class GRVHeadAdapterActivity extends BaseActivity {
         });
         headAdapter = new HeadAdapter<String, HRVBean>() {
             @Override
-            public void bindHeadToView(@NonNull BaseViewHolder holder, int position, String head, @NonNull List<Object> payloads) {
-                holder.setText(R.id.tv, head+ position);
+            public void bindHeadToView(@NonNull BaseViewHolder holder, int adapterPosition, int headPosition, String bean, @NonNull List<Object> payloads) {
+                holder.setText(R.id.tv, bean+ headPosition);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked, boolean byTouch) {
                         if (!byTouch) return;
-                        if (isChecked && getSelector().isOverMaxCountSelect() && !getSelector().isSelected(position)) {
+                        if (isChecked && getSelector().isOverMaxCountSelect() && !getSelector().isSelected(adapterPosition)) {
                             showToast("不能超过最大选择数量");
                             imageViewSelector.setChecked(false);
                             return;
                         }
-                        LogUtils.log("selectRange onCheckedChanged:" + holder.getTag(), position + ":" + isChecked);
+                        LogUtils.log("selectRange onCheckedChanged:" + holder.getTag(), adapterPosition + ":" + isChecked);
                         //长按第一个ITEM后右滑然后左滑到第2个ITEM，第2个ITEM疯狂回调 导致疯狂闪烁
-                        getSelector().selectHead(position, isChecked);
+                        getSelector().selectHead(adapterPosition, isChecked);
                     }
                 });
                 holder.setVisibility(R.id.ivs, getSelector().isUsingSelector()? View.VISIBLE : View.GONE);
 
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
-                imageViewSelector.setChecked(getSelector().isSelected(position));
+                imageViewSelector.setChecked(getSelector().isSelected(adapterPosition));
             }
 
             @Override
-            public void bindItemToView(@NonNull BaseViewHolder holder, int position, HRVBean item, @NonNull List<Object> payloads) {
-                LogUtils.log("bindItemToView", position);
+            public void bindItemToView(@NonNull BaseViewHolder holder, int adapterPosition, int itemPosition, HRVBean bean, @NonNull List<Object> payloads) {
+                LogUtils.log("bindItemToView", itemPosition);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(ImageViewSelector iv, boolean isChecked, boolean byTouch) {
                         if (!byTouch) return;
-                        if (isChecked && getSelector().isOverMaxCountSelect() && !getSelector().isSelected(position)) {
+                        if (isChecked && getSelector().isOverMaxCountSelect() && !getSelector().isSelected(adapterPosition)) {
                             showToast("不能超过最大选择数量");
                             imageViewSelector.setChecked(false);
                             return;
                         }
-                        LogUtils.log("selectRange onCheckedChanged:" + holder.getTag(), position + ":" + isChecked);
+                        LogUtils.log("selectRange onCheckedChanged:" + holder.getTag(), adapterPosition + ":" + isChecked);
                         //长按第一个ITEM后右滑然后左滑到第2个ITEM，第2个ITEM疯狂回调 导致疯狂闪烁
-                        getSelector().selectNoNotify(position, isChecked);
+                        getSelector().selectNoNotify(adapterPosition, isChecked);
                     }
                 });
                 holder.setVisibility(R.id.layout_check, getSelector().isUsingSelector() ? View.VISIBLE : View.GONE);
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
-                imageViewSelector.setChecked(getSelector().isSelected(position));
+                imageViewSelector.setChecked(getSelector().isSelected(adapterPosition));
 
                 holder.setImageResource(R.id.iv, R.drawable.pic3);
             }
 
             @Override
-            public int getHeadLayoutID(int position, String bean) {
+            public int getHeadLayoutID(int adapterPosition, int headPosition, String bean) {
                 return R.layout.item_head_selector;
             }
 
             @Override
-            public int getItemLayoutID(int position, HRVBean bean) {
+            public int getItemLayoutID(int adapterPosition, int itemPosition, HRVBean bean) {
                 return R.layout.item_grv_drag_selector;
             }
 
             @Override
-            public void onHeadClick(@NonNull BaseViewHolder holder, int position, String bean) {
-                showToast("onHeadClick 点击" + bean);
-                LogUtils.log("onHeadClick", position);
+            public void onHeadClick(@NonNull BaseViewHolder holder, int adapterPosition, int headPosition, String bean) {
+                showToast("onHeadClick 点击" + headPosition);
+                LogUtils.log("onHeadClick", headPosition);
             }
 
             @Override
-            public void onItemClick(@NonNull BaseViewHolder holder, int position, HRVBean bean) {
-                showToast("onItemClick 点击" + position);
-                LogUtils.log("onItemClick", position);
+            public void onItemClick(@NonNull BaseViewHolder holder, int adapterPosition, int itemPosition, HRVBean bean) {
+                showToast("onItemClick 点击" + itemPosition);
+                LogUtils.log("onItemClick", itemPosition);
             }
 
             @Override
-            public void onHeadLongClick(@NonNull BaseViewHolder holder, int position, String head) {
-                super.onHeadLongClick(holder, position, head);
-                LogUtils.log("onHeadLongClick", position);
+            public void onHeadLongClick(@NonNull BaseViewHolder holder, int adapterPosition, int headPosition, String bean) {
+                LogUtils.log("onHeadLongClick", headPosition);
             }
 
             @Override
-            public void onItemLongClick(@NonNull BaseViewHolder holder, int position, HRVBean item) {
-                super.onItemLongClick(holder, position, item);
-                LogUtils.log("onItemLongClick", position);
-                headAdapter.getSelector().startDragSelect(position);
+            public void onItemLongClick(@NonNull BaseViewHolder holder, int adapterPosition, int itemPosition, HRVBean bean) {
+                LogUtils.log("onItemLongClick", itemPosition);
+                headAdapter.getSelector().startDragSelect(adapterPosition);
                 imageViewSelector.setVisibility(View.VISIBLE);
             }
 
