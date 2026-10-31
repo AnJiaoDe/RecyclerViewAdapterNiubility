@@ -3,17 +3,23 @@ package com.cy.rvadapterniubility.adapter;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.graphics.Color;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.rvadapterniubility.R;
@@ -54,6 +60,11 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
     private final List<Node<H, T>> nodes = new ArrayList<>();
     private Selector<T> selector;
     private boolean canItemClick = true;
+    //    private int currentSectionIndex = -1;
+    public static final String STICKER_HEAD = "STICKER_HEAD";
+    private int currentSectionIndex = -1;
+    private int currentLayoutId = -1;
+    private BaseViewHolder holderSticker;
 
     public HeadAdapter() {
         selector = new Selector<>(new Selector.Callback<T>() {
@@ -264,16 +275,18 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
             return position_adapter;
         }
 
-        /** Header的全局位置或Item的全局位置，不包含另一种类型的数据。 */
+        /**
+         * Header的全局位置或Item的全局位置，不包含另一种类型的数据。
+         */
         public int getDataPosition() {
             return dataPosition;
         }
 
-        public int getposition_head() {
+        public int getPosition_head() {
             return head ? dataPosition : sectionIndex;
         }
 
-        public int getposition_item() {
+        public int getPosition_item() {
             return head ? -1 : dataPosition;
         }
     }
@@ -340,8 +353,8 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
      * Header固定FullSpan，Item固定非FullSpan。
      */
     public boolean isFullSpan(int position) {
-        Node<H, T> node=nodes.get(position);
-        if(node==null)return false;
+        Node<H, T> node = nodes.get(position);
+        if (node == null) return false;
         return node.type == Node.TYPE_HEAD;
     }
 
@@ -1263,7 +1276,67 @@ public abstract class HeadAdapter<H, T> extends RecyclerView.Adapter<BaseViewHol
         return result;
     }
 
+    /**
+     * @param recyclerView
+     * @param layout_sticker 传递悬浮控件容器
+     */
+    public HeadAdapter<H, T> stickyHeader(RecyclerView recyclerView, final ViewGroup layout_sticker, @LayoutRes int layoutId) {
+        final View view = LayoutInflater.from(recyclerView.getContext()).inflate(layoutId, layout_sticker, false);
+        layout_sticker.addView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        currentSectionIndex = -1;
+        currentLayoutId = -1;
+        holderSticker = null;
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Log.e("onScrolled", "-----");
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (manager == null) {
+                    layout_sticker.setVisibility(View.GONE);
+                    return;
+                }
+                int position = manager.findFirstVisibleItemPosition();
+                if (position == RecyclerView.NO_POSITION) {
+                    layout_sticker.setVisibility(View.GONE);
+                    return;
+                }
+                PositionInfo<H, T> info = getPositionInfo(position);
+                if (info == null) {
+                    layout_sticker.setVisibility(View.GONE);
+                    return;
+                }
+                H head = info.getHead();
+                if (head == null) {
+                    layout_sticker.setVisibility(View.GONE);
+                    return;
+                }
+                int sectionIndex = info.getSectionIndex();
+                int dataPosition = info.getDataPosition();
+                if (currentSectionIndex == sectionIndex) return;
+                int layoutId = getHeadLayoutID(position, dataPosition, head);
+                if (layoutId == 0) {
+                    layout_sticker.setVisibility(View.GONE);
+                    return;
+                }
+                Log.e("onScrolled", "");
+                if (holderSticker == null || currentLayoutId != layoutId) {
+                    layout_sticker.setVisibility(View.VISIBLE);
+                    holderSticker = new BaseViewHolder(view);
+                    currentLayoutId = layoutId;
+                }
+                List<Object> list = new ArrayList<>();
+                list.add(STICKER_HEAD);
+                bindHeadToView(holderSticker, position, dataPosition, head, list);
+                currentSectionIndex = sectionIndex;
+            }
+        });
+        return this;
+    }
+
     public static interface CallbackDiff {
-        void onDispatchUpdated();
+        public void onDispatchUpdated();
     }
 }

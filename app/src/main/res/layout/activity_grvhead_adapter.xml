@@ -15,15 +15,16 @@
         <TextView
             android:id="@+id/tv_count"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:text="删除"
             android:id="@+id/btn_delete"
-            android:layout_height="match_parent"/>
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="删除" />
+
         <com.cy.androidview.selectorview.ImageViewSelector
             android:id="@+id/ivs"
             android:layout_width="wrap_content"
@@ -34,8 +35,19 @@
             app:cy_srcUnChecked="@drawable/cb_unselected_rect_white" />
     </LinearLayout>
 
-    <com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView
-        android:id="@+id/grv"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView
+            android:id="@+id/grv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/layout_sticker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
 </LinearLayout>

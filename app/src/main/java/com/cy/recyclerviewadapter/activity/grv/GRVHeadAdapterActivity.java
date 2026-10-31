@@ -2,10 +2,16 @@ package com.cy.recyclerviewadapter.activity.grv;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cy.androidview.selectorview.ImageViewSelector;
 import com.cy.recyclerviewadapter.BaseActivity;
@@ -15,6 +21,7 @@ import com.cy.recyclerviewadapter.bean.HRVBean;
 import com.cy.rvadapterniubility.adapter.BaseViewHolder;
 import com.cy.rvadapterniubility.adapter.HeadAdapter;
 import com.cy.rvadapterniubility.recyclerview.GridItemDecoration;
+import com.cy.rvadapterniubility.recyclerview.OnSimpleScrollListener;
 import com.cy.rvadapterniubility.recyclerview.VerticalGridRecyclerView;
 
 import java.util.ArrayList;
@@ -51,7 +58,8 @@ public class GRVHeadAdapterActivity extends BaseActivity {
         headAdapter = new HeadAdapter<String, HRVBean>() {
             @Override
             public void bindHeadToView(@NonNull BaseViewHolder holder, int adapterPosition, int headPosition, String bean, @NonNull List<Object> payloads) {
-                holder.setText(R.id.tv, bean+ headPosition);
+                LogUtils.log("bindHeadToView", adapterPosition);
+                holder.setText(R.id.tv, bean + headPosition);
                 ImageViewSelector imageViewSelector = holder.getView(R.id.ivs);
                 imageViewSelector.setOnCheckedChangeListener(new ImageViewSelector.OnCheckedChangeListener() {
                     @Override
@@ -67,7 +75,7 @@ public class GRVHeadAdapterActivity extends BaseActivity {
                         getSelector().selectHead(adapterPosition, isChecked);
                     }
                 });
-                holder.setVisibility(R.id.ivs, getSelector().isUsingSelector()? View.VISIBLE : View.GONE);
+                holder.setVisibility(R.id.ivs, getSelector().isUsingSelector() ? View.VISIBLE : View.GONE);
 
                 //注意：setChecked必须在setOnCheckedChangeListener之后，否则VIEW复用导致position选择错乱
                 imageViewSelector.setChecked(getSelector().isSelected(adapterPosition));
@@ -146,6 +154,7 @@ public class GRVHeadAdapterActivity extends BaseActivity {
         };
 
         VerticalGridRecyclerView verticalGridRecyclerView = findViewById(R.id.grv);
+        headAdapter.stickyHeader(verticalGridRecyclerView, (FrameLayout) findViewById(R.id.layout_sticker),"");
         verticalGridRecyclerView.setSpanCount(4)
                 .addItemDecoration(new GridItemDecoration(dpAdapt(10)))
                 .setAdapter(headAdapter);
@@ -170,6 +179,8 @@ public class GRVHeadAdapterActivity extends BaseActivity {
             headAdapter.addItemNoNotify(String.valueOf(i), list);
 //            }
         }
+
+        Log.e("onScrolled", "notifyDataSetChanged");
 
         headAdapter.notifyDataSetChanged();
     }
