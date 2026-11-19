@@ -581,6 +581,7 @@ public abstract class SimpleAdapter<T> extends RecyclerView.Adapter<BaseViewHold
     }
     public SimpleAdapter<T> remove(T bean) {
         removeNoNotify(bean);
+        notifyDataSetChanged();
         return this;
     }
     /**
