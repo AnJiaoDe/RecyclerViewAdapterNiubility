@@ -48,13 +48,14 @@ public class Selector<T> {
      */
     public void startDragSelect() {
         usingSelector = true;
+        notifyCountChanged();
     }
 
     /**
      * 相册长按打开选择菜单  用这个
      */
     public Selector<T> startDragSelect(int position) {
-        usingSelector = true;
+        startDragSelect();
         toggleNoNotify(position);
         callback.dispatchUpdatesToMsg(NOTIFY_STATE_DRAG_SELECT);
         return this;
@@ -66,7 +67,7 @@ public class Selector<T> {
      * @return
      */
     public Selector<T> startDragSelectNotify() {
-        usingSelector = true;
+        startDragSelect();
         callback.dispatchUpdatesToMsg(NOTIFY_STATE_DRAG_SELECT);
         return this;
     }
